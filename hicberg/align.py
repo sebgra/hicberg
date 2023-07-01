@@ -4,7 +4,7 @@ import subprocess as sp
 import click
 
 def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very_sensitive', max_alignment :  int = None, cpus : int = None, output : str = None, verbonse : bool = False) -> None:
-
+    
 
     pass
 
