@@ -1,0 +1,2 @@
+[console_scripts]
+hicberg = hicberg.__main__:cli

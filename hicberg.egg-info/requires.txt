@@ -1,0 +1,14 @@
+bioframe
+biopython
+click
+cooler
+cooltools
+funcy
+hicstuff
+matplotlib
+numpy
+pandas
+pysam
+scipy
+sklearn
+statsmodels

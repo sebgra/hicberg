@@ -4,7 +4,7 @@ import subprocess as sp
 from os.path import join
 from pathlib import Path, PurePath
 import multiprocessing
-from tools import partial
+from functools import partial
 import itertools
 
 import numpy as np

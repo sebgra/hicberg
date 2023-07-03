@@ -1,4 +1,5 @@
 import pytest
+import hicberg.align as hal
 
 def test_hic_align():
 
@@ -8,8 +9,8 @@ def test_hic_align():
 
 def test_hic_build_index():
 
-    pass
-
+    hal.hic_build_index(genome = "data_test/SC288_with_micron.fa", output = "/home/sardine/Bureau/",  verbose=False)
+    assert True
 
 def test_hic_view():
 

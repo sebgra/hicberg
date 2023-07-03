@@ -13,7 +13,7 @@ import bioframe as bf
 import matplotlib.pyplot as plt
 import matplotlib..colors
 import matplotlib.gridspec as gridspec
-from mpl_toolkits.axes_grid import make_axes_locatable
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def get_intervals_proportions():

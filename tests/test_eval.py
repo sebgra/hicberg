@@ -11,9 +11,9 @@ from scipy.stats import median_abs_deviation, pearsonr
 import bioframe as bf
 
 import matplotlib.pyplot as plt
-import matplotlib..colors
+import matplotlib.colors
 import matplotlib.gridspec as gridspec
-from mpl_toolkits.axes_grid import make_axes_locatable
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 def test_get_intervals_proportions():
@@ -23,7 +23,7 @@ def test_get_intervals_proportions():
 
 def test_get_chromosomes_intervals():
     pass
-test_
+
 def test_draw_intervals():
     pass
 

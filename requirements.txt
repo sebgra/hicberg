@@ -1,6 +1,6 @@
 bioframe
 biopython
-bowtie2
+# bowtie2
 click
 cooler
 cooltools
@@ -10,7 +10,7 @@ matplotlib
 numpy
 pandas
 pysam
-samtools
+# samtools
 scipy
 sklearn
 statsmodels
