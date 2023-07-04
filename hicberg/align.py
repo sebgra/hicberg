@@ -65,7 +65,7 @@ def hic_build_index(genome : str, output : str = None , cpus : int = 1 , verbose
 
 def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output : str = None, verbose : bool = False) -> None:
     """
-    AI is creating summary for hic_align
+    lignement of reads from HiC experiments along an indexed genome.
 
     Parameters
     ----------
@@ -82,7 +82,7 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
     max_alignment : int, optional
         Maximum number of alignments to be returned, by default None
     cpus : int, optional
-        Number of threads allocated for the alignment, by default None
+        Number of threads allocated for the alignment, by default 1
     output : str, optional
         Path where the alignement files (.sam) should be stored, by default None
     verbonse : bool, optional
@@ -133,21 +133,179 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
 
 
 
+def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, output : str = None, verbose : bool = False) -> None:
+    """
+    Conversion of .sam alignement files to .bam alignement format (using samtools).
+
+    Parameters
+    ----------
+    sam_for : str, optional
+        Path to forward .sam alignment file, by default "1.sam"
+    sam_rev : str, optional
+        Path to reverse .sam alignment file, by default "2.sam"
+    cpus : int, optional
+        Number of threads allocated for the alignment, by default 1
+    output : str, optional
+        Path where the alignement files (.bam) should be stored, by default None
+    verbose : bool, optional
+        Set weither or not the shell command should be printed, by default False
+    """
+
+    try:
+
+        sp.check_output(["samtools", "--help"])
+
+    except OSError:
+
+        raise RuntimeError(
+            "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
+        )
+
+
+    if output is None:    
+        output_path = Path(getcwd())
+    
+    else : 
+        output_path = Path(output)
+
+    if not output_path.exists():
+
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+    
+
+    cmd_view_for = f"samtools view -S -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
+    cmd_view_rev = f"samtools view -S -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
+
+    if verbose:
+
+        print(cmd_view_for)
+        print(cmd_view_rev)
+
+    sp.check_call([cmd_view_for], shell=True)
+    sp.check_call([cmd_view_rev], shell=True)
+
+    print(f"Compressed alignemnet alignement done at {output_path}")
 
 
 
-def hic_view():
 
-    pass
+def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, output : str = None, verbose : bool = False) -> None:
+    """
+    Sort .bam alignement files by read_name  (using samtools).
+
+    Parameters
+    ----------
+    bam_for : str, optional
+        Forward alignement file to be sorted, by default "1.bam"
+    bam_rev : str, optional
+        Reverse alignement file to be sorted, by default "2.bam"
+    cpus : int, optional
+        Number of threads allocated for the alignment, by default 1
+    output : str, optional
+        Path where the alignement files (.bam) should be stored, by default None
+    verbose : bool, optional
+        Set weither or not the shell command should be printed, by default False
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
+
+    try:
+
+        sp.check_output(["samtools", "--help"])
+
+    except OSError:
+
+        raise RuntimeError(
+            "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
+        )
 
 
-def hic_sort():
+    if output is None:    
+        output_path = Path(getcwd())
+    
+    else : 
+        output_path = Path(output)
 
-    pass
+    if not output_path.exists():
 
-def hic_index():
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+    
 
-    pass
+    cmd_sort_for = f"samtools sort -n {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
+    cmd_sort_rev = f"samtools sort -n {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"
 
+    if verbose:
+
+        print(cmd_sort_for)
+        print(cmd_sort_rev)
+
+    sp.check_call([cmd_sort_for], shell=True)
+    sp.check_call([cmd_sort_rev], shell=True)
+
+    print(f"Sorted alignement done at {output_path}")
+
+
+
+def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cpus : int = 1, output : str = None, verbose : bool = False) -> None:
+    """
+    Index a coordinate-sorted BGZIP-compressed SAM, BAM or CRAM file for fast random access.
+
+    Parameters
+    ----------
+    bam_for : str, optional
+        Forward alignement file to be indexed, by default "1.sorted.bam"
+    bam_rev : str, optional
+        Reverse alignement file to be indexed,, by default "2.sorted.bam"
+    cpus : int, optional
+        Number of threads allocated for the alignment, by default 1
+    output : str, optional
+        Path where the alignement files (.bam) should be stored, by default None
+    verbose : bool, optional
+        Set weither or not the shell command should be printed, by default False
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
+
+    try:
+
+        sp.check_output(["samtools", "--help"])
+
+    except OSError:
+
+        raise RuntimeError(
+            "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
+        )
+
+
+    if output is None:    
+        output_path = Path(getcwd())
+    
+    else : 
+        output_path = Path(output)
+
+    if not output_path.exists():
+
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+    
+
+    cmd_index_for = f"samtools index -b {bam_for} -@ {cpus}"
+    cmd_index_rev = f"samtools index -b {bam_rev} -@ {cpus}"
+
+    if verbose:
+
+        print(cmd_index_for)
+        print(cmd_index_rev)
+
+    sp.check_call([cmd_index_for], shell=True)
+    sp.check_call([cmd_index_rev], shell=True)
+
+    print(f"Indexed alignement done at {output_path}")
+    
 
 

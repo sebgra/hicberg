@@ -9,7 +9,6 @@ def temporary_folder():
     fn = tempfile.TemporaryDirectory()
     # yiled temporary folder name to be used as Path object
     yield fn.name
-    # fn.cleanup()
 
 
 
@@ -25,6 +24,7 @@ def test_hic_build_index(temporary_folder):
 
     assert  any(temp_dir_path.iterdir()) == True
 
+@pytest.fixture(name = "bowtie2_alignment")
 def test_hic_align(bowtie2_index, temporary_folder):
 
     temp_dir_path = Path(temporary_folder)
@@ -41,15 +41,43 @@ def test_hic_align(bowtie2_index, temporary_folder):
     assert for_sam_path.is_file()
     assert rev_sam_path.is_file()
 
-def test_hic_view():
+@pytest.fixture(name = "samtools_view")
+def test_hic_view(temporary_folder, bowtie2_index, bowtie2_alignment):
 
-    pass
+    temp_dir_path = Path(temporary_folder)
+    hal.hic_view(output = temp_dir_path, verbose = True)
+
+    for_bam_path = temp_dir_path / '1.bam'
+    rev_bam_path = temp_dir_path / '2.bam'
+
+    # Check if the alignement files are created
+    assert for_bam_path.is_file()
+    assert rev_bam_path.is_file()
+
+@pytest.fixture(name = "samtools_sort")
+def test_hic_sort(temporary_folder, bowtie2_index, bowtie2_alignment, samtools_view):
+
+    temp_dir_path = Path(temporary_folder)
+
+    hal.hic_sort(output = temp_dir_path, verbose = True)
+
+    for_sorted_bam_path = temp_dir_path / '1.sorted.bam'
+    rev_sorted_bam_path = temp_dir_path / '2.sorted.bam'
+
+    # Check if the alignement files are created
+    assert for_sorted_bam_path.is_file()
+    assert rev_sorted_bam_path.is_file()
 
 
-def test_hic_sort():
+def test_hic_index(temporary_folder, bowtie2_index, bowtie2_alignment, samtools_view, samtools_sort):
 
-    pass
+    temp_dir_path = Path(temporary_folder)
 
-def test_hic_index():
+    hal.hic_sort(output = temp_dir_path, verbose = True)
 
-    pass
+    for_indexed_bam_path = temp_dir_path / '1.sorted.bam'
+    rev_indexed_bam_path = temp_dir_path / '2.sorted.bam'
+
+    # Check if the alignement files are created
+    assert for_indexed_bam_path.is_file()
+    assert rev_indexed_bam_path.is_file()
