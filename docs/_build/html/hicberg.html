@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hicberg package &mdash; hicberg 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to hicberg’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            hicberg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">hicberg package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.align">hicberg.align module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.align.hic_align"><code class="docutils literal notranslate"><span class="pre">hic_align()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.align.hic_build_index"><code class="docutils literal notranslate"><span class="pre">hic_build_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.align.hic_index"><code class="docutils literal notranslate"><span class="pre">hic_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.align.hic_sort"><code class="docutils literal notranslate"><span class="pre">hic_sort()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.align.hic_view"><code class="docutils literal notranslate"><span class="pre">hic_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.benchmark">hicberg.benchmark module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.benchmark.benchmark"><code class="docutils literal notranslate"><span class="pre">benchmark()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hicberg-eval-module">hicberg.eval module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.filter">hicberg.filter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.filter.filter_library"><code class="docutils literal notranslate"><span class="pre">filter_library()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.filter.is_N_rich"><code class="docutils literal notranslate"><span class="pre">is_N_rich()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.filter.is_low_complexity"><code class="docutils literal notranslate"><span class="pre">is_low_complexity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.filter.is_low_quality"><code class="docutils literal notranslate"><span class="pre">is_low_quality()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.io">hicberg.io module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.io.build_matrix"><code class="docutils literal notranslate"><span class="pre">build_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.io.build_pairs"><code class="docutils literal notranslate"><span class="pre">build_pairs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.io.create_folder"><code class="docutils literal notranslate"><span class="pre">create_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.io.load_cooler"><code class="docutils literal notranslate"><span class="pre">load_cooler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.io.load_dictionary"><code class="docutils literal notranslate"><span class="pre">load_dictionary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.io.merge_predictions"><code class="docutils literal notranslate"><span class="pre">merge_predictions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.pipeline">hicberg.pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.pipeline.check_tools"><code class="docutils literal notranslate"><span class="pre">check_tools()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.pipeline.pipeline"><code class="docutils literal notranslate"><span class="pre">pipeline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.plot">hicberg.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.plot_couple_repartition"><code class="docutils literal notranslate"><span class="pre">plot_couple_repartition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.plot_differences"><code class="docutils literal notranslate"><span class="pre">plot_differences()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.plot_hic_matrix"><code class="docutils literal notranslate"><span class="pre">plot_hic_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.plot_laws"><code class="docutils literal notranslate"><span class="pre">plot_laws()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.plot_matrix"><code class="docutils literal notranslate"><span class="pre">plot_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.plot_matrix_detailled"><code class="docutils literal notranslate"><span class="pre">plot_matrix_detailled()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.plot_probability_maps"><code class="docutils literal notranslate"><span class="pre">plot_probability_maps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.plot.show_results"><code class="docutils literal notranslate"><span class="pre">show_results()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.statistics">hicberg.statistics module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.attribute_xs"><code class="docutils literal notranslate"><span class="pre">attribute_xs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.compute_d1d2"><code class="docutils literal notranslate"><span class="pre">compute_d1d2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.filter_poor_covered"><code class="docutils literal notranslate"><span class="pre">filter_poor_covered()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.generate_coverages"><code class="docutils literal notranslate"><span class="pre">generate_coverages()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.generate_probabilities"><code class="docutils literal notranslate"><span class="pre">generate_probabilities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.generate_trans_ps"><code class="docutils literal notranslate"><span class="pre">generate_trans_ps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.generate_xs"><code class="docutils literal notranslate"><span class="pre">generate_xs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.get_dist_frags"><code class="docutils literal notranslate"><span class="pre">get_dist_frags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.get_restriction_map"><code class="docutils literal notranslate"><span class="pre">get_restriction_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.statistics.get_stats"><code class="docutils literal notranslate"><span class="pre">get_stats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hicberg-utils-module">hicberg.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.version">hicberg.version module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hicberg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">hicberg package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/hicberg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hicberg-package">
+<h1>hicberg package<a class="headerlink" href="#hicberg-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-hicberg.align">
+<span id="hicberg-align-module"></span><h2>hicberg.align module<a class="headerlink" href="#module-hicberg.align" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.align.hic_align">
+<span class="sig-prename descclassname"><span class="pre">hicberg.align.</span></span><span class="sig-name descname"><span class="pre">hic_align</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fq_for</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fq_rev</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'very-sensitive'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_alignment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/align.html#hic_align"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.align.hic_align" title="Permalink to this definition"></a></dt>
+<dd><p>lignement of reads from HiC experiments along an indexed genome.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome</strong> (<em>str</em>) – Path to the genome file along which reads are going to be aligned.</p></li>
+<li><p><strong>index</strong> (<em>str</em>) – Path to the index of the genome along which reads are going to be aligned (path to .bt2l files). Default to None, index files are searched to sample_name/data/index/sample_name.</p></li>
+<li><p><strong>fq_for</strong> (<em>str</em>) – Path to .fatsa containing set of reads to align (forward mate).</p></li>
+<li><p><strong>fq_rev</strong> (<em>str</em>) – Path to .fatsa containing set of reads to align (forward mate).</p></li>
+<li><p><strong>sensitivity</strong> (<em>str</em><em>, </em><em>optional</em>) – Sensitivity of the alignment., by default ‘very_sensitive’</p></li>
+<li><p><strong>max_alignment</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of alignments to be returned, by default None</p></li>
+<li><p><strong>cpus</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of threads allocated for the alignment, by default 1</p></li>
+<li><p><strong>output</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the alignement files (.sam) should be stored, by default None</p></li>
+<li><p><strong>verbonse</strong> (<em>bool</em><em>, </em><em>optional</em>) – Set weither or not the shell command should be printed, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.align.hic_build_index">
+<span class="sig-prename descclassname"><span class="pre">hicberg.align.</span></span><span class="sig-name descname"><span class="pre">hic_build_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/align.html#hic_build_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.align.hic_build_index" title="Permalink to this definition"></a></dt>
+<dd><p>Building of bowtie2 index (.bt2l files) for read alignement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome</strong> (<em>str</em>) – Path to the genome file along which reads are going to be aligned.</p></li>
+<li><p><strong>cpus</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of threads allocated for the alignment, by default 1</p></li>
+<li><p><strong>output</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the Bowtie2 index files should be stored, by default None</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Set weither or not the shell command should be printed, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.align.hic_index">
+<span class="sig-prename descclassname"><span class="pre">hicberg.align.</span></span><span class="sig-name descname"><span class="pre">hic_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bam_for</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.sorted.bam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bam_rev</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'2.sorted.bam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/align.html#hic_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.align.hic_index" title="Permalink to this definition"></a></dt>
+<dd><p>Index a coordinate-sorted BGZIP-compressed SAM, BAM or CRAM file for fast random access.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bam_for</strong> (<em>str</em><em>, </em><em>optional</em>) – Forward alignement file to be indexed, by default “1.sorted.bam”</p></li>
+<li><p><strong>bam_rev</strong> (<em>str</em><em>, </em><em>optional</em>) – Reverse alignement file to be indexed,, by default “2.sorted.bam”</p></li>
+<li><p><strong>cpus</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of threads allocated for the alignment, by default 1</p></li>
+<li><p><strong>output</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the alignement files (.bam) should be stored, by default None</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Set weither or not the shell command should be printed, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.align.hic_sort">
+<span class="sig-prename descclassname"><span class="pre">hicberg.align.</span></span><span class="sig-name descname"><span class="pre">hic_sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bam_for</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.bam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bam_rev</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'2.bam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/align.html#hic_sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.align.hic_sort" title="Permalink to this definition"></a></dt>
+<dd><p>Sort .bam alignement files by read_name  (using samtools).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bam_for</strong> (<em>str</em><em>, </em><em>optional</em>) – Forward alignement file to be sorted, by default “1.bam”</p></li>
+<li><p><strong>bam_rev</strong> (<em>str</em><em>, </em><em>optional</em>) – Reverse alignement file to be sorted, by default “2.bam”</p></li>
+<li><p><strong>cpus</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of threads allocated for the alignment, by default 1</p></li>
+<li><p><strong>output</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the alignement files (.bam) should be stored, by default None</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Set weither or not the shell command should be printed, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.align.hic_view">
+<span class="sig-prename descclassname"><span class="pre">hicberg.align.</span></span><span class="sig-name descname"><span class="pre">hic_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sam_for</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.sam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sam_rev</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'2.sam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/align.html#hic_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.align.hic_view" title="Permalink to this definition"></a></dt>
+<dd><p>Conversion of .sam alignement files to .bam alignement format (using samtools).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sam_for</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to forward .sam alignment file, by default “1.sam”</p></li>
+<li><p><strong>sam_rev</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to reverse .sam alignment file, by default “2.sam”</p></li>
+<li><p><strong>cpus</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of threads allocated for the alignment, by default 1</p></li>
+<li><p><strong>output</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the alignement files (.bam) should be stored, by default None</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Set weither or not the shell command should be printed, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-hicberg.benchmark">
+<span id="hicberg-benchmark-module"></span><h2>hicberg.benchmark module<a class="headerlink" href="#module-hicberg.benchmark" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.benchmark.benchmark">
+<span class="sig-prename descclassname"><span class="pre">hicberg.benchmark.</span></span><span class="sig-name descname"><span class="pre">benchmark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/benchmark.html#benchmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.benchmark.benchmark" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="hicberg-eval-module">
+<h2>hicberg.eval module<a class="headerlink" href="#hicberg-eval-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-hicberg.filter">
+<span id="hicberg-filter-module"></span><h2>hicberg.filter module<a class="headerlink" href="#module-hicberg.filter" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.filter.filter_library">
+<span class="sig-prename descclassname"><span class="pre">hicberg.filter.</span></span><span class="sig-name descname"><span class="pre">filter_library</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/filter.html#filter_library"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.filter.filter_library" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.filter.is_N_rich">
+<span class="sig-prename descclassname"><span class="pre">hicberg.filter.</span></span><span class="sig-name descname"><span class="pre">is_N_rich</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/filter.html#is_N_rich"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.filter.is_N_rich" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.filter.is_low_complexity">
+<span class="sig-prename descclassname"><span class="pre">hicberg.filter.</span></span><span class="sig-name descname"><span class="pre">is_low_complexity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/filter.html#is_low_complexity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.filter.is_low_complexity" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.filter.is_low_quality">
+<span class="sig-prename descclassname"><span class="pre">hicberg.filter.</span></span><span class="sig-name descname"><span class="pre">is_low_quality</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/filter.html#is_low_quality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.filter.is_low_quality" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-hicberg.io">
+<span id="hicberg-io-module"></span><h2>hicberg.io module<a class="headerlink" href="#module-hicberg.io" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.io.build_matrix">
+<span class="sig-prename descclassname"><span class="pre">hicberg.io.</span></span><span class="sig-name descname"><span class="pre">build_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/io.html#build_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.io.build_matrix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.io.build_pairs">
+<span class="sig-prename descclassname"><span class="pre">hicberg.io.</span></span><span class="sig-name descname"><span class="pre">build_pairs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/io.html#build_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.io.build_pairs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.io.create_folder">
+<span class="sig-prename descclassname"><span class="pre">hicberg.io.</span></span><span class="sig-name descname"><span class="pre">create_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/io.html#create_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.io.create_folder" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.io.load_cooler">
+<span class="sig-prename descclassname"><span class="pre">hicberg.io.</span></span><span class="sig-name descname"><span class="pre">load_cooler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/io.html#load_cooler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.io.load_cooler" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.io.load_dictionary">
+<span class="sig-prename descclassname"><span class="pre">hicberg.io.</span></span><span class="sig-name descname"><span class="pre">load_dictionary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/io.html#load_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.io.load_dictionary" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.io.merge_predictions">
+<span class="sig-prename descclassname"><span class="pre">hicberg.io.</span></span><span class="sig-name descname"><span class="pre">merge_predictions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/io.html#merge_predictions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.io.merge_predictions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-hicberg.pipeline">
+<span id="hicberg-pipeline-module"></span><h2>hicberg.pipeline module<a class="headerlink" href="#module-hicberg.pipeline" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.pipeline.check_tools">
+<span class="sig-prename descclassname"><span class="pre">hicberg.pipeline.</span></span><span class="sig-name descname"><span class="pre">check_tools</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/pipeline.html#check_tools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.pipeline.check_tools" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.pipeline.pipeline">
+<span class="sig-prename descclassname"><span class="pre">hicberg.pipeline.</span></span><span class="sig-name descname"><span class="pre">pipeline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/pipeline.html#pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.pipeline.pipeline" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-hicberg.plot">
+<span id="hicberg-plot-module"></span><h2>hicberg.plot module<a class="headerlink" href="#module-hicberg.plot" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.plot_couple_repartition">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">plot_couple_repartition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#plot_couple_repartition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.plot_couple_repartition" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.plot_differences">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">plot_differences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#plot_differences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.plot_differences" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.plot_hic_matrix">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">plot_hic_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#plot_hic_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.plot_hic_matrix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.plot_laws">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">plot_laws</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#plot_laws"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.plot_laws" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.plot_matrix">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">plot_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#plot_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.plot_matrix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.plot_matrix_detailled">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">plot_matrix_detailled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#plot_matrix_detailled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.plot_matrix_detailled" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.plot_probability_maps">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">plot_probability_maps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#plot_probability_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.plot_probability_maps" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.plot.show_results">
+<span class="sig-prename descclassname"><span class="pre">hicberg.plot.</span></span><span class="sig-name descname"><span class="pre">show_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/plot.html#show_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.plot.show_results" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-hicberg.statistics">
+<span id="hicberg-statistics-module"></span><h2>hicberg.statistics module<a class="headerlink" href="#module-hicberg.statistics" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.attribute_xs">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">attribute_xs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#attribute_xs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.attribute_xs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.compute_d1d2">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">compute_d1d2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#compute_d1d2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.compute_d1d2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.filter_poor_covered">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">filter_poor_covered</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#filter_poor_covered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.filter_poor_covered" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.generate_coverages">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">generate_coverages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#generate_coverages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.generate_coverages" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.generate_probabilities">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">generate_probabilities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#generate_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.generate_probabilities" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.generate_trans_ps">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">generate_trans_ps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#generate_trans_ps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.generate_trans_ps" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.generate_xs">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">generate_xs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#generate_xs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.generate_xs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.get_dist_frags">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">get_dist_frags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#get_dist_frags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.get_dist_frags" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.get_restriction_map">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">get_restriction_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#get_restriction_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.get_restriction_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.statistics.get_stats">
+<span class="sig-prename descclassname"><span class="pre">hicberg.statistics.</span></span><span class="sig-name descname"><span class="pre">get_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/statistics.html#get_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.statistics.get_stats" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="hicberg-utils-module">
+<h2>hicberg.utils module<a class="headerlink" href="#hicberg-utils-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-hicberg.version">
+<span id="hicberg-version-module"></span><h2>hicberg.version module<a class="headerlink" href="#module-hicberg.version" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-hicberg">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hicberg" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to hicberg’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Sébastien Gradit.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

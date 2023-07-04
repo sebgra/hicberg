@@ -64,7 +64,7 @@ def test_hic_sort(temporary_folder, bowtie2_index, bowtie2_alignment, samtools_v
     for_sorted_bam_path = temp_dir_path / '1.sorted.bam'
     rev_sorted_bam_path = temp_dir_path / '2.sorted.bam'
 
-    # Check if the alignement files are created
+    # Check if the sorted alignement files are created
     assert for_sorted_bam_path.is_file()
     assert rev_sorted_bam_path.is_file()
 
@@ -78,6 +78,6 @@ def test_hic_index(temporary_folder, bowtie2_index, bowtie2_alignment, samtools_
     for_indexed_bam_path = temp_dir_path / '1.sorted.bam'
     rev_indexed_bam_path = temp_dir_path / '2.sorted.bam'
 
-    # Check if the alignement files are created
+    # Check if the sorted and indexed alignement files are created
     assert for_indexed_bam_path.is_file()
     assert rev_indexed_bam_path.is_file()

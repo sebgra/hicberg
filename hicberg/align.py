@@ -282,7 +282,6 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
             "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
         )
 
-
     if output is None:    
         output_path = Path(getcwd())
     
@@ -306,6 +305,6 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
     sp.check_call([cmd_index_rev], shell=True)
 
     print(f"Indexed alignement done at {output_path}")
-    
+
 
 
