@@ -1,3 +1,5 @@
+import pytest
+import tempfile
 import re
 import glob
 import subprocess as sp
@@ -25,6 +27,8 @@ from Bio.Restriction import RestrictionBatch, Analysis
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
+import hicberg.utils as hut
+
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
 DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
@@ -37,7 +41,11 @@ DEFAULT_ENZYME = "DpnII"
 # enzymes, they shouldn't be too short
 DEFAULT_MIN_CHUNK_SIZE = 50
 
-
+@pytest.fixture(scope="session")
+def temporary_folder():
+    fn = tempfile.TemporaryDirectory()
+    # yiled temporary folder name to be used as Path object
+    yield fn.name
 
 
 def test_attribute_xs():
@@ -52,8 +60,15 @@ def test_get_restriction_table():
 def test_write_frag_info():
     pass
 
-def test_get_chromosomes_sizes():
-    pass
+def test_get_chromosomes_sizes(temporary_folder):
+
+    temp_dir_path = Path(temporary_folder)
+    hut.get_chromosomes_sizes(genome = "data_test/SC288_with_micron.fa", output_dir = temp_dir_path)
+
+    chrom_sizes_dictionary = temp_dir_path / "chromosome_sizes.npy"
+
+    # Check if the sorted alignement files are created
+    assert chrom_sizes_dictionary.is_file()
 
 def test_get_bin_table():
     pass

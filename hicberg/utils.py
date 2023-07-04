@@ -1,10 +1,11 @@
 import re
 import glob
 import subprocess as sp
+from os import getcwd
 from os.path import join
 from pathlib import Path, PurePath
 import multiprocessing
-from tools import partial
+from functools import partial
 import itertools
 
 import numpy as np
@@ -52,8 +53,43 @@ def get_restriction_table():
 def write_frag_info():
     pass
 
-def get_chromosomes_sizes():
-    pass
+def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
+    """
+    Generate a dictionnary save in .npy format where keys are chromosome name and value are size in bp.
+
+    Parameters
+    ----------
+    genome : str, optional
+        Path to the genome, by default None
+
+    output_dir : str, optional
+        Path to the folder wher eto save the dictionary, by default None
+    """
+
+    genome_path = Path(genome)
+
+    if not genome_path.is_file():
+
+        raise IOError(f"Genome file {genome_path.name} not found. Please provide a valid path.")
+
+    if output_dir is None:
+
+        folder_path = Path(getcwd())
+
+    else:
+
+        folder_path = Path(output_dir)
+
+    chrom_sizes = {}
+
+    output_file = folder_path / "chromosome_sizes.npy"
+
+    for rec in SeqIO.parse(genome_path,"fasta"):
+
+        chrom_sizes[rec.id] = len(rec.seq)
+
+    np.save(output_file, chrom_sizes)
+
 
 def get_bin_table():
     pass
