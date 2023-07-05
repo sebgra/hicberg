@@ -29,6 +29,10 @@ import matplotlib.gridspec as gridspec
 
 import hicberg.utils as hut
 
+GENOME = "data_test/SC288_with_micron.fa"
+CHROM_SIZES_DIC = "chromosome_sizes.npy"
+FRAG_FILE = "fragments_fixed_sizes.txt"
+
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
 DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
@@ -40,6 +44,8 @@ DEFAULT_ENZYME = "DpnII"
 # If using evenly-sized chunks instead of restriction
 # enzymes, they shouldn't be too short
 DEFAULT_MIN_CHUNK_SIZE = 50
+
+BINS = 2000
 
 @pytest.fixture(scope="session")
 def temporary_folder():
@@ -60,18 +66,27 @@ def test_get_restriction_table():
 def test_write_frag_info():
     pass
 
+@pytest.fixture(name = "get_chromosomes_sizes")
 def test_get_chromosomes_sizes(temporary_folder):
 
     temp_dir_path = Path(temporary_folder)
-    hut.get_chromosomes_sizes(genome = "data_test/SC288_with_micron.fa", output_dir = temp_dir_path)
+    hut.get_chromosomes_sizes(genome = GENOME, output_dir = temp_dir_path)
 
-    chrom_sizes_dictionary = temp_dir_path / "chromosome_sizes.npy"
+    chrom_sizes_dictionary_path = temp_dir_path / CHROM_SIZES_DIC
+
+    yield temp_dir_path / CHROM_SIZES_DIC
 
     # Check if the sorted alignement files are created
-    assert chrom_sizes_dictionary.is_file()
+    assert chrom_sizes_dictionary_path.is_file()
 
-def test_get_bin_table():
-    pass
+def test_get_bin_table(temporary_folder, get_chromosomes_sizes):
+    
+    temp_dir_path = Path(temporary_folder)
+    hut.get_bin_table(chrom_sizes_dict = get_chromosomes_sizes, bins = 2000,  output_dir = temp_dir_path)
+
+    bin_table_path = temp_dir_path / FRAG_FILE
+
+    assert bin_table_path.is_file()
 
 def test_is_duplicated():
     pass

@@ -30,6 +30,7 @@ import matplotlib.gridspec as gridspec
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
 DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
 DEFAULT_SPARSE_MATRIX_FILE_NAME = "abs_fragments_contacts_weighted.txt"
+
 DEFAULT_KB_BINNING = 1
 DEFAULT_THRESHOLD_SIZE = 0
 # Most used enzyme for eukaryotes
@@ -91,8 +92,73 @@ def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     np.save(output_file, chrom_sizes)
 
 
-def get_bin_table():
-    pass
+def get_bin_table(chrom_sizes_dict : str, bins : int, output_dir : str = None) -> None:
+    """
+    Create bin table containing start and end position for fixed size bin per chromosome.
+
+    Parameters
+    ----------
+    chrom_sizes_dict : str
+        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format
+    bins : int
+        Size of the desired bin.
+    output_dir : str, optional
+        Path to the folder wher eto save the dictionary, by default None
+
+    """    
+
+    chrom_sizes_dict_path = Path(chrom_sizes_dict)
+
+    if not chrom_sizes_dict_path.is_file():
+
+        raise IOError(f"Genome file {chrom_sizes_dict_path.name} not found. Please provide a valid path.")
+
+    if output_dir is None:
+
+        folder_path = Path(getcwd())
+
+    else:
+
+        folder_path = Path(output_dir)
+
+    output_file = folder_path / "fragments_fixed_sizes.txt"
+
+    chrom_size_dic = np.load(chrom_sizes_dict_path, allow_pickle=True).item()
+    chr_count = 0
+
+    with open (output_file, "w") as f_out:
+        
+        for chrom, length in zip(chrom_size_dic.keys(), chrom_size_dic.values()):
+
+            curr_chr, curr_length = chrom, length
+            chr_count += 1
+
+            if (curr_length % bins) == 0:
+                    interval_end = curr_length
+            else:
+                interval_end = (int((curr_length + bins) / bins)) * bins
+
+                for val in range(0, interval_end, bins):
+                    curr_start = val
+
+                    if val + bins > curr_length:
+
+                        curr_end = curr_length
+                    else:
+                        curr_end = val + bins
+                    if (chr_count > 1) or (val > 0):
+                        f_out.write("\n")
+                    f_out.write(
+                        str(curr_chr)
+                        + "\t"
+                        + str(curr_start)
+                        + "\t"
+                        + str(int(curr_end))
+                        + "\t"
+                    )
+
+        # close the output fragment file
+        f_out.close()
 
 def is_duplicated():
     pass
