@@ -33,6 +33,8 @@ GENOME = "data_test/SC288_with_micron.fa"
 CHROM_SIZES_DIC = "chromosome_sizes.npy"
 FRAG_FILE = "fragments_fixed_sizes.txt"
 
+FORWARD_SORTED_BAM = "data_test/alignments/1.sorted.bam"
+
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
 DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
@@ -133,8 +135,16 @@ def test_get_cis_distance():
 def test_get_event_stats():
     pass
 
-def test_sam_iterator():
-    pass
+def test_bam_iterator(bam_file = FORWARD_SORTED_BAM):
+
+    bam_path = Path(bam_file)
+    bam_iterator = hut.bam_iterator(bam_path)
+    first_iteration = next(bam_iterator)
+
+    # Check if the first iteration return a list of 1
+    assert(len(first_iteration) == 1)
+    # Check if first iteration has the right query name
+    assert first_iteration[0].query_name  == "NS500150:487:HNLLNBGXC:1:11101:1047:14348"
 
 def test_block_counter():
     pass

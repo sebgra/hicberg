@@ -8,6 +8,8 @@ import multiprocessing
 from functools import partial
 import itertools
 
+from typing import Iterator
+
 import numpy as np
 from numpy.random import choice
 import pandas as pd
@@ -205,8 +207,49 @@ def get_cis_distance():
 def get_event_stats():
     pass
 
-def sam_iterator():
-    pass
+def bam_iterator(bam_file : str = None) -> Iterator[pysam.AlignedSegment]:
+    """
+    Returns an iterator for the given SAM/BAM file (must be query-sorted).
+    In each call, the alignments of a single read are yielded as a 3-tuple: (list of primary pysam.AlignedSegment, list of supplementary pysam.AlignedSegment, list of secondary pysam.AlignedSegment).
+
+    Parameters
+    ----------
+    bam : [str]
+        Path to alignment file in .sam or .bam format.
+
+    Yields
+    -------
+    Iterator[pysam.AlignedSegment]
+        Yields a list containing pysam AlignementSegment objects, within which all the reads have the same id.
+    """
+
+    bam_path = Path(bam_file)
+
+    bam_handler = pysam.AlignmentFile(bam_path, "rb")
+    
+    alignments = bam_handler.fetch(until_eof=True)
+    current_aln = next(alignments)
+    current_read_name = current_aln.query_name
+
+    block = []
+    block.append(current_aln)
+
+    while True:
+        try:
+            next_aln = next(alignments)
+            next_read_name = next_aln.query_name
+            if next_read_name != current_read_name:
+                yield (block)
+                current_read_name = next_read_name
+                block = []
+                block.append(next_aln)
+
+            else:
+                block.append(next_aln)
+        except StopIteration:
+            break
+
+    yield (block)
 
 def block_counter():
     pass
