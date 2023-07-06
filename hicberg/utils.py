@@ -66,7 +66,7 @@ def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
         Path to the genome, by default None
 
     output_dir : str, optional
-        Path to the folder wher eto save the dictionary, by default None
+        Path to the folder where to save the dictionary, by default None
     """
 
     genome_path = Path(genome)
@@ -162,23 +162,137 @@ def get_bin_table(chrom_sizes_dict : str, bins : int, output_dir : str = None) -
         # close the output fragment file
         f_out.close()
 
-def is_duplicated():
-    pass
+def is_duplicated(read : pysam.AlignedSegment) -> bool:
+    """
+    Check if read from pysam AlignmentFile is mapping more than once along the genome.
 
-def is_poor_quality():
-    pass
+    Parameters
+    ----------
+    read : pysam.AlignedSegment
+        pysam AlignedSegment object.
 
-def is_unqualitative():
-    pass
+    Returns
+    -------
+    bool
+        True if the read is duplicated i.e. mapping to more than one position.
+    """    
 
-def is_unmapped():
-    pass
+    if "XS" in [x[0] for x in read.get_tags()]:
+        return True
 
-def is_reverse():
-    pass
+    else:
+        return False
 
-def classify_reads():
-    pass
+def is_poor_quality(read : pysam.AlignedSegment, mapq : int) -> bool:
+    """
+    Check if read from pysam AlignmentFile is under mapping quality threshold
+
+    Parameters
+    ----------
+    read : pysam.AlignedSegment
+        pysam AlignedSegment object.
+    mapq : int
+        Mapping quality threshold.
+
+    Returns
+    -------
+    bool
+        True if the read quality is below mapq threshold.
+    """    
+    if 0 < read.mapping_quality < mapq:
+        return True
+
+    else:
+        return False
+
+def is_unqualitative(read : pysam.AlignedSegment) -> bool:
+    """
+    Check if the read is unqualitative.
+
+    Parameters
+    ----------
+    read : pysam.AlignedSegment
+        pysam AlignedSegment object.
+
+    Returns
+    -------
+    bool
+        True if the read is unqualitative, False otherwise.
+    """
+
+    if read.mapping_quality == 0:
+
+        return True
+
+    else:
+
+        return False
+
+def is_unmapped(read : pysam.AlignedSegment) -> bool:
+    """
+    Check if read from pysam AlignmentFile is unmapped
+
+    Parameters
+    ----------
+    read : pysam.AlignedSegment
+        pysam AlignedSegment object.
+
+    Returns
+    -------
+    bool
+        True if the read is unmapped.
+    """    
+    if read.flag == 4:
+        return True
+
+    else:
+        return False
+
+def is_reverse(read : pysam.AlignedSegment) -> bool:
+    """
+    Check if read from pysam AlignmentFile is reverse
+
+    Parameters
+    ----------
+    read : pysam.AlignedSegment
+        pysam AlignedSegment object.
+
+    Returns
+    -------
+    bool
+        True if the read is reverse.
+    """ 
+
+    if read.flag == 16:
+        return True
+
+    else:
+        return False
+
+def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None, chromosome_sizes : str = None, mapq : int = 30, output_dir : str = None) -> None:
+    """
+    Classification of pairs of reads in 2 different groups:
+        Group 0) --> (Unmappable)
+        Group 1) --> (Uniquely Mapped  Uniquely Mapped)
+        Group 2) --> (Uniquely Mapped Multi Mapped) or (Multi Mapped  Multi Mapped).
+
+    Parameters
+    ----------
+    forward_bam_file : str, optional
+        Path to forward .bam alignment file, by default None
+    reverse_bam_file : str, optional
+        Path to reverse .bam alignment file, by default None
+    chromosome_sizes : str, optional
+        Path to a chromosome size dictionary save in .npy format, by default None
+    mapq : int, optional
+        Minimal read quality under which a Hi-C read pair will not be kept, by default 30
+    output_dir : str, optional
+        Path to the folder where to save the classified alignment files, by default None
+
+    """
+
+    
+    return 0
 
 def classify_reads_multi():
     pass
@@ -224,6 +338,10 @@ def bam_iterator(bam_file : str = None) -> Iterator[pysam.AlignedSegment]:
     """
 
     bam_path = Path(bam_file)
+
+    if not bam_path.is_file():
+
+        raise IOError(f"BAM file {bam_path.name} not found. Please provide a valid path.")
 
     bam_handler = pysam.AlignmentFile(bam_path, "rb")
     

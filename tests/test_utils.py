@@ -35,6 +35,8 @@ FRAG_FILE = "fragments_fixed_sizes.txt"
 
 FORWARD_SORTED_BAM = "data_test/alignments/1.sorted.bam"
 
+MIN_READ_MAPQ = 30
+
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
 DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
@@ -48,6 +50,7 @@ DEFAULT_ENZYME = "DpnII"
 DEFAULT_MIN_CHUNK_SIZE = 50
 
 BINS = 2000
+
 
 @pytest.fixture(scope="session")
 def temporary_folder():
@@ -91,19 +94,59 @@ def test_get_bin_table(temporary_folder, get_chromosomes_sizes):
     assert bin_table_path.is_file()
 
 def test_is_duplicated():
-    pass
+
+    read_duplicated = pysam.AlignedSegment()
+    read_duplicated.query_name = "DUPLICATED"
+    read_duplicated.query_sequence = "ATCG"
+    read_duplicated.set_tag("XS", -1)
+
+    duplicateness = hut.is_duplicated(read_duplicated)
+
+    assert duplicateness 
 
 def test_is_poor_quality():
-    pass
+    read_poor_quality = pysam.AlignedSegment()
+    read_poor_quality.query_name = "POOR QUALITY"
+    read_poor_quality.query_sequence = "ATCG"
+    read_poor_quality.mapping_quality = 3
+
+    qualitiveness = hut.is_poor_quality(read_poor_quality, MIN_READ_MAPQ)
+
+    assert qualitiveness
 
 def test_is_unqualitative():
-    pass
+
+    read_unqualitative = pysam.AlignedSegment()
+    read_unqualitative.query_name = "UNQUALITATIVE"
+    read_unqualitative.query_sequence = "ATCG"
+    read_unqualitative.mapping_quality = 0
+    read_unqualitative.flag = 0
+
+    qualitativeness = hut.is_unqualitative(read_unqualitative)
+
+    assert qualitativeness 
 
 def test_is_unmapped():
-    pass
+    
+    read_unmapped = pysam.AlignedSegment()
+    read_unmapped.query_name = "UNMAPPED"
+    read_unmapped.query_sequence = "ATCG"
+    read_unmapped.mapping_quality = 0
+    read_unmapped.flag = 4
+    mapping = hut.is_unmapped(read_unmapped)
+
+    assert mapping
+
 
 def test_is_reverse():
-    pass
+    read_reverse = pysam.AlignedSegment()
+    read_reverse.query_name = "REVERSE"
+    read_reverse.query_sequence = "ATCG"
+    read_reverse.mapping_quality = 0
+    read_reverse.flag = 16
+    reverse = hut.is_reverse(read_reverse)
+
+    assert reverse
 
 def test_classify_reads():
     pass
