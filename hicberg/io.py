@@ -45,8 +45,22 @@ def build_pairs():
 def build_matrix():
     pass
 
-def load_dictionary():
-    pass
+def load_dictionary(dictionary : str = None) -> dict:
+    """
+    Load dictionary save into numpy format (.npy).
+
+    Parameters
+    ----------
+    dictionary : str, optional
+        Path to a the dictionary saved in numpy (.npy) format, by default None
+
+    Returns
+    -------
+    dict
+        Python native dictionary
+    """    
+
+    return np.load(dictionary, allow_pickle=True).item()
 
 def load_cooler():
     pass

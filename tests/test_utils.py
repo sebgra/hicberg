@@ -29,6 +29,8 @@ import matplotlib.gridspec as gridspec
 
 import hicberg.utils as hut
 
+from .conftest import temporary_folder
+
 GENOME = "data_test/SC288_with_micron.fa"
 CHROM_SIZES_DIC = "chromosome_sizes.npy"
 FRAG_FILE = "fragments_fixed_sizes.txt"
@@ -36,6 +38,8 @@ FRAG_FILE = "fragments_fixed_sizes.txt"
 FORWARD_SORTED_BAM = "data_test/alignments/1.sorted.bam"
 
 MIN_READ_MAPQ = 30
+
+FIRST_QUERY_NAME = "NS500150:487:HNLLNBGXC:1:11101:1047:14348"
 
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
@@ -52,12 +56,6 @@ DEFAULT_MIN_CHUNK_SIZE = 50
 BINS = 2000
 
 
-@pytest.fixture(scope="session")
-def temporary_folder():
-    fn = tempfile.TemporaryDirectory()
-    # yiled temporary folder name to be used as Path object
-    yield fn.name
-
 
 def test_attribute_xs():
     pass
@@ -71,8 +69,11 @@ def test_get_restriction_table():
 def test_write_frag_info():
     pass
 
-@pytest.fixture(name = "get_chromosomes_sizes")
+@pytest.fixture(scope = "session")
 def test_get_chromosomes_sizes(temporary_folder):
+    """
+    Test if the function creating a dictionary of chromosomes sizes from a genome is correctly performed.
+    """
 
     temp_dir_path = Path(temporary_folder)
     hut.get_chromosomes_sizes(genome = GENOME, output_dir = temp_dir_path)
@@ -84,10 +85,10 @@ def test_get_chromosomes_sizes(temporary_folder):
     # Check if the sorted alignement files are created
     assert chrom_sizes_dictionary_path.is_file()
 
-def test_get_bin_table(temporary_folder, get_chromosomes_sizes):
+def test_get_bin_table(temporary_folder, test_get_chromosomes_sizes):
     
     temp_dir_path = Path(temporary_folder)
-    hut.get_bin_table(chrom_sizes_dict = get_chromosomes_sizes, bins = 2000,  output_dir = temp_dir_path)
+    hut.get_bin_table(chrom_sizes_dict = test_get_chromosomes_sizes, bins = 2000,  output_dir = temp_dir_path)
 
     bin_table_path = temp_dir_path / FRAG_FILE
 
@@ -187,7 +188,7 @@ def test_bam_iterator(bam_file = FORWARD_SORTED_BAM):
     # Check if the first iteration return a list of 1
     assert(len(first_iteration) == 1)
     # Check if first iteration has the right query name
-    assert first_iteration[0].query_name  == "NS500150:487:HNLLNBGXC:1:11101:1047:14348"
+    assert first_iteration[0].query_name  == FIRST_QUERY_NAME
 
 def test_block_counter():
     pass

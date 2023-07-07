@@ -291,7 +291,31 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
 
     """
 
+    forward_bam_file_path, reverse_bam_file_path = Path(forward_bam_file), Path(reverse_bam_file)
+
+    chromosome_sizes_path = Path(chromosome_sizes)
+
+    if not forward_bam_file_path.is_file():
+
+        raise IOError(f"Forward alignment file {forward_bam_file_path.name} not found. Please provide a valid path.")
+
+    if not reverse_bam_file_path.is_file():
+            
+            raise IOError(f"Reverse alignment file {reverse_bam_file_path.name} not found. Please provide a valid path.")
     
+    if not chromosome_sizes_path.is_file():
+            
+            raise IOError(f"Chromosome sizes file {chromosome_sizes_path.name} not found. Please provide a valid path.")
+    
+    if output_dir is None:
+            
+            output_dir = Path(getcwd())
+
+    chromosome_sizes_dic = hio.load_dictionary(chromosome_sizes_path)
+
+    ## TODO : to complete and check for default file names as 1.sorted.bam and 2.sorted.bam
+
+
     return 0
 
 def classify_reads_multi():

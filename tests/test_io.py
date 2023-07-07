@@ -13,16 +13,21 @@ import cooler
 
 import hicberg.io as hio
 
+from .conftest import temporary_folder
+from .test_utils import test_get_chromosomes_sizes
+
+
 FOLDER_TO_CREATE = "test_sample"
+TEST_DICT = "data_test/chromosome_sizes.npy"
 
-@pytest.fixture(scope="session")
-def temporary_folder():
-    fn = tempfile.TemporaryDirectory()
-    # yiled temporary folder name to be used as Path object
-    yield fn.name
+DICT_FIRST_KEY = "chr10"
+DICT_FIRST_SIZE = 745751
 
-@pytest.fixture(name = "create_folder")
+
 def test_create_folder(temporary_folder):
+    """
+    Test if the function creates a folder in the specified path.
+    """
 
     temp_dir_path = Path(temporary_folder)
     hio.create_folder(sample_name = FOLDER_TO_CREATE, output_dir = temp_dir_path)
@@ -35,8 +40,12 @@ def test_build_pairs():
 def test_build_matrix():
     pass
 
-def test_load_dictionary():
-    pass
+def test_load_dictionary(test_get_chromosomes_sizes):
+    
+    dictionary = hio.load_dictionary(dictionary = test_get_chromosomes_sizes)
+
+    assert DICT_FIRST_KEY == list(dictionary.keys())[0]
+    assert DICT_FIRST_SIZE == list(dictionary.values())[0]
 
 def test_load_cooler():
     pass

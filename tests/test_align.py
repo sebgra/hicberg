@@ -4,6 +4,8 @@ from pathlib import Path
 import tempfile
 import hicberg.align as hal
 
+from .conftest import temporary_folder
+
 
 GENOME = "data_test/SC288_with_micron.fa"
 FOR_FQ = "data_test/forward_reads_test.fq.gz"
@@ -15,16 +17,14 @@ REV_BAM = "2.bam"
 FOR_SORTED_BAM = "1.sorted.bam"
 REV_SORTED_BAM = "2.sorted.bam"
 
-@pytest.fixture(scope="session")
-def temporary_folder():
-    fn = tempfile.TemporaryDirectory()
-    # yiled temporary folder name to be used as Path object
-    yield fn.name
 
 
 
-@pytest.fixture(name = "bowtie2_index")
+@pytest.fixture()
 def test_hic_build_index(temporary_folder):
+    """
+    Test if the bowtie2 index is correctly created
+    """    
 
     temp_dir_path = Path(temporary_folder)
     genome_path  = Path(GENOME)
@@ -35,15 +35,18 @@ def test_hic_build_index(temporary_folder):
 
     assert  any(temp_dir_path.iterdir()) == True
 
-@pytest.fixture(name = "bowtie2_alignment")
-def test_hic_align(bowtie2_index, temporary_folder):
+@pytest.fixture()
+def test_hic_align(test_hic_build_index, temporary_folder):
+    """
+    Test if the alignement is correctly performed.
+    """
 
     temp_dir_path = Path(temporary_folder)
     genome_path  = Path(GENOME)
     fq_for_path = Path(FOR_FQ)
     fq_rev_path = Path(REV_FQ)
 
-    hal.hic_align(genome = genome_path, index = bowtie2_index, fq_for = fq_for_path, fq_rev = fq_rev_path, output = temp_dir_path, verbose = True)
+    hal.hic_align(genome = genome_path, index = test_hic_build_index, fq_for = fq_for_path, fq_rev = fq_rev_path, output = temp_dir_path, verbose = True)
 
     for_sam_path = temp_dir_path / FOR_SAM
     rev_sam_path = temp_dir_path / REV_SAM
@@ -52,9 +55,11 @@ def test_hic_align(bowtie2_index, temporary_folder):
     assert for_sam_path.is_file()
     assert rev_sam_path.is_file()
 
-@pytest.fixture(name = "samtools_view")
-def test_hic_view(temporary_folder, bowtie2_index, bowtie2_alignment):
-
+@pytest.fixture()
+def test_hic_view(temporary_folder, test_hic_build_index, test_hic_align):
+    """
+    Test if the alignement compression is correctly performed.
+    """
     temp_dir_path = Path(temporary_folder)
     hal.hic_view(output = temp_dir_path, verbose = True)
 
@@ -65,8 +70,11 @@ def test_hic_view(temporary_folder, bowtie2_index, bowtie2_alignment):
     assert for_bam_path.is_file()
     assert rev_bam_path.is_file()
 
-@pytest.fixture(name = "samtools_sort")
-def test_hic_sort(temporary_folder, bowtie2_index, bowtie2_alignment, samtools_view):
+@pytest.fixture()
+def test_hic_sort(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view):
+    """
+    Test if the alignement sorting by read ids is correctly performed.
+    """
 
     temp_dir_path = Path(temporary_folder)
 
@@ -80,7 +88,10 @@ def test_hic_sort(temporary_folder, bowtie2_index, bowtie2_alignment, samtools_v
     assert rev_sorted_bam_path.is_file()
 
 
-def test_hic_index(temporary_folder, bowtie2_index, bowtie2_alignment, samtools_view, samtools_sort):
+def test_hic_index(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort):
+    """
+    Test if the alignement indexing is correctly performed.
+    """
 
     temp_dir_path = Path(temporary_folder)
 
