@@ -1,4 +1,6 @@
+import pytest
 from os.path import join
+from pathlib import Path
 import statistics 
 import random
 import itertools
@@ -18,11 +20,31 @@ from Bio.Restriction import *
 
 import cooler
 
+import hicberg.statistics as hst
+
 
 lowess = sm.nonparametric.lowess
 
-def test_get_restriction_map():
-    pass
+GENOME = "data_test/SC288_with_micron.fa"
+DEFAULT_ENZYME = ["DpnII"]
+DICT_FIRST_KEY = "chr10"
+DICT_FIRST_CHR_FIRST_POS = 0
+DICT_FIRST_CHR_LAST_POS = 745751
+
+@pytest.mark.parametrize("genome, enzyme, dict_first_key", [(GENOME, DEFAULT_ENZYME, DICT_FIRST_KEY), (GENOME, ["DpnII", "HinfI"], DICT_FIRST_KEY)])
+def test_get_restriction_map(genome, enzyme, dict_first_key):
+    """
+    Test if the function returns a dictionary with the right keys and values, i.e. the genome has been correctly digested.
+    First restriction site for first chromosome should be 0 and last restriction site should be the length of the chromosome.
+    """
+
+    genome_path  = Path(genome)
+    restriction_map = hst.get_restriction_map(genome = genome_path, enzyme = enzyme)
+
+    # Check if the dictionary is not empty, if fisrt chromosome is right, and restrictions sites are in the right order.
+    assert restriction_map[DICT_FIRST_KEY][0] == DICT_FIRST_CHR_FIRST_POS
+    assert restriction_map[DICT_FIRST_KEY][-1] == DICT_FIRST_CHR_LAST_POS
+
 
 def test_generate_xs():
     pass
