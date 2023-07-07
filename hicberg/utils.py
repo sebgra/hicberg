@@ -16,7 +16,7 @@ import pandas as pd
 import scipy.stats as stats
 from scipy.stats import median_abs_deviation
 
-import hicstuff.io as hio
+import hicstuff.io as hico
 from hicstuff.log import logger
 import hicstuff.digest as hd
 
@@ -27,6 +27,8 @@ from Bio.Restriction import RestrictionBatch, Analysis
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+
+import hicberg.io as hio
 
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
@@ -272,9 +274,9 @@ def is_reverse(read : pysam.AlignedSegment) -> bool:
 def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None, chromosome_sizes : str = None, mapq : int = 30, output_dir : str = None) -> None:
     """
     Classification of pairs of reads in 2 different groups:
-        Group 0) --> (Unmappable)
-        Group 1) --> (Uniquely Mapped  Uniquely Mapped)
-        Group 2) --> (Uniquely Mapped Multi Mapped) or (Multi Mapped  Multi Mapped).
+        Group 0) --> (Unmappable) - files :group0.1.bam and group0.2.bam
+        Group 1) --> (Uniquely Mapped  Uniquely Mapped) - files :group1.1.bam and group1.2.bam
+        Group 2) --> (Uniquely Mapped Multi Mapped) or (Multi Mapped  Multi Mapped).- files :group2.1.bam and group2.2.bam
 
     Parameters
     ----------
@@ -310,13 +312,98 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
     if output_dir is None:
             
             output_dir = Path(getcwd())
+    else:
+
+        output_dir = Path(output_dir)
 
     chromosome_sizes_dic = hio.load_dictionary(chromosome_sizes_path)
 
-    ## TODO : to complete and check for default file names as 1.sorted.bam and 2.sorted.bam
+    #opening files to parse
+    forward_bam_file = pysam.AlignmentFile(forward_bam_file_path, "rb")
+    reverse_bam_file = pysam.AlignmentFile(reverse_bam_file_path, "rb")
 
 
-    return 0
+    # create iterators
+
+    forward_bam_file_iter = bam_iterator(forward_bam_file_path)
+    reverse_bam_file_iter = bam_iterator(reverse_bam_file_path)
+
+    # open the output files handlers
+    unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / "group0.1.bam", "wb", template = forward_bam_file)
+    unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / "group0.2.bam", "wb", template = reverse_bam_file)
+
+    uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / "group1.1.bam", "wb", template = forward_bam_file)
+    uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / "group1.2.bam", "wb", template = reverse_bam_file)
+
+    multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / "group2.1.bam", "wb", template = forward_bam_file)
+    multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / "group2.2.bam", "wb", template = reverse_bam_file)
+
+    for forward_block, reverse_block in zip(forward_bam_file_iter, reverse_bam_file_iter):
+        
+
+
+        unmapped_couple, multi_mapped_couple = False, False
+
+        forward_reverse_combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
+
+        for combination in forward_reverse_combinations:
+
+            if is_unqualitative(combination[0]) or is_unmapped(combination[0]) or is_unqualitative(combination[1]) or is_unmapped(combination[1]):
+
+                unmapped_couple = True
+
+                break
+
+            elif is_duplicated(combination[0]) or is_poor_quality(combination[0], mapq) or is_duplicated(combination[1]) or is_poor_quality(combination[1], mapq):
+
+                multi_mapped_couple = True
+
+                break
+
+            for forward_read in forward_block:
+
+                if unmapped_couple :
+
+                    unmapped_bam_file_foward.write(forward_read)
+
+                elif multi_mapped_couple:
+
+                    forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
+                    multi_mapped_bam_file_foward.write(forward_read)
+
+                else : 
+
+                    forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
+                    uniquely_mapped_bam_file_foward.write(forward_read)
+
+            for reverse_read in reverse_block:
+
+                if unmapped_couple :
+
+                    unmapped_bam_file_reverse.write(reverse_read)
+
+                elif multi_mapped_couple:
+
+                    reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
+                    multi_mapped_bam_file_reverse.write(reverse_read)
+
+                else : 
+
+                    reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
+                    uniquely_mapped_bam_file_reverse.write(reverse_read)
+
+    #closing files
+    forward_bam_file.close()
+    reverse_bam_file.close()
+    unmapped_bam_file_foward.close()
+    unmapped_bam_file_reverse.close()
+    uniquely_mapped_bam_file_foward.close()
+    uniquely_mapped_bam_file_reverse.close()
+    multi_mapped_bam_file_foward.close()
+    multi_mapped_bam_file_reverse.close()
+
+    print(f"Files for the different groups have been saved in {output_dir}")
+
 
 def classify_reads_multi():
     pass

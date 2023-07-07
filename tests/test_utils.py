@@ -15,7 +15,7 @@ import pandas as pd
 import scipy.stats as stats
 from scipy.stats import median_abs_deviation
 
-import hicstuff.io as hio
+import hicstuff.io as hico
 from hicstuff.log import logger
 import hicstuff.digest as hd
 
@@ -28,14 +28,26 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
 import hicberg.utils as hut
+import hicberg.io as hio
 
 from .conftest import temporary_folder
+
+from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
 
 GENOME = "data_test/SC288_with_micron.fa"
 CHROM_SIZES_DIC = "chromosome_sizes.npy"
 FRAG_FILE = "fragments_fixed_sizes.txt"
 
 FORWARD_SORTED_BAM = "data_test/alignments/1.sorted.bam"
+
+FORWARD_UNMAPPED_BAM = "group0.1.bam"
+REVERSE_UNMAPPED_BAM = "group0.2.bam"
+FORWARD_UNIQUE_BAM = "group1.1.bam"
+REVERSE_UNIQUE_BAM = "group1.2.bam"
+FORWARD_MULTI_BAM = "group2.1.bam"
+REVERSE_MULTI_BAM = "group2.2.bam"
+
+
 
 MIN_READ_MAPQ = 30
 
@@ -149,8 +161,26 @@ def test_is_reverse():
 
     assert reverse
 
-def test_classify_reads():
-    pass
+
+def test_classify_reads(temporary_folder,test_hic_sort,  test_get_chromosomes_sizes):
+
+
+    temp_dir_path = Path(temporary_folder)
+    hut.classify_reads(forward_bam_file = test_hic_sort[0], reverse_bam_file = test_hic_sort[1] , chromosome_sizes = test_get_chromosomes_sizes, mapq = MIN_READ_MAPQ,  output_dir = temporary_folder)
+    
+    forward_unmapped_path = temp_dir_path / FORWARD_UNMAPPED_BAM
+    reverse_unmapped_path = temp_dir_path / REVERSE_UNMAPPED_BAM
+    forward_unique_path = temp_dir_path / FORWARD_UNIQUE_BAM
+    reverse_unique_path = temp_dir_path / REVERSE_UNIQUE_BAM
+    forward_multi_path = temp_dir_path / FORWARD_MULTI_BAM
+    reverse_multi_path = temp_dir_path / REVERSE_MULTI_BAM
+
+    assert forward_unmapped_path.is_file()
+    assert reverse_unmapped_path.is_file()
+    assert forward_unique_path.is_file()
+    assert reverse_unique_path.is_file()
+    assert forward_multi_path.is_file()
+    assert reverse_multi_path.is_file()
 
 def test_classify_reads_multi():
     pass
