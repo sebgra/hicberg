@@ -30,9 +30,11 @@ DEFAULT_ENZYME = ["DpnII"]
 DICT_FIRST_KEY = "chr10"
 DICT_FIRST_CHR_FIRST_POS = 0
 DICT_FIRST_CHR_LAST_POS = 745751
+LENGTH_DPNII = 2266
+LENGTH_DPNII_HINFI = 4680
 
-@pytest.mark.parametrize("genome, enzyme, dict_first_key", [(GENOME, DEFAULT_ENZYME, DICT_FIRST_KEY), (GENOME, ["DpnII", "HinfI"], DICT_FIRST_KEY)])
-def test_get_restriction_map(genome, enzyme, dict_first_key):
+@pytest.mark.parametrize("genome, enzyme, length", [(GENOME, DEFAULT_ENZYME, LENGTH_DPNII), (GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI)])
+def test_get_restriction_map(genome, enzyme, length):
     """
     Test if the function returns a dictionary with the right keys and values, i.e. the genome has been correctly digested.
     First restriction site for first chromosome should be 0 and last restriction site should be the length of the chromosome.
@@ -44,6 +46,8 @@ def test_get_restriction_map(genome, enzyme, dict_first_key):
     # Check if the dictionary is not empty, if fisrt chromosome is right, and restrictions sites are in the right order.
     assert restriction_map[DICT_FIRST_KEY][0] == DICT_FIRST_CHR_FIRST_POS
     assert restriction_map[DICT_FIRST_KEY][-1] == DICT_FIRST_CHR_LAST_POS
+    #Check if the length of the restriction map is right.
+    assert len(restriction_map[DICT_FIRST_KEY]) == length
 
 
 def test_generate_xs():

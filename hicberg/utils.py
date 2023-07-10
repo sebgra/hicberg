@@ -107,7 +107,7 @@ def get_bin_table(chrom_sizes_dict : str, bins : int, output_dir : str = None) -
     bins : int
         Size of the desired bin.
     output_dir : str, optional
-        Path to the folder wher eto save the dictionary, by default None
+        Path to the folder where to save the dictionary, by default None
 
     """    
 
@@ -299,6 +299,8 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
 
     if not forward_bam_file_path.is_file():
 
+        
+
         raise IOError(f"Forward alignment file {forward_bam_file_path.name} not found. Please provide a valid path.")
 
     if not reverse_bam_file_path.is_file():
@@ -317,6 +319,8 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
         output_dir = Path(output_dir)
 
     chromosome_sizes_dic = hio.load_dictionary(chromosome_sizes_path)
+
+    print(f"reverse_bam_file_path: {reverse_bam_file_path}")
 
     #opening files to parse
     forward_bam_file = pysam.AlignmentFile(forward_bam_file_path, "rb")

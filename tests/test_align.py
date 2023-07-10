@@ -20,7 +20,7 @@ REV_SORTED_BAM = "2.sorted.bam"
 
 
 
-@pytest.fixture()
+@pytest.fixture(scope = "session")
 def test_hic_build_index(temporary_folder):
     """
     Test if the bowtie2 index is correctly created
@@ -35,7 +35,7 @@ def test_hic_build_index(temporary_folder):
 
     assert  any(temp_dir_path.iterdir()) == True
 
-@pytest.fixture()
+@pytest.fixture(scope = "session")
 def test_hic_align(test_hic_build_index, temporary_folder):
     """
     Test if the alignement is correctly performed.
@@ -55,7 +55,7 @@ def test_hic_align(test_hic_build_index, temporary_folder):
     assert for_sam_path.is_file()
     assert rev_sam_path.is_file()
 
-@pytest.fixture()
+@pytest.fixture(scope = "session")
 def test_hic_view(temporary_folder, test_hic_build_index, test_hic_align):
     """
     Test if the alignement compression is correctly performed.
@@ -70,7 +70,7 @@ def test_hic_view(temporary_folder, test_hic_build_index, test_hic_align):
     assert for_bam_path.is_file()
     assert rev_bam_path.is_file()
 
-@pytest.fixture()
+@pytest.fixture(scope = "session")
 def test_hic_sort(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view):
     """
     Test if the alignement sorting by read ids is correctly performed.
@@ -92,7 +92,7 @@ def test_hic_sort(temporary_folder, test_hic_build_index, test_hic_align, test_h
     assert for_sorted_bam_path.is_file()
     assert rev_sorted_bam_path.is_file()
 
-
+@pytest.fixture(scope = "session")
 def test_hic_index(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort):
     """
     Test if the alignement indexing is correctly performed.

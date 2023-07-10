@@ -97,6 +97,7 @@ def test_get_chromosomes_sizes(temporary_folder):
     # Check if the sorted alignement files are created
     assert chrom_sizes_dictionary_path.is_file()
 
+@pytest.fixture(scope = "session")
 def test_get_bin_table(temporary_folder, test_get_chromosomes_sizes):
     
     temp_dir_path = Path(temporary_folder)
@@ -161,12 +162,12 @@ def test_is_reverse():
 
     assert reverse
 
-
-def test_classify_reads(temporary_folder,test_hic_sort,  test_get_chromosomes_sizes):
+@pytest.fixture(scope = "session")
+def test_classify_reads(temporary_folder, test_hic_sort, test_get_chromosomes_sizes):
 
 
     temp_dir_path = Path(temporary_folder)
-    hut.classify_reads(forward_bam_file = test_hic_sort[0], reverse_bam_file = test_hic_sort[1] , chromosome_sizes = test_get_chromosomes_sizes, mapq = MIN_READ_MAPQ,  output_dir = temporary_folder)
+    hut.classify_reads(forward_bam_file = test_hic_sort[0], reverse_bam_file = test_hic_sort[1] , chromosome_sizes = test_get_chromosomes_sizes, mapq = MIN_READ_MAPQ,  output_dir = temp_dir_path)
     
     forward_unmapped_path = temp_dir_path / FORWARD_UNMAPPED_BAM
     reverse_unmapped_path = temp_dir_path / REVERSE_UNMAPPED_BAM
