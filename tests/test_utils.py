@@ -280,7 +280,14 @@ def test_fill_zeros_with_last():
     pass
 
 def test_max_consecutive_nans():
-    pass
+    
+    vector_test = np.array([np.nan, 2, 3, 4, np.nan, np.nan, 7, 8, 9])
+
+    max_consecutive_nans = hut.max_consecutive_nans(vector_test)
+
+    assert max_consecutive_nans == 2
 
 def test_mad_smoothing():
+
+    # TODO :  to implement
     pass

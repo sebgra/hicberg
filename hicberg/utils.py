@@ -586,8 +586,61 @@ def subsample_restriction_map(restriction_map : dict = None, rate : float = 1.0)
 def fill_zeros_with_last():
     pass
 
-def max_consecutive_nans():
-    pass
+def max_consecutive_nans(vector : np.ndarray) -> int:
+    """
+    Return the maximum number of consecutiver NaN values in a vecotr.
 
-def mad_smoothing():
-    pass
+    Parameters
+    ----------
+    vector : np.ndarray
+        Vector to get the maximum number of consecutive NaN values from.
+
+    Returns
+    -------
+    int
+        Number of maximum consecutive NaN values.
+    """
+
+    mask = np.concatenate(([False], np.isnan(vector), [False]))
+    if ~mask.any():
+        return 0
+    else:
+        idx = np.nonzero(mask[1:] != mask[:-1])[0]
+        return (idx[1::2] - idx[::2]).max()
+
+def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "auto", nmads :int = 1) -> np.ndarray[int]:
+    """
+    Apply MAD smoothing to an vector .
+
+    Parameters
+    ----------
+    vector : np.ndarray[int], optional
+        Data to smooth, by default None
+    window_size : int or str, optional
+        Size of the window to perform mean sliding average in. Window is center on current value as [current_value - window_size/2] U [current_value + window_size/2], by default "auto"
+    nmads : int, optional
+        number of median absolute deviation tu use, by default 1
+
+    Returns
+    -------
+    np.ndarray[int]
+        MAD smoothed vector.
+    """
+
+    mad = median_abs_deviation(vector)
+    threshold = np.median(vector) - nmads * mad
+    imputed_nan_data = np.where(vector < threshold, np.nan, vector)
+
+    if window_size == "auto":
+        # due to centered window, selected windows for rolling mean is :
+        # [window_size / 2 <-- center_value --> window_size / 2]
+        window_size = (max_consecutive_nans(imputed_nan_data) * 2) + 1
+
+    averaged_data = (
+        pd.Series(imputed_nan_data)
+        .rolling(window=window_size, min_periods=1, center=True)
+        .apply(lambda x: np.nanmean(x))
+        .to_numpy()
+    )
+
+    return averaged_data

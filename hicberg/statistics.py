@@ -26,6 +26,7 @@ lowess = sm.nonparametric.lowess
 
 RESTRICTION_DICO = "dist.frag.npy"
 XS = "xs.npy"
+COVERAGE_DICO = "coverage.npy"
 
 def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> dict[str, np.ndarray[int]]:
     """
@@ -233,8 +234,73 @@ def generate_probabilities():
 def filter_poor_covered():
     pass
 
-def generate_coverages():
-    pass
+def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file : str = "group1.1.bam", backward_bam_file : str = "group1.2.bam", output_dir : str = None) -> None:
+    """
+    Take a genome and  both for and rev sam files for unambiguous group and return a dictionary containing the coverage in terms of reads overs chromosomes. .
+
+    Parameters
+    ----------
+    genome : str, optional
+        Path to the genome file to get coverage on ., by default None
+    bins : int, optional
+        Size of the desired bin., by default 2000
+    forward_bam_file : str, optional
+        Path to forward .bam alignment file, by default None, by default group1.1.bam
+    backward_bam_file : str, optional
+        Path to reverse .bam alignment file, by default None, by default group1.2.bam
+    output_dir : str, optional
+        Path to the folder where to save the classified alignment files, by default None, by default None
+    """        
+    
+    if output_dir is None:
+
+        folder_path = Path(getcwd())
+
+    else:
+
+        folder_path = Path(output_dir)
+    
+    genome_path = Path(genome)
+
+    if not genome_path.is_file():
+                
+        raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")   
+    
+    genome_parser = SeqIO.parse(genome, "fasta")
+    genome_coverages = {seq_record.id : np.zeros(np.round(np.divide(len(seq_record.seq), bins) + 1).astype(int)) for seq_record in genome_parser}
+
+    forward_bam_path = Path(forward_bam_file)
+    reverse_bam_path = Path(backward_bam_file)
+
+    if not forward_bam_path.is_file():
+
+        raise FileNotFoundError(f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file.")
+    
+    if not reverse_bam_path.is_file():
+
+        raise FileNotFoundError(f"Reverse .bam file {backward_bam_file} not found. Please provide a valid path to a reverse .bam file.")
+    
+    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
+
+    for forward_read, reverse_read in zip(forward_bam_handler, reverse_bam_handler):
+
+        genome_coverages[forward_read.reference_name][
+            np.divide(forward_read.pos, bins).astype(int)
+        ] += 1
+        genome_coverages[reverse_read.reference_name][
+            np.divide(reverse_read.pos, bins).astype(int)
+        ] += 1
+
+    # close files
+    forward_bam_handler.close()
+    reverse_bam_handler.close()
+
+    # TODO : smooth coverage
+    
+
+    
+    
+    return
 
 def compute_d1d2():
     pass
