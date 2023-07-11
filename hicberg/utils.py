@@ -532,8 +532,54 @@ def get_bin_rsites():
 def get_full_bin_rsites():
     pass
 
-def subsample_restriction_map():
-    pass
+def subsample_restriction_map(restriction_map : dict = None, rate : float = 1.0) -> dict[str, np.ndarray[int]]:
+    """
+    Subsample a restriction map by a given rate.
+
+    Parameters
+    ----------
+    restriction_map : dict, optional
+        Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default None
+    rate : float, optional
+        Set the proportion of restriction sites to condiser. Avoid memory overflow when restriction maps are very dense, by default 1.0
+
+    Returns
+    -------
+    dict
+        Dictionary of subsampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
+    """    
+    if (0.0 > rate) or (rate > 1.0):
+        raise ValueError("Subsampling rate must be between 0.0 and 1.0.")
+    
+
+    subsampled_restriction_map = {}
+
+    for chromosome in restriction_map:
+            
+        if int(len(restriction_map.get(str(chromosome))) * rate) < 5:
+
+            subsampled_restriction_map[str(chromosome)] = restriction_map[str(chromosome)]
+
+            continue
+
+        size_sample = int(len(restriction_map.get(str(chromosome))) * rate)
+
+        subsampled_restriction_map[str(chromosome)] = np.random.choice(
+            restriction_map.get(str(chromosome)), size_sample, replace=False
+        )
+        
+        subsampled_restriction_map[str(chromosome)] = np.sort(subsampled_restriction_map[str(chromosome)])
+
+        if subsampled_restriction_map[str(chromosome)][0] != 0:
+            subsampled_restriction_map[str(chromosome)][0] = 0
+
+        if (
+            subsampled_restriction_map[str(chromosome)][-1]
+            != restriction_map.get(str(chromosome))[-1]
+        ):
+            subsampled_restriction_map[str(chromosome)][-1] = restriction_map.get(str(chromosome))[-1]        
+
+    return subsampled_restriction_map
 
 def fill_zeros_with_last():
     pass

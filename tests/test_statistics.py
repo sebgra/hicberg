@@ -21,6 +21,7 @@ from Bio.Restriction import *
 import cooler
 
 import hicberg.statistics as hst
+import hicberg.utils as hut
 
 
 lowess = sm.nonparametric.lowess
@@ -32,6 +33,8 @@ DICT_FIRST_CHR_FIRST_POS = 0
 DICT_FIRST_CHR_LAST_POS = 745751
 LENGTH_DPNII = 2266
 LENGTH_DPNII_HINFI = 4680
+SUBSAMPLE_RATE = 1.0
+
 
 @pytest.mark.parametrize("genome, enzyme, length", [(GENOME, DEFAULT_ENZYME, LENGTH_DPNII), (GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI)])
 def test_get_restriction_map(genome, enzyme, length):
@@ -43,11 +46,29 @@ def test_get_restriction_map(genome, enzyme, length):
     genome_path  = Path(genome)
     restriction_map = hst.get_restriction_map(genome = genome_path, enzyme = enzyme)
 
+
+    # yield restriction_map
+
     # Check if the dictionary is not empty, if fisrt chromosome is right, and restrictions sites are in the right order.
     assert restriction_map[DICT_FIRST_KEY][0] == DICT_FIRST_CHR_FIRST_POS
     assert restriction_map[DICT_FIRST_KEY][-1] == DICT_FIRST_CHR_LAST_POS
     #Check if the length of the restriction map is right.
     assert len(restriction_map[DICT_FIRST_KEY]) == length
+
+@pytest.mark.parametrize("genome, enzyme, length, rate", [(GENOME, DEFAULT_ENZYME, LENGTH_DPNII, 1.0), (GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI, 1.0), (GENOME, DEFAULT_ENZYME, LENGTH_DPNII, 0.5), (GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI, 0.5), (GENOME, DEFAULT_ENZYME, LENGTH_DPNII, 0.2), (GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI, 0.2)])
+def test_subsample_restriction_map(genome, enzyme, length, rate):
+
+    genome_path  = Path(genome)
+    restriction_map = hst.get_restriction_map(genome = genome_path, enzyme = enzyme)
+
+    print(f"Rate : {rate}")
+    subsampled_restriction_map = hut.subsample_restriction_map(restriction_map = restriction_map, rate = rate)
+
+
+    assert subsampled_restriction_map[DICT_FIRST_KEY][0] == DICT_FIRST_CHR_FIRST_POS
+    assert subsampled_restriction_map[DICT_FIRST_KEY][-1] == DICT_FIRST_CHR_LAST_POS
+    #Check if the length of the restriction map is right. (+/-1 because of the random subsampling on even or odd numbers)
+    assert float(len(subsampled_restriction_map[DICT_FIRST_KEY])) -1 <= length *  rate <= float(len(subsampled_restriction_map[DICT_FIRST_KEY])) + 1
 
 
 def test_generate_xs():
