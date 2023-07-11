@@ -1,3 +1,4 @@
+from os import getcwd
 from os.path import join
 from pathlib import Path
 import statistics 
@@ -18,9 +19,13 @@ from Bio.SeqUtils import GC
 from Bio.Restriction import *
 
 import cooler
+import hicberg.utils as hut
 
 
 lowess = sm.nonparametric.lowess
+
+RESTRICTION_DICO = "dist.frag.npy"
+XS = "xs.npy"
 
 def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> dict[str, np.ndarray[int]]:
     """
@@ -74,13 +79,52 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> 
     return restriction_map_dictionary
 
 
-def generate_xs():
-    pass
+def generate_xs(chromosome_size : int, base : float = 1.1) -> dict[str, np.ndarray[int]]:
+    """
+    Generate xs array for computing and plotting P(s). Return xs array which is logspace.
 
-def attribute_xs():
-    pass
+    Parameters
+    ----------
+    chromosome_size : int
+        Size of the chromosome to be binned in bp.
+    base : float, optional
+        Base of the logspace., by default 1.1
 
-def get_dist_frags(genome : str = None, restriction_map : dict = None, circular : str = None, subsample : float = 1.0) -> None:
+    Returns
+    -------
+    dict[str, np.ndarray[int]]
+        Array of log bins related to the chromosome.
+    """
+
+    n_bins = np.divide(np.log1p(chromosome_size), np.log(base)).astype(int)
+    xs = np.unique(
+        np.logspace(0, n_bins + 1, base=base, num=n_bins + 2, endpoint=True, dtype=int)
+    )
+
+
+    return xs
+
+def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
+    """
+    Attibute genomic distance to the corresponding log bin of xs.
+
+    Parameters
+    ----------
+    xs : np.ndarray[int]
+        Array containing the log bins.
+    distance : int
+        Genomic distance in bp.
+
+    Returns
+    -------
+    int
+        Index of the corresponding bins where distance has to be attributed.
+    """
+
+    idx = np.searchsorted(xs, distance, side="right") - 1
+    return idx
+
+def get_dist_frags(genome : str = None, restriction_map : dict = None, circular : str = None, rate : float = 1.0, output_dir : str = None) -> None:
     """
     Get the distribution of fragments' distance from a genome distribution .
 
@@ -92,8 +136,10 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
         Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default None
     circular : str, optional
         Name of the chromosomes to consider as circular, by default None
-    subsample : float, optional
+    rate : float, optional
         Set the proportion of restriction sites to condiser. Avoid memory overflow when restriction maps are very dense, by default 1.0
+    output_dir : str, optional
+        Path to the folder where to save the dictionary, by default None
 
     Returns
     -------
@@ -101,18 +147,82 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
         Dictionary of subsampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
     """
 
-    
+    if output_dir is None:
+
+        folder_path = Path(getcwd())
+
+    else:
+
+        folder_path = Path(output_dir)
+
+    if (0.0 > rate) or (rate > 1.0):
+        raise ValueError("Subsampling rate must be between 0.0 and 1.0.")
+
     genome_path = Path(genome)
 
     if not genome_path.is_file():
             
         raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")
     
-    if subsample == 1.0:
+    dist_frag = dict()
+    xs = dict()
+    
+    if rate != 1.0:
 
-        restriction_map_dictionary = None
+        restriction_map = hut.subsample_restriction_map(restriction_map = restriction_map, subsample = rate)
 
-    return 0
+    for seq_record in SeqIO.parse(genome, "fasta"):
+
+        if seq_record.id in restriction_map.keys():
+
+            seq_name = seq_record.id
+            map_size = restriction_map[seq_name].shape[0]
+
+            forward_distances = pdist(
+                np.reshape(restriction_map[seq_name], (map_size, 1))
+            )
+            max_size_vector = np.full(
+                forward_distances.shape, np.max(restriction_map[seq_name])
+            )
+            backward_distances = max_size_vector - forward_distances
+            pairwise_distances = np.minimum(forward_distances, backward_distances)
+            pairwise_distances = np.delete(
+                pairwise_distances, np.where(pairwise_distances == 0)
+            )
+
+            # freeing memory
+            del forward_distances
+            del backward_distances
+            del max_size_vector
+
+        else : 
+
+            pairwise_distances = pdist(
+                np.reshape(
+                    restriction_map[seq_name],
+                    (len(restriction_map[seq_name]), 1),
+                )
+            )
+            pairwise_distances = np.delete(
+                pairwise_distances, np.where(pairwise_distances == 0)
+            )
+
+        # Computing xs
+        xs[seq_name] = generate_xs(len(seq_record.seq), base=1.1)
+        dist_frag[seq_name] = np.zeros(xs[seq_name].shape)
+        # Parse distances
+        for distance in pairwise_distances:
+            dist_frag[seq_name][attribute_xs(xs[seq_name], distance)] += 1
+
+
+
+    # Save dictionaries
+    np.save(
+        folder_path / RESTRICTION_DICO,
+        dist_frag,
+    )
+
+    print(f"Restriction map saved in {folder_path}")
 
 def generate_trans_ps():
     pass

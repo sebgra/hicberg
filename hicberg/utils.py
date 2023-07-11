@@ -545,9 +545,11 @@ def subsample_restriction_map(restriction_map : dict = None, rate : float = 1.0)
 
     Returns
     -------
-    dict
+    dict[str, np.ndarray[int]]
         Dictionary of subsampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
-    """    
+
+    """
+
     if (0.0 > rate) or (rate > 1.0):
         raise ValueError("Subsampling rate must be between 0.0 and 1.0.")
     

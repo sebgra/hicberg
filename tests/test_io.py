@@ -39,20 +39,27 @@ def test_create_folder(temporary_folder):
 
 @pytest.fixture(scope = "module")
 def test_build_pairs(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads):
+    """
+    Test if the pairs file is correctly created.
+    """    
     temp_dir_path = Path(temporary_folder)
     hio.build_pairs(output_dir = temp_dir_path, mode = False)
     assert (temp_dir_path / GROUP1_PAIRS).is_file() 
 
 # @pytest.fixture(scope = "module")
 def test_build_matrix(temporary_folder, test_get_bin_table, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads, test_build_pairs):
-    
+    """
+    Test if the cool file is correctly created.
+    """
     temp_dir_path = Path(temporary_folder)
     hio.build_matrix(output_dir = temp_dir_path, mode = False)
     
     assert (temp_dir_path / UNRESCUED_MAP).is_file()
 
 def test_load_dictionary(test_get_chromosomes_sizes):
-    
+    """
+    Test if the dictionary saved in .npy format is correctly loaded.
+    """
     dictionary = hio.load_dictionary(dictionary = test_get_chromosomes_sizes)
 
     assert DICT_FIRST_KEY == list(dictionary.keys())[0]

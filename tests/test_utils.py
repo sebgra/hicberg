@@ -99,7 +99,9 @@ def test_get_chromosomes_sizes(temporary_folder):
 
 @pytest.fixture(scope = "session")
 def test_get_bin_table(temporary_folder, test_get_chromosomes_sizes):
-    
+    """
+    Test if the function creating a bin table from a genome is correctly performed.
+    """
     temp_dir_path = Path(temporary_folder)
     hut.get_bin_table(chrom_sizes_dict = test_get_chromosomes_sizes, bins = 2000,  output_dir = temp_dir_path)
 
@@ -164,7 +166,9 @@ def test_is_reverse():
 
 @pytest.fixture(scope = "session")
 def test_classify_reads(temporary_folder, test_hic_sort, test_get_chromosomes_sizes):
-
+    """
+    Test if the creation of the different bam files per group is correctly performed.
+    """
 
     temp_dir_path = Path(temporary_folder)
     hut.classify_reads(forward_bam_file = test_hic_sort[0], reverse_bam_file = test_hic_sort[1] , chromosome_sizes = test_get_chromosomes_sizes, mapq = MIN_READ_MAPQ,  output_dir = temp_dir_path)
