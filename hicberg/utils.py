@@ -44,11 +44,6 @@ DEFAULT_ENZYME = "DpnII"
 DEFAULT_MIN_CHUNK_SIZE = 50
 
 
-
-
-def attribute_xs():
-    pass
-
 def get_num_lines_alignment_file():
     pass
 

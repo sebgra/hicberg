@@ -234,7 +234,7 @@ def generate_probabilities():
 def filter_poor_covered():
     pass
 
-def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file : str = "group1.1.bam", backward_bam_file : str = "group1.2.bam", output_dir : str = None) -> None:
+def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", output_dir : str = None) -> None:
     """
     Take a genome and  both for and rev sam files for unambiguous group and return a dictionary containing the coverage in terms of reads overs chromosomes. .
 
@@ -246,7 +246,7 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
         Size of the desired bin., by default 2000
     forward_bam_file : str, optional
         Path to forward .bam alignment file, by default None, by default group1.1.bam
-    backward_bam_file : str, optional
+    reverse_bam_file : str, optional
         Path to reverse .bam alignment file, by default None, by default group1.2.bam
     output_dir : str, optional
         Path to the folder where to save the classified alignment files, by default None, by default None
@@ -254,11 +254,11 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
     
     if output_dir is None:
 
-        folder_path = Path(getcwd())
+        output_path = Path(getcwd())
 
     else:
 
-        folder_path = Path(output_dir)
+        output_path = Path(output_dir)
     
     genome_path = Path(genome)
 
@@ -270,7 +270,7 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
     genome_coverages = {seq_record.id : np.zeros(np.round(np.divide(len(seq_record.seq), bins) + 1).astype(int)) for seq_record in genome_parser}
 
     forward_bam_path = Path(forward_bam_file)
-    reverse_bam_path = Path(backward_bam_file)
+    reverse_bam_path = Path(reverse_bam_file)
 
     if not forward_bam_path.is_file():
 
@@ -278,7 +278,7 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
     
     if not reverse_bam_path.is_file():
 
-        raise FileNotFoundError(f"Reverse .bam file {backward_bam_file} not found. Please provide a valid path to a reverse .bam file.")
+        raise FileNotFoundError(f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file.")
     
     forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
 
@@ -295,12 +295,12 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
     forward_bam_handler.close()
     reverse_bam_handler.close()
 
-    # TODO : smooth coverage
-    
+    # Smooth coverages
+    smoothed_coverages = {seq_name : hut.mad_smoothing(coverage) for seq_name, coverage in genome_coverages.items()}
 
-    
-    
-    return
+    np.save(output_path / COVERAGE_DICO, smoothed_coverages)
+
+
 
 def compute_d1d2():
     pass

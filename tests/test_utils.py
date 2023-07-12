@@ -78,9 +78,6 @@ BINS = 2000
 
 
 
-def test_attribute_xs():
-    pass
-
 def test_get_num_lines_alignment_file():
     pass
 
@@ -119,7 +116,9 @@ def test_get_bin_table(temporary_folder, test_get_chromosomes_sizes):
     assert bin_table_path.is_file()
 
 def test_is_duplicated():
-
+    """
+    Test if a read is duplicated
+    """
     read_duplicated = pysam.AlignedSegment(header = HEADER)
     read_duplicated.query_name = "DUPLICATED"
     read_duplicated.query_sequence = "ATCG"
@@ -130,6 +129,9 @@ def test_is_duplicated():
     assert duplicateness 
 
 def test_is_poor_quality():
+    """
+    Test if a read is poor quality.
+    """
     read_poor_quality = pysam.AlignedSegment(header = HEADER)
     read_poor_quality.query_name = "POOR QUALITY"
     read_poor_quality.query_sequence = "ATCG"
@@ -140,6 +142,9 @@ def test_is_poor_quality():
     assert qualitiveness
 
 def test_is_unqualitative():
+    """
+    Test if a read is unqualitative.
+    """
 
     read_unqualitative = pysam.AlignedSegment(header = HEADER)
     read_unqualitative.query_name = "UNQUALITATIVE"
@@ -152,7 +157,10 @@ def test_is_unqualitative():
     assert qualitativeness 
 
 def test_is_unmapped():
-    
+    """
+    Test if a read is unmapped.
+    """
+
     read_unmapped = pysam.AlignedSegment(header = HEADER)
     read_unmapped.query_name = "UNMAPPED"
     read_unmapped.query_sequence = "ATCG"
@@ -164,6 +172,10 @@ def test_is_unmapped():
 
 
 def test_is_reverse():
+    """
+    Test if a read is reverse.
+    """
+
     read_reverse = pysam.AlignedSegment(header = HEADER)
     read_reverse.query_name = "REVERSE"
     read_reverse.query_sequence = "ATCG"
@@ -189,15 +201,14 @@ def test_classify_reads(temporary_folder, test_hic_sort, test_get_chromosomes_si
     forward_multi_path = temp_dir_path / FORWARD_MULTI_BAM
     reverse_multi_path = temp_dir_path / REVERSE_MULTI_BAM
 
+    yield forward_unique_path, reverse_unique_path, forward_multi_path, reverse_multi_path
+
     assert forward_unmapped_path.is_file()
     assert reverse_unmapped_path.is_file()
     assert forward_unique_path.is_file()
     assert reverse_unique_path.is_file()
     assert forward_multi_path.is_file()
     assert reverse_multi_path.is_file()
-
-def test_classify_reads_multi():
-    pass
 
 def test_classify_reads_multi():
     pass
@@ -393,7 +404,9 @@ def test_is_circle():
 
 
 def test_get_cis_distance():
-    
+    """
+    Test if the distance between a intrachromosomal read pair is correctly computed.
+    """
     read_forward = pysam.AlignedSegment(header = HEADER)
     read_forward.query_name = "TEST"
     read_forward.reference_name = DICT_FIRST_KEY
@@ -416,6 +429,10 @@ def test_get_event_stats():
     pass
 
 def test_bam_iterator(bam_file = FORWARD_SORTED_BAM):
+    """
+    Test if the bam_iterator function is correctly built by returning the first iteration.
+    """
+
 
     bam_path = Path(bam_file)
     bam_iterator = hut.bam_iterator(bam_path)
@@ -481,7 +498,10 @@ def test_fill_zeros_with_last():
     pass
 
 def test_max_consecutive_nans():
-    
+    """
+    Test if the function correctly return the maximum number of consecutive NaNs in a vector.
+    """
+
     vector_test = np.array([np.nan, 2, 3, 4, np.nan, np.nan, 7, 8, 9])
 
     max_consecutive_nans = hut.max_consecutive_nans(vector_test)
@@ -489,6 +509,9 @@ def test_max_consecutive_nans():
     assert max_consecutive_nans == 2
 
 def test_mad_smoothing():
+    """
+    Test if the function correctly smooth a vector using MAD smoothing.
+    """
 
     # TODO :  to implement
     assert True

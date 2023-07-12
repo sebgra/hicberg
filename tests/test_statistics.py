@@ -21,6 +21,8 @@ from Bio.Restriction import *
 import cooler
 
 from .conftest import temporary_folder
+from.test_utils import test_classify_reads, test_get_chromosomes_sizes
+from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
 
 
 import hicberg.statistics as hst
@@ -31,6 +33,9 @@ lowess = sm.nonparametric.lowess
 
 GENOME = "data_test/SC288_with_micron.fa"
 RESTRICTION_DICO = "dist.frag.npy"
+COVERAGE_DICO = "coverage.npy"
+
+BINS = 2000
 
 DEFAULT_ENZYME = ["DpnII"]
 DICT_FIRST_KEY = "chr10"
@@ -166,8 +171,18 @@ def test_generate_probabilities():
 def test_filter_poor_covered():
     pass
 
-def test_generate_coverages():
-    pass
+
+def test_generate_coverages(temporary_folder, test_classify_reads):
+    """
+    Test if the coverages are correctly generated.
+    """
+    
+    temp_dir_path = Path(temporary_folder)
+    hst.generate_coverages(genome = GENOME, forward_bam_file = test_classify_reads[0], reverse_bam_file = test_classify_reads[1], bins = BINS, output_dir = temp_dir_path)
+    
+    coverage_dictionary_path = temp_dir_path / COVERAGE_DICO
+    
+    assert coverage_dictionary_path.is_file()
 
 def test_compute_d1d2():
     pass
