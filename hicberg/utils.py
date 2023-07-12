@@ -413,8 +413,30 @@ def classify_reads_multi():
 def classify_reads_multi():
     pass
 
-def is_intra_chromosome():
-    pass
+def is_intra_chromosome(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> bool:
+    """
+    Return True if two reads of a pair came from the same chromosome.
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read of the pair.
+    read_reverse : pysam.AlignedSegment
+        Reverse read of the pair.
+
+    Returns
+    -------
+    bool
+        True if the pair is intrachromosomic, False otherwise.
+    """    
+
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not comming from the same pair")
+
+    if read_forward.reference_name == read_reverse.reference_name:
+        return True
+    else:
+        return False 
 
 def get_ordered_reads(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> Tuple[pysam.AlignedSegment, pysam.AlignedSegment]:
     """
@@ -478,7 +500,7 @@ def is_weird(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
         True if the two reads are forming a weird pattern, False otherwise.
     """
     
-    if read_forward.reference_name != read_reverse.reference_name:
+    if read_forward.query_name != read_reverse.query_name:
 
         raise ValueError("The two reads must be mapped on the same chromosome.")
     
@@ -516,7 +538,7 @@ def is_uncut(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
         True if the two reads are forming an uncut pattern, False otherwise.
     """
         
-    if read_forward.reference_name != read_reverse.reference_name:
+    if read_forward.query_name != read_reverse.query_name:
 
         raise ValueError("The two reads must be mapped on the same chromosome.")
     
@@ -551,7 +573,7 @@ def is_circle(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedS
         True if the two reads are forming a loop pattern, False otherwise.
     """
 
-    if read_forward.reference_name != read_reverse.reference_name:
+    if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not comming from the same pair")
 
     read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
@@ -566,8 +588,54 @@ def is_circle(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedS
     else:
         return False
 
-def get_cis_distance():
-    pass
+def get_cis_distance(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, circular : str = "") -> int:
+    """
+    Calculate the distance between two reads in the same pairwise alignment .
+
+    Parameters
+    ----------
+    read_forward : pysam.aligned_segment
+        Forward read of the pair
+    read_reverse : pysam.AlignedSegment
+        Reverse read of the pair
+    circular : str, optional
+        Name of the chromosomes to consider as circular, by default None, by default "".
+
+    Returns
+    -------
+    int
+        Genomic distance separating the two reads (bp).
+
+    """    
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not comming from the same pair")
+
+    if is_intra_chromosome(read_forward, read_reverse):
+
+        read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
+
+        if is_weird(read_forward, read_reverse):
+            distance = np.abs(
+                np.subtract(read_forward.reference_start, read_reverse.reference_start)
+            )
+
+        elif is_uncut(read_forward, read_reverse):
+            distance = np.abs(np.subtract(read_forward.reference_start, read_reverse.reference_end))
+
+        elif is_circle(read_forward, read_reverse):
+            distance = np.abs(np.subtract(read_forward.reference_end, read_reverse.reference_start))
+
+        # circular mode
+        if read_forward.reference_name in circular:
+
+            clockwise_distance = distance
+            anti_clockwise_distance = np.subtract(read_forward.get_tag("XG"), distance)
+            return np.min([clockwise_distance, anti_clockwise_distance])
+
+        # linear mode
+        else:
+            return distance
+
 
 def get_event_stats():
     pass

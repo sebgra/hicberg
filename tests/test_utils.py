@@ -203,7 +203,24 @@ def test_classify_reads_multi():
     pass
 
 def test_is_intra_chromosome():
-    pass
+    
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 500
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 0
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_FIRST_KEY
+    read_reverse.reference_start = 100
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 16
+
+    intra_chomosomic = hut.is_intra_chromosome(read_forward, read_reverse)
+
+    assert intra_chomosomic
 
 def test_get_ordered_reads():
     """
@@ -272,42 +289,42 @@ def test_is_weird():
 
     read_forward = pysam.AlignedSegment(header = HEADER)
 
-    read_forward.query_name = "FORWARD"
+    read_forward.query_name = "TEST1"
     read_forward.reference_name = DICT_FIRST_KEY
     read_forward.reference_start = 500
     read_forward.cigarstring = "100M"
     read_forward.flag = 0
 
     read_reverse = pysam.AlignedSegment(header = HEADER)
-    read_reverse.query_name = "REVERSE"
+    read_reverse.query_name = "TEST1"
     read_reverse.reference_name = DICT_FIRST_KEY
     read_reverse.reference_start = 100
     read_reverse.cigarstring = "100M"
     read_reverse.flag = 0
 
     read_forward_2 = pysam.AlignedSegment(header = HEADER)
-    read_forward_2.query_name = "FORWARD"
+    read_forward_2.query_name = "TEST2"
     read_forward_2.reference_name = DICT_FIRST_KEY
     read_forward_2.reference_start = 500
     read_forward_2.cigarstring = "100M"
     read_forward_2.flag = 16
 
     read_reverse_2 = pysam.AlignedSegment(header = HEADER)
-    read_reverse_2.query_name = "REVERSE"
+    read_reverse_2.query_name = "TEST2"
     read_reverse_2.reference_name = DICT_FIRST_KEY
     read_reverse_2.reference_start = 100
     read_reverse_2.cigarstring = "100M"
     read_reverse_2.flag = 16
 
     read_forward_3 = pysam.AlignedSegment(header = HEADER)
-    read_forward_3.query_name = "FORWARD"
+    read_forward_3.query_name = "TEST3"
     read_forward_3.reference_name = DICT_FIRST_KEY
     read_forward_3.reference_start = 500
     read_forward_3.cigarstring = "100M"
     read_forward_3.flag = 272
 
     read_reverse_3 = pysam.AlignedSegment(header = HEADER)
-    read_reverse_3.query_name = "REVERSE"
+    read_reverse_3.query_name = "TEST3"
     read_reverse_3.reference_name = DICT_FIRST_KEY
     read_reverse_3.reference_start = 100
     read_reverse_3.cigarstring = "100M"
@@ -332,14 +349,14 @@ def test_is_uncut():
     """
     
     read_forward = pysam.AlignedSegment(header = HEADER)
-    read_forward.query_name = "FORWARD"
+    read_forward.query_name = "TEST"
     read_forward.reference_name = DICT_FIRST_KEY
     read_forward.reference_start = 100
     read_forward.cigarstring = "100M"
     read_forward.flag = 0
 
     read_reverse = pysam.AlignedSegment(header = HEADER)
-    read_reverse.query_name = "REVERSE"
+    read_reverse.query_name = "TEST"
     read_reverse.reference_name = DICT_FIRST_KEY
     read_reverse.reference_start = 500
     read_reverse.cigarstring = "100M"
@@ -356,14 +373,14 @@ def test_is_circle():
     """
     
     read_forward = pysam.AlignedSegment(header = HEADER)
-    read_forward.query_name = "FORWARD"
+    read_forward.query_name = "TEST"
     read_forward.reference_name = DICT_FIRST_KEY
     read_forward.reference_start = 100
     read_forward.cigarstring = "100M"
     read_forward.flag = 16
 
     read_reverse = pysam.AlignedSegment(header = HEADER)
-    read_reverse.query_name = "REVERSE"
+    read_reverse.query_name = "TEST"
     read_reverse.reference_name = DICT_FIRST_KEY
     read_reverse.reference_start = 500
     read_reverse.cigarstring = "100M"
@@ -376,7 +393,24 @@ def test_is_circle():
 
 
 def test_get_cis_distance():
-    pass
+    
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 0
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_FIRST_KEY
+    read_reverse.reference_start = 500
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+    distance = hut.get_cis_distance(read_forward, read_reverse)
+
+    assert distance == 400
 
 def test_get_event_stats():
     pass
