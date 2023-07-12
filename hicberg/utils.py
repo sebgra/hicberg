@@ -8,7 +8,7 @@ import multiprocessing
 from functools import partial
 import itertools
 
-from typing import Iterator
+from typing import Iterator, Tuple
 
 import numpy as np
 from numpy.random import choice
@@ -265,7 +265,7 @@ def is_reverse(read : pysam.AlignedSegment) -> bool:
         True if the read is reverse.
     """ 
 
-    if read.flag == 16:
+    if read.flag == 16 or read.flag == 272:
         return True
 
     else:
@@ -319,8 +319,6 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
         output_dir = Path(output_dir)
 
     chromosome_sizes_dic = hio.load_dictionary(chromosome_sizes_path)
-
-    print(f"reverse_bam_file_path: {reverse_bam_file_path}")
 
     #opening files to parse
     forward_bam_file = pysam.AlignmentFile(forward_bam_file_path, "rb")
@@ -418,17 +416,155 @@ def classify_reads_multi():
 def is_intra_chromosome():
     pass
 
-def get_ordered_reads():
-    pass
+def get_ordered_reads(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> Tuple[pysam.AlignedSegment, pysam.AlignedSegment]:
+    """
+    Returns the ordered pair of reads in the same chromosome as the two reads .
 
-def is_weird():
-    pass
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read to compare with the reverse read.
+    read_reverse : pysam.AlignedSegment
+        Reverse read to compare with the forward read.
 
-def is_uncut():
-    pass
+    Returns
+    -------
+    Tuple[pysam.AlignedSegment, pysam.AlignedSegment]
+        The ordered pair of reads in the same chromosome as the two reads.
+    """    
+    if read_forward.reference_name != read_reverse.reference_name:
+            
+        raise ValueError("The two reads must be mapped on the same chromosome.")
+        
+    if is_reverse(read_forward):
 
-def is_circle():
-    pass
+        forward_start = read_forward.reference_end
+    
+    elif not is_reverse(read_forward):
+                
+        forward_start = read_forward.reference_start
+
+    if is_reverse(read_reverse):
+            
+        reverse_start = read_reverse.reference_end
+
+    elif not is_reverse(read_reverse):
+    
+        reverse_start = read_reverse.reference_start
+
+    
+    if forward_start < reverse_start:
+        
+        return (read_forward, read_reverse)
+    
+    elif forward_start > reverse_start:
+
+        return (read_reverse, read_forward)
+
+def is_weird(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> bool:
+    """
+    Check if two reads are forming a weird pattern .
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read of the pair
+    read_reverse : pysam.AlignedSegment
+        Reverse read of the pair
+
+    Returns
+    -------
+    bool
+        True if the two reads are forming a weird pattern, False otherwise.
+    """
+    
+    if read_forward.reference_name != read_reverse.reference_name:
+
+        raise ValueError("The two reads must be mapped on the same chromosome.")
+    
+    read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
+
+    if (
+        (read_forward.flag == read_reverse.flag == 0)
+        or (read_forward.flag == read_reverse.flag == 16)
+        or (read_forward.flag == read_reverse.flag == 272)
+        or (read_forward.flag == read_reverse.flag == 256)
+        or (read_forward.flag == 256 and read_reverse.flag == 0)
+        or (read_forward.flag == 0 and read_reverse.flag == 256)
+        or (read_forward.flag == 16 and read_reverse.flag == 272)
+        or (read_forward.flag == 272 and read_reverse.flag == 16)
+    ):
+        return True
+    
+    else:
+        return False
+
+def is_uncut(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> bool:
+    """
+    Check if two reads are forming an uncut pattern .
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read of the pair
+    read_reverse : pysam.AlignedSegment
+        Reverse read of the pair
+
+    Returns
+    -------
+    bool
+        True if the two reads are forming an uncut pattern, False otherwise.
+    """
+        
+    if read_forward.reference_name != read_reverse.reference_name:
+
+        raise ValueError("The two reads must be mapped on the same chromosome.")
+    
+    read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
+
+    if (
+        (read_forward.flag == 0 and read_reverse.flag == 16)
+        or (read_forward.flag == 256 and read_reverse.flag == 16)
+        or (read_forward.flag == 0 and read_reverse.flag == 272)
+        or (read_forward.flag == 256 and read_reverse.flag == 272)
+    ):
+        return True
+    else:
+        return False
+
+    
+
+def is_circle(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> bool:
+    """
+    Check if two reads are forming a loop pattern .
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read of the pair
+    read_reverse : pysam.AlignedSegment
+        Reverse read of the pair
+
+    Returns
+    -------
+    bool
+        True if the two reads are forming a loop pattern, False otherwise.
+    """
+
+    if read_forward.reference_name != read_reverse.reference_name:
+        raise ValueError("Reads are not comming from the same pair")
+
+    read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
+
+    if (
+        (read_forward.flag == 16 and read_reverse.flag == 0)
+        or (read_forward.flag == 272 and read_reverse.flag == 0)
+        or (read_forward.flag == 16 and read_reverse.flag == 256)
+        or (read_forward.flag == 272 and read_reverse.flag == 256)
+    ):
+        return True
+    else:
+        return False
 
 def get_cis_distance():
     pass

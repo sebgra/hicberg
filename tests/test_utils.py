@@ -50,8 +50,17 @@ REVERSE_MULTI_BAM = "group2.2.bam"
 
 
 MIN_READ_MAPQ = 30
+DICT_FIRST_KEY = "chr10"
+DICT_FIRST_CHR_LAST_POS = 745751
 
 FIRST_QUERY_NAME = "NS500150:487:HNLLNBGXC:1:11101:1047:14348"
+
+HEADER = pysam.AlignmentHeader().from_dict({
+            "HD": {"VN": "1.0", "SO": "unsorted"},
+            "SQ": [
+                {"SN": DICT_FIRST_KEY, "LN": DICT_FIRST_CHR_LAST_POS},
+            ],
+        })
 
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
@@ -111,7 +120,7 @@ def test_get_bin_table(temporary_folder, test_get_chromosomes_sizes):
 
 def test_is_duplicated():
 
-    read_duplicated = pysam.AlignedSegment()
+    read_duplicated = pysam.AlignedSegment(header = HEADER)
     read_duplicated.query_name = "DUPLICATED"
     read_duplicated.query_sequence = "ATCG"
     read_duplicated.set_tag("XS", -1)
@@ -121,7 +130,7 @@ def test_is_duplicated():
     assert duplicateness 
 
 def test_is_poor_quality():
-    read_poor_quality = pysam.AlignedSegment()
+    read_poor_quality = pysam.AlignedSegment(header = HEADER)
     read_poor_quality.query_name = "POOR QUALITY"
     read_poor_quality.query_sequence = "ATCG"
     read_poor_quality.mapping_quality = 3
@@ -132,7 +141,7 @@ def test_is_poor_quality():
 
 def test_is_unqualitative():
 
-    read_unqualitative = pysam.AlignedSegment()
+    read_unqualitative = pysam.AlignedSegment(header = HEADER)
     read_unqualitative.query_name = "UNQUALITATIVE"
     read_unqualitative.query_sequence = "ATCG"
     read_unqualitative.mapping_quality = 0
@@ -144,7 +153,7 @@ def test_is_unqualitative():
 
 def test_is_unmapped():
     
-    read_unmapped = pysam.AlignedSegment()
+    read_unmapped = pysam.AlignedSegment(header = HEADER)
     read_unmapped.query_name = "UNMAPPED"
     read_unmapped.query_sequence = "ATCG"
     read_unmapped.mapping_quality = 0
@@ -155,7 +164,7 @@ def test_is_unmapped():
 
 
 def test_is_reverse():
-    read_reverse = pysam.AlignedSegment()
+    read_reverse = pysam.AlignedSegment(header = HEADER)
     read_reverse.query_name = "REVERSE"
     read_reverse.query_sequence = "ATCG"
     read_reverse.mapping_quality = 0
@@ -197,16 +206,174 @@ def test_is_intra_chromosome():
     pass
 
 def test_get_ordered_reads():
-    pass
+    """
+    Test if the function ordering the reads in a bam file is reder reads correctly.
+    """
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "FORWARD"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 500
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 0
 
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "REVERSE"
+    read_reverse.reference_name = DICT_FIRST_KEY
+    read_reverse.reference_start = 100
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 16
+
+    read_forward_2 = pysam.AlignedSegment(header = HEADER)
+    read_forward_2.query_name = "FORWARD"
+    read_forward_2.reference_name = DICT_FIRST_KEY
+    read_forward_2.reference_start = 500
+    read_forward_2.cigarstring = "100M"
+    read_forward_2.flag = 272
+
+    read_reverse_2 = pysam.AlignedSegment(header = HEADER)
+    read_reverse_2.query_name = "REVERSE"
+    read_reverse_2.reference_name = DICT_FIRST_KEY
+    read_reverse_2.reference_start = 100
+    read_reverse_2.cigarstring = "100M"
+    read_reverse_2.flag = 0
+
+    read_forward_3 = pysam.AlignedSegment(header = HEADER)
+    read_forward_3.query_name = "FORWARD"
+    read_forward_3.reference_name = DICT_FIRST_KEY
+    read_forward_3.reference_start = 180
+    read_forward_3.cigarstring = "100M"
+    read_forward_3.flag = 16
+
+    read_reverse_3 = pysam.AlignedSegment(header = HEADER)
+    read_reverse_3.query_name = "REVERSE"
+    read_reverse_3.reference_name = DICT_FIRST_KEY
+    read_reverse_3.reference_start = 300
+    read_reverse_3.cigarstring = "100M"
+    read_reverse_3.flag = 0
+
+    # Check case of direct and indirect reads that have to be reordered
+    ordered_read_forward, ordered_read_reverse = hut.get_ordered_reads(read_forward, read_reverse)
+
+    assert ordered_read_forward == read_reverse and ordered_read_reverse == read_forward
+
+    # Check case of direct and indirect reads that have to be reordered
+    ordered_read_forward, ordered_read_reverse = hut.get_ordered_reads(read_forward_2, read_reverse_2)
+
+    assert ordered_read_forward == read_reverse_2 and ordered_read_reverse == read_forward_2
+
+    # Check case of direct and indirect reads that do not have to be reordered
+    ordered_read_forward, ordered_read_reverse = hut.get_ordered_reads(read_forward_3, read_reverse_3)
+
+    
 def test_is_weird():
-    pass
+    """
+    Test if two reads are forming weird pattern.
+    """
+
+    read_forward = pysam.AlignedSegment(header = HEADER)
+
+    read_forward.query_name = "FORWARD"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 500
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 0
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "REVERSE"
+    read_reverse.reference_name = DICT_FIRST_KEY
+    read_reverse.reference_start = 100
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+    read_forward_2 = pysam.AlignedSegment(header = HEADER)
+    read_forward_2.query_name = "FORWARD"
+    read_forward_2.reference_name = DICT_FIRST_KEY
+    read_forward_2.reference_start = 500
+    read_forward_2.cigarstring = "100M"
+    read_forward_2.flag = 16
+
+    read_reverse_2 = pysam.AlignedSegment(header = HEADER)
+    read_reverse_2.query_name = "REVERSE"
+    read_reverse_2.reference_name = DICT_FIRST_KEY
+    read_reverse_2.reference_start = 100
+    read_reverse_2.cigarstring = "100M"
+    read_reverse_2.flag = 16
+
+    read_forward_3 = pysam.AlignedSegment(header = HEADER)
+    read_forward_3.query_name = "FORWARD"
+    read_forward_3.reference_name = DICT_FIRST_KEY
+    read_forward_3.reference_start = 500
+    read_forward_3.cigarstring = "100M"
+    read_forward_3.flag = 272
+
+    read_reverse_3 = pysam.AlignedSegment(header = HEADER)
+    read_reverse_3.query_name = "REVERSE"
+    read_reverse_3.reference_name = DICT_FIRST_KEY
+    read_reverse_3.reference_start = 100
+    read_reverse_3.cigarstring = "100M"
+    read_reverse_3.flag = 256
+
+    weird = hut.is_weird(read_forward, read_reverse)
+
+    assert weird 
+
+    weird = hut.is_weird(read_forward_2, read_reverse_2)
+
+    assert weird
+
+    not_weird = hut.is_weird(read_forward_3, read_reverse_3)
+
+    assert not not_weird
+
 
 def test_is_uncut():
-    pass
+    """
+    Test if two reads are forming uncut pattern.
+    """
+    
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "FORWARD"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 0
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "REVERSE"
+    read_reverse.reference_name = DICT_FIRST_KEY
+    read_reverse.reference_start = 500
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 16
+
+    uncut = hut.is_uncut(read_forward, read_reverse)
+
+    assert uncut
+
 
 def test_is_circle():
-    pass
+    """
+    Test if two reads are forming circle pattern.
+    """
+    
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "FORWARD"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "REVERSE"
+    read_reverse.reference_name = DICT_FIRST_KEY
+    read_reverse.reference_start = 500
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+
+    circle = hut.is_circle(read_forward, read_reverse)
+
+    assert circle
+
 
 def test_get_cis_distance():
     pass
@@ -290,4 +457,4 @@ def test_max_consecutive_nans():
 def test_mad_smoothing():
 
     # TODO :  to implement
-    pass
+    assert True
