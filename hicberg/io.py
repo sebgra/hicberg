@@ -217,12 +217,31 @@ def load_dictionary(dictionary : str = None) -> dict:
     -------
     dict
         Python native dictionary
-    """    
+    """
+    try:
 
-    return np.load(dictionary, allow_pickle=True).item()
+        return np.load(dictionary, allow_pickle=True).item()
+    
+    except:
 
-def load_cooler():
-    pass
+        return np.load(dictionary, allow_pickle=True)
+
+def load_cooler(matrix : str = None) -> cooler.Cooler:
+    """
+    Load cooler matrix.
+
+    Parameters
+    ----------
+    matrix : str, optional
+        Path to a cooler matrix, by default None
+
+    Returns
+    -------
+    cooler.Cooler
+        Cooler matrix object
+    """
+
+    return cooler.Cooler(matrix.as_posix())
 
 def merge_predictions():
     pass

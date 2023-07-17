@@ -37,7 +37,7 @@ def test_create_folder(temporary_folder):
 
     assert (temp_dir_path / FOLDER_TO_CREATE).is_dir()
 
-@pytest.fixture(scope = "module")
+@pytest.fixture(scope = "session")
 def test_build_pairs(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads):
     """
     Test if the pairs file is correctly created.
@@ -46,15 +46,21 @@ def test_build_pairs(temporary_folder, test_hic_build_index, test_hic_align, tes
     hio.build_pairs(output_dir = temp_dir_path, mode = False)
     assert (temp_dir_path / GROUP1_PAIRS).is_file() 
 
-# @pytest.fixture(scope = "module")
+@pytest.fixture(scope = "session")
 def test_build_matrix(temporary_folder, test_get_bin_table, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads, test_build_pairs):
     """
     Test if the cool file is correctly created.
     """
     temp_dir_path = Path(temporary_folder)
     hio.build_matrix(output_dir = temp_dir_path, mode = False)
+
+    unrescued_map_path = temp_dir_path / UNRESCUED_MAP
     
-    assert (temp_dir_path / UNRESCUED_MAP).is_file()
+    yield unrescued_map_path
+
+    print(f"Unrescued map path: {unrescued_map_path}")
+    assert unrescued_map_path.is_file()
+
 
 def test_load_dictionary(test_get_chromosomes_sizes):
     """
@@ -65,8 +71,12 @@ def test_load_dictionary(test_get_chromosomes_sizes):
     assert DICT_FIRST_KEY == list(dictionary.keys())[0]
     assert DICT_FIRST_SIZE == list(dictionary.values())[0]
 
-def test_load_cooler():
-    pass
+def test_load_cooler(temporary_folder, test_build_matrix):
+
+    temp_dir_path = Path(temporary_folder)
+    matrix = hio.load_cooler(matrix = test_build_matrix)
+
+    assert isinstance(matrix, cooler.Cooler)
 
 def test_merge_predictions():
     pass

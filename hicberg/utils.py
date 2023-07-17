@@ -470,7 +470,7 @@ def get_ordered_reads(read_forward : pysam.AlignedSegment, read_reverse : pysam.
         reverse_start = read_reverse.reference_start
 
     
-    if forward_start < reverse_start:
+    if forward_start <= reverse_start:
         
         return (read_forward, read_reverse)
     
@@ -498,6 +498,7 @@ def is_weird(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
     if read_forward.query_name != read_reverse.query_name:
 
         raise ValueError("The two reads must be mapped on the same chromosome.")
+
     
     read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
 

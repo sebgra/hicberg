@@ -20,6 +20,7 @@ from Bio.Restriction import *
 
 import cooler
 import hicberg.utils as hut
+import hicberg.io as hio
 
 
 lowess = sm.nonparametric.lowess
@@ -27,6 +28,11 @@ lowess = sm.nonparametric.lowess
 RESTRICTION_DICO = "dist.frag.npy"
 XS = "xs.npy"
 COVERAGE_DICO = "coverage.npy"
+D1D2 = "d1d2.npy"
+UNCUTS = "uncuts.npy"
+WEIRDS = "weirds.npy"
+LOOPS = "loops.npy"
+TRANS_PS = "trans_ps.npy"
 
 def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> dict[str, np.ndarray[int]]:
     """
@@ -80,9 +86,9 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> 
     return restriction_map_dictionary
 
 
-def generate_xs(chromosome_size : int, base : float = 1.1) -> dict[str, np.ndarray[int]]:
+def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
     """
-    Generate xs array for computing and plotting P(s). Return xs array which is logspace.
+    Generate xs array for computing P(s). Return xs array which is logspace.
 
     Parameters
     ----------
@@ -93,17 +99,41 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> dict[str, np.ndarr
 
     Returns
     -------
-    dict[str, np.ndarray[int]]
+    np.ndarray[int]
         Array of log bins related to the chromosome.
     """
 
+    
     n_bins = np.divide(np.log1p(chromosome_size), np.log(base)).astype(int)
     xs = np.unique(
         np.logspace(0, n_bins + 1, base=base, num=n_bins + 2, endpoint=True, dtype=int)
     )
 
-
     return xs
+
+def log_bin_genome(genome :str, base : float = 1.1, output_dir : str = None) -> dict[str, np.ndarray[int]]:
+    
+    
+    genome_path = Path(genome)
+
+    if not genome_path.is_file():
+
+        raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")
+    
+    if output_dir is None:
+            
+        folder_path = Path(getcwd())
+
+    else:
+            
+        folder_path = Path(output_dir)
+
+    genome_parser = SeqIO.parse(genome, "fasta")
+    xs_dict = {seq_record.id : generate_xs(chromosome_size = len(seq_record.seq), base = base) for seq_record in genome_parser}
+
+    np.save(folder_path / XS, xs_dict)
+
+    # print(f"Log binning of genome {genome} saved in {folder_path / XS}.")
 
 def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
     """
@@ -223,10 +253,67 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
         dist_frag,
     )
 
-    print(f"Restriction map saved in {folder_path}")
+def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict = None, output_dir : str = None) -> None:
+    
 
-def generate_trans_ps():
-    pass
+    if output_dir is None:
+
+        output_path = Path(getcwd())
+
+    else:
+
+        output_path = Path(output_dir)
+
+    matrix_path = Path(matrix)
+
+    if not matrix_path.is_file():
+
+        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
+    
+    print(f"Loading matrix {matrix.name}...")
+    
+    matrix = cooler.Cooler(matrix_path.as_posix())
+
+    chromosome_sets = itertools.product((restriction_map.keys()), repeat=2)
+
+    trans_ps_dictionary = {}
+
+    t_ps = np.zeros((len(restriction_map.keys()) ** 2, 1))
+    all_interaction_matrix = np.zeros((len(restriction_map.keys()) ** 2, 1))
+    n_frags_matrix = np.zeros((len(restriction_map.keys()) ** 2, 1))
+
+
+    for idx, s in enumerate(chromosome_sets):
+
+        all_interactions = matrix.matrix(balance=False).fetch(s[0], s[1]).sum()
+        n_frags = len(restriction_map.get(str(s[0]))) * len(
+            restriction_map.get(str(s[1]))
+        )
+        trans_ps_dictionary[s] = np.divide(all_interactions, np.multiply(n_frags, 4))
+
+
+        t_ps[idx] = np.divide(all_interactions, np.multiply(n_frags, 4))
+        all_interaction_matrix[idx] = all_interactions
+        n_frags_matrix[idx] = n_frags
+
+    t_ps = t_ps.reshape(
+        (len(restriction_map.keys()), (len(restriction_map.keys())))
+    )
+    np.fill_diagonal(t_ps, np.nan)
+
+    all_interaction_matrix = all_interaction_matrix.reshape(
+        (len(restriction_map.keys()), (len(restriction_map.keys())))
+    )
+    np.fill_diagonal(all_interaction_matrix, np.nan)
+
+    n_frags_matrix = n_frags_matrix.reshape(
+        (len(restriction_map.keys()), (len(restriction_map.keys())))
+    )
+    np.fill_diagonal(n_frags_matrix, np.nan)
+
+    np.save(output_path / TRANS_PS, trans_ps_dictionary)
+
+    print(f"Trans P(s) saved in {output_path}")
 
 def generate_probabilities():
     pass
@@ -302,8 +389,194 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
 
 
 
-def compute_d1d2():
-    pass
+def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", restriction_map : str = "dist.frag.npy", output_dir : str = None) -> None:
+    """
+    Compute d1d2 distance lawswith the given alignments and restriction map.
 
-def get_stats():
-    pass
+    Parameters
+    ----------
+    forward_bam_file : str, optional
+        Path to forward .bam alignment file, by default None, by default group1.1.bam, by default "group1.1.bam"
+    reverse_bam_file : str, optional
+        Path to reverse .bam alignment file, by default None, by default group1.1.bam, by default "group1.2.bam"
+    restriction_map : str, optional
+        Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default "dist.frag.npy"
+    output_dir : str, optional
+        Path to the folder where to save the dictionary, by default None, by default None
+    """    
+    
+    
+    if output_dir is None:
+
+        output_path = Path(getcwd())
+
+    else:
+
+        output_path = Path(output_dir)
+
+    forward_bam_path = Path(forward_bam_file)
+    reverse_bam_path = Path(reverse_bam_file)
+
+    if not forward_bam_path.is_file():
+            
+        raise FileNotFoundError(f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file.")
+    
+    if not reverse_bam_path.is_file():
+            
+        raise FileNotFoundError(f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file.")
+    
+    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
+
+    # Ensure that the restriction map is a dictionary to be loaded
+    try:
+
+        restriction_map = hio.load_dictionary(restriction_map)
+
+    except : 
+
+        pass
+
+    # d1d2 = {seq_name : np.zeros((len(restriction_map[seq_name]), len(restriction_map[seq_name]))) for seq_name in restriction_map.keys()}
+    list_d1d2 = []  # list containing the (d1+d2) i.e size of the fragment to sequence
+
+    for forward_read, reverse_read in zip(forward_bam_handler, reverse_bam_handler):
+
+        r_sites_forward_read = restriction_map[forward_read.reference_name]
+        r_sites_reverse_read = restriction_map[reverse_read.reference_name]
+
+        if forward_read.flag == 0 or forward_read.flag == 256:
+
+            index = np.searchsorted(r_sites_forward_read, forward_read.pos, side="right")
+            distance_1 = np.subtract(r_sites_forward_read[index], forward_read.pos)
+
+
+        elif forward_read.flag == 16 or forward_read.flag == 272:
+
+            index = np.searchsorted(r_sites_forward_read, forward_read.reference_end, side="left")
+            distance_1 = np.abs(
+                np.subtract(forward_read.reference_end, r_sites_forward_read[index])
+            )
+
+
+        if reverse_read.flag == 0 or reverse_read.flag == 256:
+
+            index = np.searchsorted(
+                r_sites_reverse_read, reverse_read.reference_start, side="right"
+            )  # right
+            distance_2 = np.subtract(r_sites_reverse_read[index], reverse_read.reference_start)
+
+
+        elif reverse_read.flag == 16 or reverse_read.flag == 272:
+
+            index = np.searchsorted(
+                r_sites_reverse_read, reverse_read.reference_end, side="left"
+            )  # left
+            distance_2 = np.abs(
+                np.subtract(reverse_read.reference_end, r_sites_reverse_read[index])
+            )
+
+        # Correction for uncuts with no restriction sites inside
+        if forward_read.reference_name == reverse_read.reference_name and np.add(
+            distance_1, distance_2
+        ) > np.abs(np.subtract(reverse_read.pos, forward_read.pos)):
+            list_d1d2.append(np.abs(np.subtract(reverse_read.pos, forward_read.pos)))
+
+        else:
+
+            list_d1d2.append(np.add(distance_1, distance_2))
+
+    histo, bins = np.histogram(list_d1d2, max(list_d1d2))
+
+    np.save(output_path / D1D2, histo)
+
+def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", circular : str = "", output_dir : str = None) -> None:
+    """
+    Get the patterns distribution from read pairs alignement. .
+
+    Parameters
+    ----------
+    forward_bam_file : str, optional
+        Path to forward .bam alignment file, by default None, by default group1.1.bam, by default "group1.1.bam", by default "group1.1.bam"
+    reverse_bam_file : str, optional
+        Path to reverse .bam alignment file, by default None, by default group1.1.bam, by default "group1.1.bam", by default "group1.2.bam"
+    xs : str, optional
+        Path to the dictionary containing the xs values, by default "xs.npy"
+    circular : str, optional
+        Name of the chromosomes to consider as circular, by default ""
+    output_dir : str, optional
+        Path to the folder where to save the dictionary, by default None, by default None, by default None
+    """    
+
+
+    if output_dir is None:
+            
+        output_path = Path(getcwd())
+
+    else:
+
+        output_path = Path(output_dir)
+
+    forward_bam_path = Path(forward_bam_file)
+    reverse_bam_path = Path(reverse_bam_file)
+
+    if not forward_bam_path.is_file():
+        
+        raise FileNotFoundError(f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file.")
+    
+    if not reverse_bam_path.is_file():
+
+        raise FileNotFoundError(f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file.")
+    
+    #Load xs
+
+    xs = hio.load_dictionary(output_path / XS)
+
+    # Create placeholders for the dictionaries
+
+    weirds_dictionary = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    uncuts_dictionary = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    loops_dictionary = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+
+    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
+
+    for forward_read, reverse_read in zip(forward_bam_handler, reverse_bam_handler):
+
+        
+
+        if hut.is_intra_chromosome(forward_read, reverse_read):
+                
+
+            if hut.is_weird(forward_read, reverse_read):
+
+                weirds_dictionary[forward_read.reference_name][
+                    attribute_xs(
+                        xs.get(forward_read.reference_name),
+                        hut.get_cis_distance(forward_read, reverse_read, circular) + 1,
+                    )
+                ] += 1
+
+            if hut.is_uncut(forward_read, reverse_read):
+
+                uncuts_dictionary[forward_read.reference_name][
+                    attribute_xs(
+                        xs.get(forward_read.reference_name),
+                        hut.get_cis_distance(forward_read, reverse_read, circular) + 1,
+                    )
+                ] += 1
+
+            if hut.is_circle(forward_read, reverse_read):
+                loops_dictionary[forward_read.reference_name][
+                    attribute_xs(
+                        xs.get(forward_read.reference_name),
+                        hut.get_cis_distance(forward_read, reverse_read, circular) + 1,
+                    )
+                ] += 1
+    
+    forward_bam_handler.close()
+    reverse_bam_handler.close()
+
+    np.save(output_path / WEIRDS, weirds_dictionary)
+    np.save(output_path / UNCUTS, uncuts_dictionary)
+    np.save(output_path / LOOPS, loops_dictionary)
+
+    print(f"Saved {WEIRDS}, {UNCUTS} and {LOOPS} in {output_path}")
