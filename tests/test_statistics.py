@@ -28,6 +28,7 @@ from.test_io import test_build_matrix, test_build_pairs
 
 import hicberg.statistics as hst
 import hicberg.utils as hut
+import hicberg.io as hio
 
 
 lowess = sm.nonparametric.lowess
@@ -41,6 +42,20 @@ UNCUTS = "uncuts.npy"
 WEIRDS = "weirds.npy"
 LOOPS = "loops.npy"
 TRANS_PS = "trans_ps.npy"
+
+DICT_FIRST_KEY = "chr10"
+DICT_FIRST_CHR_LAST_POS = 745751
+DICT_SECOND_KEY = "chr11"
+DICT_SECOND_CHR_LAST_POS = 666816
+
+HEADER = pysam.AlignmentHeader().from_dict({
+            "HD": {"VN": "1.0", "SO": "unsorted"},
+            "SQ": [
+                {"SN": DICT_FIRST_KEY, "LN": DICT_FIRST_CHR_LAST_POS},
+                {"SN": DICT_SECOND_KEY, "LN": DICT_SECOND_CHR_LAST_POS},
+            ],
+        })
+
 
 BINS = 2000
 
@@ -61,6 +76,9 @@ XS_CHR_LAST_VALUE = 754677
 
 DISTANCE = 100000
 DISTANCE_XS_IDX = 104
+
+PS_VALUE = 3.0
+D1D2_VALUE = 18
 
 @pytest.fixture(scope = "module")
 @pytest.mark.parametrize("genome, enzyme, length", [(GENOME, DEFAULT_ENZYME, LENGTH_DPNII), (GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI)])
@@ -186,6 +204,7 @@ def test_get_dist_frags(temporary_folder, test_get_restriction_map_mono):
     
     assert chrom_sizes_dictionary_path.is_file()
 
+@pytest.fixture(scope = "module")
 def test_generate_trans_ps(temporary_folder, test_get_restriction_map_mono, test_build_matrix):
 
     temp_dir_path = Path(temporary_folder)
@@ -195,7 +214,9 @@ def test_generate_trans_ps(temporary_folder, test_get_restriction_map_mono, test
 
     hst.generate_trans_ps(matrix = test_build_matrix, restriction_map = test_get_restriction_map_mono, output_dir = temp_dir_path)
     
-    trans_ps_path = temp_dir_path / TRANS_PS 
+    trans_ps_path = temp_dir_path / TRANS_PS
+
+    yield trans_ps_path
     
     assert trans_ps_path.is_file()
 
@@ -205,7 +226,7 @@ def test_generate_probabilities():
 def test_filter_poor_covered():
     pass
 
-
+@pytest.fixture(scope = "module")
 def test_generate_coverages(temporary_folder, test_classify_reads):
     """
     Test if the coverages are correctly generated.
@@ -213,9 +234,12 @@ def test_generate_coverages(temporary_folder, test_classify_reads):
     temp_dir_path = Path(temporary_folder)
     hst.generate_coverages(genome = GENOME, forward_bam_file = test_classify_reads[0], reverse_bam_file = test_classify_reads[1], bins = BINS, output_dir = temp_dir_path)
     coverage_dictionary_path = temp_dir_path / COVERAGE_DICO
+
+    yield coverage_dictionary_path
     
     assert coverage_dictionary_path.is_file()
 
+@pytest.fixture(scope = "module")
 def test_generate_d1d2(temporary_folder, test_classify_reads, test_get_restriction_map_mono):
     """
     Test if the d1d2 law is correctly generated.
@@ -224,10 +248,12 @@ def test_generate_d1d2(temporary_folder, test_classify_reads, test_get_restricti
     hst.generate_d1d2(forward_bam_file = test_classify_reads[0], reverse_bam_file = test_classify_reads[1], restriction_map = test_get_restriction_map_mono, output_dir = temp_dir_path)
     d1d2_dictionary_path = temp_dir_path / D1D2
 
+    yield d1d2_dictionary_path
+
     assert d1d2_dictionary_path.is_file()
 
 
-
+@pytest.fixture(scope = "module")
 def test_get_patterns(temporary_folder, test_classify_reads, test_log_bin_genome):
     """
     Test if the patterns are correctly generated.
@@ -238,6 +264,142 @@ def test_get_patterns(temporary_folder, test_classify_reads, test_log_bin_genome
     uncuts_dictionary_path = temp_dir_path / UNCUTS
     loops_dictionary_path = temp_dir_path / LOOPS
 
+    yield weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path
+
     assert weirds_dictionary_path.is_file()
     assert uncuts_dictionary_path.is_file()
     assert loops_dictionary_path.is_file()
+
+def test_get_pair_ps(temporary_folder, test_log_bin_genome, test_get_patterns):
+    """
+    Test if the get_pair_ps function is correctly returning the right P(s) regarding a pair of reads.
+    """
+
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_FIRST_KEY
+    read_reverse.reference_start = 500
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+
+    weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
+    
+    xs = hio.load_dictionary(test_log_bin_genome)
+    weirds = hio.load_dictionary(weirds_dictionary_path)
+    uncuts = hio.load_dictionary(uncuts_dictionary_path)
+    loops = hio.load_dictionary(loops_dictionary_path)
+
+    ps = hst.get_pair_ps(read_forward = read_forward, read_reverse = read_reverse, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops)
+
+    assert ps == PS_VALUE
+
+def test_get_trans_ps(test_generate_trans_ps):
+    """
+    Test if the get_trans_ps function returns the right transchromosomal P(s) regarding a pair of reads.
+    """
+
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_SECOND_KEY
+    read_reverse.reference_start = 10000
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+    trans_ps = hio.load_dictionary(test_generate_trans_ps)
+
+    tps = hst.get_trans_ps(read_forward = read_forward, read_reverse = read_reverse, trans_ps = trans_ps)
+
+    assert tps <=  1.0
+
+def test_get_pair_cover(test_generate_coverages):
+    """
+    Test if the get_pair_cover function returns the right coverage regarding a pair of reads.
+    """
+
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_SECOND_KEY
+    read_reverse.reference_start = 10000
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+    coverages = hio.load_dictionary(test_generate_coverages)
+
+    cover = hst.get_pair_cover(read_forward = read_forward, read_reverse = read_reverse, coverage = coverages,  bins = BINS)
+
+    assert cover > 0
+
+def test_get_d1d2(test_get_restriction_map_mono, test_generate_d1d2):
+    """
+    Test if the get_d1d2 function returns the right d1d2 regarding a pair of reads.
+    """
+
+
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_SECOND_KEY
+    read_reverse.reference_start = 10000
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+
+    d1d2_law = hio.load_dictionary(test_generate_d1d2)
+
+    print(f"TEST D1D2 LAW: {d1d2_law}")
+    d1d2 = hst.get_d1d2(read_forward = read_forward, read_reverse = read_reverse, restriction_map = test_get_restriction_map_mono, d1d2 = d1d2_law)
+
+    print(f"TEST D1D2: {d1d2}")
+
+
+    assert d1d2 == D1D2_VALUE
+
+def test_get_d1d2_distance():
+    pass
+
+
+def test_compute_propentsity():
+    pass
+
+def test_decompose_propentsity():
+    pass
+
+def test_check_propensity():
+    pass
+
+def test_draw_read_couple():
+    pass
+
+def test_reattribute_reads():
+    pass
+
+def test_reattribute_reads_multiprocess():
+    pass

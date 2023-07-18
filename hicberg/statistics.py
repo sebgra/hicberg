@@ -22,6 +22,8 @@ import cooler
 import hicberg.utils as hut
 import hicberg.io as hio
 
+import hicberg.utils as hut
+
 
 lowess = sm.nonparametric.lowess
 
@@ -580,3 +582,252 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     np.save(output_path / LOOPS, loops_dictionary)
 
     print(f"Saved {WEIRDS}, {UNCUTS} and {LOOPS} in {output_path}")
+
+def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, xs : dict, weirds :  dict, uncuts : dict, loops : dict, circular : str = "") -> float:
+    """
+    Take two reads and return the P(s) value depending on event type (intrachromosomal case only).
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read to compare with the reverse read.
+    read_reverse : pysam.AlignedSegment
+        Reverse read to compare with the forward read.
+    xs : dict
+        Dictionary containing log binning values for each chromosome.
+    weirds : dict
+        Dictionary containing number of weird events considering distance for each chromosome.
+    uncuts : dict
+        Dictionary containing number of uncuts events considering distance for each chromosome.
+    loops : dict
+        Dictionary containing number of loops events considering distance for each chromosome.
+    circular : str, optional
+        Name of the chromosomes to consider as circular, by default None, by default "".
+
+    Returns
+    -------
+    float
+        P(s) of the pair considering the event type.
+    """    
+    
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not coming from the same pair.")
+
+    if not hut.is_intra_chromosome(read_forward, read_reverse):
+        raise ValueError("Reads are not intra-chromosomal.")
+    
+    if hut.is_weird(read_forward, read_reverse):
+        return weirds[read_forward.reference_name][
+            attribute_xs(
+                xs[read_forward.reference_name],
+                hut.get_cis_distance(read_forward, read_reverse, circular),
+            )
+        ]
+
+    elif hut.is_uncut(read_forward, read_reverse):
+        return uncuts[read_forward.reference_name][
+            attribute_xs(
+                xs[read_forward.reference_name],
+                hut.get_cis_distance(read_forward, read_reverse, circular),
+            )
+        ]
+
+    elif hut.is_circle(read_forward, read_reverse):
+        return loops[read_forward.reference_name][
+            attribute_xs(
+                xs[read_forward.reference_name],
+                hut.get_cis_distance(read_forward, read_reverse, circular),
+            )
+        ]
+    
+
+def get_trans_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, trans_ps : dict) -> float:
+    """
+    
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read to compare with the reverse read.
+    read_reverse : pysam.AlignedSegment
+        Reverse read to compare with the forward read.
+    trans_ps : dict
+        Dictionary of transchromosomal P(s)
+
+    Returns
+    -------
+    float
+        Trans P(s) value
+
+    """    
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not coming from the same pair.")
+    
+    if  hut.is_intra_chromosome(read_forward, read_reverse):
+
+        raise ValueError("Reads are not inter-chromosomal.")
+    
+    return trans_ps[
+        tuple(sorted([read_forward.reference_name, read_reverse.reference_name]))
+    ] 
+
+def get_pair_cover(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, coverage : dict, bins : int) -> float:
+    """
+    Get the coverage of a pair of reads.
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read to compare with the reverse read.
+    read_reverse : pysam.AlignedSegment
+        Reverse read to compare with the forward read.
+    coverage : dict
+        Dictionary containing the coverage of each chromosome.
+    bins : int
+        Size of the desired bin.
+
+    Returns
+    -------
+    float
+        Product of the coverage of the pair of reads.
+    """    
+
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not coming from the same pair.")
+    
+
+    if (read_forward.flag == 16 or read_forward.flag == 272) and( read_reverse.flag == 0 or read_reverse.flag == 256):
+
+        return (
+            coverage[read_forward.reference_name][
+                int(read_forward.reference_end / bins)
+            ]
+            * coverage[read_reverse.reference_name][
+                int(read_reverse.reference_start / bins)
+            ]
+        )
+
+    elif( read_forward.flag == 0 or read_forward == 256) and (read_reverse.flag == 16 or read_reverse.flag == 272):
+        return (
+            coverage[read_forward.reference_name][
+                int(read_reverse.reference_start / bins)
+            ]
+            * coverage[read_reverse.reference_name][
+                int(read_reverse.reference_end / bins)
+            ]
+        )
+
+    elif (read_forward.flag == 16 or read_forward.flag == 272) and (read_reverse.flag == 16 or read_reverse.flag == 272):
+        return (
+            coverage[read_forward.reference_name][
+                int(read_forward.reference_end / bins)
+            ]
+            * coverage[read_reverse.reference_name][
+                int(read_reverse.reference_end / bins)
+            ]
+        )
+
+    else:
+        return (
+            coverage[read_forward.reference_name][
+                int(read_forward.reference_start / bins)
+            ]
+            * coverage[read_reverse.reference_name][
+                int(read_reverse.reference_start / bins)
+            ]
+        )
+
+
+def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, d1d2 : np.array = None) -> int:
+    """
+    Get the d1d2 value of a pair of reads.
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read to compare with the reverse read.
+    read_reverse : pysam.AlignedSegment
+        Reverse read to compare with the forward read.
+    restriction_map : dict, optional
+        Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default None
+    d1d2 : np.array, optional
+        Distribution of d1d2 values, by default None
+
+    Returns
+    -------
+    int
+        d1d2 value
+    """
+
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not coming from the same pair.")
+    
+    # Get appropriate restriction sites vecctors in dicitionary
+    r_sites_read_for = restriction_map[read_forward.reference_name]
+    r_sites_read_rev = restriction_map[read_reverse.reference_name]
+
+    if read_forward.flag == 0 or read_forward.flag == 256:
+
+        index = np.searchsorted(r_sites_read_for, read_forward.pos, side="right")
+        distance_1 = np.subtract(r_sites_read_for[index], read_forward.pos)
+
+    if read_forward.flag == 16 or read_forward.flag == 272:
+
+        index = np.searchsorted(r_sites_read_for, read_forward.reference_end, side="left")
+        distance_1 = np.abs(
+            np.subtract(read_forward.reference_end, r_sites_read_for[index])
+        )
+
+    if read_reverse.flag == 0 or read_reverse.flag == 256:
+
+        index = np.searchsorted(
+            r_sites_read_rev, read_reverse.reference_start, side="right"
+        )  # right
+        distance_2 = np.subtract(r_sites_read_rev[index], read_reverse.reference_start)
+
+    if read_reverse.flag == 16 or read_reverse.flag == 272:
+
+        index = np.searchsorted(
+            r_sites_read_rev, read_reverse.reference_end, side="left"
+        )  # left
+        distance_2 = np.abs(
+            np.subtract(read_reverse.reference_end, r_sites_read_rev[index])
+        )
+
+    # Correction for uncuts with no restriction sites inside
+
+    if read_forward.reference_name == read_reverse.reference_name and np.add(
+        distance_1, distance_2
+    ) > np.abs(np.subtract(read_reverse.pos, read_forward.pos)):
+        distance = np.abs(np.subtract(read_reverse.pos, read_forward.pos))
+
+
+
+    else:
+        distance = np.add(distance_1, distance_2)
+        
+    return d1d2[distance]
+    
+
+
+def get_d1d2_distance():
+    pass
+
+
+def compute_propentsity():
+    pass
+
+def decompose_propentsity():
+    pass
+
+def check_propensity():
+    pass
+
+def draw_read_couple():
+    pass
+
+def reattribute_reads():
+    pass
+
+def reattribute_reads_multiprocess():
+    pass

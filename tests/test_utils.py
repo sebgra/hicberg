@@ -444,19 +444,21 @@ def test_bam_iterator(bam_file = FORWARD_SORTED_BAM):
     assert first_iteration[0].query_name  == FIRST_QUERY_NAME
 
 def test_block_counter(test_classify_reads):
+    """
+    Test if the block counter function is correctly counting the number of blocks in a bam file.
+    """
 
-    # print(f"test_classify_reads : {test_classify_reads}")
 
     forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[2])
-
-    print(f"forward_bam_file : {forward_bam_file}")
-    print(f"reverse_bam_file : {reverse_bam_file}")
 
     nb_forward_block, nb_reverse_block = hut.block_counter(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file)
     
     assert nb_forward_block != 0 and nb_reverse_block != 0
 
 def test_chunk_bam(temporary_folder, test_classify_reads):
+    """
+    Test if the chunk bam function is correctly chunking a couple of bam file.
+    """
 
     temp_dir_path = Path(temporary_folder)
     forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[2])
@@ -465,26 +467,9 @@ def test_chunk_bam(temporary_folder, test_classify_reads):
     
     is_full =  any((temp_dir_path / 'chunks').iterdir())
 
-    list_files = [f for f in (temp_dir_path / 'chunks').iterdir() if f.is_file()]
-
-    print(f"list_files : {list_files}")
-
     assert is_full
 
-def test_get_pair_cover():
-    pass
 
-def test_get_pair_ps():
-    pass
-
-def test_get_trans_ps():
-    pass
-
-def test_get_d1d2():
-    pass
-
-def test_get_d1d2_distance():
-    pass
 
 def test_compute_propentsity():
     pass
