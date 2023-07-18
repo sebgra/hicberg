@@ -1,7 +1,8 @@
 import re
 import glob
 import subprocess as sp
-from os import getcwd
+import shutil as sh
+from os import getcwd, mkdir
 from os.path import join
 from pathlib import Path, PurePath
 import multiprocessing
@@ -294,7 +295,6 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
 
     if not forward_bam_file_path.is_file():
 
-        
 
         raise IOError(f"Forward alignment file {forward_bam_file_path.name} not found. Please provide a valid path.")
 
@@ -335,6 +335,10 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
     multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / "group2.1.bam", "wb", template = forward_bam_file)
     multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / "group2.2.bam", "wb", template = reverse_bam_file)
 
+    unmapped_forward_counter, unmapped_reverse_counter = 0, 0
+    uniquely_mapped_forward_counter, uniquely_mapped_reverse_counter = 0, 0
+    multi_mapped_forward_counter, multi_mapped_reverse_counter = 0, 0
+
     for forward_block, reverse_block in zip(forward_bam_file_iter, reverse_bam_file_iter):
         
 
@@ -351,43 +355,51 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
 
                 break
 
-            elif is_duplicated(combination[0]) or is_poor_quality(combination[0], mapq) or is_duplicated(combination[1]) or is_poor_quality(combination[1], mapq):
+            if is_duplicated(combination[0]) or is_poor_quality(combination[0], mapq) or is_duplicated(combination[1]) or is_poor_quality(combination[1], mapq):
 
                 multi_mapped_couple = True
-
+                
                 break
 
-            for forward_read in forward_block:
+        for forward_read in forward_block:
 
-                if unmapped_couple :
+            if unmapped_couple :
 
-                    unmapped_bam_file_foward.write(forward_read)
+                unmapped_bam_file_foward.write(forward_read)
+                unmapped_forward_counter += 1
 
-                elif multi_mapped_couple:
+            elif multi_mapped_couple:
 
-                    forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
-                    multi_mapped_bam_file_foward.write(forward_read)
+                forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
+                multi_mapped_bam_file_foward.write(forward_read)
 
-                else : 
+                multi_mapped_forward_counter += 1
 
-                    forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
-                    uniquely_mapped_bam_file_foward.write(forward_read)
+            else: 
 
-            for reverse_read in reverse_block:
+                forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
+                uniquely_mapped_bam_file_foward.write(forward_read)
+                uniquely_mapped_forward_counter += 1
 
-                if unmapped_couple :
+        for reverse_read in reverse_block:
 
-                    unmapped_bam_file_reverse.write(reverse_read)
+            if unmapped_couple:
 
-                elif multi_mapped_couple:
+                unmapped_bam_file_reverse.write(reverse_read)
+                unmapped_reverse_counter += 1
 
-                    reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
-                    multi_mapped_bam_file_reverse.write(reverse_read)
 
-                else : 
+            elif multi_mapped_couple:
 
-                    reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
-                    uniquely_mapped_bam_file_reverse.write(reverse_read)
+                reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
+                multi_mapped_bam_file_reverse.write(reverse_read)
+                multi_mapped_reverse_counter += 1
+
+            else : 
+
+                reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
+                uniquely_mapped_bam_file_reverse.write(reverse_read)
+                uniquely_mapped_reverse_counter += 1
 
     #closing files
     forward_bam_file.close()
@@ -400,6 +412,13 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
     multi_mapped_bam_file_reverse.close()
 
     print(f"Files for the different groups have been saved in {output_dir}")
+
+    print(f"Number of unmapped reads in forward file : {unmapped_forward_counter}")
+    print(f"Number of unmapped reads in reverse file : {unmapped_reverse_counter}")
+    print(f"Number of uniquely mapped reads in forward file : {uniquely_mapped_forward_counter}")
+    print(f"Number of uniquely mapped reads in reverse file : {uniquely_mapped_reverse_counter}")
+    print(f"Number of multi mapped reads in forward file : {multi_mapped_forward_counter}")
+    print(f"Number of multi mapped reads in reverse file : {multi_mapped_reverse_counter}")
 
 
 def classify_reads_multi():
@@ -684,11 +703,182 @@ def bam_iterator(bam_file : str = None) -> Iterator[pysam.AlignedSegment]:
 
     yield (block)
 
-def block_counter():
-    pass
+def block_counter(forward_bam_file : str, reverse_bam_file : str) -> Tuple[int, int] : 
+    """
+    Return as a tuple the number of blocks in the forward and reverse bam files.
 
-def chunk_bam():
-    pass
+    Parameters
+    ----------
+    forward_bam_file : str, optional
+        Path to forward .bam alignment file.
+    reverse_bam_file : str, optional
+        Path to reverse .bam alignment file.
+
+    Returns
+    -------
+    Tuple[int, int]
+        Number of blocks in the forward and reverse bam files.
+    """    
+    
+    forward_bam_path = Path(forward_bam_file)
+    reverse_bam_path = Path(reverse_bam_file)
+
+    if not forward_bam_path.is_file():
+            
+        raise IOError(f"BAM file {forward_bam_path.name} not found. Please provide a valid path.")
+    
+    if not reverse_bam_path.is_file():
+                
+        raise IOError(f"BAM file {reverse_bam_path.name} not found. Please provide a valid path.")
+    
+    # forward_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb")
+    # reverse_bam_handler = pysam.AlignmentFile(reverse_bam_path, "rb")
+
+    iterator_for, iterator_rev = bam_iterator(forward_bam_path), bam_iterator(reverse_bam_path)
+
+
+    nb_blocks_for, nb_blocks_rev = 0, 0
+
+    for forward_block, reverse_block in zip(iterator_for, iterator_rev):
+
+        nb_blocks_for += 1
+        nb_blocks_rev += 1
+    
+    return (nb_blocks_for, nb_blocks_rev)
+
+def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = "group2.2.bam", nb_chunks : int = 2, output_dir : str = None) -> None:
+    """
+    Split a .bam file into chunks .bam files.
+    Parameters
+    ----------
+    forward_bam_file : str, optional
+        Path to forward .bam alignment file, by default group2.1.bam
+    reverse_bam_file : str, optional
+        Path to reverse .bam alignment file, by default group2.2.bam
+    nb_chunks : int, optional
+        Number of chunks to create, by default 2
+    output_dir : str, optional
+        Path to the folder where to save the classified alignment files, by default None
+    """
+    
+    if output_dir is None:
+            
+            output_dir = Path(getcwd())
+    else:
+
+        output_dir = Path(output_dir)
+
+    # Create folder for chunks
+
+    chunks_path = output_dir / "chunks"
+
+    if chunks_path.is_dir():
+        sh.rmtree(chunks_path)
+
+    mkdir(output_dir / "chunks")
+
+    
+    forward_bam_path, reverse_bam_path = Path(forward_bam_file), Path(reverse_bam_file)
+
+    if not forward_bam_path.is_file():
+            
+        raise IOError(f"BAM file {forward_bam_path.name} not found. Please provide a valid path.")
+    
+    if not reverse_bam_path.is_file():
+                
+        raise IOError(f"BAM file {reverse_bam_path.name} not found. Please provide a valid path.")
+    
+    forward_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb")
+    reverse_bam_handler = pysam.AlignmentFile(reverse_bam_path, "rb")
+
+    # Create placeholder for chunks
+
+    output_chunk_for = chunks_path / "chunk_for_%d.bam"
+    output_chunk_rev = chunks_path / "chunk_rev_%d.bam"
+
+    nb_forward_block, nb_reverse_blocks = block_counter(forward_bam_path, reverse_bam_path)
+
+    # Compute euclidean division to know chunks sizes
+    size_cut = np.divmod(nb_forward_block, (nb_chunks - 1))
+
+    # Create list of chunk sizes
+    cut_list = [size_cut[0]] * (nb_chunks - 1)
+    cut_list.append(size_cut[1])
+
+    # Instanciate index for list of chunks sizes
+    chunk_size_index = 0
+
+    # Instanciate generators to yield blocks of multimapping reads
+    for_iterator, rev_iterator = bam_iterator(forward_bam_path), bam_iterator(reverse_bam_path)
+
+    # Create empty lists to store blocks of reads
+    read_stack_for = list()
+    read_stack_rev = list()
+
+    # Set first output file
+    outfile_for = pysam.AlignmentFile(
+        str(output_chunk_for) % chunk_size_index, "wb", template = forward_bam_handler
+    )
+    outfile_rev = pysam.AlignmentFile(
+        str(output_chunk_rev) % chunk_size_index, "wb", template = reverse_bam_handler
+    )
+
+    # Parse alignement file to yield reads blocks
+    for block_for_, block_rev_ in zip(for_iterator, rev_iterator):
+
+        # Fill containers with blocks
+        if len(read_stack_for) < cut_list[chunk_size_index]:
+
+            read_stack_for.append(block_for_)
+            read_stack_rev.append(block_rev_)
+
+        # Write reads alignement in chunks once the container is full
+        elif len(read_stack_for) == cut_list[chunk_size_index]:
+
+            for block_for in read_stack_for:
+                for read_for in block_for:
+
+                    outfile_for.write(read_for)
+
+            for block_rev in read_stack_rev:
+                for read_rev in block_rev:
+
+                    outfile_rev.write(read_rev)
+
+            # Switch to next chunk
+            chunk_size_index += 1
+
+            # Free containers
+            read_stack_for = list()
+            read_stack_rev = list()
+
+            # Save current block
+            read_stack_for.append(block_for_)
+            read_stack_rev.append(block_rev_)
+
+            # Update output chunk file
+            outfile_for = pysam.AlignmentFile(
+                str(output_chunk_for) % chunk_size_index, "wb", template = forward_bam_handler
+            )
+            outfile_rev = pysam.AlignmentFile(
+                str(output_chunk_rev) % chunk_size_index, "wb", template = reverse_bam_handler
+            )
+
+    # Fill last chunk
+    for block_for in read_stack_for:
+        for read_for in block_for:
+
+            outfile_for.write(read_for)
+
+    for block_rev in read_stack_rev:
+        for read_rev in block_rev:
+
+            outfile_rev.write(read_rev)
+
+    forward_bam_handler.close()
+    reverse_bam_handler.close()
+
+    print(f"Chunks saved in {output_dir / 'chunks'}")
 
 def get_pair_cover():
     pass

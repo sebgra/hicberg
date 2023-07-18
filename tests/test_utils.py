@@ -235,7 +235,7 @@ def test_is_intra_chromosome():
 
 def test_get_ordered_reads():
     """
-    Test if the function ordering the reads in a bam file is reder reads correctly.
+    Test if the function ordering the reads in a bam file is ordered reads correctly.
     """
     read_forward = pysam.AlignedSegment(header = HEADER)
     read_forward.query_name = "FORWARD"
@@ -443,11 +443,33 @@ def test_bam_iterator(bam_file = FORWARD_SORTED_BAM):
     # Check if first iteration has the right query name
     assert first_iteration[0].query_name  == FIRST_QUERY_NAME
 
-def test_block_counter():
-    pass
+def test_block_counter(test_classify_reads):
 
-def test_chunk_bam():
-    pass
+    # print(f"test_classify_reads : {test_classify_reads}")
+
+    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[2])
+
+    print(f"forward_bam_file : {forward_bam_file}")
+    print(f"reverse_bam_file : {reverse_bam_file}")
+
+    nb_forward_block, nb_reverse_block = hut.block_counter(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file)
+    
+    assert nb_forward_block != 0 and nb_reverse_block != 0
+
+def test_chunk_bam(temporary_folder, test_classify_reads):
+
+    temp_dir_path = Path(temporary_folder)
+    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[2])
+
+    hut.chunk_bam(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file, nb_chunks = 12, output_dir = temp_dir_path)
+    
+    is_full =  any((temp_dir_path / 'chunks').iterdir())
+
+    list_files = [f for f in (temp_dir_path / 'chunks').iterdir() if f.is_file()]
+
+    print(f"list_files : {list_files}")
+
+    assert is_full
 
 def test_get_pair_cover():
     pass
