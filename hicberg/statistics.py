@@ -1,3 +1,4 @@
+import time
 from os import getcwd
 from os.path import join
 from pathlib import Path
@@ -708,10 +709,10 @@ def get_pair_cover(read_forward : pysam.AlignedSegment, read_reverse : pysam.Ali
             ]
         )
 
-    elif( read_forward.flag == 0 or read_forward == 256) and (read_reverse.flag == 16 or read_reverse.flag == 272):
+    elif( read_forward.flag == 0 or read_forward.flag == 256) and (read_reverse.flag == 16 or read_reverse.flag == 272):
         return (
             coverage[read_forward.reference_name][
-                int(read_reverse.reference_start / bins)
+                int(read_forward.reference_start / bins)
             ]
             * coverage[read_reverse.reference_name][
                 int(read_reverse.reference_end / bins)
@@ -1081,8 +1082,80 @@ def draw_read_couple(propensities : np.array) -> int:
 
     return index
 
-def reattribute_reads():
-    pass
+def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, mode : str = "full", output_dir : str = None) -> None:
+    """
+    
 
-def reattribute_reads_multiprocess():
-    pass
+    Parameters
+    ----------
+    reads_couple : tuple[str, str], optional
+        Paths to ambiguous reads alignment files (.bam), by default ("group2.1.bam", "group2.2.bam")
+    restriction_map : dict, optional
+        Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default None
+    xs : dict
+        Dictionary containing log binning values for each chromosome.
+    weirds : dict
+        Dictionary containing number of weird events considering distance for each chromosome.
+    uncuts : dict
+        Dictionary containing number of uncuts events considering distance for each chromosome.
+    loops : dict
+        Dictionary containing number of loops events considering distance for each chromosome.
+    circular : str, optional
+        Name of the chromosomes to consider as circular, by default None, by default "".
+    trans_ps : dict
+        Dictionary of transchromosomal P(s)
+    coverage : dict
+        Dictionary containing the coverage of each chromosome.
+    bins : int
+        Size of the desired bin, by default 2000
+    d1d2 : np.array, optional
+        Distribution of d1d2 values, by default None
+    mode : str, optional
+        Mode to use to compute propensity among, by default "full"
+    output_dir : str, optional
+        Path to the reattributed ambiguous reads alignement files are saved, by default None
+    """    
+
+    if output_dir is None:
+            
+        output_path = Path(getcwd())
+
+    else:
+            
+        output_path = Path(output_dir)
+
+    forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
+    file_id = time.time()
+
+    forward_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb")
+    reverse_bam_handler = pysam.AlignmentFile(reverse_bam_path, "rb")
+
+    forward_out_bam_handler = pysam.AlignmentFile(output_path / f"forward_{file_id}_predicted.bam", "wb", template=forward_bam_handler)
+    reverse_out_bam_handler = pysam.AlignmentFile(output_path / f"reverse_{file_id}_predicted.bam", "wb", template=reverse_bam_handler)
+
+    # Instanciate generators
+    forward_generator = hut.bam_iterator(forward_bam_path)
+    reverse_generator = hut.bam_iterator(forward_bam_path)
+
+    for forward_block, reverse_block in zip(forward_generator, reverse_generator):
+
+        propensities = []
+
+        combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
+
+        for combination in combinations:
+
+            propensities.append(compute_propentsity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, mode = mode))
+
+        selected_couple_index = draw_read_couple(propensities)
+        selected_read_forward, selected_read_reverse = combinations[selected_couple_index]
+
+        forward_out_bam_handler.write(selected_read_forward)
+        reverse_out_bam_handler.write(selected_read_reverse)
+    
+    forward_bam_handler.close()
+    reverse_bam_handler.close()
+
+    print(f"Predictions written in {output_path}")
+    
+

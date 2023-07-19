@@ -2,7 +2,7 @@ from os import getcwd, mkdir
 from os.path import join
 from pathlib import Path
 
-import glob
+from glob import glob
 import shutil
 
 import subprocess as sp
@@ -37,6 +37,10 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
         folder_path = Path(output_dir, sample_name)
 
     mkdir(folder_path)
+
+    print(f"Folder {folder_path} created.")
+
+    return folder_path
 
     
 
@@ -162,7 +166,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
     mode : bool, optional
         Choose weither the mode is rescued or unrescued to construct associated .cool file, by default False
     output_dir : str, optional
-        th to the folder where to save the cooler matrix file, by default None, by default None
+        Path to the folder where to save the cooler matrix file, by default None, by default None
     """
 
     output_path = Path(output_dir)
@@ -243,6 +247,50 @@ def load_cooler(matrix : str = None) -> cooler.Cooler:
 
     return cooler.Cooler(matrix.as_posix())
 
-def merge_predictions():
-    pass
+def merge_predictions(output_dir : str = None) -> None:
+    """
+    Merge predictions of all chunks of ambiguous reads predictions.
+
+    Parameters
+    ----------
+    output_dir : str, optional
+        Path to the folder where to save the fused alignment file, by default None
+    """
+
+    output_path = Path(output_dir)
+
+    forward_alignment_chunk_files = sorted(glob(str(output_path / "chunk_for_*.bam")))
+    reverse_alignment_chunk_files = sorted(glob(str(output_path / "chunk_rev_*.bam")))
+
+    template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
+
+    merged_forward_alignment_path = output_path / "group2.1_predicted.bam"
+    merged_reverse_alignment_path = output_path / "group2.2_predicted.bam"
+
+    merged_forward_alignment_file_handler = ps.AlignmentFile(merged_forward_alignment_path, "wb", template=template_file_for)
+    merged_reverse_alignment_file_handler = ps.AlignmentFile(merged_reverse_alignment_path, "wb", template=template_file_rev)
+
+
+    for for_chunk in forward_alignment_chunk_files:
+
+        alignement_file = ps.AlignmentFile(for_chunk, "rb")
+        for read in alignement_file:
+            merged_forward_alignment_file_handler.write(read)
+
+        alignement_file.close()
+
+    for rev_chunk in reverse_alignment_chunk_files:
+
+        alignement_file = ps.AlignmentFile(rev_chunk, "rb")
+        for read in alignement_file:
+            merged_reverse_alignment_file_handler.write(read)
+
+        alignement_file.close()
+
+    template_file_for.close()
+    template_file_rev.close()
+    merged_forward_alignment_file_handler.close()
+    merged_reverse_alignment_file_handler.close()
+
+    print(f"Predictions successfully merged in {output_path}")
 

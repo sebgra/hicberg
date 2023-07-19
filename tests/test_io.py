@@ -14,7 +14,7 @@ import cooler
 import hicberg.io as hio
 
 from .conftest import temporary_folder
-from .test_utils import test_get_chromosomes_sizes, test_classify_reads, test_get_bin_table
+from .test_utils import test_get_chromosomes_sizes, test_classify_reads, test_get_bin_table, test_chunk_bam
 from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
 
 
@@ -22,6 +22,9 @@ FOLDER_TO_CREATE = "test_sample"
 TEST_DICT = "data_test/chromosome_sizes.npy"
 GROUP1_PAIRS = "group1.pairs"
 UNRESCUED_MAP = "unrescued_map.cool"
+
+PREDICTED_BAM_FORWARD = "group2.1_predicted.bam"
+PREDICTED_BAM_REVERSE = "group2.2_predicted.bam"
 
 DICT_FIRST_KEY = "chr10"
 DICT_FIRST_SIZE = 745751
@@ -71,12 +74,25 @@ def test_load_dictionary(test_get_chromosomes_sizes):
     assert DICT_FIRST_KEY == list(dictionary.keys())[0]
     assert DICT_FIRST_SIZE == list(dictionary.values())[0]
 
-def test_load_cooler(temporary_folder, test_build_matrix):
+def test_load_cooler(test_build_matrix):
 
-    temp_dir_path = Path(temporary_folder)
     matrix = hio.load_cooler(matrix = test_build_matrix)
 
     assert isinstance(matrix, cooler.Cooler)
 
-def test_merge_predictions():
-    pass
+def test_merge_predictions(temporary_folder, test_chunk_bam):
+
+    temp_dir_path = Path(temporary_folder)
+
+    print(f"Test chunk bam: {test_chunk_bam}")
+
+    hio.merge_predictions(output_dir = test_chunk_bam)
+
+    print(f"Temp dir path: {test_chunk_bam}")
+    print(f"Predicted bam forward: {test_chunk_bam / PREDICTED_BAM_FORWARD}")
+    print(f"Predicted bam reverse: {test_chunk_bam / PREDICTED_BAM_REVERSE}")
+
+    assert (test_chunk_bam / PREDICTED_BAM_FORWARD).is_file()
+    assert (test_chunk_bam / PREDICTED_BAM_REVERSE).is_file()
+
+    assert True

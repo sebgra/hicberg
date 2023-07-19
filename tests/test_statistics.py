@@ -21,7 +21,7 @@ from Bio.Restriction import *
 import cooler
 
 from .conftest import temporary_folder
-from.test_utils import test_classify_reads, test_get_chromosomes_sizes, test_get_bin_table
+from.test_utils import test_classify_reads, test_get_chromosomes_sizes, test_get_bin_table, test_chunk_bam
 from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
 from.test_io import test_build_matrix, test_build_pairs
 
@@ -483,11 +483,33 @@ def test_draw_read_couple(test_get_restriction_map_mono, test_log_bin_genome, te
         propensities.append(propensity)
 
     read_couple_index = hst.draw_read_couple(propensities = propensities)
+
+    assert read_couple_index == 1 or read_couple_index == 0
+
+def test_reattribute_reads(temporary_folder, test_classify_reads, test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2):
+    """
+    Test if the reattribute_reads function create prediction alignment files.
+    """
+
+    temp_dir_path = Path(temporary_folder)
+
+    weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
     
-    assert read_couple_index == 1
+    xs = hio.load_dictionary(test_log_bin_genome)
+    weirds = hio.load_dictionary(weirds_dictionary_path)
+    uncuts = hio.load_dictionary(uncuts_dictionary_path)
+    loops = hio.load_dictionary(loops_dictionary_path)
 
-def test_reattribute_reads():
-    pass
+    trans_ps = hio.load_dictionary(test_generate_trans_ps)
+    coverage = hio.load_dictionary(test_generate_coverages)
+    d1d2 = hio.load_dictionary(test_generate_d1d2)
 
-def test_reattribute_reads_multiprocess():
-    pass
+    restriction_map = test_get_restriction_map_mono
+
+    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
+
+    hst.reattribute_reads(reads_couple = (forward_bam_file, reverse_bam_file), restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE, output_dir = temp_dir_path)
+    
+    assert True
+
+

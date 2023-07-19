@@ -455,6 +455,7 @@ def test_block_counter(test_classify_reads):
     
     assert nb_forward_block != 0 and nb_reverse_block != 0
 
+@pytest.fixture(scope = "module")
 def test_chunk_bam(temporary_folder, test_classify_reads):
     """
     Test if the chunk bam function is correctly chunking a couple of bam file.
@@ -463,31 +464,20 @@ def test_chunk_bam(temporary_folder, test_classify_reads):
     temp_dir_path = Path(temporary_folder)
     forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[2])
 
+    print(f"Files to be chunked : {forward_bam_file} and {reverse_bam_file}")
+
     hut.chunk_bam(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file, nb_chunks = 12, output_dir = temp_dir_path)
+
+    chunks_path = temp_dir_path / 'chunks'
     
-    is_full =  any((temp_dir_path / 'chunks').iterdir())
+    is_full =  any(chunks_path.iterdir())
+
+    yield chunks_path
 
     assert is_full
 
 
 
-def test_compute_propentsity():
-    pass
-
-def test_decompose_propentsity():
-    pass
-
-def test_check_propensity():
-    pass
-
-def test_draw_read_couple():
-    pass
-
-def test_reattribute_reads():
-    pass
-
-def test_reattribute_reads_multiprocess():
-    pass
 
 def test_inspect_reads():
     pass
