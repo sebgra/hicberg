@@ -6,6 +6,7 @@ import random
 import itertools
 
 import numpy as np
+from numpy.random import choice
 import scipy
 from scipy.spatial.distance import pdist
 import statsmodels.api as sm
@@ -278,7 +279,7 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
 
     chromosome_sets = itertools.product((restriction_map.keys()), repeat=2)
 
-    trans_ps_dictionary = {}
+    trans_ps = {}
 
     t_ps = np.zeros((len(restriction_map.keys()) ** 2, 1))
     all_interaction_matrix = np.zeros((len(restriction_map.keys()) ** 2, 1))
@@ -291,7 +292,7 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
         n_frags = len(restriction_map.get(str(s[0]))) * len(
             restriction_map.get(str(s[1]))
         )
-        trans_ps_dictionary[s] = np.divide(all_interactions, np.multiply(n_frags, 4))
+        trans_ps[s] = np.divide(all_interactions, np.multiply(n_frags, 4))
 
 
         t_ps[idx] = np.divide(all_interactions, np.multiply(n_frags, 4))
@@ -313,7 +314,7 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
     )
     np.fill_diagonal(n_frags_matrix, np.nan)
 
-    np.save(output_path / TRANS_PS, trans_ps_dictionary)
+    np.save(output_path / TRANS_PS, trans_ps)
 
     print(f"Trans P(s) saved in {output_path}")
 
@@ -535,9 +536,9 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
 
     # Create placeholders for the dictionaries
 
-    weirds_dictionary = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
-    uncuts_dictionary = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
-    loops_dictionary = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    weirds = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    uncuts = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    loops = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
 
     forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
 
@@ -550,7 +551,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
 
             if hut.is_weird(forward_read, reverse_read):
 
-                weirds_dictionary[forward_read.reference_name][
+                weirds[forward_read.reference_name][
                     attribute_xs(
                         xs.get(forward_read.reference_name),
                         hut.get_cis_distance(forward_read, reverse_read, circular) + 1,
@@ -559,7 +560,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
 
             if hut.is_uncut(forward_read, reverse_read):
 
-                uncuts_dictionary[forward_read.reference_name][
+                uncuts[forward_read.reference_name][
                     attribute_xs(
                         xs.get(forward_read.reference_name),
                         hut.get_cis_distance(forward_read, reverse_read, circular) + 1,
@@ -567,7 +568,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
                 ] += 1
 
             if hut.is_circle(forward_read, reverse_read):
-                loops_dictionary[forward_read.reference_name][
+                loops[forward_read.reference_name][
                     attribute_xs(
                         xs.get(forward_read.reference_name),
                         hut.get_cis_distance(forward_read, reverse_read, circular) + 1,
@@ -577,9 +578,9 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     forward_bam_handler.close()
     reverse_bam_handler.close()
 
-    np.save(output_path / WEIRDS, weirds_dictionary)
-    np.save(output_path / UNCUTS, uncuts_dictionary)
-    np.save(output_path / LOOPS, loops_dictionary)
+    np.save(output_path / WEIRDS, weirds)
+    np.save(output_path / UNCUTS, uncuts)
+    np.save(output_path / LOOPS, loops)
 
     print(f"Saved {WEIRDS}, {UNCUTS} and {LOOPS} in {output_path}")
 
@@ -801,8 +802,6 @@ def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
     ) > np.abs(np.subtract(read_reverse.pos, read_forward.pos)):
         distance = np.abs(np.subtract(read_reverse.pos, read_forward.pos))
 
-
-
     else:
         distance = np.add(distance_1, distance_2)
         
@@ -814,8 +813,238 @@ def get_d1d2_distance():
     pass
 
 
-def compute_propentsity():
-    pass
+def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, mode : str = "full") -> float:
+    """
+    Compute propensity for read pair to be selected among all plausible pairs related to multi-mapping reads.
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        Forward read to compare with the reverse read.
+    read_reverse : pysam.AlignedSegment
+        Reverse read to compare with the forward read.
+    restriction_map : dict, optional
+        Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default None
+    xs : dict
+        Dictionary containing log binning values for each chromosome.
+    weirds : dict
+        Dictionary containing number of weird events considering distance for each chromosome.
+    uncuts : dict
+        Dictionary containing number of uncuts events considering distance for each chromosome.
+    loops : dict
+        Dictionary containing number of loops events considering distance for each chromosome.
+    circular : str, optional
+        Name of the chromosomes to consider as circular, by default None, by default "".
+    trans_ps : dict
+        Dictionary of transchromosomal P(s)
+    coverage : dict
+        Dictionary containing the coverage of each chromosome.
+    bins : int
+        Size of the desired bin, by default 2000
+    d1d2 : np.array, optional
+        Distribution of d1d2 values, by default None
+    mode : str, optional
+        Mode to use to compute propensity among, by default "full"
+
+    Returns
+    -------
+    float
+        Propensity to use for read couple drawing
+    """
+
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not coming from the same pair.")
+    
+    if mode == "ps_only":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+    
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
+        return ps
+    
+    elif mode == "d1d2_only":  # not functional so far
+
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+
+        )
+
+        except:
+
+            d1d2 = 1
+
+        return d1d2
+    
+    elif mode == "cover_only":
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        if cover <= 0:
+            cover = 1
+
+        return cover
+
+    elif mode == "no_d1d2":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins = bins)
+
+        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        if cover <= 0:
+            cover = 1
+
+        return ps * cover
+
+    elif mode == "no_cover":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+        )
+
+        except:
+
+            d1d2 = 1
+
+        return ps * d1d2
+
+    elif mode == "no_ps":
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        if cover <= 0:
+            cover = 1
+
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+
+        )
+
+        except:
+
+            d1d2 = 1
+
+        return cover * d1d2
+
+    elif mode == "random":
+
+        return 1
+
+    elif mode == "full":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        if cover <= 0:
+            cover = 1
+
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+        )
+
+        except:
+
+            d1d2 = 1
+
+        return ps * d1d2 * cover
+    
 
 def decompose_propentsity():
     pass
@@ -823,8 +1052,34 @@ def decompose_propentsity():
 def check_propensity():
     pass
 
-def draw_read_couple():
-    pass
+def draw_read_couple(propensities : np.array) -> int:
+    """
+    Draw an index respecting distribution of propensities. This function is used to draw a couple of reads considering the propensity of each couple.
+
+    Parameters
+    ----------
+    propensities : np.array
+        Array containing all the propensities of each couple of reads.
+
+    Returns
+    -------
+    int
+        Index of the couple of reads drawn.
+    """
+
+    xk = np.arange(len(propensities))
+
+    if  np.sum(propensities) > 0: 
+
+        pk = np.divide(propensities, np.sum(propensities))
+
+    elif np.sum(propensities) <= 0:
+
+        pk = np.full(xk.shape, np.divide(1, len(propensities)))
+
+    index = choice(xk, p=pk)
+
+    return index
 
 def reattribute_reads():
     pass

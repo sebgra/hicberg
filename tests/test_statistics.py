@@ -69,6 +69,8 @@ SUBSAMPLE_RATE = 1.0
 
 CIRCULAR = "chrM"
 
+MODE = "full"
+
 XS_BASE = 1.1
 LENGTH_XS_CHR_FIRST = 127
 XS_CHR_FIRST_VALUE = 1
@@ -324,6 +326,8 @@ def test_get_trans_ps(test_generate_trans_ps):
 
     tps = hst.get_trans_ps(read_forward = read_forward, read_reverse = read_reverse, trans_ps = trans_ps)
 
+
+
     assert tps <=  1.0
 
 def test_get_pair_cover(test_generate_coverages):
@@ -356,7 +360,6 @@ def test_get_d1d2(test_get_restriction_map_mono, test_generate_d1d2):
     Test if the get_d1d2 function returns the right d1d2 regarding a pair of reads.
     """
 
-
     read_forward = pysam.AlignedSegment(header = HEADER)
     read_forward.query_name = "TEST"
     read_forward.reference_name = DICT_FIRST_KEY
@@ -386,8 +389,39 @@ def test_get_d1d2_distance():
     pass
 
 
-def test_compute_propentsity():
-    pass
+def test_compute_propentsity(test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2):
+    """
+    Test if the compute_propensity function returns the right propensity regarding a pair of reads.
+    """
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_SECOND_KEY
+    read_reverse.reference_start = 10000
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+    weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
+    
+    xs = hio.load_dictionary(test_log_bin_genome)
+    weirds = hio.load_dictionary(weirds_dictionary_path)
+    uncuts = hio.load_dictionary(uncuts_dictionary_path)
+    loops = hio.load_dictionary(loops_dictionary_path)
+
+    trans_ps = hio.load_dictionary(test_generate_trans_ps)
+    coverage = hio.load_dictionary(test_generate_coverages)
+    d1d2 = hio.load_dictionary(test_generate_d1d2)
+
+    restriction_map = test_get_restriction_map_mono
+    propensity = hst.compute_propentsity(read_forward = read_forward, read_reverse = read_reverse, restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
+
+    assert propensity >= 0
 
 def test_decompose_propentsity():
     pass
@@ -395,8 +429,62 @@ def test_decompose_propentsity():
 def test_check_propensity():
     pass
 
-def test_draw_read_couple():
-    pass
+def test_draw_read_couple(test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2):
+    """
+    Test if the draw_read_couple function returns the right read couple index.
+    """
+    
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
+
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_SECOND_KEY
+    read_reverse.reference_start = 10000
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+    read_reverse_2 = pysam.AlignedSegment(header = HEADER)
+    read_reverse_2.query_name = "TEST"
+    read_reverse_2.reference_name = DICT_SECOND_KEY
+    read_reverse_2.reference_start = 50000
+    read_reverse_2.cigarstring = "100M"
+    read_reverse_2.flag = 0
+
+    weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
+    
+    xs = hio.load_dictionary(test_log_bin_genome)
+    weirds = hio.load_dictionary(weirds_dictionary_path)
+    uncuts = hio.load_dictionary(uncuts_dictionary_path)
+    loops = hio.load_dictionary(loops_dictionary_path)
+
+    trans_ps = hio.load_dictionary(test_generate_trans_ps)
+    coverage = hio.load_dictionary(test_generate_coverages)
+    d1d2 = hio.load_dictionary(test_generate_d1d2)
+
+    restriction_map = test_get_restriction_map_mono
+
+    reads_forward = [read_forward]
+    reads_reverse = [read_reverse, read_reverse_2]
+
+    propensities = []
+
+    all_couples = list(
+            itertools.product(tuple(reads_forward), tuple(reads_reverse))
+        )
+    
+    for couple in all_couples:
+        
+        propensity =  hst.compute_propentsity(read_forward = couple[0], read_reverse = couple[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
+        propensities.append(propensity)
+
+    read_couple_index = hst.draw_read_couple(propensities = propensities)
+    
+    assert read_couple_index == 1
 
 def test_reattribute_reads():
     pass
