@@ -29,8 +29,8 @@ c_handler.setLevel(logging.INFO)
 f_handler.setLevel(logging.INFO)
 
 # Create formatters and add it to handlers
-c_format = logging.Formatter(' %(levelname)s - %(message)s')
-f_format = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+c_format = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
+f_format = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
 c_handler.setFormatter(c_format)
 f_handler.setFormatter(f_format)
 
@@ -92,7 +92,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         logger.info("%s: %s", arg, args[arg])
 
-    
 
     if start_stage < 1 : 
 

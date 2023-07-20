@@ -13,6 +13,26 @@ import cooler
 import pysam as ps
 
 # log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Create handlers
+c_handler = logging.StreamHandler()
+f_handler = logging.FileHandler('hicberg.log')
+c_handler.setLevel(logging.INFO)
+f_handler.setLevel(logging.INFO)
+
+# Create formatters and add it to handlers
+c_format = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
+f_format = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
+c_handler.setFormatter(c_format)
+f_handler.setFormatter(f_format)
+
+# Add handlers to the logger
+logger.addHandler(c_handler)
+logger.addHandler(f_handler)
+logger.propagate = False
+
 
 def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
     """
@@ -26,7 +46,6 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
         Path where the folder will be created.
     """
     
-    # logger = logging.getLogger(__name__)
 
     if sample_name is None:
 
@@ -42,7 +61,7 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
 
     mkdir(folder_path)
 
-    logging.info(f"Folder {folder_path} created.")
+    logger.info(f"Folder {folder_path} created.")
 
     # return folder_path
 
