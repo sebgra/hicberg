@@ -29,7 +29,7 @@ def test_hic_build_index(temporary_folder):
     temp_dir_path = Path(temporary_folder)
     genome_path  = Path(GENOME)
     
-    hal.hic_build_index(genome = genome_path, output = temp_dir_path, verbose = True)
+    hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
 
     yield temp_dir_path / genome_path.stem
 
@@ -46,7 +46,7 @@ def test_hic_align(test_hic_build_index, temporary_folder):
     fq_for_path = Path(FOR_FQ)
     fq_rev_path = Path(REV_FQ)
 
-    hal.hic_align(genome = genome_path, index = test_hic_build_index, fq_for = fq_for_path, fq_rev = fq_rev_path, output = temp_dir_path, verbose = True)
+    hal.hic_align(genome = genome_path, index = test_hic_build_index, fq_for = fq_for_path, fq_rev = fq_rev_path, output_dir = temp_dir_path, verbose = True)
 
     for_sam_path = temp_dir_path / FOR_SAM
     rev_sam_path = temp_dir_path / REV_SAM
@@ -61,7 +61,7 @@ def test_hic_view(temporary_folder, test_hic_build_index, test_hic_align):
     Test if the alignement compression is correctly performed.
     """
     temp_dir_path = Path(temporary_folder)
-    hal.hic_view(output = temp_dir_path, verbose = True)
+    hal.hic_view(output_dir = temp_dir_path, verbose = True)
 
     for_bam_path = temp_dir_path / FOR_BAM
     rev_bam_path = temp_dir_path / REV_BAM
@@ -78,7 +78,7 @@ def test_hic_sort(temporary_folder, test_hic_build_index, test_hic_align, test_h
 
     temp_dir_path = Path(temporary_folder)
 
-    hal.hic_sort(output = temp_dir_path, verbose = True)
+    hal.hic_sort(output_dir = temp_dir_path, verbose = True)
 
     for_sorted_bam_path = temp_dir_path / FOR_SORTED_BAM
     rev_sorted_bam_path = temp_dir_path / REV_SORTED_BAM
@@ -100,7 +100,7 @@ def test_hic_index(temporary_folder, test_hic_build_index, test_hic_align, test_
 
     temp_dir_path = Path(temporary_folder)
 
-    hal.hic_sort(output = temp_dir_path, verbose = True)
+    hal.hic_sort(output_dir = temp_dir_path, verbose = True)
 
     for_indexed_bam_path = temp_dir_path / FOR_SORTED_BAM
     rev_indexed_bam_path = temp_dir_path / REV_SORTED_BAM

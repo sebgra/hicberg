@@ -31,6 +31,8 @@ import matplotlib.gridspec as gridspec
 
 import hicberg.io as hio
 import hicberg.statistics as hst
+from hicberg import logger
+
 
 
 DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
@@ -91,6 +93,8 @@ def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
         chrom_sizes[rec.id] = len(rec.seq)
 
     np.save(output_file, chrom_sizes)
+
+    logger.info(f"Chromosome sizes have been saved in {output_file}")
 
 
 def get_bin_table(chrom_sizes_dict : str, bins : int, output_dir : str = None) -> None:
@@ -412,14 +416,14 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
     multi_mapped_bam_file_foward.close()
     multi_mapped_bam_file_reverse.close()
 
-    print(f"Files for the different groups have been saved in {output_dir}")
+    logger.info(f"Files for the different groups have been saved in {output_dir}")
 
-    print(f"Number of unmapped reads in forward file : {unmapped_forward_counter}")
-    print(f"Number of unmapped reads in reverse file : {unmapped_reverse_counter}")
-    print(f"Number of uniquely mapped reads in forward file : {uniquely_mapped_forward_counter}")
-    print(f"Number of uniquely mapped reads in reverse file : {uniquely_mapped_reverse_counter}")
-    print(f"Number of multi mapped reads in forward file : {multi_mapped_forward_counter}")
-    print(f"Number of multi mapped reads in reverse file : {multi_mapped_reverse_counter}")
+    logger.info(f"Number of unmapped reads in forward file : {unmapped_forward_counter}")
+    logger.info(f"Number of unmapped reads in reverse file : {unmapped_reverse_counter}")
+    logger.info(f"Number of uniquely mapped reads in forward file : {uniquely_mapped_forward_counter}")
+    logger.info(f"Number of uniquely mapped reads in reverse file : {uniquely_mapped_reverse_counter}")
+    logger.info(f"Number of multi mapped reads in forward file : {multi_mapped_forward_counter}")
+    logger.info(f"Number of multi mapped reads in reverse file : {multi_mapped_reverse_counter}")
 
 
 def classify_reads_multi():
@@ -879,96 +883,10 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
     forward_bam_handler.close()
     reverse_bam_handler.close()
 
-    print(f"Chunks saved in {output_dir / 'chunks'}")
-
-def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, xs : dict, weirds :  dict, uncuts : dict, loops : dict, circular : str = "") -> int:
-    """
-    Take two reads and return the P(s) value depending on event type (intrachromosomal case only).
-
-    Parameters
-    ----------
-    read_forward : pysam.AlignedSegment
-        Forward read to compare with the reverse read.
-    read_reverse : pysam.AlignedSegment
-        Reverse read to compare with the forward read.
-    xs : dict
-        Dictionary containing log binning values for each chromosome.
-    weirds : dict
-        Dictionary containing number of weird events considering distance for each chromosome.
-    uncuts : dict
-        Dictionary containing number of uncuts events considering distance for each chromosome.
-    loops : dict
-        Dictionary containing number of loops events considering distance for each chromosome.
-    circular : str, optional
-        Name of the chromosomes to consider as circular, by default None, by default "".
-
-    Returns
-    -------
-    int
-        P(s) of the pair considering the event type.
-    """    
-    
-    if read_forward.query_name != read_reverse.query_name:
-        raise ValueError("Reads are not coming from the same pair.")
-
-    if not is_intra_chromosome(read_forward, read_reverse):
-        raise ValueError("Reads are not intra-chromosomal.")
-    
-    if is_weird(read_forward, read_reverse):
-        return weirds[read_forward.reference_name][
-            hst.attribute_xs(
-                xs[read_forward.reference_name],
-                get_cis_distance(read_forward, read_reverse, circular),
-            )
-        ]
-
-    elif is_uncut(read_forward, read_reverse):
-        return uncuts[read_forward.reference_name][
-            hst.attribute_xs(
-                xs[read_forward.reference_name],
-                get_cis_distance(read_forward, read_reverse, circular),
-            )
-        ]
-
-    elif is_circle(read_forward, read_reverse):
-        return loops[read_forward.reference_name][
-            hst.attribute_xs(
-                xs[read_forward.reference_name],
-                get_cis_distance(read_forward, read_reverse, circular),
-            )
-        ]
-    
-
-def get_trans_ps():
-    pass
-
-def get_pair_cover():
-    pass
+    logger.info(f"Chunks saved in {output_dir / 'chunks'}")
 
 
-def get_d1d2():
-    pass
 
-def get_d1d2_distance():
-    pass
-
-def compute_propentsity():
-    pass
-
-def decompose_propentsity():
-    pass
-
-def check_propensity():
-    pass
-
-def draw_read_couple():
-    pass
-
-def reattribute_reads():
-    pass
-
-def reattribute_reads_multiprocess():
-    pass
 
 def inspect_reads():
     pass

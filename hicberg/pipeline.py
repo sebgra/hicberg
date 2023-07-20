@@ -65,11 +65,17 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     if start_stage < 1 : 
 
         hio.create_folder(sample_name = name, output_dir = output_dir)
+
+        hut.get_chromosomes_sizes(genome = genome, output_dir = output_dir)
+
+        index = hal.hic_build_index(genome = genome, output_dir = output_dir, verbose = verbose)
+
+        hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, output_dir = output_dir, cpus = cpus, verbose = verbose)
     
     logger.info("Ending HiCBERG pipeline")
 
 
 if __name__ == "__main__":
 
-    pipeline()
+    pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8)
 

@@ -3,9 +3,11 @@ from os.path import join
 from pathlib import Path
 import subprocess as sp
 import click
+from hicberg import logger
 
 
-def hic_build_index(genome : str, output : str = None , cpus : int = 1 , verbose : bool = False) -> None:
+
+def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , verbose : bool = False) -> None:
     """
     Building of bowtie2 index (.bt2l files) for read alignement.
 
@@ -15,7 +17,7 @@ def hic_build_index(genome : str, output : str = None , cpus : int = 1 , verbose
         Path to the genome file along which reads are going to be aligned.
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
-    output : str, optional
+    output_dir : str, optional
         Path where the Bowtie2 index files should be stored, by default None
     verbose : bool, optional
         Set weither or not the shell command should be printed, by default False
@@ -37,12 +39,12 @@ def hic_build_index(genome : str, output : str = None , cpus : int = 1 , verbose
         
         raise ValueError(f"Genome file {genome} not found")
 
-    if output is None:    
+    if output_dir is None:    
         output_path = Path(getcwd())
 
     # output_path  = Path(output)
     else : 
-        output_path = Path(output)
+        output_path = Path(output_dir)
 
         
     if not output_path.exists():
@@ -50,20 +52,23 @@ def hic_build_index(genome : str, output : str = None , cpus : int = 1 , verbose
         raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
     
     sample = Path(genome).stem
-    index_path = Path(output, sample)
+    index_path = Path(output_dir, sample)
 
     cmd_index = f"bowtie2-build -q -f  --large-index {genome} {index_path}"
 
     if verbose:
 
-        print(cmd_index)
+        logger.info(cmd_index)
 
     sp.check_call([cmd_index], shell=True)
 
-    print(f"Index built at {index_path}")
+    logger.info(f"Index built at {index_path}")
 
 
-def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output : str = None, verbose : bool = False) -> None:
+    return index_path
+
+
+def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
     lignement of reads from HiC experiments along an indexed genome.
 
@@ -83,7 +88,7 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
         Maximum number of alignments to be returned, by default None
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
-    output : str, optional
+    output_dir : str, optional
         Path where the alignement files (.sam) should be stored, by default None
     verbonse : bool, optional
         Set weither or not the shell command should be printed, by default False
@@ -96,11 +101,11 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
         raise IOError(f"Wront path to fastq files : {fq_for_path} or {fq_rev_path} given. \
                     Pease provide existing files.")
     
-    if output is None:    
+    if output_dir is None:    
         output_path = Path(getcwd())
     
     else : 
-        output_path = Path(output)
+        output_path = Path(output_dir)
 
     if not output_path.exists():
 
@@ -121,19 +126,35 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
 
     if verbose :
 
-        print(cmd_alignment_for)
-        print(cmd_alignment_rev)
-
-    
-    sp.check_call([cmd_alignment_for], shell=True)
-    sp.check_call([cmd_alignment_rev], shell=True)
-
-    print(f"Alignement done at {output_path}")
+        logger.info(cmd_alignment_for)
+        logger.info(cmd_alignment_rev)
 
 
 
 
-def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, output : str = None, verbose : bool = False) -> None:
+    p_for = sp.Popen([cmd_alignment_for], shell=True, stdout = sp.PIPE, stderr = sp.PIPE)
+    p_rev = sp.Popen([cmd_alignment_rev], shell=True, stdout = sp.PIPE,  stderr = sp.PIPE)
+
+    stdout_for, stderr_for  = p_for.communicate()
+    stdout_rev, stderr_rev = p_rev.communicate()
+
+
+    if stdout_for : 
+        logger.info(stdout_for)
+    if stderr_for : 
+        logger.info(stderr_for)
+
+    if stdout_rev:
+        logger.info(stdout_rev)
+    if stderr_rev:
+        logger.info(stderr_rev)
+
+    logger.info(f"Alignement saved at {output_path}")
+
+
+
+
+def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
     Conversion of .sam alignement files to .bam alignement format (using samtools).
 
@@ -145,7 +166,7 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
         Path to reverse .sam alignment file, by default "2.sam"
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
-    output : str, optional
+    output_dir : str, optional
         Path where the alignement files (.bam) should be stored, by default None
     verbose : bool, optional
         Set weither or not the shell command should be printed, by default False
@@ -162,11 +183,11 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
         )
 
 
-    if output is None:    
+    if output_dir is None:    
         output_path = Path(getcwd())
     
     else : 
-        output_path = Path(output)
+        output_path = Path(output_dir)
 
     if not output_path.exists():
 
@@ -178,18 +199,18 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
 
     if verbose:
 
-        print(cmd_view_for)
-        print(cmd_view_rev)
+        logger.info(cmd_view_for)
+        logger.info(cmd_view_rev)
 
     sp.check_call([cmd_view_for], shell=True)
     sp.check_call([cmd_view_rev], shell=True)
 
-    print(f"Compressed alignemnet alignement done at {output_path}")
+    logger.info(f"Compressed alignemnet alignement done at {output_path}")
 
 
 
 
-def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, output : str = None, verbose : bool = False) -> None:
+def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
     Sort .bam alignement files by read_name  (using samtools).
 
@@ -201,7 +222,7 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
         Reverse alignement file to be sorted, by default "2.bam"
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
-    output : str, optional
+    output_dir : str, optional
         Path where the alignement files (.bam) should be stored, by default None
     verbose : bool, optional
         Set weither or not the shell command should be printed, by default False
@@ -223,11 +244,11 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
         )
 
 
-    if output is None:    
+    if output_dir is None:    
         output_path = Path(getcwd())
     
     else : 
-        output_path = Path(output)
+        output_path = Path(output_dir)
 
     if not output_path.exists():
 
@@ -239,17 +260,17 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
 
     if verbose:
 
-        print(cmd_sort_for)
-        print(cmd_sort_rev)
+        logger.info(cmd_sort_for)
+        logger.info(cmd_sort_rev)
 
     sp.check_call([cmd_sort_for], shell=True)
     sp.check_call([cmd_sort_rev], shell=True)
 
-    print(f"Sorted alignement done at {output_path}")
+    logger.info(f"Sorted alignement done at {output_path}")
 
 
 
-def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cpus : int = 1, output : str = None, verbose : bool = False) -> None:
+def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
     Index a coordinate-sorted BGZIP-compressed SAM, BAM or CRAM file for fast random access.
 
@@ -261,7 +282,7 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
         Reverse alignement file to be indexed,, by default "2.sorted.bam"
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
-    output : str, optional
+    output_dir : str, optional
         Path where the alignement files (.bam) should be stored, by default None
     verbose : bool, optional
         Set weither or not the shell command should be printed, by default False
@@ -282,11 +303,11 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
             "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
         )
 
-    if output is None:    
+    if output_dir is None:    
         output_path = Path(getcwd())
     
     else : 
-        output_path = Path(output)
+        output_path = Path(output_dir)
 
     if not output_path.exists():
 
@@ -298,13 +319,13 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
 
     if verbose:
 
-        print(cmd_index_for)
-        print(cmd_index_rev)
+        logger.info(cmd_index_for)
+        logger.info(cmd_index_rev)
 
     sp.check_call([cmd_index_for], shell=True)
     sp.check_call([cmd_index_rev], shell=True)
 
-    print(f"Indexed alignement done at {output_path}")
+    logger.info(f"Indexed alignement done at {output_path}")
 
 
 

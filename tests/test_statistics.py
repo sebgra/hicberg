@@ -208,7 +208,10 @@ def test_get_dist_frags(temporary_folder, test_get_restriction_map_mono):
 
 @pytest.fixture(scope = "module")
 def test_generate_trans_ps(temporary_folder, test_get_restriction_map_mono, test_build_matrix):
-
+    """
+    Test if the transchromosomal P(s) are correctly generated.
+    """
+    
     temp_dir_path = Path(temporary_folder)
 
     print(f"Build matrix : {test_build_matrix}")
