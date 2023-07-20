@@ -211,7 +211,6 @@ def test_generate_trans_ps(temporary_folder, test_get_restriction_map_mono, test
     """
     Test if the transchromosomal P(s) are correctly generated.
     """
-    
     temp_dir_path = Path(temporary_folder)
 
     print(f"Build matrix : {test_build_matrix}")

@@ -66,6 +66,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         output_folder = hio.create_folder(sample_name = name, output_dir = output_dir)
 
         hut.get_chromosomes_sizes(genome = genome, output_dir = output_folder)
+        hut.get_bin_table(bins = bins, output_dir = output_folder)
 
         index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
 
@@ -92,6 +93,15 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme)
         hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
+        hio.build_pairs(output_dir = output_folder)
+        hio.build_matrix(output_dir = output_folder)
+
+        hst.log_bin_genome(genome = genome, output_dir = output_folder)
+        hst.get_patterns(circular = circular, output_dir = output_folder)
+        hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output_folder)
+        hst.generate_coverages(genome = genome, bins = bins, output_dir = output_folder)
+        hst.generate_d1d2(output_dir = output_folder)
+        
 
 
     

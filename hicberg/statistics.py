@@ -139,7 +139,7 @@ def log_bin_genome(genome :str, base : float = 1.1, output_dir : str = None) -> 
 
     np.save(folder_path / XS, xs_dict)
 
-    # logger.info(f"Log binning of genome {genome} saved in {folder_path / XS}.")
+    logger.info(f"Log binning of genome {genome} saved in {folder_path / XS}.")
 
 def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
     """
@@ -270,13 +270,13 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
 
         output_path = Path(output_dir)
 
-    matrix_path = Path(matrix)
+    matrix_path = Path(output_path, matrix)
 
     if not matrix_path.is_file():
 
         raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
     
-    logger.info(f"Loading matrix {matrix.name}...")
+    # logger.info(f"Loading matrix {matrix.name}...")
     
     matrix = cooler.Cooler(matrix_path.as_posix())
 
@@ -362,8 +362,8 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
     genome_parser = SeqIO.parse(genome, "fasta")
     genome_coverages = {seq_record.id : np.zeros(np.round(np.divide(len(seq_record.seq), bins) + 1).astype(int)) for seq_record in genome_parser}
 
-    forward_bam_path = Path(forward_bam_file)
-    reverse_bam_path = Path(reverse_bam_file)
+    forward_bam_path = Path(output_dir, forward_bam_file)
+    reverse_bam_path = Path(output_dir, reverse_bam_file)
 
     if not forward_bam_path.is_file():
 
@@ -420,8 +420,8 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
         output_path = Path(output_dir)
 
-    forward_bam_path = Path(forward_bam_file)
-    reverse_bam_path = Path(reverse_bam_file)
+    forward_bam_path = Path(output_path, forward_bam_file)
+    reverse_bam_path = Path(output_path, reverse_bam_file)
 
     if not forward_bam_path.is_file():
             
@@ -436,7 +436,7 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
     # Ensure that the restriction map is a dictionary to be loaded
     try:
 
-        restriction_map = hio.load_dictionary(restriction_map)
+        restriction_map = hio.load_dictionary(output_path / restriction_map)
 
     except : 
 
@@ -453,15 +453,28 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
         if forward_read.flag == 0 or forward_read.flag == 256:
 
             index = np.searchsorted(r_sites_forward_read, forward_read.pos, side="right")
-            distance_1 = np.subtract(r_sites_forward_read[index], forward_read.pos)
+
+            try : 
+                distance_1 = np.subtract(r_sites_forward_read[index], forward_read.pos)
+
+            except : 
+
+                distance_1 = np.subtract(r_sites_forward_read[index - 1], forward_read.pos)
 
 
         elif forward_read.flag == 16 or forward_read.flag == 272:
 
             index = np.searchsorted(r_sites_forward_read, forward_read.reference_end, side="left")
-            distance_1 = np.abs(
-                np.subtract(forward_read.reference_end, r_sites_forward_read[index])
-            )
+
+            try : 
+                distance_1 = np.abs(
+                    np.subtract(forward_read.reference_end, r_sites_forward_read[index])
+                )
+            except : 
+
+                distance_1 = np.abs(
+                    np.subtract(forward_read.reference_end, r_sites_forward_read[index - 1])
+                )
 
 
         if reverse_read.flag == 0 or reverse_read.flag == 256:
@@ -469,7 +482,13 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
             index = np.searchsorted(
                 r_sites_reverse_read, reverse_read.reference_start, side="right"
             )  # right
-            distance_2 = np.subtract(r_sites_reverse_read[index], reverse_read.reference_start)
+
+            try : 
+                distance_2 = np.subtract(r_sites_reverse_read[index], reverse_read.reference_start)
+
+            except : 
+
+                distance_2 = np.subtract(r_sites_reverse_read[index - 1], reverse_read.reference_start)
 
 
         elif reverse_read.flag == 16 or reverse_read.flag == 272:
@@ -477,9 +496,17 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
             index = np.searchsorted(
                 r_sites_reverse_read, reverse_read.reference_end, side="left"
             )  # left
-            distance_2 = np.abs(
-                np.subtract(reverse_read.reference_end, r_sites_reverse_read[index])
-            )
+
+            try : 
+                distance_2 = np.abs(
+                    np.subtract(reverse_read.reference_end, r_sites_reverse_read[index])
+                )
+
+            except : 
+
+                distance_2 = np.abs(
+                    np.subtract(reverse_read.reference_end, r_sites_reverse_read[index - 1])
+                )
 
         # Correction for uncuts with no restriction sites inside
         if forward_read.reference_name == reverse_read.reference_name and np.add(
@@ -491,9 +518,11 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
             list_d1d2.append(np.add(distance_1, distance_2))
 
-    histo, bins = np.histogram(list_d1d2, max(list_d1d2))
+    histo, bins = np.histogram(list_d1d2, int(max(list_d1d2)))
 
     np.save(output_path / D1D2, histo)
+
+    logger.info(f"Saved d1d2 law at : {output_path / D1D2}")
 
 def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", circular : str = "", output_dir : str = None) -> None:
     """
@@ -522,8 +551,8 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
 
         output_path = Path(output_dir)
 
-    forward_bam_path = Path(forward_bam_file)
-    reverse_bam_path = Path(reverse_bam_file)
+    forward_bam_path = Path(output_path, forward_bam_file)
+    reverse_bam_path = Path(output_path, reverse_bam_file)
 
     if not forward_bam_path.is_file():
         

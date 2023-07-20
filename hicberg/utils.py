@@ -97,22 +97,22 @@ def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     logger.info(f"Chromosome sizes have been saved in {output_file}")
 
 
-def get_bin_table(chrom_sizes_dict : str, bins : int, output_dir : str = None) -> None:
+def get_bin_table(chrom_sizes_dict : str = "chromosome_sizes.npy", bins : int = 2000, output_dir : str = None) -> None:
     """
     Create bin table containing start and end position for fixed size bin per chromosome.
 
     Parameters
     ----------
     chrom_sizes_dict : str
-        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format
+        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format. By default chromosome_sizes.npy
     bins : int
-        Size of the desired bin.
+        Size of the desired bin, by default 2000.
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None
 
     """    
 
-    chrom_sizes_dict_path = Path(chrom_sizes_dict)
+    chrom_sizes_dict_path = Path(output_dir, chrom_sizes_dict)
 
     if not chrom_sizes_dict_path.is_file():
 
@@ -422,6 +422,10 @@ def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : s
     logger.info(f"Number of uniquely mapped reads in reverse file : {uniquely_mapped_reverse_counter}")
     logger.info(f"Number of multi mapped reads in forward file : {multi_mapped_forward_counter}")
     logger.info(f"Number of multi mapped reads in reverse file : {multi_mapped_reverse_counter}")
+
+    # Cleaning files after classification
+    forward_bam_file_path.unlink()
+    reverse_bam_file_path.unlink()
 
 
 def classify_reads_multi():

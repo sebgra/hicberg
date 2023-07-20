@@ -476,9 +476,6 @@ def test_chunk_bam(temporary_folder, test_classify_reads):
 
     assert is_full
 
-
-
-
 def test_inspect_reads():
     pass
 
@@ -505,10 +502,10 @@ def test_max_consecutive_nans():
 
     assert max_consecutive_nans == 2
 
-def test_mad_smoothing():
-    """
-    Test if the function correctly smooth a vector using MAD smoothing.
-    """
+# def test_mad_smoothing():
+#     """
+#     Test if the function correctly smooth a vector using MAD smoothing.
+#     """
 
-    # TODO :  to implement
-    assert True
+#     # TODO :  to implement
+#     assert True
