@@ -74,7 +74,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if exit_stage == 1:
 
-        logger.info("Ending HiCBERG pipeline")
+        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
         return
     
 
@@ -86,7 +86,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if exit_stage == 2:
 
-        logger.info("Ending HiCBERG pipeline")
+        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
         return
     
     if start_stage < 3:
@@ -103,6 +103,14 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hst.generate_d1d2(output_dir = output_folder)
         
 
+    if exit_stage == 3:
+        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        return
+    
+    if start_stage < 4:
+
+        hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
+
 
     
     logger.info("Ending HiCBERG pipeline")
@@ -110,5 +118,5 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
 if __name__ == "__main__":
 
-    pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8, rate = 0.05)
+    pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8, rate = 0.05, nb_chunks = 8)
 

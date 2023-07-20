@@ -109,7 +109,6 @@ def get_bin_table(chrom_sizes_dict : str = "chromosome_sizes.npy", bins : int = 
         Size of the desired bin, by default 2000.
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None
-
     """    
 
     chrom_sizes_dict_path = Path(output_dir, chrom_sizes_dict)
@@ -785,7 +784,7 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
     mkdir(output_dir / "chunks")
 
     
-    forward_bam_path, reverse_bam_path = Path(forward_bam_file), Path(reverse_bam_file)
+    forward_bam_path, reverse_bam_path = Path(output_dir, forward_bam_file), Path(output_dir, reverse_bam_file)
 
     if not forward_bam_path.is_file():
             
