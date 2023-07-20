@@ -18,6 +18,27 @@ import hicberg.plot as hpl
 import hicberg.statistics as hst
 
 
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Create handlers
+c_handler = logging.StreamHandler()
+f_handler = logging.FileHandler('hicberg.log')
+c_handler.setLevel(logging.INFO)
+f_handler.setLevel(logging.INFO)
+
+# Create formatters and add it to handlers
+c_format = logging.Formatter(' %(levelname)s - %(message)s')
+f_format = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+c_handler.setFormatter(c_format)
+f_handler.setFormatter(f_format)
+
+# Add handlers to the logger
+logger.addHandler(c_handler)
+logger.addHandler(f_handler)
+
+logger.propagate = False
 
 
 def check_tool(name):
@@ -32,6 +53,8 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             mode : str = "full",  verbose : bool = False, cpus : int = 1, output_dir : str = None) -> None :
 
 
+    logger.info('This is an info message from the main function')
+    
     args = locals()
     
     # logging.basicConfig(
@@ -43,17 +66,13 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     #     ], stream=sys.stdout
     # )
 
-    log = logging.getLogger(__name__)
-
-
-    log.info("Starting HiCBERG pipeline")
 
     if not check_tool("bowtie2"):
-        log.error("bowtie2 is not available on your system.")
+        logger.error("bowtie2 is not available on your system.")
         raise ValueError("bowtie2 is not available on your system.")
 
     if not check_tool("samtools"):
-        log.error("samtools is not available on your system.")
+        logger.error("samtools is not available on your system.")
         raise ValueError("samtools is not available on your system.")
     
     stages = {"fastq": 0, "bam": 1, "stats": 2, "pairs": 3, "rescue": 4, "cool": 5}
@@ -66,19 +85,20 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     exit_stage = out_stage[exit_stage]
 
-    log.info("Start HiCBERG pipeline")
+    logger.info("Start HiCBERG pipeline")
 
     # Keep track of the arguments used
     for arg in args:
 
-        log.info("%s: %s", arg, args[arg])
+        logger.info("%s: %s", arg, args[arg])
 
     
-    log.info("Ending HiCBERG pipeline")
 
     if start_stage < 1 : 
 
         hio.create_folder(sample_name = name, output_dir = output_dir)
+    
+    logger.info("Ending HiCBERG pipeline")
 
 
 if __name__ == "__main__":

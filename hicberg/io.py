@@ -1,3 +1,4 @@
+import logging
 from os import getcwd, mkdir
 from os.path import join
 from pathlib import Path
@@ -11,6 +12,7 @@ import numpy as np
 import cooler
 import pysam as ps
 
+# log = logging.getLogger(__name__)
 
 def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
     """
@@ -23,6 +25,8 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
     output_dir : str
         Path where the folder will be created.
     """
+    
+    # logger = logging.getLogger(__name__)
 
     if sample_name is None:
 
@@ -38,9 +42,9 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
 
     mkdir(folder_path)
 
-    print(f"Folder {folder_path} created.")
+    logging.info(f"Folder {folder_path} created.")
 
-    return folder_path
+    # return folder_path
 
     
 

@@ -1,0 +1,21 @@
+2023-07-20 11:36:22,910 - INFO - This is an info message from the main function
+2023-07-20 11:36:22,910 - INFO - Start HiCBERG pipeline
+2023-07-20 11:36:22,910 - INFO - name: sample
+2023-07-20 11:36:22,910 - INFO - start_stage: fastq
+2023-07-20 11:36:22,910 - INFO - exit_stage: None
+2023-07-20 11:36:22,910 - INFO - genome: None
+2023-07-20 11:36:22,910 - INFO - fq_for: None
+2023-07-20 11:36:22,910 - INFO - fq_rev: None
+2023-07-20 11:36:22,910 - INFO - sensitivity: very-sensitive
+2023-07-20 11:36:22,910 - INFO - max_alignment: None
+2023-07-20 11:36:22,910 - INFO - mapq: 35
+2023-07-20 11:36:22,910 - INFO - enzyme: ['DpnII', 'HinfI']
+2023-07-20 11:36:22,910 - INFO - circular: 
+2023-07-20 11:36:22,910 - INFO - rate: 1.0
+2023-07-20 11:36:22,910 - INFO - bins: 2000
+2023-07-20 11:36:22,910 - INFO - nb_chunks: 1
+2023-07-20 11:36:22,910 - INFO - mode: full
+2023-07-20 11:36:22,910 - INFO - verbose: False
+2023-07-20 11:36:22,910 - INFO - cpus: 1
+2023-07-20 11:36:22,911 - INFO - output_dir: None
+2023-07-20 11:36:22,911 - INFO - Ending HiCBERG pipeline
