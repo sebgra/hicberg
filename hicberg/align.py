@@ -129,9 +129,6 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
         logger.info(cmd_alignment_for)
         logger.info(cmd_alignment_rev)
 
-
-
-
     p_for = sp.Popen([cmd_alignment_for], shell=True, stdout = sp.PIPE, stderr = sp.PIPE)
     p_rev = sp.Popen([cmd_alignment_rev], shell=True, stdout = sp.PIPE,  stderr = sp.PIPE)
 
@@ -140,14 +137,14 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
 
 
     if stdout_for : 
-        logger.info(stdout_for)
+        logger.info(stdout_for.decode('ascii'))
     if stderr_for : 
-        logger.info(stderr_for)
+        logger.info(stderr_for.decode('ascii'))
 
     if stdout_rev:
-        logger.info(stdout_rev)
+        logger.info(stdout_rev.decode('ascii'))
     if stderr_rev:
-        logger.info(stderr_rev)
+        logger.info(stderr_rev.decode('ascii'))
 
     logger.info(f"Alignement saved at {output_path}")
 
@@ -205,6 +202,10 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
     sp.check_call([cmd_view_for], shell=True)
     sp.check_call([cmd_view_rev], shell=True)
 
+    # Delete .sam files after .bam conversion
+    (output_path / sam_for).unlink()
+    (output_path / sam_rev).unlink()
+
     logger.info(f"Compressed alignemnet alignement done at {output_path}")
 
 
@@ -227,10 +228,6 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
     verbose : bool, optional
         Set weither or not the shell command should be printed, by default False
 
-    Returns
-    -------
-    [type]
-        [description]
     """
 
     try:
@@ -265,6 +262,9 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
 
     sp.check_call([cmd_sort_for], shell=True)
     sp.check_call([cmd_sort_rev], shell=True)
+
+    (output_path / '1.bam').unlink()
+    (output_path / '2.bam').unlink()
 
     logger.info(f"Sorted alignement done at {output_path}")
 

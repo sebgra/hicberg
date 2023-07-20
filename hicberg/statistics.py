@@ -25,6 +25,8 @@ import hicberg.utils as hut
 import hicberg.io as hio
 
 import hicberg.utils as hut
+from hicberg import logger
+
 
 
 lowess = sm.nonparametric.lowess
@@ -137,7 +139,7 @@ def log_bin_genome(genome :str, base : float = 1.1, output_dir : str = None) -> 
 
     np.save(folder_path / XS, xs_dict)
 
-    # print(f"Log binning of genome {genome} saved in {folder_path / XS}.")
+    # logger.info(f"Log binning of genome {genome} saved in {folder_path / XS}.")
 
 def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
     """
@@ -159,7 +161,7 @@ def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
     idx = np.searchsorted(xs, distance, side="right") - 1
     return idx
 
-def get_dist_frags(genome : str = None, restriction_map : dict = None, circular : str = None, rate : float = 1.0, output_dir : str = None) -> None:
+def get_dist_frags(genome : str = None, restriction_map : dict = None, circular : str = "", rate : float = 1.0, output_dir : str = None) -> None:
     """
     Get the distribution of fragments' distance from a genome distribution .
 
@@ -170,7 +172,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
     restriction_map : dict, optional
         Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default None
     circular : str, optional
-        Name of the chromosomes to consider as circular, by default None
+        Name of the chromosomes to consider as circular, by default ""
     rate : float, optional
         Set the proportion of restriction sites to condiser. Avoid memory overflow when restriction maps are very dense, by default 1.0
     output_dir : str, optional
@@ -204,7 +206,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
     
     if rate != 1.0:
 
-        restriction_map = hut.subsample_restriction_map(restriction_map = restriction_map, subsample = rate)
+        restriction_map = hut.subsample_restriction_map(restriction_map = restriction_map, rate = rate)
 
     for seq_record in SeqIO.parse(genome, "fasta"):
 
@@ -230,7 +232,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
             del backward_distances
             del max_size_vector
 
-        else : 
+        else :
 
             pairwise_distances = pdist(
                 np.reshape(
@@ -249,13 +251,13 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
         for distance in pairwise_distances:
             dist_frag[seq_name][attribute_xs(xs[seq_name], distance)] += 1
 
-
-
     # Save dictionaries
     np.save(
         folder_path / RESTRICTION_DICO,
         dist_frag,
     )
+
+    logger.info(f"Saved restriction map at : {folder_path / RESTRICTION_DICO}")
 
 def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict = None, output_dir : str = None) -> None:
     
@@ -274,7 +276,7 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
 
         raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
     
-    print(f"Loading matrix {matrix.name}...")
+    logger.info(f"Loading matrix {matrix.name}...")
     
     matrix = cooler.Cooler(matrix_path.as_posix())
 
@@ -317,7 +319,7 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
 
     np.save(output_path / TRANS_PS, trans_ps)
 
-    print(f"Trans P(s) saved in {output_path}")
+    logger.info(f"Trans P(s) saved in {output_path}")
 
 def generate_probabilities():
     pass
@@ -583,7 +585,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     np.save(output_path / UNCUTS, uncuts)
     np.save(output_path / LOOPS, loops)
 
-    print(f"Saved {WEIRDS}, {UNCUTS} and {LOOPS} in {output_path}")
+    logger.info(f"Saved {WEIRDS}, {UNCUTS} and {LOOPS} in {output_path}")
 
 def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, xs : dict, weirds :  dict, uncuts : dict, loops : dict, circular : str = "") -> float:
     """
@@ -1156,6 +1158,6 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     forward_bam_handler.close()
     reverse_bam_handler.close()
 
-    print(f"Predictions written in {output_path}")
+    logger.info(f"Predictions written in {output_path}")
     
 

@@ -32,8 +32,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             mode : str = "full",  verbose : bool = False, cpus : int = 1, output_dir : str = None) -> None :
 
 
-    logger.info('This is an info message from the main function')
-    
+
     args = locals()
 
     if not check_tool("bowtie2"):
@@ -64,18 +63,42 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage < 1 : 
 
-        hio.create_folder(sample_name = name, output_dir = output_dir)
+        output_folder = hio.create_folder(sample_name = name, output_dir = output_dir)
 
-        hut.get_chromosomes_sizes(genome = genome, output_dir = output_dir)
+        hut.get_chromosomes_sizes(genome = genome, output_dir = output_folder)
 
-        index = hal.hic_build_index(genome = genome, output_dir = output_dir, verbose = verbose)
+        index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
 
-        hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, output_dir = output_dir, cpus = cpus, verbose = verbose)
+        hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, output_dir = output_folder, cpus = cpus, verbose = verbose)
+
+    if exit_stage == 1:
+
+        logger.info("Ending HiCBERG pipeline")
+        return
+    
+
+    if start_stage < 2: 
+
+        hal.hic_view(cpus = cpus, output_dir = output_folder, verbose = True)
+        hal.hic_sort(cpus = cpus, output_dir = output_folder, verbose = True)
+        hut.classify_reads(output_dir = output_folder)
+
+    if exit_stage == 2:
+
+        logger.info("Ending HiCBERG pipeline")
+        return
+    
+    if start_stage < 3:
+
+        restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme)
+        hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
+
+
     
     logger.info("Ending HiCBERG pipeline")
 
 
 if __name__ == "__main__":
 
-    pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8)
+    pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8, rate = 0.05)
 

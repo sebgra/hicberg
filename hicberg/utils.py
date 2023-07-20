@@ -272,7 +272,7 @@ def is_reverse(read : pysam.AlignedSegment) -> bool:
     else:
         return False
 
-def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None, chromosome_sizes : str = None, mapq : int = 30, output_dir : str = None) -> None:
+def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : str = "2.sorted.bam", chromosome_sizes : str = "chromosome_sizes.npy", mapq : int = 30, output_dir : str = None) -> None:
     """
     Classification of pairs of reads in 2 different groups:
         Group 0) --> (Unmappable) - files :group0.1.bam and group0.2.bam
@@ -282,24 +282,22 @@ def classify_reads(forward_bam_file : str = None, reverse_bam_file : str = None,
     Parameters
     ----------
     forward_bam_file : str, optional
-        Path to forward .bam alignment file, by default None
+        Path to forward .bam alignment file, by default 1.sorted.bam
     reverse_bam_file : str, optional
-        Path to reverse .bam alignment file, by default None
+        Path to reverse .bam alignment file, by default 2.sorted.bam
     chromosome_sizes : str, optional
-        Path to a chromosome size dictionary save in .npy format, by default None
+        Path to a chromosome size dictionary save in .npy format, by default chromosome_sizes.npy
     mapq : int, optional
         Minimal read quality under which a Hi-C read pair will not be kept, by default 30
     output_dir : str, optional
         Path to the folder where to save the classified alignment files, by default None
-
     """
 
-    forward_bam_file_path, reverse_bam_file_path = Path(forward_bam_file), Path(reverse_bam_file)
+    forward_bam_file_path, reverse_bam_file_path = Path(output_dir, forward_bam_file), Path(output_dir, reverse_bam_file)
 
-    chromosome_sizes_path = Path(chromosome_sizes)
+    chromosome_sizes_path = Path(output_dir, chromosome_sizes)
 
     if not forward_bam_file_path.is_file():
-
 
         raise IOError(f"Forward alignment file {forward_bam_file_path.name} not found. Please provide a valid path.")
 

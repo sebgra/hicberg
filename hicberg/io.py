@@ -24,9 +24,13 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
         Name of the folder to be created.
     output_dir : str
         Path where the folder will be created.
+
+    Returns
+    -------
+    [str]
+        Path of the folder created
     """
     
-
     if sample_name is None:
 
         sample_name = "sample"
@@ -43,7 +47,7 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
 
     logger.info(f"Folder {folder_path} created.")
 
-    # return folder_path
+    return folder_path.as_posix()
 
     
 
@@ -151,7 +155,7 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
         f_out.close()
 
-    print(f"Pairs file successfully created in {output_path}")
+    logger.info(f"Pairs file successfully created in {output_path}")
 
 
     
@@ -209,7 +213,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
     sp.check_call(cooler_cmd, shell=True)
     sp.check_call(balance_cmd, shell=True)
 
-    print(f"Cooler matrix successfully created in {output_path}")
+    logger.info(f"Cooler matrix successfully created in {output_path}")
 
 def load_dictionary(dictionary : str = None) -> dict:
     """
@@ -295,5 +299,5 @@ def merge_predictions(output_dir : str = None) -> None:
     merged_forward_alignment_file_handler.close()
     merged_reverse_alignment_file_handler.close()
 
-    print(f"Predictions successfully merged in {output_path}")
+    logger.info(f"Predictions successfully merged in {output_path}")
 
