@@ -1,23 +1,22 @@
-2023-07-20 13:17:34,643 INFO  Folder /tmp/tmpycgliwpt/test_sample created.
-2023-07-20 13:21:36,427 INFO  This is an info message from the main function
-2023-07-20 13:21:36,427 INFO  Start HiCBERG pipeline
-2023-07-20 13:21:36,427 INFO  name: sample
-2023-07-20 13:21:36,427 INFO  start_stage: fastq
-2023-07-20 13:21:36,427 INFO  exit_stage: None
-2023-07-20 13:21:36,427 INFO  genome: None
-2023-07-20 13:21:36,427 INFO  fq_for: None
-2023-07-20 13:21:36,427 INFO  fq_rev: None
-2023-07-20 13:21:36,427 INFO  sensitivity: very-sensitive
-2023-07-20 13:21:36,427 INFO  max_alignment: None
-2023-07-20 13:21:36,428 INFO  mapq: 35
-2023-07-20 13:21:36,428 INFO  enzyme: ['DpnII', 'HinfI']
-2023-07-20 13:21:36,428 INFO  circular: 
-2023-07-20 13:21:36,428 INFO  rate: 1.0
-2023-07-20 13:21:36,428 INFO  bins: 2000
-2023-07-20 13:21:36,428 INFO  nb_chunks: 1
-2023-07-20 13:21:36,428 INFO  mode: full
-2023-07-20 13:21:36,428 INFO  verbose: False
-2023-07-20 13:21:36,428 INFO  cpus: 1
-2023-07-20 13:21:36,428 INFO  output_dir: None
-2023-07-20 13:21:36,428 INFO  Folder /home/sardine/Bureau/codes/hicberg/sample created.
-2023-07-20 13:21:36,428 INFO  Ending HiCBERG pipeline
+2023-07-20 --  13:48:17 :: INFO :: This is an info message from the main function
+2023-07-20 --  13:48:17 :: INFO :: Start HiCBERG pipeline
+2023-07-20 --  13:48:17 :: INFO :: name: sample
+2023-07-20 --  13:48:17 :: INFO :: start_stage: fastq
+2023-07-20 --  13:48:17 :: INFO :: exit_stage: None
+2023-07-20 --  13:48:17 :: INFO :: genome: None
+2023-07-20 --  13:48:17 :: INFO :: fq_for: None
+2023-07-20 --  13:48:17 :: INFO :: fq_rev: None
+2023-07-20 --  13:48:17 :: INFO :: sensitivity: very-sensitive
+2023-07-20 --  13:48:17 :: INFO :: max_alignment: None
+2023-07-20 --  13:48:17 :: INFO :: mapq: 35
+2023-07-20 --  13:48:17 :: INFO :: enzyme: ['DpnII', 'HinfI']
+2023-07-20 --  13:48:17 :: INFO :: circular: 
+2023-07-20 --  13:48:17 :: INFO :: rate: 1.0
+2023-07-20 --  13:48:17 :: INFO :: bins: 2000
+2023-07-20 --  13:48:17 :: INFO :: nb_chunks: 1
+2023-07-20 --  13:48:17 :: INFO :: mode: full
+2023-07-20 --  13:48:17 :: INFO :: verbose: False
+2023-07-20 --  13:48:17 :: INFO :: cpus: 1
+2023-07-20 --  13:48:17 :: INFO :: output_dir: None
+2023-07-20 --  13:48:17 :: INFO :: Folder /home/sardine/Bureau/codes/hicberg/sample created.
+2023-07-20 --  13:48:17 :: INFO :: Ending HiCBERG pipeline

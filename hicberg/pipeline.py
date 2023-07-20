@@ -17,28 +17,7 @@ import hicberg.utils as hut
 import hicberg.plot as hpl
 import hicberg.statistics as hst
 
-
-# Set up logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-# Create handlers
-c_handler = logging.StreamHandler()
-f_handler = logging.FileHandler('hicberg.log')
-c_handler.setLevel(logging.INFO)
-f_handler.setLevel(logging.INFO)
-
-# Create formatters and add it to handlers
-c_format = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
-f_format = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
-c_handler.setFormatter(c_format)
-f_handler.setFormatter(f_format)
-
-# Add handlers to the logger
-logger.addHandler(c_handler)
-logger.addHandler(f_handler)
-
-logger.propagate = False
+from hicberg import logger
 
 
 def check_tool(name):
@@ -56,16 +35,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     logger.info('This is an info message from the main function')
     
     args = locals()
-    
-    # logging.basicConfig(
-    # level=logging.INFO,
-    # format="%(asctime)s [%(levelname)s] %(message)s",
-    # handlers=[
-    #     logging.FileHandler("hicberg.log"),
-    #     logging.StreamHandler()
-    #     ], stream=sys.stdout
-    # )
-
 
     if not check_tool("bowtie2"):
         logger.error("bowtie2 is not available on your system.")
