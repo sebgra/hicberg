@@ -111,19 +111,24 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     if start_stage < 4:
 
         hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
+        
         # Get chunks as lists
         forward_chunks, reverse_chunks = hut.get_chunks(output_folder)
-        forward_chunks = sorted(glob(output_folder + '/chunks/chunk_for_*.bam'))
-        reverse_chunks = sorted(glob(output_folder + '/chunks/chunk_rev_*.bam'))
+   
 
-        # # print(f"output_folder: {output_folder}")
+        with multiprocessing.Pool(processes = cpus) as pool:
 
-        # # print(f"glob_test : {output_folder + '/chunks/chunk_for_*.bam'}")
+            results = pool.map_async(partial(hst.reattribute_reads, restriction_map = restriction_map, output_dir = output_folder),
+            zip(forward_chunks, reverse_chunks))
+            pool.close()
+            pool.join()
+        
+    
+        
+        
+        # couple = ("/home/sardine/Bureau/sample/group2.1.bam", "/home/sardine/Bureau/sample/group2.2.bam")
 
-        print(f"Forward chunks : {forward_chunks}")
-        print(f"Reverse chunks : {reverse_chunks}")
-
-
+        # hst.reattribute_reads(reads_couple = couple, restriction_map = restriction_map, output_dir = output_folder,)
 
     
     logger.info("Ending HiCBERG pipeline")

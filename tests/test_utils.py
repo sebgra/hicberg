@@ -509,3 +509,12 @@ def test_max_consecutive_nans():
 
 #     # TODO :  to implement
 #     assert True
+
+
+def test_get_chunks(test_chunk_bam):
+
+    ret = test_chunk_bam
+
+    print(f"ret : {ret}")
+
+    assert True

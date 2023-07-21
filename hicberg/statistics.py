@@ -1113,9 +1113,9 @@ def draw_read_couple(propensities : np.array) -> int:
 
     return index
 
-def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, mode : str = "full", output_dir : str = None) -> None:
+def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", bins : int = 2000, d1d2 : dict = "d1d2.npy", mode : str = "full", output_dir : str = None) -> None:
     """
-    
+    Reattribute multi-mapping (ambiguous) reads considering sets of statistical laws.
 
     Parameters
     ----------
@@ -1145,7 +1145,7 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         Mode to use to compute propensity among, by default "full"
     output_dir : str, optional
         Path to the reattributed ambiguous reads alignement files are saved, by default None
-    """    
+    """ 
 
     if output_dir is None:
             
@@ -1154,6 +1154,18 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     else:
             
         output_path = Path(output_dir)
+
+
+
+    #TODO : reload dictionaries
+    
+    xs = hio.load_dictionary(output_path / xs)
+    weirds  = hio.load_dictionary(output_path / weirds)
+    uncuts = hio.load_dictionary(output_path / uncuts)
+    loops = hio.load_dictionary(output_path / loops)
+    trans_ps = hio.load_dictionary(output_path / trans_ps)
+    coverage = hio.load_dictionary(output_path / coverage)
+    d1d2 = hio.load_dictionary(output_path / d1d2)
 
     forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
     file_id = time.time()
