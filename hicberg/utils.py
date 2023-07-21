@@ -1,5 +1,5 @@
 import re
-import glob
+from glob import glob
 import subprocess as sp
 import shutil as sh
 from os import getcwd, mkdir
@@ -9,7 +9,7 @@ import multiprocessing
 from functools import partial
 import itertools
 
-from typing import Iterator, Tuple
+from typing import Iterator, Tuple, List
 
 import numpy as np
 from numpy.random import choice
@@ -1010,3 +1010,12 @@ def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "au
     )
 
     return averaged_data
+
+
+def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
+
+    forward_chunks = sorted(glob(output_dir + '/chunks/chunk_for_*.bam'))
+    reverse_chunks = sorted(glob(output_dir + '/chunks/chunk_rev_*.bam'))
+
+
+    return (forward_chunks, reverse_chunks)

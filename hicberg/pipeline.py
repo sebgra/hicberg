@@ -1,5 +1,6 @@
 import time
 import glob, sys
+from glob import glob
 from shutil import which
 from os.path import join
 from pathlib import Path
@@ -110,6 +111,18 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     if start_stage < 4:
 
         hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
+        # Get chunks as lists
+        forward_chunks, reverse_chunks = hut.get_chunks(output_folder)
+        forward_chunks = sorted(glob(output_folder + '/chunks/chunk_for_*.bam'))
+        reverse_chunks = sorted(glob(output_folder + '/chunks/chunk_rev_*.bam'))
+
+        # # print(f"output_folder: {output_folder}")
+
+        # # print(f"glob_test : {output_folder + '/chunks/chunk_for_*.bam'}")
+
+        print(f"Forward chunks : {forward_chunks}")
+        print(f"Reverse chunks : {reverse_chunks}")
+
 
 
     
