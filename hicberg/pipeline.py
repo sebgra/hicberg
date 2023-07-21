@@ -1,7 +1,7 @@
 import time
 import glob, sys
 from glob import glob
-from shutil import which
+from shutil import which, rmtree
 from os.path import join
 from pathlib import Path
 import subprocess as sp
@@ -124,6 +124,21 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             pool.join()
 
         hio.merge_predictions(output_dir = output_folder)
+
+        # Delete chunks
+        folder_to_delete = Path(output_folder) / 'chunks'
+        rmtree(folder_to_delete)
+
+
+        print(f"output_folder : {output_folder}")
+
+
+        hio.build_pairs(mode = True, output_dir = output_folder)
+        hio.build_matrix(mode = True, output_dir = output_folder)
+
+    if start_stage <= 5:
+
+        print(f"add plots")
         
 
 

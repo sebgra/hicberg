@@ -108,10 +108,10 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
     elif mode: 
             
-        bam_for_path = Path(bam_for_rescued)
-        bam_rev_path = Path(bam_rev_rescued)
-        bam_for_path_rescued = Path(bam_for_rescued)
-        bam_rev_path_rescued = Path(bam_rev_rescued)
+        bam_for_path = Path(output_path / bam_for)
+        bam_rev_path = Path(output_path / bam_rev)
+        bam_for_path_rescued = Path(output_path / bam_for_rescued)
+        bam_rev_path_rescued = Path(output_path / bam_rev_rescued)
 
         if not bam_for_path.exists():
 
@@ -271,8 +271,8 @@ def merge_predictions(output_dir : str = None) -> None:
 
     template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
 
-    merged_forward_alignment_path = output_path / "group2.1_predicted.bam"
-    merged_reverse_alignment_path = output_path / "group2.2_predicted.bam"
+    merged_forward_alignment_path = output_path / "group2.1.rescued.bam"
+    merged_reverse_alignment_path = output_path / "group2.2.rescued.bam"
 
     merged_forward_alignment_file_handler = ps.AlignmentFile(merged_forward_alignment_path, "wb", template=template_file_for)
     merged_reverse_alignment_file_handler = ps.AlignmentFile(merged_reverse_alignment_path, "wb", template=template_file_rev)

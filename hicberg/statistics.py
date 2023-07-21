@@ -1155,10 +1155,7 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
             
         output_path = Path(output_dir)
 
-
-
-    #TODO : reload dictionaries
-    
+    #Reload dictionaries
     xs = hio.load_dictionary(output_path / xs)
     weirds  = hio.load_dictionary(output_path / weirds)
     uncuts = hio.load_dictionary(output_path / uncuts)
