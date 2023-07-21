@@ -1,70 +1,70 @@
-2023-07-21 --  20:05:56 :: INFO :: Start HiCBERG pipeline
-2023-07-21 --  20:05:56 :: INFO :: name: sample
-2023-07-21 --  20:05:56 :: INFO :: start_stage: fastq
-2023-07-21 --  20:05:56 :: INFO :: exit_stage: None
-2023-07-21 --  20:05:56 :: INFO :: genome: /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa
-2023-07-21 --  20:05:56 :: INFO :: fq_for: /home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz
-2023-07-21 --  20:05:56 :: INFO :: fq_rev: /home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz
-2023-07-21 --  20:05:56 :: INFO :: sensitivity: very-sensitive
-2023-07-21 --  20:05:56 :: INFO :: max_alignment: None
-2023-07-21 --  20:05:56 :: INFO :: mapq: 35
-2023-07-21 --  20:05:56 :: INFO :: enzyme: ['DpnII', 'HinfI']
-2023-07-21 --  20:05:56 :: INFO :: circular: 
-2023-07-21 --  20:05:56 :: INFO :: rate: 0.05
-2023-07-21 --  20:05:56 :: INFO :: bins: 2000
-2023-07-21 --  20:05:56 :: INFO :: nb_chunks: 8
-2023-07-21 --  20:05:56 :: INFO :: mode: full
-2023-07-21 --  20:05:56 :: INFO :: verbose: False
-2023-07-21 --  20:05:56 :: INFO :: cpus: 8
-2023-07-21 --  20:05:56 :: INFO :: output_dir: /home/sardine/Bureau/
-2023-07-21 --  20:05:56 :: INFO :: Folder /home/sardine/Bureau/sample created.
-2023-07-21 --  20:05:56 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/sample/chromosome_sizes.npy
-2023-07-21 --  20:06:03 :: INFO :: Index built at /home/sardine/Bureau/sample/SC288_with_micron
-2023-07-21 --  20:06:04 :: INFO :: 100000 reads; of these:
+2023-07-21 --  23:02:30 :: INFO :: Start HiCBERG pipeline
+2023-07-21 --  23:02:30 :: INFO :: name: sample
+2023-07-21 --  23:02:30 :: INFO :: start_stage: fastq
+2023-07-21 --  23:02:30 :: INFO :: exit_stage: None
+2023-07-21 --  23:02:30 :: INFO :: genome: /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa
+2023-07-21 --  23:02:30 :: INFO :: fq_for: /home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz
+2023-07-21 --  23:02:30 :: INFO :: fq_rev: /home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz
+2023-07-21 --  23:02:30 :: INFO :: sensitivity: very-sensitive
+2023-07-21 --  23:02:30 :: INFO :: max_alignment: None
+2023-07-21 --  23:02:30 :: INFO :: mapq: 35
+2023-07-21 --  23:02:30 :: INFO :: enzyme: ['DpnII', 'HinfI']
+2023-07-21 --  23:02:30 :: INFO :: circular: 
+2023-07-21 --  23:02:30 :: INFO :: rate: 0.7
+2023-07-21 --  23:02:30 :: INFO :: bins: 2000
+2023-07-21 --  23:02:30 :: INFO :: nb_chunks: 8
+2023-07-21 --  23:02:30 :: INFO :: mode: full
+2023-07-21 --  23:02:30 :: INFO :: verbose: False
+2023-07-21 --  23:02:30 :: INFO :: cpus: 8
+2023-07-21 --  23:02:30 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-07-21 --  23:02:30 :: INFO :: Folder /home/sardine/Bureau/sample created.
+2023-07-21 --  23:02:30 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/sample/chromosome_sizes.npy
+2023-07-21 --  23:02:38 :: INFO :: Index built at /home/sardine/Bureau/sample/SC288_with_micron
+2023-07-21 --  23:02:39 :: INFO :: 100000 reads; of these:
   100000 (100.00%) were unpaired; of these:
     5972 (5.97%) aligned 0 times
     83671 (83.67%) aligned exactly 1 time
     10357 (10.36%) aligned >1 times
 94.03% overall alignment rate
 
-2023-07-21 --  20:06:04 :: INFO :: 100000 reads; of these:
+2023-07-21 --  23:02:39 :: INFO :: 100000 reads; of these:
   100000 (100.00%) were unpaired; of these:
     4918 (4.92%) aligned 0 times
     84572 (84.57%) aligned exactly 1 time
     10510 (10.51%) aligned >1 times
 95.08% overall alignment rate
 
-2023-07-21 --  20:06:04 :: INFO :: Alignement saved at /home/sardine/Bureau/sample
-2023-07-21 --  20:06:04 :: INFO :: samtools view -S -b /home/sardine/Bureau/sample/1.sam -o /home/sardine/Bureau/sample/1.bam --threads 8
-2023-07-21 --  20:06:04 :: INFO :: samtools view -S -b /home/sardine/Bureau/sample/2.sam -o /home/sardine/Bureau/sample/2.bam --threads 8
-2023-07-21 --  20:06:05 :: INFO :: Compressed alignemnet alignement done at /home/sardine/Bureau/sample
-2023-07-21 --  20:06:05 :: INFO :: samtools sort -n /home/sardine/Bureau/sample/1.bam -o /home/sardine/Bureau/sample/1.sorted.bam --threads 8
-2023-07-21 --  20:06:05 :: INFO :: samtools sort -n /home/sardine/Bureau/sample/2.bam -o /home/sardine/Bureau/sample/2.sorted.bam --threads 8
-2023-07-21 --  20:06:05 :: INFO :: Sorted alignement done at /home/sardine/Bureau/sample
-2023-07-21 --  20:06:07 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:07 :: INFO :: Number of unmapped reads in forward file : 19576
-2023-07-21 --  20:06:07 :: INFO :: Number of unmapped reads in reverse file : 19286
-2023-07-21 --  20:06:07 :: INFO :: Number of uniquely mapped reads in forward file : 74819
-2023-07-21 --  20:06:07 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
-2023-07-21 --  20:06:07 :: INFO :: Number of multi mapped reads in forward file : 125539
-2023-07-21 --  20:06:07 :: INFO :: Number of multi mapped reads in reverse file : 114340
-2023-07-21 --  20:06:09 :: INFO :: Saved restriction map at : /home/sardine/Bureau/sample/dist.frag.npy
-2023-07-21 --  20:06:09 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:13 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:13 :: INFO :: Log binning of genome /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa saved in /home/sardine/Bureau/sample/xs.npy.
-2023-07-21 --  20:06:14 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:16 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:17 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/sample/d1d2.npy
-2023-07-21 --  20:06:18 :: INFO :: Chunks saved in /home/sardine/Bureau/sample/chunks
-2023-07-21 --  20:06:18 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:32 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:33 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:37 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:39 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:41 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:41 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:55 :: INFO :: Predictions written in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:55 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/sample
-2023-07-21 --  20:06:55 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/sample
-2023-07-21 --  20:07:00 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/sample
-2023-07-21 --  20:07:00 :: INFO :: Ending HiCBERG pipeline
+2023-07-21 --  23:02:39 :: INFO :: Alignement saved at /home/sardine/Bureau/sample
+2023-07-21 --  23:02:39 :: INFO :: samtools view -S -b /home/sardine/Bureau/sample/1.sam -o /home/sardine/Bureau/sample/1.bam --threads 8
+2023-07-21 --  23:02:39 :: INFO :: samtools view -S -b /home/sardine/Bureau/sample/2.sam -o /home/sardine/Bureau/sample/2.bam --threads 8
+2023-07-21 --  23:02:39 :: INFO :: Compressed alignemnet alignement done at /home/sardine/Bureau/sample
+2023-07-21 --  23:02:39 :: INFO :: samtools sort -n /home/sardine/Bureau/sample/1.bam -o /home/sardine/Bureau/sample/1.sorted.bam --threads 8
+2023-07-21 --  23:02:39 :: INFO :: samtools sort -n /home/sardine/Bureau/sample/2.bam -o /home/sardine/Bureau/sample/2.sorted.bam --threads 8
+2023-07-21 --  23:02:40 :: INFO :: Sorted alignement done at /home/sardine/Bureau/sample
+2023-07-21 --  23:02:42 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/sample
+2023-07-21 --  23:02:42 :: INFO :: Number of unmapped reads in forward file : 19576
+2023-07-21 --  23:02:42 :: INFO :: Number of unmapped reads in reverse file : 19286
+2023-07-21 --  23:02:42 :: INFO :: Number of uniquely mapped reads in forward file : 74819
+2023-07-21 --  23:02:42 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
+2023-07-21 --  23:02:42 :: INFO :: Number of multi mapped reads in forward file : 125539
+2023-07-21 --  23:02:42 :: INFO :: Number of multi mapped reads in reverse file : 114340
+2023-07-21 --  23:07:35 :: INFO :: Saved restriction map at : /home/sardine/Bureau/sample/dist.frag.npy
+2023-07-21 --  23:07:35 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/sample
+2023-07-21 --  23:07:38 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/sample
+2023-07-21 --  23:07:38 :: INFO :: Log binning of genome /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa saved in /home/sardine/Bureau/sample/xs.npy.
+2023-07-21 --  23:07:39 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/sample
+2023-07-21 --  23:07:41 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/sample
+2023-07-21 --  23:07:42 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/sample/d1d2.npy
+2023-07-21 --  23:07:43 :: INFO :: Chunks saved in /home/sardine/Bureau/sample/chunks
+2023-07-21 --  23:07:44 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:07:57 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:07:58 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:02 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:04 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:06 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:07 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:20 :: INFO :: Predictions written in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:20 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:20 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:25 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/sample
+2023-07-21 --  23:08:25 :: INFO :: Ending HiCBERG pipeline

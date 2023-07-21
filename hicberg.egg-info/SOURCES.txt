@@ -20,6 +20,7 @@ hicberg.egg-info/entry_points.txt
 hicberg.egg-info/requires.txt
 hicberg.egg-info/top_level.txt
 tests/__init__.py
+tests/conftest.py
 tests/test_align.py
 tests/test_benchmark.py
 tests/test_eval.py

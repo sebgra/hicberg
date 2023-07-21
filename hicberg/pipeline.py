@@ -155,5 +155,5 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
 if __name__ == "__main__":
 
-    pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8, rate = 0.05, nb_chunks = 8)
+    pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8, rate = 0.1, nb_chunks = 8)
 

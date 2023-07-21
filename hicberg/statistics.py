@@ -524,7 +524,7 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
     logger.info(f"Saved d1d2 law at : {output_path / D1D2}")
 
-def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", circular : str = "", output_dir : str = None) -> None:
+def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", dist_frag : str = "dist.frag.npy", circular : str = "", output_dir : str = None) -> None:
     """
     Get the patterns distribution from read pairs alignement. .
 
@@ -536,6 +536,8 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
         Path to reverse .bam alignment file, by default None, by default group1.1.bam, by default "group1.1.bam", by default "group1.2.bam"
     xs : str, optional
         Path to the dictionary containing the xs values, by default "xs.npy"
+    dist_frag : str, optional
+        Path to the dictionary containing the inter fragment distances, by default "dist.frag.npy"
     circular : str, optional
         Name of the chromosomes to consider as circular, by default ""
     output_dir : str, optional
@@ -565,6 +567,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     #Load xs
 
     xs = hio.load_dictionary(output_path / XS)
+    dist_frag = hio.load_dictionary(output_path / dist_frag)
 
     # Create placeholders for the dictionaries
 
@@ -609,6 +612,29 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     
     forward_bam_handler.close()
     reverse_bam_handler.close()
+
+    for chromosome in weirds.keys():
+
+        weirds[chromosome] = np.divide(
+            weirds[chromosome],
+            2 * dist_frag.get(chromosome),
+            out=np.zeros_like(weirds[chromosome]),
+            where=2 * dist_frag.get(chromosome) != 0,
+        )
+
+        uncuts[chromosome] = np.divide(
+            uncuts[chromosome],
+            dist_frag.get(chromosome),
+            out=np.zeros_like(uncuts[chromosome]),
+            where=dist_frag.get(chromosome) != 0,
+        )
+
+        loops[chromosome] = np.divide(
+            loops[chromosome],
+            dist_frag.get(chromosome),
+            out=np.zeros_like(loops[chromosome]),
+            where=dist_frag.get(chromosome) != 0,
+        )
 
     np.save(output_path / WEIRDS, weirds)
     np.save(output_path / UNCUTS, uncuts)

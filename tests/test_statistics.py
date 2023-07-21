@@ -256,6 +256,7 @@ def test_generate_d1d2(temporary_folder, test_classify_reads, test_get_restricti
 
     assert d1d2_dictionary_path.is_file()
 
+# TODO : Add argument dist_frag
 
 @pytest.fixture(scope = "module")
 def test_get_patterns(temporary_folder, test_classify_reads, test_log_bin_genome):
