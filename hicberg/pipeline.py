@@ -115,14 +115,18 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         # Get chunks as lists
         forward_chunks, reverse_chunks = hut.get_chunks(output_folder)
    
-
+        # Reattribute reads
         with multiprocessing.Pool(processes = cpus) as pool:
 
             results = pool.map_async(partial(hst.reattribute_reads, restriction_map = restriction_map, output_dir = output_folder),
             zip(forward_chunks, reverse_chunks))
             pool.close()
             pool.join()
+
+        hio.merge_predictions(output_dir = output_folder)
         
+
+
     
         
         

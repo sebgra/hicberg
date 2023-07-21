@@ -266,8 +266,8 @@ def merge_predictions(output_dir : str = None) -> None:
 
     output_path = Path(output_dir)
 
-    forward_alignment_chunk_files = sorted(glob(str(output_path / "chunk_for_*.bam")))
-    reverse_alignment_chunk_files = sorted(glob(str(output_path / "chunk_rev_*.bam")))
+    forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
+    reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
 
     template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
 
@@ -298,6 +298,13 @@ def merge_predictions(output_dir : str = None) -> None:
     template_file_rev.close()
     merged_forward_alignment_file_handler.close()
     merged_reverse_alignment_file_handler.close()
+
+    #TODO : set mode for keeping chunks
+
+    for forward_chunk, reverse_chunk in zip(forward_alignment_chunk_files, reverse_alignment_chunk_files):
+
+        Path(forward_chunk).unlink()
+        Path(reverse_chunk).unlink()
 
     logger.info(f"Predictions successfully merged in {output_path}")
 
