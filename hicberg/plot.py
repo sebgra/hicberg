@@ -19,7 +19,7 @@ from hicberg import logger
 
 DIST_FRAG = "dist.frag.npy"
 XS = "xs.npy"
-COVERAGE_DICO = "coverage.npy"
+COVERAGE = "coverage.npy"
 D1D2 = "d1d2.npy"
 UNCUTS = "uncuts.npy"
 WEIRDS = "weirds.npy"
@@ -152,6 +152,47 @@ def plot_trans_ps(output_dir : str = None) -> None:
     plt.close()
 
     logger.info(f"Saved pseudo P(s) of patterns at : {output_path}")
+
+def plot_coverages(bins : int = 2000, output_dir : str = None ) -> None:
+    """
+    Plot coverages of chromosomes
+    
+    Parameters
+    ----------
+    bins : int, optional
+        Size of the desired bin., by default 2000
+    output_dir : str, optional
+        Path to the folder where to save the plot, by default None, by default None.
+    """
+    
+    if output_dir is None:
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    # reload dictionaries
+
+    xs = load_dictionary(output_path / XS)
+    coverage = load_dictionary(output_path / COVERAGE)
+
+
+    for chromosome in xs.keys():
+
+        
+        plt.figure()
+        plt.plot(coverage[chromosome], label="Covering smoothed")        
+        plt.title(f"Covering across {chromosome} - bins of {bins} bp")
+        plt.xlabel(f"Bin number")
+        plt.ylabel("Number of reads")
+        plt.legend()
+        plt.grid()
+        plt.savefig(output_path / f"coverage_{chromosome}.pdf", format = "pdf")
+        plt.close()
+
+    logger.info(f"Saved coverages at : {output_path}")
+
 
 
 def plot_hic_matrix():
