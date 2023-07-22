@@ -39,8 +39,9 @@ UNCUTS = "uncuts.npy"
 WEIRDS = "weirds.npy"
 LOOPS = "loops.npy"
 TRANS_PS = "trans_ps.npy"
+RESTRICTION_MAP = "restriction_map.npy"
 
-def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> dict[str, np.ndarray[int]]:
+def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], output_dir : str = None) -> dict[str, np.ndarray[int]]:
     """
     Get ordered restriction map (including 0 and n) from a chromosome sequence.
     Return a dictionary where keys are chromosomes names and values are restrictions sites positions.
@@ -51,6 +52,8 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> 
         Path to the genome to digest, by default None, by default None
     enzyme : list[str], optional
         Enzyme or list of enzyme to digest the genome with., by default None, by default ["DpnII"]
+    output_dir : str, optional
+        Path to the folder where to save the plot, by default None
 
     Returns
     -------
@@ -63,6 +66,14 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> 
     if not genome_path.is_file():
 
         raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")
+
+    if output_dir is None:
+
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
     
     
     restriction_map_dictionary = dict()
@@ -88,6 +99,11 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"]) -> 
         )
 
         restriction_map_dictionary[seq_record.id] = restriction_map_array
+
+    np.save(output_path / RESTRICTION_MAP, restriction_map_dictionary)
+
+    logger.info(f"Saved restriction map at : {output_path}")
+    
 
     return restriction_map_dictionary
 

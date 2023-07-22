@@ -22,6 +22,8 @@ import hicberg.statistics as hst
 from hicberg import logger
 
 
+
+
 def check_tool(name):
     """Check whether `name` is on PATH and marked as executable."""
 
@@ -93,7 +95,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     
     if start_stage < 3:
 
-        restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme)
+        restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output_folder)
         hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
         hio.build_pairs(output_dir = output_folder)
         hio.build_matrix(output_dir = output_folder)
@@ -144,6 +146,9 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hpl.plot_trans_ps(output_dir = output_folder)
         hpl.plot_coverages(bins = bins, output_dir = output_folder)
         hpl.plot_couple_repartition(output_dir = output_folder)
+
+        print(f"genome : {genome}")
+        hpl.plot_matrix(genome = genome, output_dir = output_folder)
 
 
     

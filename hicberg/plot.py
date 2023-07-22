@@ -27,6 +27,8 @@ WEIRDS = "weirds.npy"
 LOOPS = "loops.npy"
 TRANS_PS = "trans_ps.npy"
 CLR = "unrescued_map.cool"
+RESTRICTION_MAP = "restriction_map.npy"
+
 
 def plot_laws(output_dir : str = None) -> None:
     """
@@ -211,7 +213,7 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
         Path to reverse .bam alignment file, by default 2.sorted.bam
         Minimal read quality under which a Hi-C read pair will not be kept, by default 30
     output_dir : str, optional
-        Path to the folder where to save the classified alignment files, by default None
+        Path to the folder where to save the plot, by default None
     """
 
     if output_dir is None:
@@ -270,20 +272,160 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
     plt.title("Distribution of set of potential couple sizes")
     plt.legend()
 
-    plt.savefig(
-        join(output_path / f"Couple_sizes_distribution.pdf"),
+    plt.savefig(output_path / f"Couple_sizes_distribution.pdf",
         format="pdf",
     )
     plt.close()
-    plt.close()
+
 
     logger.info(f"Saved couple size distribution at : {output_path}")
 
 def plot_matrix_detailled():
     pass
 
-def plot_matrix():
-    pass
+def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : str = "rescued_map.cool", restriction_map : str = "restriction_map.npy", genome : str = "", vmin : float = 0.0, vmax : float = 3.5, bins : int = 2000, output_dir : str = None) -> None:
+    """
+    Plot matrix with additional trackss
+
+    Parameters
+    ----------
+    unrescued_matrix : str, optional
+        Path to the unrescued map file, by default unrescued_map.cool
+    rescued_matrix : str, optional
+        Path to rescued map file, by default rescued_map.cool
+    restriction_map : dict, optional
+        Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default dist.frag.npy
+    genome : str, optional
+        Path to the genome to digest, by default None, by default None
+    vmin : float, optional
+        Inferior limit for the colorscale, by default 0.0
+    vmax : float, optional
+        Superior limit for the colorscale, by default 3.5
+    bins : int, optional
+        Size of the desired bin., by default 2000
+    output_dir : str, optional
+        Path to the folder where to save the plot, by default None
+    """
+
+    if output_dir is None:
+
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    # Get the matrix
+    unrescued_matrix = load_cooler(output_path / unrescued_matrix)
+    rescued_matrix = load_cooler(output_path /rescued_matrix)
+
+    genome_file = bf.load_fasta(genome, engine="pysam")
+
+    restriction_map = load_dictionary(output_path / restriction_map)
+
+    bins = unrescued_matrix.bins()[:]
+    gc_cov = bf.frac_gc(bins[["chrom", "start", "end"]], genome_file)
+
+
+    ### to make a list of chromosome start/ends in bins:
+    chromstarts = []
+    for i in rescued_matrix.chromnames:
+        chromstarts.append(rescued_matrix.extent(i)[0])
+
+    for i in rescued_matrix.chromnames:
+
+        lower = rescued_matrix.extent(str(i))[0]
+        upper = rescued_matrix.extent(str(i))[1]
+
+        print(f"restriction map : {restriction_map[i]}")
+        print(f"Shape of restriction map :{restriction_map[i].shape}")
+
+
+        # TODO : to correct
+        
+        # binned_restriction_sites = np.floor_divide(restriction_map[i], bins)
+        # Unrescued
+        cis_coverage_unrescued, tot_coverage_unrescued = cooltools.coverage(
+            unrescued_matrix, ignore_diags=False
+        )
+
+        # Rescued
+        cis_coverage, tot_coverage = cooltools.coverage(
+            rescued_matrix, ignore_diags=False
+        )
+
+        # Plot the matrix
+        fig = plt.figure(figsize=(20, 20))
+        gs = gridspec.GridSpec(2, 2, height_ratios=[10, 1], width_ratios=[1, 1])
+
+        ax1 = plt.subplot(gs[0])
+        divider1 = make_axes_locatable(ax1)
+        cax1 = divider1.append_axes("right", size="5%", pad=0.1)
+        im_unrescued = ax1.imshow(
+            np.log10(unrescued_matrix.matrix(balance=False).fetch(i)), vmin = vmin, vmax = vmax,
+            cmap = "afmhot_r",
+        )
+        fig.colorbar(im_unrescued, cax=cax1, label="corrected frequencies")
+        ax1.set_title(
+            f"Unrescued map of chromosome {i} \n binned at {int(rescued_matrix.binsize / 1000 )}kb",
+            loc="center",
+        )
+
+        # Synchronize rescued and unrescued parts
+        ax2 = plt.subplot(gs[1], sharex=ax1, sharey=ax1)
+
+        # Rescued map
+        divider2 = make_axes_locatable(ax2)
+        cax2 = divider2.append_axes("right", size="5%", pad=0.1)
+        im_rescued = ax2.imshow(
+            np.log10(rescued_matrix.matrix(balance=False).fetch(i)), vmin = vmin, vmax = vmax,
+            cmap = "afmhot_r",
+        )
+        fig.colorbar(im_rescued, cax=cax2, label="corrected frequencies")
+        ax2.set_title(
+            f"Rescued map of chromosome {i} \n binned at {int(unrescued_matrix.binsize / 1000 ) }kb",
+            loc="center",
+        )
+
+        ax3 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        ax3.plot(tot_coverage_unrescued[lower:upper], label="total")
+        ax3.plot(cis_coverage_unrescued[lower:upper], label="cis")
+        ax3.set_ylabel("Coverage")
+        ax3.legend(loc="lower left", bbox_to_anchor=(1, 0.5))
+        ax3.set_xticks([])
+
+
+        ax9 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        ax9.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        ax9.set_ylabel("GC Content")
+
+        # ax12 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        # ax12.plot(binned_restriction_sites, color="green")
+        # ax12.set_ylabel("Number of \n restriction sites")
+
+        ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        ax5.plot(tot_coverage_unrescued[lower:upper], label="Before recovery")
+        ax5.plot(tot_coverage[lower:upper], label="Afetr recovery")
+        ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])
+        ax5.set_ylabel("Coverage")
+        ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))
+        ax5.set_xticks([])
+
+
+        ax10 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        ax10.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        ax10.set_ylabel("GC Content")
+
+        # ax11 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        # ax11.plot(binned_restriction_sites, color="green")
+        # ax11.set_ylabel("Number of \n restriction sites")
+
+        plt.savefig(
+            output_path / f"chr_{i}.pdf",
+            format="pdf",
+        )
+
+        plt.close()
 
 def plot_differences():
     pass
