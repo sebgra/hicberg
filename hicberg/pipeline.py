@@ -18,6 +18,7 @@ import hicberg.utils as hut
 import hicberg.plot as hpl
 import hicberg.statistics as hst
 
+
 from hicberg import logger
 
 
@@ -138,8 +139,9 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage <= 5:
 
-        print(f"add plots")
         
+        hpl.plot_laws(output_dir = output_folder)
+        hpl.plot_trans_ps(output_dir = output_folder)
 
 
     
