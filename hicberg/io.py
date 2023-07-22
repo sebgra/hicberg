@@ -263,8 +263,12 @@ def merge_predictions(output_dir : str = None) -> None:
     output_dir : str, optional
         Path to the folder where to save the fused alignment file, by default None
     """
+    if output_dir is None:
+        output_path = Path(getcwd())
 
-    output_path = Path(output_dir)
+    else : 
+
+        output_path = Path(output_dir)
 
     forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
     reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))

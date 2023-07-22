@@ -143,6 +143,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hpl.plot_laws(output_dir = output_folder)
         hpl.plot_trans_ps(output_dir = output_folder)
         hpl.plot_coverages(bins = bins, output_dir = output_folder)
+        hpl.plot_couple_repartition(output_dir = output_folder)
 
 
     

@@ -1215,6 +1215,8 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
         selected_couple_index = draw_read_couple(propensities)
         selected_read_forward, selected_read_reverse = combinations[selected_couple_index]
+        selected_read_forward.set_tag("XL", len(forward_block))
+        selected_read_reverse.set_tag("XL", len(reverse_block))
 
         forward_out_bam_handler.write(selected_read_forward)
         reverse_out_bam_handler.write(selected_read_reverse)
