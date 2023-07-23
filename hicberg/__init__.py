@@ -1,5 +1,6 @@
 import logging
 import logging.config
+import pysam
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -20,4 +21,6 @@ file_handler.setFormatter(file_format)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 logger.propagate = False
+
+save = pysam.set_verbosity(0)
 

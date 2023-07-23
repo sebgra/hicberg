@@ -27,6 +27,7 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Topic :: Scientific/Engineering :: Visualization",
@@ -44,7 +45,7 @@ MAINTENANCE = 0
 VERSION = "{}.{}.{}".format(MAJOR, MINOR, MAINTENANCE)
 
 LICENSE = "MIT"
-URL = "https://github.com/sebgra/mosa-hic"
+URL = "https://github.com/sebgra/hicberg"
 
 DESCRIPTION = __doc__.strip("\n")
 
