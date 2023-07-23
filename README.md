@@ -80,18 +80,22 @@ function App() {
 
 ## Full pipeline
 
-All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command. By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
+All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command.\
+ By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
 
 WEBSITE TO BE ADDED
 
 ```bash
 
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]] [--rate=1.0] [--cpus=1] [--mode="full"] [--output=DIR]
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]\
+[--rate=1.0] [--cpus=1] [--mode="full"] [--output=DIR]
 
-hicberg pipeline -g /home/sardine/Bureau/codes/hic│(hicberg)  sardine@sardine  ~/Bureau/codes/hicberg   main  1
-berg/data_test/SC288_with_micron.fa --fq-for /home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz --f│
-q-rev /home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz -o ~/Bureau/ -r 0.02 -t 8 -m ps_only
+```
 
+For example, to run the pipeline using 8 threads and generate a matrix and its reconstruction in the directory out : 
+
+```
+hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq --cpus 8 -o out/
 
 ```
 
