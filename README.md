@@ -16,29 +16,61 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 
 
+## Environment and dependencies
+
+### Environement 
+
+Create environment by using following command : 
+
+```
+conda create -f hicberg_env.yaml
+```
+
+
+### Dependencies
+
+To ensure that HiC-BERG is correctly working, Bowtie2 and Samtools have to be installed. These can be install through : 
+
+```bash
+
+mamba install bowtie2 -c bioconda;
+mamba install samtools -c bioconda;
+```
 
 
 ## Installation
 
-Install my-project with npm
+Install my-project with pip
 
 ```bash
-  npm install my-project
-  cd my-project
+  pip install -e .
 ```
 
 ## pip
 
+Install HiC-BERG locally by using
+
+```bash
+
+  pip install -e .
+
+```
+
 ### Conda
 
+TO BE COMPLETED
+
 ### Docker
+
+
+TO BE COMPLETED
 
 
 
     
 ## Usage/Examples
 
-```javascript
+```bash
 import Component from 'my-project'
 
 function App() {
@@ -47,6 +79,21 @@ function App() {
 ```
 
 ## Full pipeline
+
+All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command. By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
+
+WEBSITE TO BE ADDED
+
+```bash
+
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]] [--rate=1.0] [--cpus=1] [--mode="full"] [--output=DIR]
+
+hicberg pipeline -g /home/sardine/Bureau/codes/hic│(hicberg)  sardine@sardine  ~/Bureau/codes/hicberg   main  1
+berg/data_test/SC288_with_micron.fa --fq-for /home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz --f│
+q-rev /home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz -o ~/Bureau/ -r 0.02 -t 8 -m ps_only
+
+
+```
 
 ## Individual components
 
@@ -82,6 +129,6 @@ Please adhere to this project's `code of conduct`.
 
 ## Authors
 
-- [@octokatherine](https://www.github.com/octokatherine)
+- [@sebgra](https://www.github.com/sebgra)
 
 ## Citation
