@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess as sp
 
 import multiprocessing
+from multiprocessing import Process
 from functools import partial
 import logging
 
@@ -101,10 +102,29 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hio.build_matrix(output_dir = output_folder)
 
         hst.log_bin_genome(genome = genome, output_dir = output_folder)
-        hst.get_patterns(circular = circular, output_dir = output_folder)
-        hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output_folder)
-        hst.generate_coverages(genome = genome, bins = bins, output_dir = output_folder)
-        hst.generate_d1d2(output_dir = output_folder)
+
+        # TODO : Implement running functions in parallel
+
+        p1 = Process(target = hst.get_patterns(circular = circular, output_dir = output_folder))
+        p1.start()
+        p2 = Process(target = hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output_folder))
+        p2.start()
+        p3 = Process(target = hst.generate_coverages(genome = genome, bins = bins, output_dir = output_folder))
+        p3.start()
+        p4 = Process(target = hst.generate_d1d2(output_dir = output_folder))
+        p4.start()
+
+        p1.join()
+        p2.join()
+        p3.join()
+        p4.join()
+
+
+        # # Classical monothread way
+        # hst.get_patterns(circular = circular, output_dir = output_folder)
+        # hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output_folder)
+        # hst.generate_coverages(genome = genome, bins = bins, output_dir = output_folder)
+        # hst.generate_d1d2(output_dir = output_folder)
         
 
     if exit_stage == 3:
@@ -141,11 +161,26 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage <= 5:
 
+        p1 = Process(target = hpl.plot_laws(output_dir = output_folder))
+        p2 = Process(target = hpl.plot_trans_ps(output_dir = output_folder))
+        p3 = Process(target = hpl.plot_coverages(bins = bins, output_dir = output_folder))
+        p4 = Process(target = hpl.plot_couple_repartition(output_dir = output_folder))
+
         
-        hpl.plot_laws(output_dir = output_folder)
-        hpl.plot_trans_ps(output_dir = output_folder)
-        hpl.plot_coverages(bins = bins, output_dir = output_folder)
-        hpl.plot_couple_repartition(output_dir = output_folder)
+        # hpl.plot_laws(output_dir = output_folder)
+        # hpl.plot_trans_ps(output_dir = output_folder)
+        # hpl.plot_coverages(bins = bins, output_dir = output_folder)
+        # hpl.plot_couple_repartition(output_dir = output_folder)
+
+        p1.start()
+        p2.start()
+        p3.start()
+        p4.start()
+        
+        p1.join()
+        p2.join()
+        p3.join()
+        p4.join()
 
         print(f"genome : {genome}")
         hpl.plot_matrix(genome = genome, output_dir = output_folder)
