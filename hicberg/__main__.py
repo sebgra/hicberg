@@ -37,10 +37,11 @@ def cli(chain=True):
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
 @click.option("rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
 @click.option("cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
+@click.option("mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-def pipeline_cmd(genome, fq_for, fq_rev, rate,  cpus, output):
+def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output):
 
-    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus)
+    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode)
     
 
 

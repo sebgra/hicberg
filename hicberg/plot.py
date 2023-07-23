@@ -337,8 +337,8 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         lower = rescued_matrix.extent(str(i))[0]
         upper = rescued_matrix.extent(str(i))[1]
 
-        print(f"restriction map : {restriction_map[i]}")
-        print(f"Shape of restriction map :{restriction_map[i].shape}")
+        # print(f"restriction map : {restriction_map[i]}")
+        # print(f"Shape of restriction map :{restriction_map[i].shape}")
 
 
         # TODO : to correct

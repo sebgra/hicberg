@@ -121,7 +121,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         # Reattribute reads
         with multiprocessing.Pool(processes = cpus) as pool:
 
-            results = pool.map_async(partial(hst.reattribute_reads, restriction_map = restriction_map, output_dir = output_folder),
+            results = pool.map_async(partial(hst.reattribute_reads, mode = mode,  restriction_map = restriction_map, output_dir = output_folder),
             zip(forward_chunks, reverse_chunks))
             pool.close()
             pool.join()
@@ -152,17 +152,5 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
 
     
-        
-        
-        # couple = ("/home/sardine/Bureau/sample/group2.1.bam", "/home/sardine/Bureau/sample/group2.2.bam")
-
-        # hst.reattribute_reads(reads_couple = couple, restriction_map = restriction_map, output_dir = output_folder,)
-
-    
     logger.info("Ending HiCBERG pipeline")
-
-
-# if __name__ == "__main__":
-
-    # pipeline(genome = "/home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa", fq_for = "/home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz", fq_rev = "/home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz", output_dir = "/home/sardine/Bureau/", cpus = 8, rate = 0.1, nb_chunks = 8)
 
