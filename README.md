@@ -87,14 +87,14 @@ WEBSITE TO BE ADDED
 
 ```bash
 
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]\
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
 [--rate=1.0] [--cpus=1] [--mode="full"] [--output=DIR]
 
 ```
 
 For example, to run the pipeline using 8 threads and generate a matrix and its reconstruction in the directory out : 
 
-```
+```bash
 hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq --cpus 8 -o out/
 
 ```
