@@ -4,7 +4,7 @@ from os.path import join
 from pathlib import Path
 
 from glob import glob
-import shutil
+from shutil import rmtree
 
 import subprocess as sp
 
@@ -14,7 +14,7 @@ import pysam as ps
 
 from hicberg import logger
 
-def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
+def create_folder(sample_name : str  = None, output_dir : str = None, force : bool = False) -> None:
     """
     Creates folder architecture to store results and intermediate files for the full HiCBERG pipeline.
 
@@ -22,6 +22,8 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
     ----------
     samlpe_name : str
         Name of the folder to be created.
+    force : bool
+        Set if existing folder has to be deleted before folder creation.
     output_dir : str
         Path where the folder will be created.
 
@@ -43,7 +45,18 @@ def create_folder(sample_name : str  = None, output_dir : str = None) -> None:
 
         folder_path = Path(output_dir, sample_name)
 
+    if folder_path.exists() and force : 
+
+        rmtree(folder_path)
+
     mkdir(folder_path)
+    mkdir(folder_path / "index")
+    mkdir(folder_path / "alignments")
+    mkdir(folder_path / "statistics")
+    mkdir(folder_path / "contacts")
+    mkdir(folder_path / "contacts" / "matricies")
+    mkdir(folder_path / "contacts" / "pairs")
+    mkdir(folder_path / "plots")
 
     logger.info(f"Folder {folder_path} created.")
 
@@ -311,4 +324,52 @@ def merge_predictions(output_dir : str = None) -> None:
         Path(reverse_chunk).unlink()
 
     logger.info(f"Predictions successfully merged in {output_path}")
+
+def tidy_folder(output_dir : str = None) -> None:
+    """
+    Tidy all the files in the output folder.
+
+    Parameters
+    ----------
+    output_dir : str, optional
+        Path to the folder where to save the fused alignment file, by default None
+    """ 
+
+    if output_dir is None:
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    # Tidy folder
+    # files = glob(str(output_path))
+    files = [p for  p in output_path.glob("*")]
+
+    for file in files :
+
+        if Path(file).suffix == ".bt2l":
+
+            Path(file).rename(output_path / "index" / Path(file).name)
+
+        if Path(file).suffix == ".bam":
+
+            Path(file).rename(output_path / "alignments" / Path(file).name)
+
+        elif Path(file).suffix == ".npy":
+
+            Path(file).rename(output_path / "statistics" / Path(file).name)
+
+        elif Path(file).suffix == ".pairs":
+
+            Path(file).rename(output_path / "contacts" / "pairs" / Path(file).name)
+
+        elif Path(file).suffix == ".cool":
+
+            Path(file).rename(output_path / "contacts" / "matricies" / Path(file).name)
+
+        elif Path(file).suffix == ".pdf" or Path(file).suffix == ".svg":
+
+            Path(file).rename(output_path / "plots" / Path(file).name)
+
 

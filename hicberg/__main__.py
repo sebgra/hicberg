@@ -39,9 +39,10 @@ def cli(chain=True):
 @click.option("cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
 @click.option("mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output):
+@click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
+def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, force):
 
-    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode)
+    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, force = force)
     
 
 

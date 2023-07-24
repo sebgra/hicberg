@@ -34,7 +34,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             fq_for : str = None, fq_rev : str = None, sensitivity : str = "very-sensitive",
             max_alignment : int = None, mapq : int = 35, enzyme  : list[str] = ["DpnII", "HinfI"],
             circular : str = "", rate : float = 1.0, bins : int = 2000, nb_chunks : int = 1,
-            mode : str = "full",  verbose : bool = False, cpus : int = 1, output_dir : str = None) -> None :
+            mode : str = "full",  verbose : bool = False, cpus : int = 1, output_dir : str = None, force : bool = False) -> None :
 
 
 
@@ -68,7 +68,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage < 1 : 
 
-        output_folder = hio.create_folder(sample_name = name, output_dir = output_dir)
+        output_folder = hio.create_folder(sample_name = name, output_dir = output_dir, force = force)
 
         hut.get_chromosomes_sizes(genome = genome, output_dir = output_folder)
         hut.get_bin_table(bins = bins, output_dir = output_folder)
@@ -148,21 +148,24 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hio.build_pairs(mode = True, output_dir = output_folder)
         hio.build_matrix(mode = True, output_dir = output_folder)
 
-    if start_stage <= 5:
+    # if start_stage <= 5:
 
         p1 = Process(target = hpl.plot_laws(output_dir = output_folder))
         p2 = Process(target = hpl.plot_trans_ps(output_dir = output_folder))
         p3 = Process(target = hpl.plot_coverages(bins = bins, output_dir = output_folder))
         p4 = Process(target = hpl.plot_couple_repartition(output_dir = output_folder))
-
+        p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output_folder))
 
         # Launch processees
-        for process in [p1, p2, p3, p4]:
-            process.join()
+        for process in [p1, p2, p3, p4, p5]:
             process.start()
+            process.join()        
 
-        print(f"genome : {genome}")
-        hpl.plot_matrix(genome = genome, output_dir = output_folder)
+    # Tidy outputs
+
+    logger.info(f"Tidying : {output_folder}")
+
+    hio.tidy_folder(output_dir = output_folder)
 
 
     
