@@ -119,10 +119,10 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
         cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
         cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
 
-    else:
+    elif max_alignment is not None:
             
-        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment} {sensitivity} -p {cpus}  -x {index_path} -S {output_path / '1.sam'} {fq_for}"
-        cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment} {sensitivity} -p {cpus}  -x {index_path} -S {output_path / '2.sam'} {fq_rev}"
+        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '1.sam'} {fq_for}"
+        cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '2.sam'} {fq_rev}"
 
     if verbose :
 

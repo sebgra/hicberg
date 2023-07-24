@@ -35,14 +35,22 @@ def cli(chain=True):
 @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
 @click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to analyze.")
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
-@click.option("rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
-@click.option("cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
-@click.option("mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
-@click.option("output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
+@click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
+@click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
+@click.option("--max-alignment", '-k', required = False, type = int, default = None, help = "Set the number of alignments to report in ambiguous reads case.")
+@click.option("--sensitivity", "-s", required = False, type = click.Choice(["very-sensitive", "sensitive", "fast", "very-fast"]), default = "very-sensitive", help = "Set sensitivity level for Bowtie2")
+@click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
+@click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, force):
+def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme,  force):
 
-    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, force = force)
+    print(max_alignment is None)
+
+    
+    
+    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, force = force)
     
 
 
