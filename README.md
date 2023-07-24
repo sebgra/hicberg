@@ -96,7 +96,8 @@ hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "
 For example, to run the pipeline using 8 threads using ARIMA Hi-C kit enzymes (DpnII & HinfI) and generate a matrix and its reconstruction in the directory out : 
 
 ```bash
-hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq -e DpnII -e HinfI --cpus 8 -o out/
+hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq 
+-e DpnII -e HinfI --cpus 8 -o out/
 
 ```
 
