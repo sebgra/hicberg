@@ -88,7 +88,7 @@ WEBSITE TO BE ADDED
 ```bash
 
 hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] \
+[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] 
 [--bins=2000] [--circular=""] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
 
 ```
