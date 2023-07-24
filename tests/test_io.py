@@ -96,3 +96,7 @@ def test_merge_predictions(temporary_folder, test_chunk_bam):
     assert (test_chunk_bam / PREDICTED_BAM_REVERSE).is_file()
 
     assert True
+
+    def test_tidy_folder():
+
+        assert True 
