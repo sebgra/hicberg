@@ -88,7 +88,8 @@ WEBSITE TO BE ADDED
 ```bash
 
 hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--bins=2000] [--circular=""] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
+[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] \
+[--bins=2000] [--circular=""] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
 
 ```
 
@@ -116,8 +117,8 @@ All components of the hicberg program can be used as python modules. See the doc
 ```python
 
 import hicberg.io #Functions for I/O and folder management.
-import hicberg.align#Functions for sequence alignment steps
-import hicberg.utils#Functions for handling reads and alignment
+import hicberg.align #Functions for sequence alignment steps
+import hicberg.utils #Functions for handling reads and alignment
 import hicberg.statistics #Functions for extract and create statistical models
 import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
 
