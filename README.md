@@ -129,10 +129,40 @@ import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
 
 ## File formats
 
-* pair files
+* pair files: This format is used for all intermediate files in the pipeline and is also used by hicberg build_matrix. It is a tab-separated format holding informations about Hi-C pairs. It has an official specification defined by the 4D Nucleome data coordination and integration center.
 
 
-* cool files
+* cool files: This format is used to store genomic interaction data such as Hi-C contact matrices. These file can be handled using `cooler` Python library.
+
+* npy files: This format is used to store dictionaries containing information about genomic coordinates, binning or statistical laws. Dictionaries are stores with * chromosome * as key and * arrays* as values. Such file can be handled using `numpy` Python library. 
+
+
+* bt2l files:
+
+* bam files:
+
+* fragments_fixed_sizes.txt: 
+
+  * chrom: Chromosome identifier. Order should be the same as in pairs files.
+
+  * start: 0-based start of fragment, in base pairs.
+
+  * end: 0-based end of fragment, in base pairs.
+
+```
+chrom start end
+chr1   0       2000
+chr1   2000    4000
+chr1   4000    6000
+chr1   6000    8000
+chr1   8000    10000
+chr1   10000   12000
+chr1   12000   14000
+chr1   14000   16000
+chr1   16000   18000
+chr1   18000   20000
+
+```
 
 
 
