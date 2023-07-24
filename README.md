@@ -81,21 +81,21 @@ function App() {
 ## Full pipeline
 
 All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command.\
- By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
+By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
 
 WEBSITE TO BE ADDED
 
 ```bash
 
 hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--output=DIR]
+[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--bins=2000] [--circular=""] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
 
 ```
 
-For example, to run the pipeline using 8 threads and generate a matrix and its reconstruction in the directory out : 
+For example, to run the pipeline using 8 threads using ARIMA Hi-C kit enzymes (DpnII & HinfI) and generate a matrix and its reconstruction in the directory out : 
 
 ```bash
-hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq --cpus 8 -o out/
+hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq -e DpnII -e HinfI --cpus 8 -o out/
 
 ```
 
@@ -111,11 +111,25 @@ hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq --cpus
 
 ## Library
 
+All components of the hicberg program can be used as python modules. See the documentation on reathedocs. The expected contact map format for the library is a simple COOL file, and the objects handled by the library are simple numpy arrays through Cooler. The various submodules of hicberg contain various utilities.
+
+```python
+
+import hicberg.io #Functions for I/O and folder management.
+import hicberg.align#Functions for sequence alignment steps
+import hicberg.utils#Functions for handling reads and alignment
+import hicberg.statistics #Functions for extract and create statistical models
+import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
+
+```
+
 ## Connecting the modules
 
 ## File formats
 
 * pair files
+
+
 * cool files
 
 
