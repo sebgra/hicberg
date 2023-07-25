@@ -80,6 +80,8 @@ function App() {
 
 ## Full pipeline
 
+<img src="/docs/images/Workflow.png" alt="HiC-BERG" style="height: 100px; width:100px;"/>
+
 All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command.\
 By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
 
