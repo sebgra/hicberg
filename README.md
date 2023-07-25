@@ -137,9 +137,9 @@ import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
 * npy files: This format is used to store dictionaries containing information about genomic coordinates, binning or statistical laws. Dictionaries are stores with * chromosome * as key and * arrays* as values. Such file can be handled using `numpy` Python library. 
 
 
-* bt2l files:
+* bt2l files: Thi format is used to store index of genomes performer using Bowtie2. 
 
-* bam files:
+* bam files: This format is used to built analyses on, by several functions of hicberg. It is a compressed standard alignement format file providing multiple informations about read alignments performer by [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml). Such files can be handled through [Samtools](http://www.htslib.org/doc/) and it's Python wrapper [PySam](https://pysam.readthedocs.io/en/latest/api.html). More details about SAM and BAM format can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
 
 * fragments_fixed_sizes.txt: 
 
@@ -154,27 +154,23 @@ chrom start end
 chr1   0       2000
 chr1   2000    4000
 chr1   4000    6000
-chr1   6000    8000
-chr1   8000    10000
-chr1   10000   12000
-chr1   12000   14000
+...
 chr1   14000   16000
 chr1   16000   18000
 chr1   18000   20000
-
 ```
-
-
-
 
 
 ## Contributing
 
-Contributions are always welcome!
+All contributions are welcome, in the form of bug reports, suggestions, documentation or pull requests. We use the numpy standard for docstrings when documenting functions.
 
-See `contributing.md` for ways to get started.
+The code formatting standard we use is black, with --line-length=79 to follow PEP8 recommendations. We use pytest with the pytest-doctest and pytest-pylint plugins as our testing framework. Ideally, new functions should have associated unit tests, placed in the tests folder. To test the code, you can run:
 
-Please adhere to this project's `code of conduct`.
+```bash
+
+PUT CODE HERE
+```
 
 
 ## Authors
