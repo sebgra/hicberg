@@ -4006,3 +4006,4 @@ Command: /usr/bin/bowtie2-align-l --wrapper basic-0 --very-sensitive -p 8 -k 3 -
 2023-07-31 --  17:21:36 :: INFO :: Number of multi mapped reads in forward file : 125539
 2023-07-31 --  17:21:36 :: INFO :: Number of multi mapped reads in reverse file : 114340
 2023-07-31 --  17:21:37 :: INFO :: Chunks saved in /tmp/tmp1dmu07vl/chunks
+2023-07-31 --  17:33:04 :: INFO :: Folder /home/sardine/Bureau/blabla created.

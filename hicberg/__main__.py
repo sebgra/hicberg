@@ -48,13 +48,54 @@ def cli(chain=True):
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "stats", "pairs", "rescue", "cool"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
 def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, start_stage, exit_stage, force):
-
-    print(max_alignment is None)
-
-    
-    
     hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
+@click.option("--name", "-n", required = False, default = None, type = str, help = "Name of the output folder to create.")
+def create_folder_cmd(output, force, name):
+    hio.create_folder(sample_name=name, output_dir=output, force=force)
 
+# @click.command()
+# def get_tables_cmd():
+#     pass
 
+# @click.command()
+# def alignment_cmd():
+#     pass
+
+# @click.command()
+# def classify_cmd():
+#     pass
+
+# @click.command()
+# def statistics_cmd():
+#     pass
+
+# @click.command()
+# def pairs_cmd():
+#     pass
+
+# @click.command()
+# def matrix_cmd():
+#     pass
+
+# def rescue_cmd():
+#     pass
+
+# @click.command()
+# def plot_cmd():
+#     pass
+
+# Command group
 cli.add_command(pipeline_cmd, name="pipeline")
+cli.add_command(create_folder_cmd, name="create-folder")
+# cli.add_command(get_tables_cmd, name="get-tables")
+# cli.add_command(alignment_cmd, name="alignment")
+# cli.add_command(classify_cmd, name="classify")
+# cli.add_command(statistics_cmd, name="statistics")
+# cli.add_command(pairs_cmd, name="pairs")
+# cli.add_command(matrix_cmd, name="matrix")
+# cli.add_command(rescue_cmd, name="rescue")
+# cli.add_command(plot_cmd, name="plot")

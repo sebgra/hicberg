@@ -105,13 +105,55 @@ hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq
 
 ## Individual components
 
-### Component 1
+### I/O
 
-#### Sub component 1
+#### Create folder
+
+```bash
+hicberg create_folder --output=DIR [--name="folder_name"] [--force]
+```
+
+For example to create a folder named "test" on the desktop:
+
+```bash
+hicberg create_folder -o ~/Desktop/ -n test
+```
 
 #### Sub component 2
 
-### Component 2
+### Alignment
+
+```bash
+```
+
+### Classification
+```bash
+```
+
+### Statistics
+```bash
+```
+
+### Hi-C map
+```bash
+``` 
+
+#### Build pairs
+```bash
+```
+
+#### Build matrix
+```bash
+```
+
+### Reconstruction
+```bash
+```
+
+### Plot
+
+```bash
+```
 
 ## Library
 
