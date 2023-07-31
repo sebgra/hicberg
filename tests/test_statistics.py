@@ -98,6 +98,7 @@ def test_get_restriction_map(genome, enzyme, length):
     assert restriction_map[DICT_FIRST_KEY][-1] == DICT_FIRST_CHR_LAST_POS
     #Check if the length of the restriction map is right.
     assert len(restriction_map[DICT_FIRST_KEY]) == length
+    
 
 
 @pytest.fixture(scope = "module")
@@ -513,15 +514,7 @@ def test_reattribute_reads(temporary_folder, test_classify_reads, test_get_restr
     weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
 
     print(f"test_log_bin_genome: {test_log_bin_genome}")
-    
-    # xs = hio.load_dictionary(test_log_bin_genome)
-    # weirds = hio.load_dictionary(weirds_dictionary_path)
-    # uncuts = hio.load_dictionary(uncuts_dictionary_path)
-    # loops = hio.load_dictionary(loops_dictionary_path)
-
-    # trans_ps = hio.load_dictionary(test_generate_trans_ps)
-    # coverage = hio.load_dictionary(test_generate_coverages)
-    # d1d2 = hio.load_dictionary(test_generate_d1d2)
+    print(f"test_get_restriction_map_mono : {test_get_restriction_map_mono}")
 
     xs = test_log_bin_genome
     weirds = weirds_dictionary_path
@@ -536,7 +529,7 @@ def test_reattribute_reads(temporary_folder, test_classify_reads, test_get_restr
 
     forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
 
-    hut.reattribute_reads(reads_couple = (forward_bam_file, reverse_bam_file), restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE, output_dir = temp_dir_path)
+    hst.reattribute_reads(reads_couple = (forward_bam_file, reverse_bam_file), restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE, output_dir = temp_dir_path)
     
     # yield temp_dir_path
 

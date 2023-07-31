@@ -23,8 +23,8 @@ TEST_DICT = "data_test/chromosome_sizes.npy"
 GROUP1_PAIRS = "group1.pairs"
 UNRESCUED_MAP = "unrescued_map.cool"
 
-PREDICTED_BAM_FORWARD = "group2.1_predicted.bam"
-PREDICTED_BAM_REVERSE = "group2.2_predicted.bam"
+PREDICTED_BAM_FORWARD = "group2.1.rescued.bam"
+PREDICTED_BAM_REVERSE = "group2.2.rescued.bam"
 
 
 DICT_FIRST_KEY = "chr10"
@@ -85,10 +85,12 @@ def test_merge_predictions(temporary_folder, test_chunk_bam):
 
     temp_dir_path = Path(temporary_folder)
 
-    hio.merge_predictions(output_dir = "./data_test/")
+    folder_path = Path("data_test/alignments/chunks")
 
-    assert (test_chunk_bam / PREDICTED_BAM_FORWARD).is_file()
-    assert (test_chunk_bam / PREDICTED_BAM_REVERSE).is_file()
+    hio.merge_predictions(output_dir = folder_path, clean = False)
+
+    assert (folder_path / PREDICTED_BAM_FORWARD).is_file()
+    assert (folder_path / PREDICTED_BAM_REVERSE).is_file()
 
     assert True
 

@@ -267,7 +267,7 @@ def load_cooler(matrix : str = None) -> cooler.Cooler:
 
     return cooler.Cooler(matrix.as_posix())
 
-def merge_predictions(output_dir : str = None) -> None:
+def merge_predictions(output_dir : str = None, clean : bool = True) -> None:
     """
     Merge predictions of all chunks of ambiguous reads predictions.
 
@@ -275,6 +275,8 @@ def merge_predictions(output_dir : str = None) -> None:
     ----------
     output_dir : str, optional
         Path to the folder where to save the fused alignment file, by default None
+    clean : bool, optional
+        Set weither or not to remove temporary chunks, by default True
     """
     if output_dir is None:
         output_path = Path(getcwd())
@@ -320,12 +322,12 @@ def merge_predictions(output_dir : str = None) -> None:
     merged_forward_alignment_file_handler.close()
     merged_reverse_alignment_file_handler.close()
 
-    #TODO : set mode for keeping chunks
+    if clean:
 
-    for forward_chunk, reverse_chunk in zip(forward_alignment_chunk_files, reverse_alignment_chunk_files):
+        for forward_chunk, reverse_chunk in zip(forward_alignment_chunk_files, reverse_alignment_chunk_files):
 
-        Path(forward_chunk).unlink()
-        Path(reverse_chunk).unlink()
+            Path(forward_chunk).unlink()
+            Path(reverse_chunk).unlink()
 
     logger.info(f"Predictions successfully merged in {output_path}")
 
