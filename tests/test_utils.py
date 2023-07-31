@@ -75,6 +75,8 @@ DEFAULT_ENZYME = "DpnII"
 DEFAULT_MIN_CHUNK_SIZE = 50
 
 BINS = 2000
+MODE = "full"
+
 
 
 
@@ -449,7 +451,7 @@ def test_block_counter(test_classify_reads):
     """
 
 
-    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[2])
+    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
 
     nb_forward_block, nb_reverse_block = hut.block_counter(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file)
     
@@ -462,15 +464,19 @@ def test_chunk_bam(temporary_folder, test_classify_reads):
     """
 
     temp_dir_path = Path(temporary_folder)
-    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[2])
+    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
 
     print(f"Files to be chunked : {forward_bam_file} and {reverse_bam_file}")
 
     hut.chunk_bam(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file, nb_chunks = 12, output_dir = temp_dir_path)
 
     chunks_path = temp_dir_path / 'chunks'
+
+    print(f"Chunks path : {chunks_path}")
     
     is_full =  any(chunks_path.iterdir())
+
+    # print(f"Folder content : {list(chunks_path.iterdir())}")
 
     yield chunks_path
 
@@ -500,6 +506,8 @@ def test_max_consecutive_nans():
 
     max_consecutive_nans = hut.max_consecutive_nans(vector_test)
 
+    print(f"Max consecutive nans : {max_consecutive_nans}")
+
     assert max_consecutive_nans == 2
 
 # def test_mad_smoothing():
@@ -516,5 +524,45 @@ def test_get_chunks(test_chunk_bam):
     ret = test_chunk_bam
 
     print(f"ret : {ret}")
+
+    assert True
+
+# @pytest.fixture(scope="session")
+def test_reattribute_reads(temporary_folder, test_classify_reads, test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2):
+    """
+    Test if the reattribute_reads function create prediction alignment files.
+    """
+
+    temp_dir_path = Path(temporary_folder)
+
+    weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
+
+    print(f"test_log_bin_genome: {test_log_bin_genome}")
+    
+    # xs = hio.load_dictionary(test_log_bin_genome)
+    # weirds = hio.load_dictionary(weirds_dictionary_path)
+    # uncuts = hio.load_dictionary(uncuts_dictionary_path)
+    # loops = hio.load_dictionary(loops_dictionary_path)
+
+    # trans_ps = hio.load_dictionary(test_generate_trans_ps)
+    # coverage = hio.load_dictionary(test_generate_coverages)
+    # d1d2 = hio.load_dictionary(test_generate_d1d2)
+
+    xs = test_log_bin_genome
+    weirds = weirds_dictionary_path
+    uncuts = uncuts_dictionary_path
+    loops = loops_dictionary_path
+
+    trans_ps = test_generate_trans_ps
+    coverage = test_generate_coverages
+    d1d2 = test_generate_d1d2
+
+    restriction_map = test_get_restriction_map_mono
+
+    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
+
+    hut.reattribute_reads(reads_couple = (forward_bam_file, reverse_bam_file), restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE, output_dir = temp_dir_path)
+    
+    # yield temp_dir_path
 
     assert True

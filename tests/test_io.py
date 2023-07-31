@@ -26,6 +26,7 @@ UNRESCUED_MAP = "unrescued_map.cool"
 PREDICTED_BAM_FORWARD = "group2.1_predicted.bam"
 PREDICTED_BAM_REVERSE = "group2.2_predicted.bam"
 
+
 DICT_FIRST_KEY = "chr10"
 DICT_FIRST_SIZE = 745751
 
@@ -84,19 +85,13 @@ def test_merge_predictions(temporary_folder, test_chunk_bam):
 
     temp_dir_path = Path(temporary_folder)
 
-    print(f"Test chunk bam: {test_chunk_bam}")
-
-    hio.merge_predictions(output_dir = test_chunk_bam)
-
-    print(f"Temp dir path: {test_chunk_bam}")
-    print(f"Predicted bam forward: {test_chunk_bam / PREDICTED_BAM_FORWARD}")
-    print(f"Predicted bam reverse: {test_chunk_bam / PREDICTED_BAM_REVERSE}")
+    hio.merge_predictions(output_dir = "./data_test/")
 
     assert (test_chunk_bam / PREDICTED_BAM_FORWARD).is_file()
     assert (test_chunk_bam / PREDICTED_BAM_REVERSE).is_file()
 
     assert True
 
-    def test_tidy_folder():
+def test_tidy_folder():
 
-        assert True 
+    assert True 

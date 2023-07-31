@@ -286,6 +286,10 @@ def merge_predictions(output_dir : str = None) -> None:
     forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
     reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
 
+    print(f"output_path : {output_path}")
+    print(f"forward_alignment_chunk_files : {forward_alignment_chunk_files}")
+    print(f"reverse_alignment_chunk_files : {reverse_alignment_chunk_files}")
+
     template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
 
     merged_forward_alignment_path = output_path / "group2.1.rescued.bam"

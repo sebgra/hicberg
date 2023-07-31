@@ -201,7 +201,7 @@ def plot_coverages(bins : int = 2000, output_dir : str = None ) -> None:
 def plot_hic_matrix():
     pass
 
-def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", reverse_bam_file : str = "group2.1.rescued.bam",  output_dir : str = None ) -> None:
+def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", reverse_bam_file : str = "group2.2.rescued.bam",  output_dir : str = None ) -> None:
     """
     Plot read couples sizes distribution
 
@@ -229,12 +229,14 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
     merged_forward_alignment_file_handler = ps.AlignmentFile(merged_forward_alignment_path, "rb")
     merged_reverse_alignment_file_handler = ps.AlignmentFile(merged_reverse_alignment_path, "rb")
 
-     # Get the number of possible couples
+    # Get the number of possible couples
     couple_lenght = list()
 
     for forward_read, reverse_read in zip(merged_forward_alignment_file_handler, merged_reverse_alignment_file_handler):
 
         couple_lenght.append(forward_read.get_tag("XL") * reverse_read.get_tag("XL"))
+
+    # print(f"Max couple lenght : {max(couple_lenght)}")
 
     _, bins_edges = np.histogram(couple_lenght, bins=max(couple_lenght))
 
