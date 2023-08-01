@@ -121,14 +121,47 @@ hicberg create_folder -o ~/Desktop/ -n test
 
 #### Sub component 2
 
+### Preprocessing
+
+After having created a folder with the previous command mentionned in **create folder**, the gennome can be processed to generate fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__  using the following command:
+
+```bash
+hicberg get-tables --output=DIR --genome=FILE [--bins=2000] 
+``` 
+For example to these files in a folder named "test" previously created on the desktop with a binning size of 2000 bp :
+
+```bash
+hicberg get-tables -o ~/Desktop/test/ -g genome.fa --bins 2000
+```
+
 ### Alignment
 
+After having created a folder with the previous command mentionned in **create folder** and performed the creation of fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__ , the reads can be aligned using the following command:
+
 ```bash
+hicberg alignment --genome=FILE --fq-for=FILE --fq-rev=FILE --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivity="very-sensitive"] 
+  [--verbosity]
 ```
 
-### Classification
+For example to align reads in a folder named "test" previously created on the desktop with 8 threads:
+
 ```bash
+hicberg alignment -g genome.fa -f reads_for.fq -r rev_reads.fq -o ~/Desktop/test/ --cpus 8
 ```
+
+
+### Classification
+
+```bash
+hicberg classify --output=DIR
+```
+
+Considering the previous example, to classify the reads in a folder named "test" previously created on the desktop:
+
+```bash
+hicberg classify -o ~/Desktop/test/
+```
+
 
 ### Statistics
 ```bash

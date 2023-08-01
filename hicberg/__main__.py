@@ -57,17 +57,35 @@ def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, max_alignment
 def create_folder_cmd(output, force, name):
     hio.create_folder(sample_name=name, output_dir=output, force=force)
 
-# @click.command()
-# def get_tables_cmd():
-#     pass
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
+def get_tables_cmd(genome, bins, output):
+    hut.get_chromosomes_sizes(genome = genome, output_dir = output)
+    hut.get_bin_table(bins = bins, output_dir = output)
 
-# @click.command()
-# def alignment_cmd():
-#     pass
 
-# @click.command()
-# def classify_cmd():
-#     pass
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to map.")
+@click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to map.")
+@click.option("--sensitivity", "-s", required = False, type = click.Choice(["very-sensitive", "sensitive", "fast", "very-fast"]), default = "very-sensitive", help = "Set sensitivity level for Bowtie2")
+@click.option("--max-alignment", '-k', required = False, type = int, default = None, help = "Set the number of alignments to report in ambiguous reads case.")
+@click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
+@click.option("--verbose", "-v", is_flag = True, help = "Set verbosity level.")
+def alignment_cmd(genome, fq_for, fq_rev, max_alignment, sensitivity, output, cpus, verbose):
+    index = hal.hic_build_index(genome = genome, output_dir = output, cpus = cpus, verbose = verbose)
+    hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output, cpus = cpus, verbose = True)
+    hal.hic_view(output_dir = output, cpus = cpus, verbose = verbose)
+    hal.hic_sort(output_dir = output, cpus = cpus, verbose = verbose)
+
+
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+def classify_cmd(output):
+    hut.classify_reads(output_dir = output)
 
 # @click.command()
 # def statistics_cmd():
@@ -91,9 +109,9 @@ def create_folder_cmd(output, force, name):
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
 cli.add_command(create_folder_cmd, name="create-folder")
-# cli.add_command(get_tables_cmd, name="get-tables")
-# cli.add_command(alignment_cmd, name="alignment")
-# cli.add_command(classify_cmd, name="classify")
+cli.add_command(get_tables_cmd, name="get-tables")
+cli.add_command(alignment_cmd, name="alignment")
+cli.add_command(classify_cmd, name="classify")
 # cli.add_command(statistics_cmd, name="statistics")
 # cli.add_command(pairs_cmd, name="pairs")
 # cli.add_command(matrix_cmd, name="matrix")

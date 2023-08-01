@@ -105,8 +105,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         hst.log_bin_genome(genome = genome, output_dir = output_folder)
 
-        # TODO : Implement running functions in parallel
-
         p1 = Process(target = hst.get_patterns(circular = circular, output_dir = output_folder))
         p2 = Process(target = hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output_folder))
         p3 = Process(target = hst.generate_coverages(genome = genome, bins = bins, output_dir = output_folder))
