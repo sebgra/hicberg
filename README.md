@@ -62,21 +62,10 @@ TO BE COMPLETED
 
 ### Docker
 
-
 TO BE COMPLETED
-
-
-
     
 ## Usage/Examples
 
-```bash
-import Component from 'my-project'
-
-function App() {
-  return <Component />
-}
-```
 
 ## Full pipeline
 
