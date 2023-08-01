@@ -80,7 +80,7 @@ WEBSITE TO BE ADDED
 
 hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
 [--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] 
-[--bins=2000] [--circular=""] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
+[--bins=2000] [--circular=""] [--mapq=35] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
 
 ```
 
@@ -209,7 +209,7 @@ Thus, the built matrix file will be  __*rescued_map.cool*__.
 ### Classification
 
 ```bash
-hicberg classify --output=DIR
+hicberg classify --output=DIR [--mapq=35] 
 ```
 
 Considering the previous example, to classify the reads in a folder named "test" previously created on the desktop:

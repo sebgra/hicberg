@@ -87,7 +87,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         hal.hic_view(cpus = cpus, output_dir = output_folder, verbose = True)
         hal.hic_sort(cpus = cpus, output_dir = output_folder, verbose = True)
-        hut.classify_reads(output_dir = output_folder)
+        hut.classify_reads(mapq = mapq, output_dir = output_folder)
 
     if exit_stage == 2:
 
@@ -162,7 +162,5 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     hio.tidy_folder(output_dir = output_folder)
 
-
-    
     logger.info("Ending HiCBERG pipeline")
 

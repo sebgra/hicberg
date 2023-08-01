@@ -13,6 +13,8 @@ import hicberg.plot as hpl
 
 import ast
 
+import numpy as np
+
 from hicberg.version import __version__
 
 
@@ -46,12 +48,13 @@ def cli(chain=True):
 @click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
 @click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
 @click.option("--circular", "-c", required = False, type = str, default = "", help = "Name of the chromosome to consider as circular")
+@click.option("--mapq", "-q", required = False, type = int, default = 35, help = "Minimum MAPQ to consider a read as valid")
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "stats", "pairs", "rescue", "cool"]), default = "fastq", help = "Stage to start the pipeline")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "stats", "pairs", "rescue", "cool"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, start_stage, exit_stage, force):
-    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, start_stage = start_stage, exit_stage = exit_stage, force = force)
+def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
@@ -86,9 +89,10 @@ def alignment_cmd(genome, fq_for, fq_rev, max_alignment, sensitivity, output, cp
 
 
 @click.command()
+@click.option("--mapq", "-q", required = False, type = int, default = 35, help = "Minimum MAPQ to consider a read as valid")
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-def classify_cmd(output):
-    hut.classify_reads(output_dir = output)
+def classify_cmd(mapq, output):
+    hut.classify_reads(mapq = mapq, output_dir = output)
 
 
 @click.command()
@@ -172,6 +176,17 @@ def plot_cmd(genome, bins, output):
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
 def tidy_cmd(output):
     hio.tidy_folder(output_dir = output)
+
+# @click.command()
+# @click.option("-a", "--aaa", type = str, multiple = True)
+# @click.option("-b", "--bbb", type = str)
+# def test_cmd(aaa, bbb):
+#     print(f"aaa = {aaa}")
+#     print(f"Splitted aaa : {aaa.split(',')}")
+#     print(f"bbb = {bbb.split(',')}")
+#     c = [int(t) for t in bbb.split(",")]
+
+#     print(np.sum(c))
     
 
 # Command group
@@ -186,3 +201,4 @@ cli.add_command(statistics_cmd, name="statistics")
 cli.add_command(rescue_cmd, name="rescue")
 cli.add_command(plot_cmd, name="plot")
 cli.add_command(tidy_cmd, name="tidy")
+# cli.add_command(test_cmd, name="test")

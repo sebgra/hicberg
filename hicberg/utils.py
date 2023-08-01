@@ -271,7 +271,7 @@ def is_reverse(read : pysam.AlignedSegment) -> bool:
     else:
         return False
 
-def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : str = "2.sorted.bam", chromosome_sizes : str = "chromosome_sizes.npy", mapq : int = 30, output_dir : str = None) -> None:
+def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : str = "2.sorted.bam", chromosome_sizes : str = "chromosome_sizes.npy", mapq : int = 35, output_dir : str = None) -> None:
     """
     Classification of pairs of reads in 2 different groups:
         Group 0) --> (Unmappable) - files :group0.1.bam and group0.2.bam
