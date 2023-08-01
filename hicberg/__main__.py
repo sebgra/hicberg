@@ -167,6 +167,11 @@ def plot_cmd(genome, bins, output):
     for process in [p1, p2, p3, p4, p5]:
         process.start()
         process.join()
+
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+def tidy_cmd(output):
+    hio.tidy_folder(output_dir = output)
     
 
 # Command group
@@ -180,3 +185,4 @@ cli.add_command(build_matrix_cmd, name="build-matrix")
 cli.add_command(statistics_cmd, name="statistics")
 cli.add_command(rescue_cmd, name="rescue")
 cli.add_command(plot_cmd, name="plot")
+cli.add_command(tidy_cmd, name="tidy")

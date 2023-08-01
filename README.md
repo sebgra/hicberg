@@ -289,9 +289,77 @@ hicberg plot -g genome.fa -o ~/Desktop/test/ -b 2000
 
 The plots created are:
 
-- __*patterns_distribution_X.pdf*__ : plot of the distribution of the different patterns extracted from the reads of **group1**
-- __*coverage_X.png*__ : plot of the genome coverage extracted from the reads of **group1**
-- __*d1d2.pdf*__ : plot of the d1d2 law extracted from the reads of **group1**
+- __*patterns_distribution_X.pdf*__ : plot of the distribution of the different patterns extracted from the reads of **group1**.
+- __*coverage_X.png*__ : plot of the genome coverage extracted from the reads of **group1**.
+- __*d1d2.pdf*__ : plot of the d1d2 law extracted from the reads of **group1**.
+- __*Couple_sizes_distribution.pdf*__ : plot of the distribution of the plausible couple sizes extracted from the reads of **group2**.
+- __*chr_X.pdf*__ : plot of the original map and reconstructed one for each chromosome.
+
+
+### Tidy folder
+
+To tidy the folder, the following command can be used:
+
+```bash
+hicberg tidy --output=DIR
+```
+
+Considering all the previous analysis, to tidy the folder in a folder named "test" previously created on the desktop:
+
+```bash
+hicberg tidy -o ~/Desktop/test/ 
+```
+
+After tidying the folders architecture will be the following:
+
+```bash
+/home/sardine/Bureau/blabla
+├── alignments
+│   ├── group0.1.bam
+│   ├── group0.2.bam
+│   ├── group1.1.bam
+│   ├── group1.2.bam
+│   ├── group2.1.bam
+│   ├── group2.1.rescued.bam
+│   ├── group2.2.bam
+│   └── group2.2.rescued.bam
+├── chunks
+│   ├── chunk_for_X.bam
+│   └── chunk_rev_X.bam
+├── contacts
+│   ├── matricies
+│   │   ├── rescued_map.cool
+│   │   └── unrescued_map.cool
+│   └── pairs
+│       ├── all_group.pairs
+│       └── group1.pairs
+├── fragments_fixed_sizes.txt
+├── index
+│   ├── index.1.bt2l
+│   ├── index.2.bt2l
+│   ├── index.3.bt2l
+│   ├── index.4.bt2l
+│   ├── index.rev.1.bt2l
+│   └── index.rev.2.bt2l
+├── plots
+│   ├── chr_X.pdf
+│   ├── Couple_sizes_distribution.pdf
+│   ├── coverage_X.pdf
+│   ├── patterns_distribution_X.pdf
+│   └── pseudo_ps.pdf
+└── statistics
+    ├── chromosome_sizes.npy
+    ├── coverage.npy
+    ├── d1d2.npy
+    ├── dist.frag.npy
+    ├── loops.npy
+    ├── restriction_map.npy
+    ├── trans_ps.npy
+    ├── uncuts.npy
+    ├── weirds.npy
+    └── xs.npy
+```
+
 
 ## Library
 
@@ -306,6 +374,8 @@ import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
 ```
 
 ## Connecting the modules
+
+All the steps described here are handled automatically when running the ```hicberg``` pipeline. But if you want to connect the different modules manually, the intermediate input and output files can be processed using some python scripting.
 
 ## File formats
 
