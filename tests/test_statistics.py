@@ -199,7 +199,6 @@ def test_get_dist_frags(temporary_folder, test_get_restriction_map_mono):
     Test if the distance between restriction sites is correctly computed.
     """
     temp_dir_path = Path(temporary_folder)
-    print(f"temp_dir_path : {temp_dir_path}")
     
     hst.get_dist_frags(genome = GENOME, restriction_map = test_get_restriction_map_mono, circular = CIRCULAR, rate = SUBSAMPLE_RATE, output_dir = temp_dir_path)
 
@@ -215,10 +214,6 @@ def test_generate_trans_ps(temporary_folder, test_get_restriction_map_mono, test
     Test if the transchromosomal P(s) are correctly generated.
     """
     temp_dir_path = Path(temporary_folder)
-
-    print(f"Build matrix : {test_build_matrix}")
-    print(f"File name : {test_build_matrix.name}")
-
     hst.generate_trans_ps(matrix = test_build_matrix, restriction_map = test_get_restriction_map_mono, output_dir = temp_dir_path)
     
     trans_ps_path = temp_dir_path / TRANS_PS
@@ -299,11 +294,6 @@ def test_get_pair_ps(temporary_folder, test_log_bin_genome, test_get_patterns):
 
 
     weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
-
-    print(f"test_log_bin_genome : {test_log_bin_genome}")
-    print(f"weirds_dictionary_path : {weirds_dictionary_path}")
-    print(f"uncuts_dictionary_path : {uncuts_dictionary_path}")
-    print(f"loops_dictionary_path : {loops_dictionary_path}")
     
     xs = hio.load_dictionary(test_log_bin_genome)
     weirds = hio.load_dictionary(weirds_dictionary_path)
@@ -391,10 +381,8 @@ def test_get_d1d2(test_get_restriction_map_mono, test_generate_d1d2):
 
     d1d2_law = hio.load_dictionary(test_generate_d1d2)
 
-    print(f"TEST D1D2 LAW: {d1d2_law}")
     d1d2 = hst.get_d1d2(read_forward = read_forward, read_reverse = read_reverse, restriction_map = test_get_restriction_map_mono, d1d2 = d1d2_law)
 
-    print(f"TEST D1D2: {d1d2}")
 
 
     assert d1d2 == D1D2_VALUE
@@ -513,8 +501,6 @@ def test_reattribute_reads(temporary_folder, test_classify_reads, test_get_restr
 
     weirds_dictionary_path, uncuts_dictionary_path, loops_dictionary_path = test_get_patterns
 
-    print(f"test_log_bin_genome: {test_log_bin_genome}")
-    print(f"test_get_restriction_map_mono : {test_get_restriction_map_mono}")
 
     xs = test_log_bin_genome
     weirds = weirds_dictionary_path

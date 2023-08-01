@@ -62,7 +62,6 @@ def test_build_matrix(temporary_folder, test_get_bin_table, test_hic_build_index
     
     yield unrescued_map_path
 
-    print(f"Unrescued map path: {unrescued_map_path}")
     assert unrescued_map_path.is_file()
 
 

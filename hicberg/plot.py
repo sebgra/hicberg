@@ -106,8 +106,6 @@ def plot_trans_ps(output_dir : str = None) -> None:
 
     trans_ps_dictionary = dict()
 
-    # print(f"Size of t_ps : {t_ps.shape}")
-
     for idx, s in enumerate(chrm_sets):
 
         all_interactions = clr_unambiguous.matrix(balance=False).fetch(s[0], s[1]).sum()
@@ -116,7 +114,6 @@ def plot_trans_ps(output_dir : str = None) -> None:
         )
         trans_ps_dictionary[s] = np.divide(all_interactions, np.multiply(n_frags, 4))
 
-        # print(f"idx : {idx}, s : {s}, value : {np.divide(all_interactions, np.multiply(n_frags, 4))}, : all_interactions : {all_interactions}")
 
         t_ps[idx] = np.divide(all_interactions, np.multiply(n_frags, 4))
         all_interaction_matrix[idx] = all_interactions
@@ -236,7 +233,6 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
 
         couple_lenght.append(forward_read.get_tag("XL") * reverse_read.get_tag("XL"))
 
-    # print(f"Max couple lenght : {max(couple_lenght)}")
 
     _, bins_edges = np.histogram(couple_lenght, bins=max(couple_lenght))
 
@@ -339,8 +335,6 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         lower = rescued_matrix.extent(str(i))[0]
         upper = rescued_matrix.extent(str(i))[1]
 
-        # print(f"restriction map : {restriction_map[i]}")
-        # print(f"Shape of restriction map :{restriction_map[i].shape}")
 
 
         # TODO : to correct

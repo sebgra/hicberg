@@ -466,17 +466,13 @@ def test_chunk_bam(temporary_folder, test_classify_reads):
     temp_dir_path = Path(temporary_folder)
     forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
 
-    print(f"Files to be chunked : {forward_bam_file} and {reverse_bam_file}")
 
     hut.chunk_bam(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file, nb_chunks = 12, output_dir = temp_dir_path)
 
     chunks_path = temp_dir_path / 'chunks'
-
-    print(f"Chunks path : {chunks_path}")
     
     is_full =  any(chunks_path.iterdir())
 
-    # print(f"Folder content : {list(chunks_path.iterdir())}")
 
     yield chunks_path
 
@@ -506,8 +502,6 @@ def test_max_consecutive_nans():
 
     max_consecutive_nans = hut.max_consecutive_nans(vector_test)
 
-    print(f"Max consecutive nans : {max_consecutive_nans}")
-
     assert max_consecutive_nans == 2
 
 # def test_mad_smoothing():
@@ -522,8 +516,6 @@ def test_max_consecutive_nans():
 def test_get_chunks(test_chunk_bam):
 
     ret = test_chunk_bam
-
-    print(f"ret : {ret}")
 
     assert True
 

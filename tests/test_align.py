@@ -81,15 +81,8 @@ def test_hic_sort(temporary_folder, test_hic_build_index, test_hic_align, test_h
     for_sorted_bam_path = temp_dir_path / FOR_SORTED_BAM
     rev_sorted_bam_path = temp_dir_path / REV_SORTED_BAM
 
-    print(f"for_sorted_bam_path: {for_sorted_bam_path}")
-    print(f"rev_sorted_bam_path: {rev_sorted_bam_path}")
 
     yield for_sorted_bam_path, rev_sorted_bam_path
-
-    print(f"for_sorted_bam_path: {for_sorted_bam_path}")
-    print(f"rev_sorted_bam_path: {rev_sorted_bam_path}")
-    print(for_sorted_bam_path.is_file())
-    print(rev_sorted_bam_path.is_file())
 
     # Check if the sorted alignement files are created
     # assert for_sorted_bam_path.is_file()

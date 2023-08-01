@@ -1,9 +1,12 @@
 from email.policy import default
+import multiprocessing
+from multiprocessing import Process
+from functools import partial
 import click
 import hicberg.io as hio
 import hicberg.utils as hut
 import hicberg.align as hal
-import hicberg.statistics as hstst
+import hicberg.statistics as hst
 import hicberg.pipeline as hpp
 # import hicberg.benchmark as mbk
 import hicberg.plot as hpl
@@ -87,20 +90,67 @@ def alignment_cmd(genome, fq_for, fq_rev, max_alignment, sensitivity, output, cp
 def classify_cmd(output):
     hut.classify_reads(output_dir = output)
 
-# @click.command()
-# def statistics_cmd():
-#     pass
 
-# @click.command()
-# def pairs_cmd():
-#     pass
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if pairs are bulit after reads reassignment.")
+def build_pairs_cmd(output, recover):
+    hio.build_pairs(output_dir = output, mode = recover)
 
-# @click.command()
-# def matrix_cmd():
-#     pass
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if .cool matrix are bulit after reads reassignment.")
+def build_matrix_cmd(output, recover):
+    hio.build_matrix(output_dir = output, mode = recover)
 
-# def rescue_cmd():
-#     pass
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
+@click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
+@click.option("--circular", "-c", required = False, type = str, default = "", help = "Name of the chromosome to consider as circular")
+@click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
+def statistics_cmd(genome, rate, enzyme, circular, bins, output):
+    restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output)
+    hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output)
+    hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output)
+    hst.log_bin_genome(genome = genome, output_dir = output)
+
+    p1 = Process(target = hst.get_patterns(circular = circular, output_dir = output))
+    p2 = Process(target = hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output))
+    p3 = Process(target = hst.generate_coverages(genome = genome, bins = bins, output_dir = output))
+    p4 = Process(target = hst.generate_d1d2(output_dir = output))
+
+    # Launch processes
+    for process in [p1, p2, p3, p4]:
+        process.start()
+        process.join()
+
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
+@click.option("--nb-chunks", "-n", required = False, default = 1, type = int, help = "Number of chunks to split the alignment files into.")
+@click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
+@click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
+def rescue_cmd(genome, enzyme, nb_chunks, mode, output, cpus):
+    
+    restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output)
+    hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output)
+        
+    # Get chunks as lists
+    forward_chunks, reverse_chunks = hut.get_chunks(output)
+
+    # Reattribute reads
+    with multiprocessing.Pool(processes = cpus) as pool:
+
+        results = pool.map_async(partial(hst.reattribute_reads, mode = mode,  restriction_map = restriction_map, output_dir = output),
+        zip(forward_chunks, reverse_chunks))
+        pool.close()
+        pool.join()
+
+    hio.merge_predictions(output_dir = output, clean = True)
+
 
 # @click.command()
 # def plot_cmd():
@@ -112,8 +162,8 @@ cli.add_command(create_folder_cmd, name="create-folder")
 cli.add_command(get_tables_cmd, name="get-tables")
 cli.add_command(alignment_cmd, name="alignment")
 cli.add_command(classify_cmd, name="classify")
-# cli.add_command(statistics_cmd, name="statistics")
-# cli.add_command(pairs_cmd, name="pairs")
-# cli.add_command(matrix_cmd, name="matrix")
-# cli.add_command(rescue_cmd, name="rescue")
+cli.add_command(build_pairs_cmd, name="build-pairs")
+cli.add_command(build_matrix_cmd, name="build-matrix")
+cli.add_command(statistics_cmd, name="statistics")
+cli.add_command(rescue_cmd, name="rescue")
 # cli.add_command(plot_cmd, name="plot")

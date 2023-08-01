@@ -251,11 +251,6 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
 
         raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
     
-    # TODO :to remove
-
-    print(f"bam_for? : {(output_path / '1.bam').is_file()}")
-    print(f"bam_rev? : {(output_path / '2.bam').is_file()}")
-    
 
     cmd_sort_for = f"samtools sort -n {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
     cmd_sort_rev = f"samtools sort -n {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"

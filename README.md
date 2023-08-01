@@ -119,8 +119,6 @@ For example to create a folder named "test" on the desktop:
 hicberg create_folder -o ~/Desktop/ -n test
 ```
 
-#### Sub component 2
-
 ### Preprocessing
 
 After having created a folder with the previous command mentionned in **create folder**, the gennome can be processed to generate fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__  using the following command:
@@ -149,6 +147,56 @@ For example to align reads in a folder named "test" previously created on the de
 hicberg alignment -g genome.fa -f reads_for.fq -r rev_reads.fq -o ~/Desktop/test/ --cpus 8
 ```
 
+### Pairs and matrix building
+
+#### Build pairs
+
+After having aligned the reads, the pairs file __*group1.pairs*__ can be built using the following command:
+
+```bash
+hicberg build-pairs --output=DIR [--recover]
+```
+
+If the flag argument *recover* is used, the pairs file will be built from the last step of the analyis e.g. after having computed the statistics and reattributed reads from **group2** bam files.
+
+Considering the previous example, to build the matrix in a folder named "test" previously created on the desktop:
+
+```bash
+hicberg build-pairs -o ~/Desktop/test/ 
+```
+
+If the pairs file has to be built after reads of **group2** reassignament, the following command can be used:
+
+```bash
+hicberg build-pairs -o ~/Desktop/test/ --recover
+```
+Thus, the built pairs file will be  __*all_group.pairs*__.
+
+
+#### Build matrix
+
+After having aligned the reads and built the pairs file __*group1.pairs*__, the cooler matrix  __*unrescued_map.cool*__ can be built using the following command:
+
+```bash
+hicberg build-matrix  --output=DIR [--recover]
+```
+
+If the flag argument *recover* is used, the matrix file will be built from the last step of the analyis e.g. after having computed the statistics and reattributed reads from **group2** bam files.
+
+Considering the previous example, to build the matrix in a folder named "test" previously created on the desktop:
+
+```bash
+hicberg build-pamatrixirs -o ~/Desktop/test/ 
+```
+
+If the cooler file has to be built after reads of **group2** reassignament, the following command can be used:
+
+```bash
+hicberg build-matrix -o ~/Desktop/test/ --recover
+```
+
+Thus, the built matrix file will be  __*rescued_map.cool*__.
+
 
 ### Classification
 
@@ -162,30 +210,46 @@ Considering the previous example, to classify the reads in a folder named "test"
 hicberg classify -o ~/Desktop/test/
 ```
 
-
 ### Statistics
+
+After having aligned the reads and built the pairs file __*group1.pairs*__, the cooler matrix  __*unrescued_map.cool*__,  the statistical laws for the reassignment of the reads from **group2** can be learnt by using the following command:
+
 ```bash
+hicberg statistics --genome=FILE --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] 
+```
+Considering the previous example, to get the statistical laws (with respect of ARIMA kit enzymes), without subsampling th restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
+
+```bash
+hicberg statistics -g genome.fa -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ 
 ```
 
-### Hi-C map
-```bash
-``` 
+The statistical laws are going to be saved as:
 
-#### Build pairs
-```bash
-```
+- __*xs.npy*__ : dictionary containing the log binned genome as dictionary such as ```{chromosome: [log bins]}```
+- __*uncuts.npy*__, __*loops*__, __*weirds*__ : dictionary containing the distribution of uncuts, loops and weirds as dictionary such as ```{chromosome: [distribution]}```
+- __*coverage*__: dictionary containing the coverage of the genome as dictionary such as ```{chromosome: [coverage]}```
+- __*d1d2.npy*__: np.array containing the d1d2 law as dictionary such as ```[distribution]```
 
-#### Build matrix
-```bash
-```
 
 ### Reconstruction
+
+After having learnt the statistical laws (based on reads of **group1**), the reads from **group2** can be reassigned using the following command:
+
 ```bash
+hicberg rescue --genome=FILE  --output=DIR  [--enzyme=["DpnII", "HinfI"]] [--mode="full"] [--cpus=1]
+```
+
+Considering the previous example, to reassign the reads from **group2** in a folder named "test" previously created on the desktop:
+
+```bash
+
+hicberg rescue -g genome.fa -e DpnII -e HinfI -o ~/Desktop/test/ 
 ```
 
 ### Plot
 
 ```bash
+
 ```
 
 ## Library
