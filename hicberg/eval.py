@@ -6,7 +6,9 @@ import tempfile as tmpf
 import shutil
 from itertools import combinations
 
-import numpy as np 
+import numpy as np
+from numpy.random import choice
+
 from scipy import spatial
 from scipy.stats import median_abs_deviation, pearsonr
 import bioframe as bf
@@ -19,16 +21,67 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import hicberg.io as hio
 
 
-def get_intervals_proportions():
+def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", nb_intervals : int = 1) -> dict[str, float]:
+    """
+    AI is creating summary for get_intervals_proportions
 
-    pass
+    Parameters
+    ----------
+    chrom_sizes_dict : str
+        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format. By default chromosome_sizes.npy
+    nb_intervals : int, optional
+        Number of intervals to draw, by default 1
+
+    Returns
+    -------
+    dict[str, float]
+        Dictionary containing proportion by intervals as {chromosome : proportion}.
+    """ 
+    
+    chrom_sizes_path = Path(chrom_sizes_dict)
+    chrom_sizes = hio.load_dictionary(chrom_sizes_path)
+
+    # Get genome global length
+    tot_genome_length = np.sum(list(chrom_sizes.item().values()))
+
+    # Compute relative proportion of each chromosome through genome
+    chr_proportions  = {k : (v / tot_genome_length)  for (k, v) in zip(chrom_sizes.keys(), chrom_sizes.values())}
+
+    # Draw chromosomes considering their relative prpoportion in genome
+    proportions_choice = choice(a = list(chr_proportions.keys()), size = nb_intervals, replace = True, p = list(chr_proportions.values()))
+
+    # Get and return chromosomes picked and counts
+    unique, counts = np.unique(proportions_choice, return_counts=True)
+
+    return dict(zip(unique, counts))
+
 
 
 def get_chromosomes_intervals():
     pass
 
-def draw_intervals():
-    pass
+def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict : str = "chromosome_sizes.npy") -> dict[str, list[tuple[int, int]]]:
+    """
+    Draw intervals from a given chromosome sizes dictionary.
+
+    Parameters
+    ----------
+    nb_intervals : int, optional
+        Number of intervals to draw, by default 1
+    bins : int, optional
+        Size of the desired bin, by default 2000., by default 2000
+    chrom_sizes_dict : str
+        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format. By default chromosome_sizes.npy
+
+    Returns
+    -------
+    dict[str, list[tuple[int, int]]]
+        Dictionary containing the intervals as {chromosome : [(start, end), ...]}.
+    """
+
+    # TODO : implement get_intervals_proportion
+
+    pass  
 
 def draw_positions():
     pass

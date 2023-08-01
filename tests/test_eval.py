@@ -60,6 +60,9 @@ def test_is_overlapping():
     pass
 
 def test_get_boundaries(test_get_chromosomes_sizes):
+    """
+    Test if boundaries from genomic coordinates are correctly computed.
+    """
     boundaries = hev.get_boundaries(position = POSITION, bins = BINS, chromosome = CHROMOSOME, chrom_sizes_dict = test_get_chromosomes_sizes)
 
     assert boundaries == BOUNDARIES
