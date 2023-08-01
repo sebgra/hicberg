@@ -393,11 +393,11 @@ All the steps described here are handled automatically when running the ```hicbe
 
 * fragments_fixed_sizes.txt: 
 
-  * chrom: Chromosome identifier. Order should be the same as in pairs files.
+  * *chrom*: Chromosome identifier. Order should be the same as in pairs files.
 
-  * start: 0-based start of fragment, in base pairs.
+  * *start*: 0-based start of fragment, in base pairs.
 
-  * end: 0-based end of fragment, in base pairs.
+  * *end*: 0-based end of fragment, in base pairs.
 
 ```
 chrom start end
