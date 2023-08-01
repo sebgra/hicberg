@@ -119,6 +119,17 @@ For example to create a folder named "test" on the desktop:
 hicberg create_folder -o ~/Desktop/ -n test
 ```
 
+The folders architecture will be the following:
+
+```bash
+├── output
+│   ├── alignments
+│   ├── contacts
+│   ├── index
+│   ├── plots
+│   ├── statistics
+```
+
 ### Preprocessing
 
 After having created a folder with the previous command mentionned in **create folder**, the gennome can be processed to generate fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__  using the following command:
@@ -131,6 +142,8 @@ For example to these files in a folder named "test" previously created on the de
 ```bash
 hicberg get-tables -o ~/Desktop/test/ -g genome.fa --bins 2000
 ```
+
+The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be generated in the folder **output/**.
 
 ### Alignment
 
@@ -146,6 +159,8 @@ For example to align reads in a folder named "test" previously created on the de
 ```bash
 hicberg alignment -g genome.fa -f reads_for.fq -r rev_reads.fq -o ~/Desktop/test/ --cpus 8
 ```
+
+The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created.
 
 ### Pairs and matrix building
 
@@ -164,6 +179,8 @@ Considering the previous example, to build the matrix in a folder named "test" p
 ```bash
 hicberg build-pairs -o ~/Desktop/test/ 
 ```
+
+The file __*group1.pairs*__ will be created.
 
 If the pairs file has to be built after reads of **group2** reassignament, the following command can be used:
 
@@ -189,6 +206,8 @@ Considering the previous example, to build the matrix in a folder named "test" p
 hicberg build-pamatrixirs -o ~/Desktop/test/ 
 ```
 
+The file __*unrescued_map.cool*__ will be created.
+
 If the cooler file has to be built after reads of **group2** reassignament, the following command can be used:
 
 ```bash
@@ -209,6 +228,12 @@ Considering the previous example, to classify the reads in a folder named "test"
 ```bash
 hicberg classify -o ~/Desktop/test/
 ```
+
+The files created are: 
+
+- __*group0.1.bam*__ and __*group0.2.bam*__ : bam files containing the reads of **group0** i.e. where at least one read of the pair is unaligned.
+- __*group1.1.bam*__ and __*group1.2.bam*__ : bam files containing the reads of **group1** i.e. where both reads of the pair are aligned only one time.
+- __*group2.1.bam*__ and __*group2.2.bam*__ : bam files containing the reads of **group2** i.e. where at least one reads of the pair are aligned more than one time.
 
 ### Statistics
 
@@ -246,24 +271,38 @@ Considering the previous example, to reassign the reads from **group2** in a fol
 hicberg rescue -g genome.fa -e DpnII -e HinfI -o ~/Desktop/test/ 
 ```
 
+The files __*goup2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be created.
+
 ### Plot
 
-```bash
+To plot all the informations about the analysis, the following command can be used:
 
+```bash
+hicberg plot --genome=FILE --output=DIR  [--bins=2000]
 ```
+
+Considering all the previous analysis, with 2000bp as bin size to plot all the informations in a folder named "test" previously created on the desktop:
+
+```bash
+hicberg plot -g genome.fa -o ~/Desktop/test/ -b 2000
+```
+
+The plots created are:
+
+- __*patterns_distribution_X.pdf*__ : plot of the distribution of the different patterns extracted from the reads of **group1**
+- __*coverage_X.png*__ : plot of the genome coverage extracted from the reads of **group1**
+- __*d1d2.pdf*__ : plot of the d1d2 law extracted from the reads of **group1**
 
 ## Library
 
 All components of the hicberg program can be used as python modules. See the documentation on reathedocs. The expected contact map format for the library is a simple COOL file, and the objects handled by the library are simple numpy arrays through Cooler. The various submodules of hicberg contain various utilities.
 
 ```python
-
 import hicberg.io #Functions for I/O and folder management.
 import hicberg.align #Functions for sequence alignment steps
 import hicberg.utils #Functions for handling reads and alignment
 import hicberg.statistics #Functions for extract and create statistical models
 import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
-
 ```
 
 ## Connecting the modules

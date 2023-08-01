@@ -152,9 +152,22 @@ def rescue_cmd(genome, enzyme, nb_chunks, mode, output, cpus):
     hio.merge_predictions(output_dir = output, clean = True)
 
 
-# @click.command()
-# def plot_cmd():
-#     pass
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--bins", "-b", required = False, default = 2000, type = int, help = "Size of bins")
+def plot_cmd(genome, bins, output):
+    p1 = Process(target = hpl.plot_laws(output_dir = output))
+    p2 = Process(target = hpl.plot_trans_ps(output_dir = output))
+    p3 = Process(target = hpl.plot_coverages(bins = bins, output_dir = output))
+    p4 = Process(target = hpl.plot_couple_repartition(output_dir = output))
+    p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output))
+
+    # Launch processees
+    for process in [p1, p2, p3, p4, p5]:
+        process.start()
+        process.join()
+    
 
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
@@ -166,4 +179,4 @@ cli.add_command(build_pairs_cmd, name="build-pairs")
 cli.add_command(build_matrix_cmd, name="build-matrix")
 cli.add_command(statistics_cmd, name="statistics")
 cli.add_command(rescue_cmd, name="rescue")
-# cli.add_command(plot_cmd, name="plot")
+cli.add_command(plot_cmd, name="plot")

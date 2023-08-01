@@ -4219,3 +4219,71 @@ Command: /usr/bin/bowtie2-align-l --wrapper basic-0 --very-sensitive -p 8 -k 3 -
 2023-08-01 --  13:36:43 :: INFO :: Chunks saved in /tmp/tmpvkgb4anj/chunks
 2023-08-01 --  13:52:05 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/blabla
 2023-08-01 --  13:52:21 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/blabla
+2023-08-01 --  13:57:35 :: INFO :: Folder /home/sardine/Bureau/blabla created.
+2023-08-01 --  14:02:13 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/blabla/chromosome_sizes.npy
+2023-08-01 --  14:06:08 :: INFO :: Index built at /home/sardine/Bureau/blabla/SC288_with_micron
+2023-08-01 --  14:06:08 :: INFO :: bowtie2 --very-sensitive -p 8 -a -x /home/sardine/Bureau/blabla/SC288_with_micron -S /home/sardine/Bureau/blabla/1.sam /home/sardine/Bureau/codes/hicberg/data_test/reverse_reads_test.fq.gz
+2023-08-01 --  14:06:08 :: INFO :: bowtie2 --very-sensitive -p 8 -a -x /home/sardine/Bureau/blabla/SC288_with_micron -S /home/sardine/Bureau/blabla/2.sam /home/sardine/Bureau/codes/hicberg/data_test/forward_reads_test.fq.gz
+2023-08-01 --  14:06:09 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-08-01 --  14:06:09 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-08-01 --  14:06:09 :: INFO :: Alignement saved at /home/sardine/Bureau/blabla
+2023-08-01 --  14:06:09 :: INFO :: Compressed alignemnet alignement done at /home/sardine/Bureau/blabla
+2023-08-01 --  14:06:09 :: INFO :: Sorted alignement done at /home/sardine/Bureau/blabla
+2023-08-01 --  14:08:58 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:08:59 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla/dist.frag.npy
+2023-08-01 --  14:08:59 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla/dist.frag.npy
+2023-08-01 --  14:08:59 :: INFO :: Log binning of genome /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa saved in /home/sardine/Bureau/blabla/xs.npy.
+2023-08-01 --  14:09:13 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/blabla
+2023-08-01 --  14:09:13 :: INFO :: Number of unmapped reads in forward file : 19576
+2023-08-01 --  14:09:13 :: INFO :: Number of unmapped reads in reverse file : 19286
+2023-08-01 --  14:09:13 :: INFO :: Number of uniquely mapped reads in forward file : 74819
+2023-08-01 --  14:09:13 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
+2023-08-01 --  14:09:13 :: INFO :: Number of multi mapped reads in forward file : 125539
+2023-08-01 --  14:09:13 :: INFO :: Number of multi mapped reads in reverse file : 114340
+2023-08-01 --  14:12:11 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:12:11 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla/dist.frag.npy
+2023-08-01 --  14:12:11 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla/dist.frag.npy
+2023-08-01 --  14:12:11 :: INFO :: Log binning of genome /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa saved in /home/sardine/Bureau/blabla/xs.npy.
+2023-08-01 --  14:12:12 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/blabla
+2023-08-01 --  14:12:29 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/blabla
+2023-08-01 --  14:12:41 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/blabla
+2023-08-01 --  14:12:47 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:12:47 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla/dist.frag.npy
+2023-08-01 --  14:12:47 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla/dist.frag.npy
+2023-08-01 --  14:12:47 :: INFO :: Log binning of genome /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa saved in /home/sardine/Bureau/blabla/xs.npy.
+2023-08-01 --  14:12:48 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/blabla
+2023-08-01 --  14:12:50 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/blabla
+2023-08-01 --  14:12:52 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/blabla/d1d2.npy
+2023-08-01 --  14:13:04 :: INFO :: Saved restriction map at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:05 :: INFO :: Chunks saved in /home/sardine/Bureau/blabla/chunks
+2023-08-01 --  14:13:05 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:18 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:19 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:23 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:25 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:27 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:27 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:41 :: INFO :: Predictions written in /home/sardine/Bureau/blabla
+2023-08-01 --  14:13:41 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/blabla
+2023-08-01 --  14:16:50 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:16:52 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:16:55 :: INFO :: Saved coverages at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:16:55 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:17:16 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/blabla
+2023-08-01 --  14:17:29 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/blabla
+2023-08-01 --  14:17:40 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:17:42 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:17:45 :: INFO :: Saved coverages at : /home/sardine/Bureau/blabla
+2023-08-01 --  14:17:46 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/blabla

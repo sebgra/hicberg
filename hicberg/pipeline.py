@@ -23,8 +23,6 @@ import hicberg.statistics as hst
 from hicberg import logger
 
 
-
-
 def check_tool(name):
     """Check whether `name` is on PATH and marked as executable."""
 
@@ -142,13 +140,10 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         rmtree(folder_to_delete)
 
 
-        print(f"output_folder : {output_folder}")
-
-
         hio.build_pairs(mode = True, output_dir = output_folder)
         hio.build_matrix(mode = True, output_dir = output_folder)
 
-    # if start_stage <= 5:
+    if start_stage <= 5:
 
         p1 = Process(target = hpl.plot_laws(output_dir = output_folder))
         p2 = Process(target = hpl.plot_trans_ps(output_dir = output_folder))
