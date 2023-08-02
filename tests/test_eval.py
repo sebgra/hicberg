@@ -6,6 +6,10 @@ import tempfile as tmpf
 import shutil
 from itertools import combinations
 
+import pytest
+
+
+import numpy as np
 from scipy import spatial
 from scipy.stats import median_abs_deviation, pearsonr
 import bioframe as bf
@@ -15,6 +19,7 @@ import matplotlib.colors
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+from .conftest import random
 import hicberg.eval as hev
 
 from .conftest import temporary_folder
@@ -33,16 +38,19 @@ REVERSE_UNIQUE_BAM = "group1.2.bam"
 FORWARD_MULTI_BAM = "group2.1.bam"
 REVERSE_MULTI_BAM = "group2.2.bam"
 
+NB_INTERVALS = 2
 POSITION = 5000
 CHROMOSOME = "chr1"
 BINS = 2000
 BOUNDARIES = (4000, 6000)
+PROPORTIONS = {'chr2': 1, 'chr4': 1} # Seed set
 
 
-def test_get_intervals_proportions():
+def test_get_intervals_proportions(random, test_get_chromosomes_sizes):
 
-    pass
-
+    proportions = hev.get_intervals_proportions(chrom_sizes_dict = test_get_chromosomes_sizes, nb_intervals = NB_INTERVALS)
+    # print(f"proportions : {proportions}")
+    assert proportions == PROPORTIONS
 
 def test_get_chromosomes_intervals():
     pass

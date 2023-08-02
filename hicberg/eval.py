@@ -42,7 +42,7 @@ def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", n
     chrom_sizes = hio.load_dictionary(chrom_sizes_path)
 
     # Get genome global length
-    tot_genome_length = np.sum(list(chrom_sizes.item().values()))
+    tot_genome_length = np.sum(list(chrom_sizes.values()))
 
     # Compute relative proportion of each chromosome through genome
     chr_proportions  = {k : (v / tot_genome_length)  for (k, v) in zip(chrom_sizes.keys(), chrom_sizes.values())}

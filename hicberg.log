@@ -4370,3 +4370,24 @@ Command: /usr/bin/bowtie2-align-l --wrapper basic-0 --very-sensitive -p 8 -k 3 -
 2023-08-01 --  18:03:34 :: INFO :: Predictions written in /home/sardine/Bureau/sample
 2023-08-01 --  18:04:47 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/sample
 2023-08-01 --  18:06:36 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/sample
+2023-08-01 --  18:08:57 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/sample
+2023-08-01 --  18:09:04 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/sample
+2023-08-01 --  18:09:13 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/sample
+2023-08-01 --  18:09:16 :: INFO :: Saved coverages at : /home/sardine/Bureau/sample
+2023-08-01 --  18:09:30 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/sample
+2023-08-01 --  18:09:56 :: INFO :: Tidying : /home/sardine/Bureau/sample
+2023-08-01 --  18:09:56 :: INFO :: Ending HiCBERG pipeline
+2023-08-02 --  10:07:28 :: INFO :: Chromosome sizes have been saved in /tmp/tmpnih8rep8/chromosome_sizes.npy
+2023-08-02 --  10:08:36 :: INFO :: Chromosome sizes have been saved in /tmp/tmp0vgj28qc/chromosome_sizes.npy
+2023-08-02 --  10:11:28 :: INFO :: Chromosome sizes have been saved in /tmp/tmpnulwi1wk/chromosome_sizes.npy
+2023-08-02 --  10:39:47 :: INFO :: Chromosome sizes have been saved in /tmp/tmpbn6llha5/chromosome_sizes.npy
+2023-08-02 --  10:39:51 :: INFO :: Chromosome sizes have been saved in /tmp/tmpyxh8mr18/chromosome_sizes.npy
+2023-08-02 --  10:45:13 :: INFO :: Chromosome sizes have been saved in /tmp/tmpx83yhnlw/chromosome_sizes.npy
+2023-08-02 --  10:45:16 :: INFO :: Chromosome sizes have been saved in /tmp/tmp6l18ko8y/chromosome_sizes.npy
+2023-08-02 --  10:46:56 :: INFO :: Chromosome sizes have been saved in /tmp/tmp17b42l94/chromosome_sizes.npy
+2023-08-02 --  10:46:59 :: INFO :: Chromosome sizes have been saved in /tmp/tmp0gncpb2b/chromosome_sizes.npy
+2023-08-02 --  10:47:19 :: INFO :: Chromosome sizes have been saved in /tmp/tmp6mpjv0ze/chromosome_sizes.npy
+2023-08-02 --  10:47:22 :: INFO :: Chromosome sizes have been saved in /tmp/tmpk1398sen/chromosome_sizes.npy
+2023-08-02 --  10:47:26 :: INFO :: Chromosome sizes have been saved in /tmp/tmpqtxe1ukv/chromosome_sizes.npy
+2023-08-02 --  10:47:31 :: INFO :: Chromosome sizes have been saved in /tmp/tmp9rdonsga/chromosome_sizes.npy
+2023-08-02 --  10:49:15 :: INFO :: Chromosome sizes have been saved in /tmp/tmpwjp3diqw/chromosome_sizes.npy
