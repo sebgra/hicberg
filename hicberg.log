@@ -4391,3 +4391,6 @@ Command: /usr/bin/bowtie2-align-l --wrapper basic-0 --very-sensitive -p 8 -k 3 -
 2023-08-02 --  10:47:26 :: INFO :: Chromosome sizes have been saved in /tmp/tmpqtxe1ukv/chromosome_sizes.npy
 2023-08-02 --  10:47:31 :: INFO :: Chromosome sizes have been saved in /tmp/tmp9rdonsga/chromosome_sizes.npy
 2023-08-02 --  10:49:15 :: INFO :: Chromosome sizes have been saved in /tmp/tmpwjp3diqw/chromosome_sizes.npy
+2023-08-02 --  11:49:58 :: INFO :: Chromosome sizes have been saved in /tmp/tmp208abie7/chromosome_sizes.npy
+2023-08-02 --  11:51:59 :: INFO :: Chromosome sizes have been saved in /tmp/tmpj06dfr3a/chromosome_sizes.npy
+2023-08-02 --  12:09:43 :: INFO :: Chromosome sizes have been saved in /tmp/tmp08w9hjhe/chromosome_sizes.npy

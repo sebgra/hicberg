@@ -42,18 +42,33 @@ NB_INTERVALS = 2
 POSITION = 5000
 CHROMOSOME = "chr1"
 BINS = 2000
+FRIST_INTERVAL = (2 * BINS, 2* BINS + BINS)
+LAST_INTERVAL = (230000 - BINS, 230000)
 BOUNDARIES = (4000, 6000)
 PROPORTIONS = {'chr2': 1, 'chr4': 1} # Seed set
 
 
-def test_get_intervals_proportions(random, test_get_chromosomes_sizes):
+def test_get_interval_index():
+    pass
 
+def test_select_reads():
+    pass
+
+def test_get_intervals_proportions(random, test_get_chromosomes_sizes):
+    """
+    Test if the dictionary of proportion is correctly computed.
+    """
     proportions = hev.get_intervals_proportions(chrom_sizes_dict = test_get_chromosomes_sizes, nb_intervals = NB_INTERVALS)
-    # print(f"proportions : {proportions}")
     assert proportions == PROPORTIONS
 
-def test_get_chromosomes_intervals():
-    pass
+def test_get_chromosomes_intervals(test_get_chromosomes_sizes):
+    """
+    Test if all the intervals possible are correctly computed.
+    """
+    intervals = hev.get_chromosomes_intervals(bins = BINS, chrom_sizes_dict = test_get_chromosomes_sizes, chromosome = CHROMOSOME)
+    # print(f"Intervals: {intervals}")
+    assert intervals[0] == FRIST_INTERVAL
+    assert intervals[-1] == LAST_INTERVAL
 
 def test_draw_intervals():
     pass
