@@ -21,9 +21,13 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from .conftest import random
 import hicberg.eval as hev
+import hicberg.io as hio
 
 from .conftest import temporary_folder
-from .test_utils import test_get_chromosomes_sizes
+from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
+
+from .test_utils import test_get_chromosomes_sizes, test_classify_reads, test_hic_sort, test_get_bin_table
+from .test_io import test_build_matrix, test_build_pairs
 
 GENOME = "data_test/SC288_with_micron.fa"
 CHROM_SIZES_DIC = "chromosome_sizes.npy"
@@ -46,13 +50,33 @@ FRIST_INTERVAL = (2 * BINS, 2* BINS + BINS)
 LAST_INTERVAL = (230000 - BINS, 230000)
 BOUNDARIES = (4000, 6000)
 PROPORTIONS = {'chr2': 1, 'chr4': 1} # Seed set
+INTERVALS_DICT = {'chr2': [(0, 1000), (1000, 2000)], 'chr4': [(0, 1000), (1000, 2000)], 
+                'chr1': [(0, 1000), (1000, 2000), (4000, 6000)]} # Seed set
+
+DRAWN_INTERVALs =   {'chr2': [(756000, 758000)], 'chr3': [(54000, 56000)]}
 
 
-def test_get_interval_index():
-    pass
 
-def test_select_reads():
-    pass
+def test_get_interval_index(test_get_chromosomes_sizes):
+    """
+    Test if interval belonging is correctly computed.
+    """
+
+    chrom_size_dict = hio.load_dictionary(test_get_chromosomes_sizes)
+    indexes = hev.get_interval_index(chromosome = CHROMOSOME, value = POSITION, intervals_dict = INTERVALS_DICT,  chrom_sizes_dict = chrom_size_dict)
+
+    assert indexes[CHROMOSOME][1] == BOUNDARIES
+    assert indexes[CHROMOSOME][0] == INTERVALS_DICT[CHROMOSOME][:2]
+
+    assert indexes["chr8"][0] == [(None, None)]
+    assert indexes["chr8"][1] == (None, None)
+
+
+# TODO to implement
+def test_select_reads(temporary_folder, test_classify_reads, test_build_matrix, test_get_chromosomes_sizes):
+    hev.select_reads(bam_for = test_classify_reads[0], bam_rev = test_classify_reads[1], matrix_file = test_build_matrix, output_dir = temporary_folder, chromosome = CHROMOSOME)
+
+    assert True
 
 def test_get_intervals_proportions(random, test_get_chromosomes_sizes):
     """
@@ -70,8 +94,13 @@ def test_get_chromosomes_intervals(test_get_chromosomes_sizes):
     assert intervals[0] == FRIST_INTERVAL
     assert intervals[-1] == LAST_INTERVAL
 
-def test_draw_intervals():
-    pass
+def test_draw_intervals(test_get_chromosomes_sizes):
+    """
+    Test if interval drawing is correctly computed.
+    """
+    intervals = hev.draw_intervals(nb_intervals = NB_INTERVALS, bins = BINS, chrom_sizes_dict = test_get_chromosomes_sizes)
+    assert intervals == DRAWN_INTERVALs
+
 
 def test_draw_positions():
     pass

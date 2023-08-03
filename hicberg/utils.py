@@ -473,10 +473,11 @@ def get_ordered_reads(read_forward : pysam.AlignedSegment, read_reverse : pysam.
     -------
     Tuple[pysam.AlignedSegment, pysam.AlignedSegment]
         The ordered pair of reads in the same chromosome as the two reads.
-    """    
-    if read_forward.reference_name != read_reverse.reference_name:
+    """
+
+    if read_forward.query_name != read_reverse.query_name:
             
-        raise ValueError("The two reads must be mapped on the same chromosome.")
+        raise ValueError("The two reads must come from the same pair.")
         
     if is_reverse(read_forward):
 

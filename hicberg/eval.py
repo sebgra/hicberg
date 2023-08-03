@@ -12,6 +12,7 @@ from numpy.random import choice
 from scipy import spatial
 from scipy.stats import median_abs_deviation, pearsonr
 import bioframe as bf
+import pysam
 import pysam as ps
 
 import matplotlib.pyplot as plt
@@ -20,12 +21,11 @@ import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import hicberg.io as hio
+import hicberg.utils as hut
 
-def get_interval_index(
-    chromosome, value, intervals_dict, chromosome_size_dictionary
-):
+
+def get_interval_index(chromosome : str = "", value : int = None, intervals_dict : dict[str, list[(int, int)]] = None, chrom_sizes_dict : dict[str, int] = None) -> dict[str, list[(int, int)]]:
     """
-    Check if value is in between sets of chromosome depending intervals and return all the intervals where the value does not belong to.
 
     Parameters
     ----------
@@ -35,6 +35,8 @@ def get_interval_index(
         Value to search in intervals.
     intervals_dict : [dict]
         Dictionary of intervals as key : chromosome, value : [(low_limit_0, up_limit_0), (low_limit_1, up_limit_1), ..., (low_limit_n, up_limit_n)].
+    chrom_sizes_dict : str
+        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format. By default chromosome_sizes.npy
 
     Returns
     -------
@@ -44,9 +46,11 @@ def get_interval_index(
         If the value in not in any interval, return None.
     """
 
+    # chrom_sizes_dict = hio.load_dictionary(chrom_sizes_dict)
+
     out_dict = {
         k: ([(None, None)], (None, None))
-        for k in chromosome_size_dictionary.item().keys()
+        for k in chrom_sizes_dict.keys()
     }
 
     for chrom in intervals_dict.keys():
@@ -72,40 +76,111 @@ def get_interval_index(
     return out_dict
 
 
-def select_reads(forward_file, reverse_file, matrix_file, position,chromosome, bin_size, chromosome_size_dictionary, strides,
-trans_chromosome, tmp_output, trans_position=None, nb_bins=1, random=False, auto = None):
+def select_reads(bam_for :str = "group1.1.bam", bam_rev : str = "group1.2.bam", matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
+trans_chromosome :  str = None, output_dir : str = None, trans_position : list[int] = None, nb_bins : int = 1, random : bool = False, auto : int = None) -> None:
+    """
+    AI is creating summary for select_reads
+
+    Parameters
+    ----------
+    bam_for : str, optional
+        [description], by default "group1.1.bam"
+    bam_rev : str, optional
+        [description], by default "group1.2.bam"
+    matrix_file : str, optional
+        [description], by default "unrescued_map.cool"
+    position : int, optional
+        [description], by default 0
+    chromosome : str, optional
+        [description], by default ""
+    bin_size : int, optional
+        [description], by default 2000
+    chrom_sizes_dict : str, optional
+        [description], by default "chromosome_sizes.npy"
+    strides : list[int], optional
+        [description], by default [0]
+    trans_chromosome : str, optional
+        [description], by default None
+    output_dir : str, optional
+        [description], by default None
+    trans_position : list[int], optional
+        [description], by default None
+    nb_bins : int, optional
+        [description], by default 1
+    random : bool, optional
+        [description], by default False
+    auto : int, optional
+        [description], by default None
+
+    Returns
+    -------
+    [type]
+        [description]
+
+    """    
     
-    save = ps.set_verbosity(0)
+    output_path = Path(output_dir)
+
+    if not output_path.exists():
+        
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+    
+    chrom_sizes_path = output_path / Path(chrom_sizes_dict)
+
+    print(f"Chromosome sizes path: {chrom_sizes_path}")
+
+    if not chrom_sizes_path.exists():
+
+        raise ValueError(f"Chromosome sizes file {chrom_sizes_path} does not exist. Please provide existing chromosome sizes file.")
+    
+
+    chs = hio.load_dictionary(chrom_sizes_path)
 
     if trans_position is not None:
         random = False
 
-    # alignment file handlers
-    chs = hio.load_dictionary(chromosome_size_dictionary)
+    forward_file_path = output_path / Path(bam_for)
+    reverse_file_path = output_path / Path(bam_rev)
 
+    if not forward_file_path.exists():
+            
+        raise ValueError(f"Forward bam file {forward_file_path} does not exist. Please provide existing bam file.")
+    
+    if not reverse_file_path.exists():
+
+        raise ValueError(f"Reverse bam file {reverse_file_path} does not exist. Please provide existing bam file.")
+    
+    matrix_file_path = output_path / Path(matrix_file)
+    
+    if not matrix_file_path.exists():
+
+        raise ValueError(f"Matrix file {matrix_file_path} does not exist. Please provide existing matrix file.")
+    
+
+    # alignment file handlers
     # Create handler for files to parse
-    forward_file_handler = ps.AlignmentFile(forward_file, "rb")
-    reverse_file_handler = ps.AlignmentFile(reverse_file, "rb")
+    forward_file_handler = ps.AlignmentFile(forward_file_path, "rb")
+    reverse_file_handler = ps.AlignmentFile(reverse_file_path, "rb")
 
     # Create handlers for files to write
     ## Files where selected reads and duplicates are going to be written
     selected_reads_forward = ps.AlignmentFile(
-        f"{tmp_output}/group1.1_in.bam", "wb", template=forward_file_handler
+        output_path / "group1.1_in.bam", "wb", template = forward_file_handler
     )
     selected_reads_reverse = ps.AlignmentFile(
-        f"{tmp_output}/group1.2_in.bam", "wb", template=reverse_file_handler
+        output_path / "group1.2_in.bam", "wb", template = reverse_file_handler
     )
 
     ## Files where non selected reads are going to be written
     depleted_reads_forward = ps.AlignmentFile(
-        f"{tmp_output}/group1.1_out.bam", "wb", template=forward_file_handler
+        output_path / "group1.1_out.bam", "wb", template = forward_file_handler
     )
     depleted_reads_reverse = ps.AlignmentFile(
-        f"{tmp_output}/group1.2_out.bam", "wb", template=reverse_file_handler
+        output_path / "group1.2_out.bam", "wb", template = reverse_file_handler
     )
 
     # get acces to dictionary containing chromosomes sizes to pick random position for transchromosomal duplication
-    cs_disctionary = np.load(chromosome_size_dictionary, allow_pickle=True)
+    cs_disctionary = hio.load_dictionary(chrom_sizes_path)
 
 
     if auto is None:
@@ -114,26 +189,36 @@ trans_chromosome, tmp_output, trans_position=None, nb_bins=1, random=False, auto
         ## set areas and boundaries for intrachromosomal duplications
         forward_intervals = [
             get_boundaries(
-                position=position + stride,
-                bin_size=bin_size,
-                chromosome=chromosome,
-                chromosome_size_dictionary=chromosome_size_dictionary,
+                position = position + stride,
+                bins = bin_size,
+                chromosome = chromosome,
+                chrom_sizes_dict = chrom_sizes_path,
             )
             for stride in strides
         ]
         reverse_intervals = [
             get_boundaries(
-                position=position + stride,
-                bin_size=bin_size,
-                chromosome=chromosome,
-                chromosome_size_dictionary=chromosome_size_dictionary,
+                position = position + stride,
+                bins = bin_size,
+                chromosome = chromosome,
+                chrom_sizes_dict = chrom_sizes_path,
             )
             for stride in strides
         ]
 
         # Define list of chromosome to target/duplicate read on.
 
-        list_selected_chromosomes = list(chromosome.split()) + list(trans_chromosome)
+        # print(f"list(chromosome.split()) : {list(chromosome.split())}")
+        # print(f"list(trans_chromosome) : {list(trans_chromosome)}")
+
+        if trans_chromosome is not None:
+
+            list_selected_chromosomes = list(chromosome.split()) + list(trans_chromosome)
+
+        else:
+
+
+            list_selected_chromosomes = list(chromosome.split())
 
         # adjust intervals width
         if nb_bins > 1:
@@ -159,45 +244,48 @@ trans_chromosome, tmp_output, trans_position=None, nb_bins=1, random=False, auto
 
         # print(f"trans_chromosome : {trans_chromosome}")
 
-        for chrom, pos in zip(trans_chromosome, trans_position):
+        if trans_chromosome is not None:
 
-            if random:
+            for chrom, pos in zip(trans_chromosome, trans_position):
 
-                # print(f"Chrom : {chrom}")
+                if random:
 
-                trans_target_interval = [
-                    get_boundaries(
-                        position=np.random.randint(
-                            low=1, high=cs_disctionary.item().get(chrom)
-                        ),
-                        bin_size=bin_size,
-                        chromosome=chrom,
-                        chromosome_size_dictionary=chromosome_size_dictionary,
-                    )
-                ]
+                    # print(f"Chrom : {chrom}")
+
+                    trans_target_interval = [
+                        get_boundaries(
+                            position = np.random.randint(
+                                low=1, high=cs_disctionary.item().get(chrom)
+                            ),
+                            bins = bin_size,
+                            chromosome = chrom,
+                            chrom_sizes_dict=chrom_sizes_path,
+                        )
+                    ]
 
 
-            # set areas and boundaries for interchromosomal duplications
-            else:
-                trans_target_interval = [
-                    get_boundaries(
-                        position=pos,
-                        bin_size=bin_size,
-                        chromosome=chrom,
-                        chromosome_size_dictionary=chromosome_size_dictionary,
-                    )
-                ]
+                # set areas and boundaries for interchromosomal duplications
+                else:
 
-            if chrom not in dictionary_of_intervals.keys():
+                    trans_target_interval = [
+                        get_boundaries(
+                            position=pos,
+                            bins=bin_size,
+                            chromosome=chrom,
+                            chrom_sizes_dict=chrom_sizes_path,
+                        )
+                    ]
 
-                dictionary_of_intervals[chrom] = trans_target_interval
+                if chrom not in dictionary_of_intervals.keys():
 
-        print(f"-- forward_intervals : {forward_intervals} --")
+                    dictionary_of_intervals[chrom] = trans_target_interval
+
+            # print(f"-- forward_intervals : {forward_intervals} --")
 
 
     if auto is not None:
 
-        dictionary_of_intervals = draw_intervals(chromosome_size_dictionary  = chromosome_size_dictionary, nb_duplicates = auto, bin_size = bin_size)
+        dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_dict, nb_duplicates = auto, bin_size = bin_size)
 
         list_selected_chromosomes = list(dictionary_of_intervals.keys())
 
@@ -208,7 +296,7 @@ trans_chromosome, tmp_output, trans_position=None, nb_bins=1, random=False, auto
         save = True
 
         ## Order reads by corrdinates
-        ordered_forward_read, ordered_reverse_read = order_reads(
+        ordered_forward_read, ordered_reverse_read = hut.get_ordered_reads(
             forward_read, reverse_read
         )
 
@@ -224,16 +312,16 @@ trans_chromosome, tmp_output, trans_position=None, nb_bins=1, random=False, auto
 
         # Search for intervals where reads potentially belong
         forward_interval_search = get_interval_index(
-            chromosome=ordered_forward_read.reference_name,
-            value=ordered_forward_read.pos,
-            intervals_dict=dictionary_of_intervals,
-            chromosome_size_dictionary=chs,
+            chromosome = ordered_forward_read.reference_name,
+            value = ordered_forward_read.pos,
+            intervals_dict = dictionary_of_intervals,
+            chrom_sizes_dict = chs,
         )
         reverse_interval_search = get_interval_index(
-            chromosome=ordered_reverse_read.reference_name,
-            value=ordered_reverse_read.pos,
-            intervals_dict=dictionary_of_intervals,
-            chromosome_size_dictionary=chs,
+            chromosome = ordered_reverse_read.reference_name,
+            value = ordered_reverse_read.pos,
+            intervals_dict = dictionary_of_intervals,
+            chrom_sizes_dict = chs,
         )
 
         # Case where both forward and reverse reads belong to any of the selected of target interval
@@ -394,13 +482,11 @@ trans_chromosome, tmp_output, trans_position=None, nb_bins=1, random=False, auto
     forward_file_handler.close()
     reverse_file_handler.close()
 
-    ps.set_verbosity(save)
+    print(f"Saved in : {output_path / 'group1.1_in.bam'}")
 
     return dictionary_of_intervals, position, bin_size
+
     
-
-
-
 
 def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", nb_intervals : int = 1) -> dict[str, float]:
     """
@@ -500,7 +586,6 @@ def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict :
         selected_intervals[chrom] = [candidate_intervals[idx] for idx in picked_interval_indexes]
     
     return selected_intervals
-  
 
 def draw_positions():
 
@@ -540,6 +625,9 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = 
         np.arange(2 * bins, chrom_sizes.get(chromosome) - 3 * bins, bins), # np.arange(0, cs_disctionary.item().get(chromosome) - bin_size, bin_size)
         chrom_sizes.get(chromosome),
     )
+
+    print(f"position : {position}")
+    print(f"bins : {bins}")
 
     if position % bins == 0:
 

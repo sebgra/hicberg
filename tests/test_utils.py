@@ -240,42 +240,42 @@ def test_get_ordered_reads():
     Test if the function ordering the reads in a bam file is ordered reads correctly.
     """
     read_forward = pysam.AlignedSegment(header = HEADER)
-    read_forward.query_name = "FORWARD"
+    read_forward.query_name = "QUERY_1"
     read_forward.reference_name = DICT_FIRST_KEY
     read_forward.reference_start = 500
     read_forward.cigarstring = "100M"
     read_forward.flag = 0
 
     read_reverse = pysam.AlignedSegment(header = HEADER)
-    read_reverse.query_name = "REVERSE"
+    read_reverse.query_name = "QUERY_1"
     read_reverse.reference_name = DICT_FIRST_KEY
     read_reverse.reference_start = 100
     read_reverse.cigarstring = "100M"
     read_reverse.flag = 16
 
     read_forward_2 = pysam.AlignedSegment(header = HEADER)
-    read_forward_2.query_name = "FORWARD"
+    read_forward_2.query_name = "QUERY_2"
     read_forward_2.reference_name = DICT_FIRST_KEY
     read_forward_2.reference_start = 500
     read_forward_2.cigarstring = "100M"
     read_forward_2.flag = 272
 
     read_reverse_2 = pysam.AlignedSegment(header = HEADER)
-    read_reverse_2.query_name = "REVERSE"
+    read_reverse_2.query_name = "QUERY_2"
     read_reverse_2.reference_name = DICT_FIRST_KEY
     read_reverse_2.reference_start = 100
     read_reverse_2.cigarstring = "100M"
     read_reverse_2.flag = 0
 
     read_forward_3 = pysam.AlignedSegment(header = HEADER)
-    read_forward_3.query_name = "FORWARD"
+    read_forward_3.query_name = "QUERY_3"
     read_forward_3.reference_name = DICT_FIRST_KEY
     read_forward_3.reference_start = 180
     read_forward_3.cigarstring = "100M"
     read_forward_3.flag = 16
 
     read_reverse_3 = pysam.AlignedSegment(header = HEADER)
-    read_reverse_3.query_name = "REVERSE"
+    read_reverse_3.query_name = "QUERY_3"
     read_reverse_3.reference_name = DICT_FIRST_KEY
     read_reverse_3.reference_start = 300
     read_reverse_3.cigarstring = "100M"
