@@ -10,6 +10,7 @@ import hicberg.statistics as hst
 import hicberg.pipeline as hpp
 # import hicberg.benchmark as mbk
 import hicberg.plot as hpl
+import hicberg.benchmark as hbk
 
 import ast
 
@@ -189,6 +190,20 @@ def tidy_cmd(output):
 #     print(np.sum(c))
     
 
+@click.command()
+@click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
+@click.option("--chromosome", "-c", required = False, default = None, type = str, help = "Chromosome to get as source for duplication.")
+@click.option("--position", "-p", required = False, default = None, type = str, help = "Position to get as source for duplication.")
+@click.option("--trans-chromosome", "-C", required = False, default = None, type = str, help = "Chromosome to get as target for duplication.")
+@click.option("--trans-position", "-P", required = False, default = None, type = str, help = "Position to get as target for duplication.")
+@click.option("--bins", "-b", required = False, default = 1, type = int, help = "Number of bins to select from a genomic coordinates.")
+@click.option("--strides", "-s", required = False, default = None, type = str, help = "Strides to apply from source genomic coordinates to define targets intervals.")
+@click.option("--auto", "-a", required = False, default = None, type = int, help = "Automatically select auto intervals for duplication.")
+@click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
+def benchmark_cmd(chromosome, position, trans_chromosome, trans_position, bins, strides, auto, mode, output):
+
+    hbk.benchmark(output_dir = output, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, bins = bins, auto = auto)
+
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
 cli.add_command(create_folder_cmd, name="create-folder")
@@ -202,3 +217,4 @@ cli.add_command(rescue_cmd, name="rescue")
 cli.add_command(plot_cmd, name="plot")
 cli.add_command(tidy_cmd, name="tidy")
 # cli.add_command(test_cmd, name="test")
+cli.add_command(benchmark_cmd, name="benchmark")

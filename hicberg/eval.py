@@ -120,7 +120,7 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
         [description]
 
     """    
-    
+    # TODO : complete docstrings    
     output_path = Path(output_dir)
 
     if not output_path.exists():
