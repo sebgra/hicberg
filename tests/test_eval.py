@@ -1,7 +1,7 @@
 import os
 import subprocess as sp
 import glob
-import pathlib
+from pathlib import Path
 import tempfile as tmpf
 import shutil
 from itertools import combinations
@@ -53,7 +53,7 @@ PROPORTIONS = {'chr2': 1, 'chr4': 1} # Seed set
 INTERVALS_DICT = {'chr2': [(0, 1000), (1000, 2000)], 'chr4': [(0, 1000), (1000, 2000)], 
                 'chr1': [(0, 1000), (1000, 2000), (4000, 6000)]} # Seed set
 
-DRAWN_INTERVALs =   {'chr2': [(756000, 758000)], 'chr3': [(54000, 56000)]}
+DRAWN_INTERVALS =   {'chr2': [(756000, 758000)], 'chr3': [(54000, 56000)]}
 
 
 
@@ -76,7 +76,16 @@ def test_get_interval_index(test_get_chromosomes_sizes):
 def test_select_reads(temporary_folder, test_classify_reads, test_build_matrix, test_get_chromosomes_sizes):
     hev.select_reads(bam_for = test_classify_reads[0], bam_rev = test_classify_reads[1], matrix_file = test_build_matrix, output_dir = temporary_folder, chromosome = CHROMOSOME)
 
-    assert True
+    temp_dir_path = Path(temporary_folder)
+    forward_in_path = temp_dir_path / "group1.1.in.bam"
+    reverse_in_path = temp_dir_path / "group1.2.in.bam"
+    forward_out_path = temp_dir_path / "group1.1.out.bam"
+    reverse_out_path = temp_dir_path / "group1.2.out.bam"
+
+    assert forward_in_path.is_file()
+    assert reverse_in_path.is_file()
+    assert forward_out_path.is_file()
+    assert reverse_out_path.is_file()
 
 def test_get_intervals_proportions(random, test_get_chromosomes_sizes):
     """
@@ -99,7 +108,7 @@ def test_draw_intervals(test_get_chromosomes_sizes):
     Test if interval drawing is correctly computed.
     """
     intervals = hev.draw_intervals(nb_intervals = NB_INTERVALS, bins = BINS, chrom_sizes_dict = test_get_chromosomes_sizes)
-    assert intervals == DRAWN_INTERVALs
+    assert intervals == DRAWN_INTERVALS
 
 
 def test_draw_positions():

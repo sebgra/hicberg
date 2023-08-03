@@ -165,18 +165,18 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
     # Create handlers for files to write
     ## Files where selected reads and duplicates are going to be written
     selected_reads_forward = ps.AlignmentFile(
-        output_path / "group1.1_in.bam", "wb", template = forward_file_handler
+        output_path / "group1.1.in.bam", "wb", template = forward_file_handler
     )
     selected_reads_reverse = ps.AlignmentFile(
-        output_path / "group1.2_in.bam", "wb", template = reverse_file_handler
+        output_path / "group1.2.in.bam", "wb", template = reverse_file_handler
     )
 
     ## Files where non selected reads are going to be written
     depleted_reads_forward = ps.AlignmentFile(
-        output_path / "group1.1_out.bam", "wb", template = forward_file_handler
+        output_path / "group1.1.out.bam", "wb", template = forward_file_handler
     )
     depleted_reads_reverse = ps.AlignmentFile(
-        output_path / "group1.2_out.bam", "wb", template = reverse_file_handler
+        output_path / "group1.2.out.bam", "wb", template = reverse_file_handler
     )
 
     # get acces to dictionary containing chromosomes sizes to pick random position for transchromosomal duplication
