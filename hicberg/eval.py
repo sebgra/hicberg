@@ -20,6 +20,8 @@ import matplotlib.colors
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+import cooler
+
 import hicberg.io as hio
 import hicberg.utils as hut
 
@@ -156,6 +158,8 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
         raise ValueError(f"Matrix file {matrix_file_path} does not exist. Please provide existing matrix file.")
     
+    matrix = hio.load_cooler(matrix_file_path)
+    
 
     # alignment file handlers
     # Create handler for files to parse
@@ -208,8 +212,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
         # Define list of chromosome to target/duplicate read on.
 
-        # print(f"list(chromosome.split()) : {list(chromosome.split())}")
-        # print(f"list(trans_chromosome) : {list(trans_chromosome)}")
 
         if trans_chromosome is not None:
 
@@ -286,6 +288,11 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
     if auto is not None:
 
         dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_dict, nb_duplicates = auto, bin_size = bin_size)
+
+        # If a randomly selected interval is empty, draw another set of intervals
+        while check_emptiness(intervals = dictionary_of_intervals, matrix = matrix):
+                
+            dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_dict, nb_duplicates = auto, bin_size = bin_size)
 
         list_selected_chromosomes = list(dictionary_of_intervals.keys())
 
@@ -642,6 +649,31 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = 
     lower_bound, upper_bound = area_to_search[before_index], area_to_search[after_index]
 
     return (lower_bound, upper_bound)
+
+def check_emptiness(intervals : dict[str, list[(int, int)]], matrix : cooler.Cooler = None) -> bool:
+    """
+    Check if intervals are empty in a given matrix.
+
+    Parameters
+    ----------
+    intervals : dict[str, list[(int, int)]
+        Lists of intervals (sets) where the value is not in between as element 0 and where the value is  in between as element 1.
+        One list per chromosome in a dictionary.
+    matrix : cooler.Cooler, optional
+        Cooler Hi-C matrix to be checked for emptyness, by default None
+
+    Returns
+    -------
+    bool
+        Returns True if one of the intervals are empty in the matrix, False otherwise.
+    """
+
+    for chrom in intervals.keys():
+        for interval in intervals[chrom]:
+            if matrix.matrix(balance = False).fetch((chrom, interval[0], interval[1])).sum() == 0:
+                return True
+
+    return False
 
 
 def get_intervals_indexes():

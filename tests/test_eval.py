@@ -19,6 +19,8 @@ import matplotlib.colors
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+import cooler
+
 from .conftest import random
 import hicberg.eval as hev
 import hicberg.io as hio
@@ -31,6 +33,7 @@ from .test_io import test_build_matrix, test_build_pairs
 
 GENOME = "data_test/SC288_with_micron.fa"
 CHROM_SIZES_DIC = "chromosome_sizes.npy"
+MATRIX = "data_test/unrescued_map.cool"
 FRAG_FILE = "fragments_fixed_sizes.txt"
 
 FORWARD_SORTED_BAM = "data_test/alignments/1.sorted.bam"
@@ -43,6 +46,7 @@ FORWARD_MULTI_BAM = "group2.1.bam"
 REVERSE_MULTI_BAM = "group2.2.bam"
 
 NB_INTERVALS = 2
+NB_INTERVALS_EMPTINESS = 10
 POSITION = 5000
 CHROMOSOME = "chr1"
 BINS = 2000
@@ -72,7 +76,6 @@ def test_get_interval_index(test_get_chromosomes_sizes):
     assert indexes["chr8"][1] == (None, None)
 
 
-# TODO to implement
 def test_select_reads(temporary_folder, test_classify_reads, test_build_matrix, test_get_chromosomes_sizes):
     hev.select_reads(bam_for = test_classify_reads[0], bam_rev = test_classify_reads[1], matrix_file = test_build_matrix, output_dir = temporary_folder, chromosome = CHROMOSOME)
 
@@ -127,6 +130,17 @@ def test_get_boundaries(test_get_chromosomes_sizes):
     boundaries = hev.get_boundaries(position = POSITION, bins = BINS, chromosome = CHROMOSOME, chrom_sizes_dict = test_get_chromosomes_sizes)
 
     assert boundaries == BOUNDARIES
+
+def test_emptyness(test_get_chromosomes_sizes):
+    """
+    Test if emptiness checking before considering genomic intervals is correctly computed.
+    """
+
+    clr = cooler.Cooler(MATRIX)
+    dictionary_of_intervals = hev.draw_intervals(chrom_sizes_dict  = test_get_chromosomes_sizes, nb_intervals = NB_INTERVALS_EMPTINESS, bins = BINS)
+    emptiness = hev.check_emptiness(intervals = dictionary_of_intervals, matrix = clr)
+
+    assert not emptiness
 
 def test_get_intervals_indexes():
     pass
