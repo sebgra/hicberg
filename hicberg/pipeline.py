@@ -83,8 +83,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage < 2: 
 
-        
-
         hal.hic_view(cpus = cpus, output_dir = output_folder, verbose = True)
         hal.hic_sort(cpus = cpus, output_dir = output_folder, verbose = True)
         hut.classify_reads(mapq = mapq, output_dir = output_folder)

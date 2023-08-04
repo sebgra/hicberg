@@ -126,6 +126,9 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
         bam_for_path_rescued = Path(output_path / bam_for_rescued)
         bam_rev_path_rescued = Path(output_path / bam_rev_rescued)
 
+        print(f"bam_for_path : {bam_for_path}")
+        print(f"bam_for_path_rescued : {bam_for_path_rescued}")
+
         if not bam_for_path.exists():
 
             raise ValueError(f"Forward bam file {bam_for_rescued} not found")

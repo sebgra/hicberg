@@ -39,6 +39,7 @@ def cli(chain=True):
 
 @click.command()
 @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--name", "-n", required = False, default = "sample", type = str, help = "Name of the analysis.")
 @click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to analyze.")
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
 @click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
@@ -54,8 +55,8 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "stats", "pairs", "rescue", "cool"]), default = "fastq", help = "Stage to start the pipeline")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "stats", "pairs", "rescue", "cool"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def pipeline_cmd(genome, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
-    hpp.pipeline(genome = genome, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")

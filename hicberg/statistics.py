@@ -1217,7 +1217,7 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
     # Instanciate generators
     forward_generator = hut.bam_iterator(forward_bam_path)
-    reverse_generator = hut.bam_iterator(forward_bam_path)
+    reverse_generator = hut.bam_iterator(reverse_bam_path)
 
     for forward_block, reverse_block in zip(forward_generator, reverse_generator):
 
@@ -1236,6 +1236,7 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
         forward_out_bam_handler.write(selected_read_forward)
         reverse_out_bam_handler.write(selected_read_reverse)
+        
     
     forward_bam_handler.close()
     reverse_bam_handler.close()

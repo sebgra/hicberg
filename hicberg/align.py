@@ -130,11 +130,9 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
         logger.info(cmd_alignment_rev)
 
     p_for = sp.Popen([cmd_alignment_for], shell=True, stdout = sp.PIPE, stderr = sp.PIPE)
-    p_rev = sp.Popen([cmd_alignment_rev], shell=True, stdout = sp.PIPE,  stderr = sp.PIPE)
-
     stdout_for, stderr_for  = p_for.communicate()
+    p_rev = sp.Popen([cmd_alignment_rev], shell=True, stdout = sp.PIPE,  stderr = sp.PIPE)
     stdout_rev, stderr_rev = p_rev.communicate()
-
 
     if stdout_for : 
         logger.info(stdout_for.decode('ascii'))
@@ -147,8 +145,6 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
         logger.info(stderr_rev.decode('ascii'))
 
     logger.info(f"Alignement saved at {output_path}")
-
-
 
 
 def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
@@ -199,9 +195,10 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
         logger.info(cmd_view_for)
         logger.info(cmd_view_rev)
 
-    sp.check_call([cmd_view_for], shell=True)
-    sp.check_call([cmd_view_rev], shell=True)
-
+    sp_for = sp.Popen([cmd_view_for], shell=True)
+    sp_for.communicate()
+    sp_rev = sp.Popen([cmd_view_rev], shell=True)
+    sp_rev.communicate()
     # Delete .sam files after .bam conversion
     (output_path / sam_for).unlink()
     (output_path / sam_rev).unlink()
@@ -260,9 +257,10 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
         logger.info(cmd_sort_for)
         logger.info(cmd_sort_rev)
 
-    sp.check_call([cmd_sort_for], shell=True)
-    sp.check_call([cmd_sort_rev], shell=True)
-
+    sp_for = sp.Popen([cmd_sort_for], shell=True)
+    sp_for.communicate()
+    sp_rev = sp.Popen([cmd_sort_rev], shell=True)
+    sp_rev.communicate()    
     (output_path / '1.bam').unlink()
     (output_path / '2.bam').unlink()
 

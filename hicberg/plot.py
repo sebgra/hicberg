@@ -56,20 +56,21 @@ def plot_laws(output_dir : str = None) -> None:
     loops = load_dictionary(output_path / LOOPS)
 
     for chromosome in xs.keys():
-
-        plt.figure(figsize = (10, 10))
+        
+        
+        plt.figure()
 
         plt.loglog(xs[chromosome], weirds[chromosome], "o", label="++/--")
         plt.loglog(xs[chromosome], uncuts[chromosome], "o", label="+-")
         plt.loglog(xs[chromosome], loops[chromosome], "o", label="-+")
-        plt.title(f"Distribution of weirds, uncuts and loops events across chr11")
+        plt.title(f"Distribution of weirds, uncuts and loops events across {chromosome}")
         plt.xlabel("Logarithmic binned genomic distances")
         plt.ylabel("Number of events")
         plt.grid()
         plt.legend()
         plt.savefig(output_path / f"patterns_distribution_{chromosome}.pdf", format = "pdf")
         plt.close()
-     
+
     logger.info(f"Saved plots of patterns at : {output_path}")
 
 
