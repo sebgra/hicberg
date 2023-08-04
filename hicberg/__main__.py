@@ -193,7 +193,7 @@ def tidy_cmd(output):
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
 @click.option("--chromosome", "-c", required = False, default = None, type = str, help = "Chromosome to get as source for duplication.")
-@click.option("--position", "-p", required = False, default = None, type = str, help = "Position to get as source for duplication.")
+@click.option("--position", "-p", required = False, default = None, type = int, help = "Position to get as source for duplication.")
 @click.option("--trans-chromosome", "-C", required = False, default = None, type = str, help = "Chromosome to get as target for duplication.")
 @click.option("--trans-position", "-P", required = False, default = None, type = str, help = "Position to get as target for duplication.")
 @click.option("--bins", "-b", required = False, default = 1, type = int, help = "Number of bins to select from a genomic coordinates.")

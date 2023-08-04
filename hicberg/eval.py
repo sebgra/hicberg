@@ -189,6 +189,10 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
     if auto is None:
         # check intervals overlaping
+        print("----------------")
+        print(f"position : {type(position)}")
+        print(f"chromosome : {type(chromosome)}")
+        print(f"stride : {type(strides)}")
 
         ## set areas and boundaries for intrachromosomal duplications
         forward_intervals = [
@@ -287,12 +291,12 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
     if auto is not None:
 
-        dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_dict, nb_duplicates = auto, bin_size = bin_size)
+        dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_path, nb_intervals = auto, bins = bin_size)
 
         # If a randomly selected interval is empty, draw another set of intervals
         while check_emptiness(intervals = dictionary_of_intervals, matrix = matrix):
                 
-            dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_dict, nb_duplicates = auto, bin_size = bin_size)
+            dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_path, nb_intervals = auto, bins = bin_size)
 
         list_selected_chromosomes = list(dictionary_of_intervals.keys())
 

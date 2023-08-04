@@ -58,80 +58,50 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     print("------ Formating inputs ------")
 
-    # position = [int(p) for p in position.split(",")]
-    # trans_chromosome = [c for c in trans_chromosome.split(",")]
-    # trans_position = [int(tp) for tp in trans_position.split(",")]
-    # strides = [int(s) for s in strides.split(",")]
+    OTHER = [[chromosome, position, trans_chromosome, trans_position, strides, auto, bins]]
 
-    MODE = [[m] for m in mode.split(",")]
-
-    CHROMOSOME = [c for c in chromosome.split(",")]
-
-    TRANS_CHROMOSOME = [[str(t)] for t in trans_chromosome.split(",")]
-
-    # TRANS_POSITION = [[int(p) for p in P.split(",")] for P in trans_position]
-
-    TRANS_POSITION = [[int(p)] for p in position.split(",")]
-
-
-    NB_BINS = bins
-    POSITION = [[int(p) for p in str(position).split(",")]]
-    BIN_SIZE = bins
-
-    STRIDES = [[int(s) for s in strides.split(",")]]
-
-    print(f"output_dir : {output_dir}")
-    print(f"chromosome : {CHROMOSOME}")
-    print(f"position : {POSITION}")
-    print(f"trans_chromosome : {TRANS_CHROMOSOME}")
-    print(f"trans_position : {TRANS_POSITION}")
-    print(f"strides : {STRIDES}")
-    print(f"mode : {MODE}")
-    print(f"auto : {auto}")
-    print(f"bins : {bins}")
+    print(f"OTHER : {OTHER}")
 
     print('----- Creating grid search -----')
 
-    # stride = stride
 
-    # trans_coordinates = list(zip(*trans_chromosome, trans_position))
-    trans_coordinates = zip(TRANS_CHROMOSOME, TRANS_POSITION)
+    print(f"----Mode : {mode}----")
 
-    GS = list(product(MODE, CHROMOSOME, POSITION, trans_coordinates, STRIDES))
+    # CHROMOSOME = [c for c in chromosome.split(",")]
+    CHROMOSOME = chromosome
 
-    # print(list(product(MODE, CHROMOSOME, POSITION, trans_coordinates, STRIDES)))
+    if trans_chromosome is not None:
+        TRANS_CHROMOSOME = [str(t) for t in trans_chromosome.split(",")]
+    else : 
+        TRANS_CHROMOSOME = None
 
-    # if len(trans_chromosome) != 0:
+    if trans_position is not None:
+        TRANS_POSITION = [int(p) for p in trans_position.split(",")]
 
-    #     GS =  product(mode, chromosome, position, strides, trans_coordinates)
-
-    # else:
-
-    #     GS = list(product(mode, chromosome, position, strides))
-
-    # print(f"GS : {GS}")
-
-    for idx, g in enumerate(GS):
-
-        # print(f"{idx} : {g}")
-
-        print(f"GS[{idx}] : {g}")
-
-        # if len(TRANS_CHROMOSOME) != 0:
-
-    
+    else :
+        TRANS_POSITION = None
 
 
-        #     MODE, CHROMOSOME, POSITION, STRIDE = g[:-1]
-        #     TRANS_CHROMOSOME, TRANS_POSITION = g[-1]
+    NB_BINS = bins
+    # POSITION = [int(p) for p in str(position).split(",")]
+    POSITION = position
+    BIN_SIZE = bins
 
-        # # conver list of position from CLI from str to int
-        #     TRANS_POSITION = [int(x) for x in TRANS_POSITION.split(",")]
+    STRIDES = [int(s) for s in strides.split(",")]
 
-        # else : 
+    for m in mode.split(","):
 
-        #     MODE, CHROMOSOME, POSITION, STRIDE  =  g
+        print(f"mode : {m}")
+        print(f"output_dir : {output_dir}")
+        print(f"chromosome : {CHROMOSOME}")
+        print(f"position : {POSITION}")
+        print(f"trans_chromosome : {TRANS_CHROMOSOME}")
+        print(f"trans_position : {TRANS_POSITION}")
+        print(f"strides : {STRIDES}")
+        print(f"auto : {auto}")
 
+        hev.select_reads(position = POSITION, chromosome = CHROMOSOME, strides = STRIDES, trans_chromosome = TRANS_CHROMOSOME, trans_position = TRANS_POSITION, auto = auto, nb_bins = NB_BINS, output_dir = output_dir)
+        break
 
 
     return
