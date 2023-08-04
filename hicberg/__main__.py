@@ -56,7 +56,7 @@ def cli(chain=True):
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "stats", "pairs", "rescue", "cool"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
 def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
-    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")

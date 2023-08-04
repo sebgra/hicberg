@@ -411,7 +411,7 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
 
 
 
-def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", restriction_map : str = "dist.frag.npy", output_dir : str = None) -> None:
+def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", restriction_map : str = "restriction_map.npy", output_dir : str = None) -> None:
     """
     Compute d1d2 distance lawswith the given alignments and restriction map.
 
@@ -470,27 +470,27 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
             index = np.searchsorted(r_sites_forward_read, forward_read.pos, side="right")
 
-            try : 
-                distance_1 = np.subtract(r_sites_forward_read[index], forward_read.pos)
+            # try : 
+            distance_1 = np.subtract(r_sites_forward_read[index], forward_read.pos)
 
-            except : 
+            # except : 
 
-                distance_1 = np.subtract(r_sites_forward_read[index - 1], forward_read.pos)
+            #     distance_1 = np.subtract(r_sites_forward_read[index - 1], forward_read.pos)
 
 
         elif forward_read.flag == 16 or forward_read.flag == 272:
 
             index = np.searchsorted(r_sites_forward_read, forward_read.reference_end, side="left")
 
-            try : 
-                distance_1 = np.abs(
-                    np.subtract(forward_read.reference_end, r_sites_forward_read[index])
-                )
-            except : 
+            # try : 
+            distance_1 = np.abs(
+                np.subtract(forward_read.reference_end, r_sites_forward_read[index])
+            )
+            # except : 
 
-                distance_1 = np.abs(
-                    np.subtract(forward_read.reference_end, r_sites_forward_read[index - 1])
-                )
+            #     distance_1 = np.abs(
+            #         np.subtract(forward_read.reference_end, r_sites_forward_read[index - 1])
+            #     )
 
 
         if reverse_read.flag == 0 or reverse_read.flag == 256:
@@ -499,12 +499,12 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
                 r_sites_reverse_read, reverse_read.reference_start, side="right"
             )  # right
 
-            try : 
-                distance_2 = np.subtract(r_sites_reverse_read[index], reverse_read.reference_start)
+            # try : 
+            distance_2 = np.subtract(r_sites_reverse_read[index], reverse_read.reference_start)
 
-            except : 
+            # except : 
 
-                distance_2 = np.subtract(r_sites_reverse_read[index - 1], reverse_read.reference_start)
+            #     distance_2 = np.subtract(r_sites_reverse_read[index - 1], reverse_read.reference_start)
 
 
         elif reverse_read.flag == 16 or reverse_read.flag == 272:
@@ -513,16 +513,16 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
                 r_sites_reverse_read, reverse_read.reference_end, side="left"
             )  # left
 
-            try : 
-                distance_2 = np.abs(
-                    np.subtract(reverse_read.reference_end, r_sites_reverse_read[index])
-                )
+            # try : 
+            distance_2 = np.abs(
+                np.subtract(reverse_read.reference_end, r_sites_reverse_read[index])
+            )
 
-            except : 
+            # except : 
 
-                distance_2 = np.abs(
-                    np.subtract(reverse_read.reference_end, r_sites_reverse_read[index - 1])
-                )
+            #     distance_2 = np.abs(
+            #         np.subtract(reverse_read.reference_end, r_sites_reverse_read[index - 1])
+            #     )
 
         # Correction for uncuts with no restriction sites inside
         if forward_read.reference_name == reverse_read.reference_name and np.add(
