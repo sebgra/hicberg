@@ -148,9 +148,10 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         p3 = Process(target = hpl.plot_coverages(bins = bins, output_dir = output_folder))
         p4 = Process(target = hpl.plot_couple_repartition(output_dir = output_folder))
         p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output_folder))
+        p6 = Process(target = hpl.plot_d1d2(output_dir = output_folder))
 
         # Launch processees
-        for process in [p1, p2, p3, p4, p5]:
+        for process in [p1, p2, p3, p4, p5, p6]:
             process.start()
             process.join()        
 

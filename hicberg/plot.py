@@ -29,6 +29,38 @@ TRANS_PS = "trans_ps.npy"
 CLR = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
 
+def plot_d1d2(output_dir : str = None) -> None:
+    """
+    Plot d1d2 law
+    
+    Parameters
+    ----------
+    output_dir : str, optional
+        Path to the folder where to save the plot, by default None, by default None.
+    """
+
+    if output_dir is None:
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    # reload dictionary
+    d1d2 = load_dictionary(output_path / D1D2)
+
+    histo, bins = np.histogram(d1d2, max(d1d2))
+
+    plt.figure(figsize=(10, 10))
+    plt.loglog(histo)
+    plt.title("Log distribution of d1d2 distance")
+    plt.xlabel("d1+d2")
+    plt.ylabel("No. occurences")
+    plt.savefig(output_path / f"d1d2.pdf", format = "pdf")
+    plt.close()
+
+    logger.info(f"Saved plots of d1d2 at : {output_path}")
+
 
 def plot_laws(output_dir : str = None) -> None:
     """
@@ -58,7 +90,7 @@ def plot_laws(output_dir : str = None) -> None:
     for chromosome in xs.keys():
         
         
-        plt.figure()
+        plt.figure(figsize=(10, 10))
 
         plt.loglog(xs[chromosome], weirds[chromosome], "o", label="++/--")
         plt.loglog(xs[chromosome], uncuts[chromosome], "o", label="+-")

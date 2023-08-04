@@ -168,9 +168,10 @@ def plot_cmd(genome, bins, output):
     p3 = Process(target = hpl.plot_coverages(bins = bins, output_dir = output))
     p4 = Process(target = hpl.plot_couple_repartition(output_dir = output))
     p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output))
+    p6 = Process(target = hpl.plot_d1d2(output_dir = output))
 
     # Launch processees
-    for process in [p1, p2, p3, p4, p5]:
+    for process in [p1, p2, p3, p4, p5, p6]:
         process.start()
         process.join()
 
