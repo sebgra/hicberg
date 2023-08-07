@@ -260,7 +260,7 @@ Considering the previous example, to reassign the reads from **group2** in a fol
 hicberg rescue -g genome.fa -e DpnII -e HinfI -o ~/Desktop/test/ 
 ```
 
-The files __*goup2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be created.
+The files __*group2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be created.
 
 ### Plot
 
@@ -366,14 +366,40 @@ The genomic intervals used to duplicate the reads are defined by the user throug
 
 So in a basic example considering only one chromosome and two artificial duplicated sequence, it is necessary to define a source interval corresponding to the chromosome of interest and a target interval corresponding to the duplicated sequence. The source interval is defined by the chromosome name (__*chromosome*__), the position (__*--position*__) and the width of the interval in number of bins (__*bins*__). 
 
-Thus the source interval is defined as [chromosome:position-bins*bin_size ; chromosome:position+bins*bin_size] and the target interval as [chromosome:(position-bins*bin_size) + stride ; chromosome:(position+bins*bin_size) + stride]. 
+Thus the source interval is defined as $[chromosome:position-bins*bin size ; chromosome:position+bins * binsize]$ and the target interval as $[chromosome:(position-bins*binsize) + stride ; chromosome:(position+bins*binsize) + stride]$. 
 
 
-For example, if the source interval is chromosome 1, position 100000 and strides set as [0, 50000] with a bin size of 2000bp, the source interval is defined as chr1:100000-102000 and the target interval is defined as chr1:150000-152000. 
+For example, if the source interval is __chromosome 1__, position _68000_ and strides set as __[0, 50000]__ with a bin size of __2000bp__, the source interval is defined as _chr1:68000-70000_ and the target interval is defined as _chr1:118000-120000_. 
+
+The files __*group1.1.in.bam*__, __*group1.2.in.bam*__, __*group1.1.out.bam*__ and __*group1.2.out.bam*__ will be created.
+
+The duplicated aligned reads should look like this :
+
+__*group1.1.in.bam*__ :
+
+```
+NS500150:487:HNLLNBGXC:1:11101:1071:2862        0       chr1    69227   255     35M     *       0       0       ATCTGTTGTGNNGAAGGATACTCCCAGAACTCGTT     AAAAAEEEAE##EEEEEEEEEEEEEEEEEEEEEEE     AS:i:-2 XN:i:0  XM:i:2  XO:i:0  NM:i:2  MD:Z:10G0A23    YT:Z:UU   XG:i:230218
+NS500150:487:HNLLNBGXC:1:11101:1071:2862        0       chr1    119227  255     35M     *       0       0       ATCTGTTGTGNNGAAGGATACTCCCAGAACTCGTT     AAAAAEEEAE##EEEEEEEEEEEEEEEEEEEEEEE     AS:i:-2 XN:i:0  XM:i:2  XO:i:0  NM:i:2  MD:Z:10G0A23    YT:Z:UU   XG:i:230218     XF:Z:Fake
+NS500150:487:HNLLNBGXC:1:11101:3001:19423       16      chr1    118866  255     35M     *       0       0       GAAAAAGGATTGGTCCAATAAGTGGGAAAAAAGAT     EEAEEEAEE/EAE/EEEEEEEE/EEEEEE6AAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
+NS500150:487:HNLLNBGXC:1:11101:3001:19423       16      chr1    68866   255     35M     *       0       0       GAAAAAGGATTGGTCCAATAAGTGGGAAAAAAGAT     EEAEEEAEE/EAE/EEEEEEEE/EEEEEE6AAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218       XF:Z:Fake
+NS500150:487:HNLLNBGXC:1:11101:4986:15168       16      chr1    69239   255     35M     *       0       0       GAAGGATACTCCCAGAACTCGTTACTGTCTGGACT     EEEEEEEEEEEEEEEEEEEEEEEAEEEAEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
+NS500150:487:HNLLNBGXC:1:11101:4986:15168       16      chr1    119239  255     35M     *       0       0       GAAGGATACTCCCAGAACTCGTTACTGTCTGGACT     EEEEEEEEEEEEEEEEEEEEEEEAEEEAEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218       XF:Z:Fake
+```
+
+
+__*group1.2.bam*__ :
+
+``` 
+NS500150:487:HNLLNBGXC:1:11101:1071:2862        16      chr1    103994  255     35M     *       0       0       TGCTTTTTTGGGATTGGGAATGATTTTTCCTCCTT     EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
+NS500150:487:HNLLNBGXC:1:11101:3001:19423       16      chr1    121776  255     35M     *       0       0       GGTCAAGAAATGGTTTTCACAGGCGAAATCATTGG     EEEEEEEEEEE<EEEE/EEEEEEEEEEAEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
+NS500150:487:HNLLNBGXC:1:11101:4986:15168       0       chr1    86626   255     35M     *       0       0       GATCTAGGGGTACCTCCTCGGGAAACATCCAGCCC     AAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
+```
+
+_The XF:Z:Fake signed read duplication._
 
 In the case of trans chromosomal duplications, the user has to specify the names of trans chromosomes and the relative positions for each trans chromosome selected. The user has to provide as many position as the number of chromosome names selected. 
 
-For example, if the source interval is chromosome 1, position 100000 and strides set as [0, 50000] with a bin size of 2000bp and the specified trans chromosomes and trans positions are respectively [chr2, chr8] and [70000, 130000], the source interval is defined as chr1:100000-102000 and the target intervals are defined as chr1:150000-152000, chr2:70000-72000 and chr8:130000-132000.
+For example, if the source interval is __chromosome 1__, position __100000__ and strides set as __[0, 50000]__ with a bin size of __2000bp__ and the specified trans chromosomes and trans positions are respectively __[chr2, chr8]__ and __[70000, 130000]__, the source interval is defined as _chr1:100000-102000_ and the target intervals are defined as _chr1:150000-152000_, _chr2:70000-72000_ and _chr8:130000-132000_.
 
 The stride is the number of bins between the first bin of the source interval and the first bin of the target interval. The stride can be negative or positive. If the stride is negative, the target interval is located before the source interval. If the stride is positive, the target interval is located after the source interval. The stride can be set to 0, in this case the target interval is the same as the source interval. The target interval can be located on the same chromosome as the source interval or on another chromosome. In this case, the chromosome name and the position of the first bin of the target interval must be specified. All the parameters __*--position*__, __*--strides*__, __*--trans-chromosome*__ and __*--trans-position*__ should be provided as coma separated lists.
 
@@ -387,7 +413,7 @@ The benchmark can be performed considering several modes. The modes are defined 
 - no_cover
 - no_d1d2
 
-$equation test$
+
 
 The evaluation can be run using the following command :
 
@@ -396,7 +422,7 @@ The evaluation can be run using the following command :
 hicberg benchmark  --output=DIR [--chromosome] [--position] [--trans-chromosome] [--trans-position] [--stride] [--bins] [--auto] [--modes]
 ```
 
-Considering a benchmark with 4 artificially duplicated sequences set at chr1:100000-102000 (source), chr1:200000-202000 chr4:50000-52000 (target 1) and chr7:300000-302000, with 2000bp as bin size and considering full and ps_only modes to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
+Considering a benchmark with 4 artificially duplicated sequences set at __chr1:100000-102000 (source)__, __chr1:200000-202000 (target 1)__ __chr4:50000-52000 (target 2)__ and __chr7:300000-302000 (target 3)__, with 2000bp as bin size and considering __full and ps_only modes__ to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
 
 
 ```bash
@@ -405,12 +431,12 @@ hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7
 
 It is also possible to let the source and target intervals being picked at random. However in such cases, the empty bins are not considered in the evaluation. The random mode is activated by setting the parameter __*--auto*__ to the number of desired artificially duplicated sequences. 
 
-Thus, considering a benchmark with 100 artificially duplicated sequences , with 2000bp as bin size and considering full and ps_only modes to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
+Thus, considering a benchmark with __100 artificially duplicated sequences__ , with 2000bp as bin size and considering full and ps_only modes to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
 
 ```bash
 hicberg benchmark  -o ~/Desktop/test/ -a 100 -m full,ps_only
 ```
-```
+
 
 ## Library
 
