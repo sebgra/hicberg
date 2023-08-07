@@ -46,26 +46,26 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     #TODO : complete code and docstring   
 
-    print(f"output_dir : {output_dir}")
-    print(f"chromosome : {chromosome}")
-    print(f"position : {position}")
-    print(f"trans_chromosome : {trans_chromosome}")
-    print(f"trans_position : {trans_position}")
-    print(f"strides : {strides}")
-    print(f"mode : {mode}")
-    print(f"auto : {auto}")
-    print(f"bins : {bins}")
+    # print(f"output_dir : {output_dir}")
+    # print(f"chromosome : {chromosome}")
+    # print(f"position : {position}")
+    # print(f"trans_chromosome : {trans_chromosome}")
+    # print(f"trans_position : {trans_position}")
+    # print(f"strides : {strides}")
+    # print(f"mode : {mode}")
+    # print(f"auto : {auto}")
+    # print(f"bins : {bins}")
 
-    print("------ Formating inputs ------")
+    # print("------ Formating inputs ------")
 
     OTHER = [[chromosome, position, trans_chromosome, trans_position, strides, auto, bins]]
 
-    print(f"OTHER : {OTHER}")
+    # print(f"OTHER : {OTHER}")
 
-    print('----- Creating grid search -----')
+    # print('----- Creating grid search -----')
 
 
-    print(f"----Mode : {mode}----")
+    # print(f"----Mode : {mode}----")
 
     # CHROMOSOME = [c for c in chromosome.split(",")]
     CHROMOSOME = chromosome
@@ -92,13 +92,13 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     for m in mode.split(","):
 
         print(f"mode : {m}")
-        print(f"output_dir : {output_dir}")
-        print(f"chromosome : {CHROMOSOME}")
-        print(f"position : {POSITION}")
-        print(f"trans_chromosome : {TRANS_CHROMOSOME}")
-        print(f"trans_position : {TRANS_POSITION}")
-        print(f"strides : {STRIDES}")
-        print(f"auto : {auto}")
+        # print(f"output_dir : {output_dir}")
+        # print(f"chromosome : {CHROMOSOME}")
+        # print(f"position : {POSITION}")
+        # print(f"trans_chromosome : {TRANS_CHROMOSOME}")
+        # print(f"trans_position : {TRANS_POSITION}")
+        # print(f"strides : {STRIDES}")
+        # print(f"auto : {auto}")
 
         hev.select_reads(position = POSITION, chromosome = CHROMOSOME, strides = STRIDES, trans_chromosome = TRANS_CHROMOSOME, trans_position = TRANS_POSITION, auto = auto, nb_bins = NB_BINS, output_dir = output_dir)
         break

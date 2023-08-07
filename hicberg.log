@@ -5485,3 +5485,152 @@ Command: /usr/bin/bowtie2-align-l --wrapper basic-0 --very-sensitive -p 8 -k 3 -
 2023-08-04 --  23:07:07 :: INFO :: Saved coverages at : /home/sardine/Bureau/AC_1_bis
 2023-08-04 --  23:07:23 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/AC_1_bis
 2023-08-04 --  23:08:46 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/AC_1_bis
+2023-08-07 --  10:04:04 :: INFO :: Chromosome sizes have been saved in /tmp/tmpzurhk1gr/chromosome_sizes.npy
+2023-08-07 --  10:04:04 :: INFO :: bowtie2-build -q -f  --large-index data_test/SC288_with_micron.fa /tmp/tmpzurhk1gr/SC288_with_micron
+2023-08-07 --  10:04:13 :: INFO :: Index built at /tmp/tmpzurhk1gr/SC288_with_micron
+2023-08-07 --  10:04:13 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpzurhk1gr/SC288_with_micron -S /tmp/tmpzurhk1gr/1.sam data_test/reverse_reads_test.fq.gz
+2023-08-07 --  10:04:13 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpzurhk1gr/SC288_with_micron -S /tmp/tmpzurhk1gr/2.sam data_test/forward_reads_test.fq.gz
+2023-08-07 --  10:04:21 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-08-07 --  10:04:21 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-08-07 --  10:04:21 :: INFO :: Alignement saved at /tmp/tmpzurhk1gr
+2023-08-07 --  10:04:21 :: INFO :: samtools view -S -b /tmp/tmpzurhk1gr/1.sam -o /tmp/tmpzurhk1gr/1.bam --threads 1
+2023-08-07 --  10:04:21 :: INFO :: samtools view -S -b /tmp/tmpzurhk1gr/2.sam -o /tmp/tmpzurhk1gr/2.bam --threads 1
+2023-08-07 --  10:04:22 :: INFO :: Compressed alignemnet alignement done at /tmp/tmpzurhk1gr
+2023-08-07 --  10:04:22 :: INFO :: samtools sort -n /tmp/tmpzurhk1gr/1.bam -o /tmp/tmpzurhk1gr/1.sorted.bam --threads 1
+2023-08-07 --  10:04:22 :: INFO :: samtools sort -n /tmp/tmpzurhk1gr/2.bam -o /tmp/tmpzurhk1gr/2.sorted.bam --threads 1
+2023-08-07 --  10:04:23 :: INFO :: Sorted alignement done at /tmp/tmpzurhk1gr
+2023-08-07 --  10:04:26 :: INFO :: Files for the different groups have been saved in /tmp/tmpzurhk1gr
+2023-08-07 --  10:04:26 :: INFO :: Number of unmapped reads in forward file : 19576
+2023-08-07 --  10:04:26 :: INFO :: Number of unmapped reads in reverse file : 19286
+2023-08-07 --  10:04:26 :: INFO :: Number of uniquely mapped reads in forward file : 74819
+2023-08-07 --  10:04:26 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
+2023-08-07 --  10:04:26 :: INFO :: Number of multi mapped reads in forward file : 125539
+2023-08-07 --  10:04:26 :: INFO :: Number of multi mapped reads in reverse file : 114340
+2023-08-07 --  10:04:26 :: INFO :: Pairs file successfully created in /tmp/tmpzurhk1gr
+2023-08-07 --  10:04:30 :: INFO :: Cooler matrix successfully created in /tmp/tmpzurhk1gr
+2023-08-07 --  10:04:31 :: INFO :: Folder /tmp/tmp71la64xc/test_sample created.
+2023-08-07 --  10:04:31 :: INFO :: Chromosome sizes have been saved in /tmp/tmp71la64xc/chromosome_sizes.npy
+2023-08-07 --  10:04:31 :: INFO :: bowtie2-build -q -f  --large-index data_test/SC288_with_micron.fa /tmp/tmp71la64xc/SC288_with_micron
+2023-08-07 --  10:04:39 :: INFO :: Index built at /tmp/tmp71la64xc/SC288_with_micron
+2023-08-07 --  10:04:39 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmp71la64xc/SC288_with_micron -S /tmp/tmp71la64xc/1.sam data_test/reverse_reads_test.fq.gz
+2023-08-07 --  10:04:39 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmp71la64xc/SC288_with_micron -S /tmp/tmp71la64xc/2.sam data_test/forward_reads_test.fq.gz
+2023-08-07 --  10:04:48 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-08-07 --  10:04:48 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-08-07 --  10:04:48 :: INFO :: Alignement saved at /tmp/tmp71la64xc
+2023-08-07 --  10:04:48 :: INFO :: samtools view -S -b /tmp/tmp71la64xc/1.sam -o /tmp/tmp71la64xc/1.bam --threads 1
+2023-08-07 --  10:04:48 :: INFO :: samtools view -S -b /tmp/tmp71la64xc/2.sam -o /tmp/tmp71la64xc/2.bam --threads 1
+2023-08-07 --  10:04:49 :: INFO :: Compressed alignemnet alignement done at /tmp/tmp71la64xc
+2023-08-07 --  10:04:49 :: INFO :: samtools sort -n /tmp/tmp71la64xc/1.bam -o /tmp/tmp71la64xc/1.sorted.bam --threads 1
+2023-08-07 --  10:04:49 :: INFO :: samtools sort -n /tmp/tmp71la64xc/2.bam -o /tmp/tmp71la64xc/2.sorted.bam --threads 1
+2023-08-07 --  10:04:50 :: INFO :: Sorted alignement done at /tmp/tmp71la64xc
+2023-08-07 --  10:04:53 :: INFO :: Files for the different groups have been saved in /tmp/tmp71la64xc
+2023-08-07 --  10:04:53 :: INFO :: Number of unmapped reads in forward file : 19576
+2023-08-07 --  10:04:53 :: INFO :: Number of unmapped reads in reverse file : 19286
+2023-08-07 --  10:04:53 :: INFO :: Number of uniquely mapped reads in forward file : 74819
+2023-08-07 --  10:04:53 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
+2023-08-07 --  10:04:53 :: INFO :: Number of multi mapped reads in forward file : 125539
+2023-08-07 --  10:04:53 :: INFO :: Number of multi mapped reads in reverse file : 114340
+2023-08-07 --  10:04:53 :: INFO :: Pairs file successfully created in /tmp/tmp71la64xc
+2023-08-07 --  10:04:57 :: INFO :: Cooler matrix successfully created in /tmp/tmp71la64xc
+2023-08-07 --  10:04:58 :: INFO :: Chunks saved in /tmp/tmp71la64xc/chunks
+2023-08-07 --  10:04:58 :: INFO :: Predictions successfully merged in data_test/alignments/chunks
+2023-08-07 --  10:04:58 :: INFO :: bowtie2-build -q -f  --large-index data_test/SC288_with_micron.fa /tmp/tmptx7dsoq1/SC288_with_micron
+2023-08-07 --  10:05:07 :: INFO :: Index built at /tmp/tmptx7dsoq1/SC288_with_micron
+2023-08-07 --  10:05:07 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmptx7dsoq1/SC288_with_micron -S /tmp/tmptx7dsoq1/1.sam data_test/reverse_reads_test.fq.gz
+2023-08-07 --  10:05:07 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmptx7dsoq1/SC288_with_micron -S /tmp/tmptx7dsoq1/2.sam data_test/forward_reads_test.fq.gz
+2023-08-07 --  10:05:15 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-08-07 --  10:05:15 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-08-07 --  10:05:15 :: INFO :: Alignement saved at /tmp/tmptx7dsoq1
+2023-08-07 --  10:05:15 :: INFO :: samtools view -S -b /tmp/tmptx7dsoq1/1.sam -o /tmp/tmptx7dsoq1/1.bam --threads 1
+2023-08-07 --  10:05:15 :: INFO :: samtools view -S -b /tmp/tmptx7dsoq1/2.sam -o /tmp/tmptx7dsoq1/2.bam --threads 1
+2023-08-07 --  10:05:16 :: INFO :: Compressed alignemnet alignement done at /tmp/tmptx7dsoq1
+2023-08-07 --  10:05:16 :: INFO :: samtools sort -n /tmp/tmptx7dsoq1/1.bam -o /tmp/tmptx7dsoq1/1.sorted.bam --threads 1
+2023-08-07 --  10:05:16 :: INFO :: samtools sort -n /tmp/tmptx7dsoq1/2.bam -o /tmp/tmptx7dsoq1/2.sorted.bam --threads 1
+2023-08-07 --  10:05:17 :: INFO :: Sorted alignement done at /tmp/tmptx7dsoq1
+2023-08-07 --  10:05:18 :: INFO :: Chromosome sizes have been saved in /tmp/tmptx7dsoq1/chromosome_sizes.npy
+2023-08-07 --  10:05:20 :: INFO :: Files for the different groups have been saved in /tmp/tmptx7dsoq1
+2023-08-07 --  10:05:20 :: INFO :: Number of unmapped reads in forward file : 19576
+2023-08-07 --  10:05:20 :: INFO :: Number of unmapped reads in reverse file : 19286
+2023-08-07 --  10:05:20 :: INFO :: Number of uniquely mapped reads in forward file : 74819
+2023-08-07 --  10:05:20 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
+2023-08-07 --  10:05:20 :: INFO :: Number of multi mapped reads in forward file : 125539
+2023-08-07 --  10:05:20 :: INFO :: Number of multi mapped reads in reverse file : 114340
+2023-08-07 --  10:05:20 :: INFO :: Log binning of genome data_test/SC288_with_micron.fa saved in /tmp/tmptx7dsoq1/xs.npy.
+2023-08-07 --  10:05:20 :: INFO :: Saved restriction map at : /home/sardine/Bureau/codes/hicberg
+2023-08-07 --  10:07:28 :: INFO :: Saved restriction map at : /tmp/tmptx7dsoq1/dist.frag.npy
+2023-08-07 --  10:07:29 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /tmp/tmptx7dsoq1
+2023-08-07 --  10:07:29 :: INFO :: Pairs file successfully created in /tmp/tmptx7dsoq1
+2023-08-07 --  10:07:33 :: INFO :: Cooler matrix successfully created in /tmp/tmptx7dsoq1
+2023-08-07 --  10:07:35 :: INFO :: Trans P(s) saved in /tmp/tmptx7dsoq1
+2023-08-07 --  10:07:36 :: INFO :: Saved d1d2 law at : /tmp/tmptx7dsoq1/d1d2.npy
+2023-08-07 --  10:07:53 :: INFO :: Predictions written in /tmp/tmptx7dsoq1
+2023-08-07 --  10:07:53 :: INFO :: bowtie2-build -q -f  --large-index data_test/SC288_with_micron.fa /tmp/tmpvm0mgaf2/SC288_with_micron
+2023-08-07 --  10:08:01 :: INFO :: Index built at /tmp/tmpvm0mgaf2/SC288_with_micron
+2023-08-07 --  10:08:01 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpvm0mgaf2/SC288_with_micron -S /tmp/tmpvm0mgaf2/1.sam data_test/reverse_reads_test.fq.gz
+2023-08-07 --  10:08:01 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpvm0mgaf2/SC288_with_micron -S /tmp/tmpvm0mgaf2/2.sam data_test/forward_reads_test.fq.gz
+2023-08-07 --  10:08:10 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-08-07 --  10:08:10 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-08-07 --  10:08:10 :: INFO :: Alignement saved at /tmp/tmpvm0mgaf2
+2023-08-07 --  10:08:10 :: INFO :: samtools view -S -b /tmp/tmpvm0mgaf2/1.sam -o /tmp/tmpvm0mgaf2/1.bam --threads 1
+2023-08-07 --  10:08:10 :: INFO :: samtools view -S -b /tmp/tmpvm0mgaf2/2.sam -o /tmp/tmpvm0mgaf2/2.bam --threads 1
+2023-08-07 --  10:08:11 :: INFO :: Compressed alignemnet alignement done at /tmp/tmpvm0mgaf2
+2023-08-07 --  10:08:11 :: INFO :: samtools sort -n /tmp/tmpvm0mgaf2/1.bam -o /tmp/tmpvm0mgaf2/1.sorted.bam --threads 1
+2023-08-07 --  10:08:11 :: INFO :: samtools sort -n /tmp/tmpvm0mgaf2/2.bam -o /tmp/tmpvm0mgaf2/2.sorted.bam --threads 1
+2023-08-07 --  10:08:12 :: INFO :: Sorted alignement done at /tmp/tmpvm0mgaf2
+2023-08-07 --  10:08:12 :: INFO :: Chromosome sizes have been saved in /tmp/tmpvm0mgaf2/chromosome_sizes.npy
+2023-08-07 --  10:08:14 :: INFO :: Files for the different groups have been saved in /tmp/tmpvm0mgaf2
+2023-08-07 --  10:08:14 :: INFO :: Number of unmapped reads in forward file : 19576
+2023-08-07 --  10:08:14 :: INFO :: Number of unmapped reads in reverse file : 19286
+2023-08-07 --  10:08:14 :: INFO :: Number of uniquely mapped reads in forward file : 74819
+2023-08-07 --  10:08:14 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
+2023-08-07 --  10:08:14 :: INFO :: Number of multi mapped reads in forward file : 125539
+2023-08-07 --  10:08:14 :: INFO :: Number of multi mapped reads in reverse file : 114340
+2023-08-07 --  10:08:16 :: INFO :: Chunks saved in /tmp/tmpvm0mgaf2/chunks

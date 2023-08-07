@@ -189,10 +189,10 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
     if auto is None:
         # check intervals overlaping
-        print("----------------")
-        print(f"position : {type(position)}")
-        print(f"chromosome : {type(chromosome)}")
-        print(f"stride : {type(strides)}")
+        # print("----------------")
+        # print(f"position : {type(position)}")
+        # print(f"chromosome : {type(chromosome)}")
+        # print(f"stride : {type(strides)}")
 
         ## set areas and boundaries for intrachromosomal duplications
         forward_intervals = [
@@ -637,8 +637,8 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = 
         chrom_sizes.get(chromosome),
     )
 
-    print(f"position : {position}")
-    print(f"bins : {bins}")
+    # print(f"position : {position}")
+    # print(f"bins : {bins}")
 
     if position % bins == 0:
 

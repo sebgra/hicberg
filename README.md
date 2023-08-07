@@ -349,6 +349,68 @@ After tidying the folders architecture will be the following:
     └── xs.npy
 ```
 
+## Evaluating the model
+
+HiC-BERG provide a method to evaluate the infered reconstructed maps. The evaluation is based on first a split of the orininal uniquelly mapping reads into two sets :
+  
+  - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the orginal alignment files) and used to learn the statistics for read couple inference.
+  - __*group1.X_in.bam*__: alignment files where selected reads are duplicated  between all possible genomic intervals defined by the user. Thus ambiguity is introduced in the alignment of the reads.
+
+Hence, the most plausible couple from fakely duplicated reads in __*group1.X.in.bam*__ is infered and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.
+
+The evaluation pipeline can be illustrated as follow : 
+
+<img src="/docs/images/Evaluation.png" alt="HiC-BERG Evaluation"/>
+
+The genomic intervals used to duplicate the reads are defined by the user through the definition of source and target intervals.The source interval is set through the parameters __*--chromosome*__ , __*--position*__ and __*--bins*__.  The target intervals are set through the parameters __*--strides*__ and eventually  __*--trans_chromosome*__ with __*--trans_position*__. 
+
+So in a basic example considering only one chromosome and two artificial duplicated sequence, it is necessary to define a source interval corresponding to the chromosome of interest and a target interval corresponding to the duplicated sequence. The source interval is defined by the chromosome name (__*chromosome*__), the position (__*--position*__) and the width of the interval in number of bins (__*bins*__). 
+
+Thus the source interval is defined as [chromosome:position-bins*bin_size ; chromosome:position+bins*bin_size] and the target interval as [chromosome:(position-bins*bin_size) + stride ; chromosome:(position+bins*bin_size) + stride]. 
+
+
+For example, if the source interval is chromosome 1, position 100000 and strides set as [0, 50000] with a bin size of 2000bp, the source interval is defined as chr1:100000-102000 and the target interval is defined as chr1:150000-152000. 
+
+In the case of trans chromosomal duplications, the user has to specify the names of trans chromosomes and the relative positions for each trans chromosome selected. The user has to provide as many position as the number of chromosome names selected. 
+
+For example, if the source interval is chromosome 1, position 100000 and strides set as [0, 50000] with a bin size of 2000bp and the specified trans chromosomes and trans positions are respectively [chr2, chr8] and [70000, 130000], the source interval is defined as chr1:100000-102000 and the target intervals are defined as chr1:150000-152000, chr2:70000-72000 and chr8:130000-132000.
+
+The stride is the number of bins between the first bin of the source interval and the first bin of the target interval. The stride can be negative or positive. If the stride is negative, the target interval is located before the source interval. If the stride is positive, the target interval is located after the source interval. The stride can be set to 0, in this case the target interval is the same as the source interval. The target interval can be located on the same chromosome as the source interval or on another chromosome. In this case, the chromosome name and the position of the first bin of the target interval must be specified. All the parameters __*--position*__, __*--strides*__, __*--trans-chromosome*__ and __*--trans-position*__ should be provided as coma separated lists.
+
+The benchmark can be performed considering several modes. The modes are defined by the parameter __*--modes*__. The modes are defined as a list of strings separated by comas. The modes are the same as the one used for the reconstruction : 
+
+- full
+- ps_only
+- cover_only
+- d1d2_only
+- no_ps
+- no_cover
+- no_d1d2
+
+$equation test$
+
+The evaluation can be run using the following command :
+
+
+```bash
+hicberg benchmark  --output=DIR [--chromosome] [--position] [--trans-chromosome] [--trans-position] [--stride] [--bins] [--auto] [--modes]
+```
+
+Considering a benchmark with 4 artificially duplicated sequences set at chr1:100000-102000 (source), chr1:200000-202000 chr4:50000-52000 (target 1) and chr7:300000-302000, with 2000bp as bin size and considering full and ps_only modes to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
+
+
+```bash
+hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7 -P 50000,30000 -m full,ps_only
+```
+
+It is also possible to let the source and target intervals being picked at random. However in such cases, the empty bins are not considered in the evaluation. The random mode is activated by setting the parameter __*--auto*__ to the number of desired artificially duplicated sequences. 
+
+Thus, considering a benchmark with 100 artificially duplicated sequences , with 2000bp as bin size and considering full and ps_only modes to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
+
+```bash
+hicberg benchmark  -o ~/Desktop/test/ -a 100 -m full,ps_only
+```
+```
 
 ## Library
 
