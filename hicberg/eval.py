@@ -25,6 +25,7 @@ import cooler
 import hicberg.io as hio
 import hicberg.utils as hut
 
+# TODO : Implement associated test
 
 def get_interval_index(chromosome : str = "", value : int = None, intervals_dict : dict[str, list[(int, int)]] = None, chrom_sizes_dict : dict[str, int] = None) -> dict[str, list[(int, int)]]:
     """
@@ -495,9 +496,10 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
     print(f"Saved in : {output_path / 'group1.1_in.bam'}")
 
-    return dictionary_of_intervals, position, bin_size
+    return dictionary_of_intervals
 
     
+# TODO : Implement associated test
 
 def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", nb_intervals : int = 1) -> dict[str, float]:
     """
@@ -534,7 +536,7 @@ def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", n
     return dict(zip(unique, counts))
 
 
-
+# TODO : Implement associated test
 def get_chromosomes_intervals(bins : int = 2000, chrom_sizes_dict : str = "chromosome_sizes.npy", chromosome : str = "") -> list[(int, int)]:
     """
     Get all possible intervals from a given chromosome considering a chromosome sizes dictionary.
@@ -562,7 +564,7 @@ def get_chromosomes_intervals(bins : int = 2000, chrom_sizes_dict : str = "chrom
     return intervals
     
     
-
+# TODO : implement associated test
 def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict : str = "chromosome_sizes.npy") -> dict[str, list[tuple[int, int]]]:
     """
     Draw intervals from a given chromosome sizes dictionary.
@@ -608,6 +610,7 @@ def is_overlapping():
 def is_overlapping():
     pass
 
+# TODO : implement associated test
 def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = None, chrom_sizes_dict : str = "chromosome_sizes.npy") -> tuple[int, int]:
     """
     Return boundaries surrounding position considering regular binning of bins.
@@ -654,6 +657,7 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = 
 
     return (lower_bound, upper_bound)
 
+# TODO : implement test function
 def check_emptiness(intervals : dict[str, list[(int, int)]], matrix : cooler.Cooler = None) -> bool:
     """
     Check if intervals are empty in a given matrix.
@@ -757,12 +761,27 @@ def get_trans_bins():
 def zoom_stripe():
     pass
 
+# TODO :  Implement associated test
+def get_bin_indexes(matrix : str = None, dictionary : dict = None):
+    """
+    Return the bins indexes (in the cooler matrix) corresponding to the genomic coordinates in the dictionary.
 
-def get_bin_indexes():
-    pass
+    Parameters
+    ----------
+    matrix : str, optional
+        Path to a cooler matrix file, by default None
+    dictionary : dict, optional
+        Dictionary of genomic coordintes where reads are going to be selected for duplication, by default None
+    """    
 
-def check_reco_sum():
-    pass
+    bin_list = []
+    for chrm in dictionary.keys():
+        for start, end in dictionary[chrm]:
+            bin_list.append(int(matrix.bins().fetch(chrm + ':' + str(start) + '-' + str(end)).index[0]))
+
+    return bin_list
+
+
 
 def grid_search(mode : list[str] = [], chromosome : list[str] = [], trans_chromosome : list[str] = [], position : list[str] = [], trans_position : list[str] = [], stride : list[int] = []) -> None:
     pass

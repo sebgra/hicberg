@@ -49,7 +49,7 @@ URL = "https://github.com/sebgra/hicberg"
 
 DESCRIPTION = __doc__.strip("\n")
 
-with codecs.open("README.rst", encoding="utf-8") as f:
+with codecs.open("README.md", encoding="utf-8") as f:
     LONG_DESCRIPTION = f.read()
 
 with open("requirements.txt", "r") as f:

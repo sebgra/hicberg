@@ -10,6 +10,7 @@ import numpy as np
 from numpy.random import choice
 import scipy
 from scipy.spatial.distance import pdist
+from scipy.stats import pearsonr
 import statsmodels.api as sm
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -1242,5 +1243,18 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     reverse_bam_handler.close()
 
     logger.info(f"Predictions written in {output_path}")
-    
+
+
+# TODO : implement associated test
+def pearson_score(original_matrix, rescued_matrix , markers):
+
+    ori_matrix = original_matrix.matrix(balance=False)[:]
+    reco_matrix = rescued_matrix.matrix(balance=False)[:]
+
+    ori_vector = ori_matrix[markers]
+    reco_vector = reco_matrix[markers]
+
+    pearson_score = pearsonr(ori_vector.flatten(), reco_vector.flatten())
+
+    return pearson_score[0]    
 

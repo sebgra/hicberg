@@ -99,13 +99,13 @@ hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq
 #### Create folder
 
 ```bash
-hicberg create_folder --output=DIR [--name="folder_name"] [--force]
+hicberg create-folder --output=DIR [--name="folder_name"] [--force]
 ```
 
 For example to create a folder named "test" on the desktop:
 
 ```bash
-hicberg create_folder -o ~/Desktop/ -n test
+hicberg create-folder -o ~/Desktop/ -n test
 ```
 
 The folders architecture will be the following:
@@ -121,7 +121,7 @@ The folders architecture will be the following:
 
 ### Preprocessing
 
-After having created a folder with the previous command mentionned in **create folder**, the gennome can be processed to generate fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__  using the following command:
+After having created a folder with the previous command mentioned in **create folder**, the genome can be processed to generate fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__  using the following command:
 
 ```bash
 hicberg get-tables --output=DIR --genome=FILE [--bins=2000] 
@@ -136,7 +136,7 @@ The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be 
 
 ### Alignment
 
-After having created a folder with the previous command mentionned in **create folder** and performed the creation of fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__ , the reads can be aligned using the following command:
+After having created a folder with the previous command mentioned in **create folder** and performed the creation of fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__ , the reads can be aligned using the following command:
 
 ```bash
 hicberg alignment --genome=FILE --fq-for=FILE --fq-rev=FILE --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivity="very-sensitive"] 
@@ -146,7 +146,7 @@ hicberg alignment --genome=FILE --fq-for=FILE --fq-rev=FILE --output=DIR [--cpus
 For example to align reads in a folder named "test" previously created on the desktop with 8 threads:
 
 ```bash
-hicberg alignment -g genome.fa -f reads_for.fq -r rev_reads.fq -o ~/Desktop/test/ --cpus 8
+hicberg alignment -g genome.fa --fq-for reads_for.fq --fq-rev rev_reads.fq -o ~/Desktop/test/ --cpus 8
 ```
 
 The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created.
@@ -161,7 +161,7 @@ After having aligned the reads, the pairs file __*group1.pairs*__ can be built u
 hicberg build-pairs --output=DIR [--recover]
 ```
 
-If the flag argument *recover* is used, the pairs file will be built from the last step of the analyis e.g. after having computed the statistics and reattributed reads from **group2** bam files.
+If the flag argument *recover* is used, the pairs file will be built from the last step of the analysis e.g. after having computed the statistics and reattributed reads from **group2** bam files.
 
 Considering the previous example, to build the matrix in a folder named "test" previously created on the desktop:
 
@@ -171,7 +171,7 @@ hicberg build-pairs -o ~/Desktop/test/
 
 The file __*group1.pairs*__ will be created.
 
-If the pairs file has to be built after reads of **group2** reassignament, the following command can be used:
+If the pairs file has to be built after reads of **group2** reassignment, the following command can be used:
 
 ```bash
 hicberg build-pairs -o ~/Desktop/test/ --recover
@@ -187,17 +187,17 @@ After having aligned the reads and built the pairs file __*group1.pairs*__, the 
 hicberg build-matrix  --output=DIR [--recover]
 ```
 
-If the flag argument *recover* is used, the matrix file will be built from the last step of the analyis e.g. after having computed the statistics and reattributed reads from **group2** bam files.
+If the flag argument *recover* is used, the matrix file will be built from the last step of the analyis e.g. after having computed the statistics and re-attributed reads from **group2** bam files.
 
 Considering the previous example, to build the matrix in a folder named "test" previously created on the desktop:
 
 ```bash
-hicberg build-pamatrixirs -o ~/Desktop/test/ 
+hicberg build-matrix -o ~/Desktop/test/ 
 ```
 
 The file __*unrescued_map.cool*__ will be created.
 
-If the cooler file has to be built after reads of **group2** reassignament, the following command can be used:
+If the cooler file has to be built after reads of **group2** re-assignament, the following command can be used:
 
 ```bash
 hicberg build-matrix -o ~/Desktop/test/ --recover
@@ -231,7 +231,7 @@ After having aligned the reads and built the pairs file __*group1.pairs*__, the 
 ```bash
 hicberg statistics --genome=FILE --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] 
 ```
-Considering the previous example, to get the statistical laws (with respect of ARIMA kit enzymes), without subsampling th restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
+Considering the previous example, to get the statistical laws (with respect of ARIMA kit enzymes), without sub-sampling th restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
 
 ```bash
 hicberg statistics -g genome.fa -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ 
@@ -264,13 +264,13 @@ The files __*group2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be crea
 
 ### Plot
 
-To plot all the informations about the analysis, the following command can be used:
+To plot all the information about the analysis, the following command can be used:
 
 ```bash
 hicberg plot --genome=FILE --output=DIR  [--bins=2000]
 ```
 
-Considering all the previous analysis, with 2000bp as bin size to plot all the informations in a folder named "test" previously created on the desktop:
+Considering all the previous analysis, with 2000bp as bin size to plot all the information in a folder named "test" previously created on the desktop:
 
 ```bash
 hicberg plot -g genome.fa -o ~/Desktop/test/ -b 2000
@@ -302,7 +302,7 @@ hicberg tidy -o ~/Desktop/test/
 After tidying the folders architecture will be the following:
 
 ```bash
-/home/sardine/Bureau/blabla
+/home/sardine/Bureau/sample_name
 ├── alignments
 │   ├── group0.1.bam
 │   ├── group0.2.bam
@@ -351,12 +351,12 @@ After tidying the folders architecture will be the following:
 
 ## Evaluating the model
 
-HiC-BERG provide a method to evaluate the infered reconstructed maps. The evaluation is based on first a split of the orininal uniquelly mapping reads into two sets :
+HiC-BERG provide a method to evaluate the infered reconstructed maps. The evaluation is based on first a split of the original uniquely mapping reads into two sets :
   
   - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the orginal alignment files) and used to learn the statistics for read couple inference.
   - __*group1.X_in.bam*__: alignment files where selected reads are duplicated  between all possible genomic intervals defined by the user. Thus ambiguity is introduced in the alignment of the reads.
 
-Hence, the most plausible couple from fakely duplicated reads in __*group1.X.in.bam*__ is infered and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.
+Hence, the most plausible couple from fakely duplicated reads in __*group1.X.in.bam*__ is inferred and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.
 
 The evaluation pipeline can be illustrated as follow : 
 
@@ -384,15 +384,17 @@ NS500150:487:HNLLNBGXC:1:11101:3001:19423       16      chr1    118866  255     
 NS500150:487:HNLLNBGXC:1:11101:3001:19423       16      chr1    68866   255     35M     *       0       0       GAAAAAGGATTGGTCCAATAAGTGGGAAAAAAGAT     EEAEEEAEE/EAE/EEEEEEEE/EEEEEE6AAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218       XF:Z:Fake
 NS500150:487:HNLLNBGXC:1:11101:4986:15168       16      chr1    69239   255     35M     *       0       0       GAAGGATACTCCCAGAACTCGTTACTGTCTGGACT     EEEEEEEEEEEEEEEEEEEEEEEAEEEAEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
 NS500150:487:HNLLNBGXC:1:11101:4986:15168       16      chr1    119239  255     35M     *       0       0       GAAGGATACTCCCAGAACTCGTTACTGTCTGGACT     EEEEEEEEEEEEEEEEEEEEEEEAEEEAEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218       XF:Z:Fake
+...
 ```
 
 
-__*group1.2.bam*__ :
+__*group1.2.in.bam*__ :
 
 ``` 
 NS500150:487:HNLLNBGXC:1:11101:1071:2862        16      chr1    103994  255     35M     *       0       0       TGCTTTTTTGGGATTGGGAATGATTTTTCCTCCTT     EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
 NS500150:487:HNLLNBGXC:1:11101:3001:19423       16      chr1    121776  255     35M     *       0       0       GGTCAAGAAATGGTTTTCACAGGCGAAATCATTGG     EEEEEEEEEEE<EEEE/EEEEEEEEEEAEEAAAAA     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
 NS500150:487:HNLLNBGXC:1:11101:4986:15168       0       chr1    86626   255     35M     *       0       0       GATCTAGGGGTACCTCCTCGGGAAACATCCAGCCC     AAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE     AS:i:0  XN:i:0  XM:i:0  XO:i:0  NM:i:0  MD:Z:35 YT:Z:UU XG:i:230218
+...
 ```
 
 _The XF:Z:Fake signed read duplication._
@@ -456,7 +458,7 @@ All the steps described here are handled automatically when running the ```hicbe
 
 ## File formats
 
-* pair files: This format is used for all intermediate files in the pipeline and is also used by hicberg build_matrix. It is a tab-separated format holding informations about Hi-C pairs. It has an official specification defined by the 4D Nucleome data coordination and integration center.
+* pair files: This format is used for all intermediate files in the pipeline and is also used by hicberg build_matrix. It is a tab-separated format holding information about Hi-C pairs. It has an official specification defined by the 4D Nucleome data coordination and integration center.
 
 
 * cool files: This format is used to store genomic interaction data such as Hi-C contact matrices. These file can be handled using `cooler` Python library.
