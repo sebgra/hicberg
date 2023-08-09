@@ -113,9 +113,9 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     STRIDES = [int(s) for s in strides.split(",")]
 
-    for m in mode.split(","):
+    for mode in mode.split(","):
 
-        print(f"mode : {m}")
+        print(f"mode : {mode}")
 
         # Pick reads
 
@@ -161,7 +161,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         # Reattribute reads
 
-        hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), output_dir = output_path)
+        hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = mode, output_dir = output_path)
         hio.merge_predictions(output_dir = output_path, clean = True)
         hio.build_pairs(mode = True, output_dir = output_path)
         hio.build_matrix(mode = True, output_dir = output_path)
@@ -174,7 +174,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         # number_reads = np.sum(rescued_matrix_array[indexes])
         number_reads = 10
 
-        print(f"Pearson score : {pearson} in mode {m}")
+        print(f"Pearson score : {pearson} in mode {mode}")
 
         if not results.exists():
             with open(results, "w") as f_out:
