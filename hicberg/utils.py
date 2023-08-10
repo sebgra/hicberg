@@ -59,7 +59,7 @@ def write_frag_info():
 
 def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     """
-    Generate a dictionnary save in .npy format where keys are chromosome name and value are size in bp.
+    Generate a dictionary save in .npy format where keys are chromosome name and value are size in bp.
 
     Parameters
     ----------
@@ -209,7 +209,7 @@ def is_poor_quality(read : pysam.AlignedSegment, mapq : int) -> bool:
 
 def is_unqualitative(read : pysam.AlignedSegment) -> bool:
     """
-    Check if the read is unqualitative.
+    Check if the read is not qualitative.
 
     Parameters
     ----------
@@ -219,7 +219,7 @@ def is_unqualitative(read : pysam.AlignedSegment) -> bool:
     Returns
     -------
     bool
-        True if the read is unqualitative, False otherwise.
+        True if the read is not qualitative, False otherwise.
     """
 
     if read.mapping_quality == 0:
@@ -447,11 +447,11 @@ def is_intra_chromosome(read_forward : pysam.AlignedSegment, read_reverse : pysa
     Returns
     -------
     bool
-        True if the pair is intrachromosomic, False otherwise.
+        True if the pair is intra-chromosomic, False otherwise.
     """    
 
     if read_forward.query_name != read_reverse.query_name:
-        raise ValueError("Reads are not comming from the same pair")
+        raise ValueError("Reads are not coming from the same pair")
 
     if read_forward.reference_name == read_reverse.reference_name:
         return True
@@ -596,7 +596,7 @@ def is_circle(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedS
     """
 
     if read_forward.query_name != read_reverse.query_name:
-        raise ValueError("Reads are not comming from the same pair")
+        raise ValueError("Reads are not coming from the same pair")
 
     read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
 
@@ -630,7 +630,7 @@ def get_cis_distance(read_forward : pysam.AlignedSegment, read_reverse : pysam.A
 
     """    
     if read_forward.query_name != read_reverse.query_name:
-        raise ValueError("Reads are not comming from the same pair")
+        raise ValueError("Reads are not coming from the same pair")
 
     if is_intra_chromosome(read_forward, read_reverse):
 
@@ -675,7 +675,7 @@ def bam_iterator(bam_file : str = None) -> Iterator[pysam.AlignedSegment]:
     Yields
     -------
     Iterator[pysam.AlignedSegment]
-        Yields a list containing pysam AlignementSegment objects, within which all the reads have the same id.
+        Yields a list containing pysam AlignmentSegment objects, within which all the reads have the same id.
     """
 
     bam_path = Path(bam_file)
@@ -815,7 +815,7 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
     # Instanciate index for list of chunks sizes
     chunk_size_index = 0
 
-    # Instanciate generators to yield blocks of multimapping reads
+    # Instanciate generators to yield blocks of multi-mapping reads
     for_iterator, rev_iterator = bam_iterator(forward_bam_path), bam_iterator(reverse_bam_path)
 
     # Create empty lists to store blocks of reads
@@ -830,7 +830,7 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
         str(output_chunk_rev) % chunk_size_index, "wb", template = reverse_bam_handler
     )
 
-    # Parse alignement file to yield reads blocks
+    # Parse alignment file to yield reads blocks
     for block_for_, block_rev_ in zip(for_iterator, rev_iterator):
 
         # Fill containers with blocks
@@ -839,7 +839,7 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
             read_stack_for.append(block_for_)
             read_stack_rev.append(block_rev_)
 
-        # Write reads alignement in chunks once the container is full
+        # Write reads alignment in chunks once the container is full
         elif len(read_stack_for) == cut_list[chunk_size_index]:
 
             for block_for in read_stack_for:
@@ -908,17 +908,17 @@ def subsample_restriction_map(restriction_map : dict = None, rate : float = 1.0)
     restriction_map : dict, optional
         Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default None
     rate : float, optional
-        Set the proportion of restriction sites to condiser. Avoid memory overflow when restriction maps are very dense, by default 1.0
+        Set the proportion of restriction sites to consider. Avoid memory overflow when restriction maps are very dense, by default 1.0
 
     Returns
     -------
     dict[str, np.ndarray[int]]
-        Dictionary of subsampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
+        Dictionary of sub-sampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
 
     """
 
     if (0.0 > rate) or (rate > 1.0):
-        raise ValueError("Subsampling rate must be between 0.0 and 1.0.")
+        raise ValueError("Sub-sampling rate must be between 0.0 and 1.0.")
     
 
     subsampled_restriction_map = {}
@@ -955,7 +955,7 @@ def fill_zeros_with_last():
 
 def max_consecutive_nans(vector : np.ndarray) -> int:
     """
-    Return the maximum number of consecutiver NaN values in a vecotr.
+    Return the maximum number of consecutive NaN values in a vector.
 
     Parameters
     ----------

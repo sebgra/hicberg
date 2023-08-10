@@ -111,14 +111,14 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
 
 def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
     """
-    Generate xs array for computing P(s). Return xs array which is logspace.
+    Generate xs array for computing P(s). Return xs array which is log space.
 
     Parameters
     ----------
     chromosome_size : int
         Size of the chromosome to be binned in bp.
     base : float, optional
-        Base of the logspace., by default 1.1
+        Base of the log space., by default 1.1
 
     Returns
     -------
@@ -191,14 +191,14 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
     circular : str, optional
         Name of the chromosomes to consider as circular, by default ""
     rate : float, optional
-        Set the proportion of restriction sites to condiser. Avoid memory overflow when restriction maps are very dense, by default 1.0
+        Set the proportion of restriction sites to consider. Avoid memory overflow when restriction maps are very dense, by default 1.0
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None
 
     Returns
     -------
     dict
-        Dictionary of subsampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
+        Dictionary of sub-sampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
     """
 
     if output_dir is None:
@@ -414,7 +414,7 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
 
 def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", restriction_map : str = "restriction_map.npy", output_dir : str = None) -> None:
     """
-    Compute d1d2 distance lawswith the given alignments and restriction map.
+    Compute d1d2 distance laws with the given alignments and restriction map.
 
     Parameters
     ----------
@@ -543,7 +543,7 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
 def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", dist_frag : str = "dist.frag.npy", circular : str = "", output_dir : str = None) -> None:
     """
-    Get the patterns distribution from read pairs alignement. .
+    Get the patterns distribution from read pairs alignment. .
 
     Parameters
     ----------
@@ -728,7 +728,7 @@ def get_trans_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.Align
     read_reverse : pysam.AlignedSegment
         Reverse read to compare with the forward read.
     trans_ps : dict
-        Dictionary of transchromosomal P(s)
+        Dictionary of trans-chromosomal P(s)
 
     Returns
     -------
@@ -911,7 +911,7 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
     circular : str, optional
         Name of the chromosomes to consider as circular, by default None, by default "".
     trans_ps : dict
-        Dictionary of transchromosomal P(s)
+        Dictionary of trans-chromosomal P(s)
     coverage : dict
         Dictionary containing the coverage of each chromosome.
     bins : int
@@ -948,7 +948,7 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
-            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
             if ps == 0:
 
                 ps = 1
@@ -976,7 +976,7 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
-        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
 
@@ -1000,14 +1000,14 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
-            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
             if ps == 0:
 
                 ps = 1
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins = bins)
 
-        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
 
@@ -1031,7 +1031,7 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
-            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
             if ps == 0:
 
                 ps = 1
@@ -1054,7 +1054,7 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
-        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
 
@@ -1095,14 +1095,14 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
-            # Avoid ps = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to P(s).
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
             if ps == 0:
 
                 ps = 1
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
-        # Avoid cover = 0 making the read unselectionable. Value of 1 make the propensity unsensitive to coverage.
+        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
 
@@ -1158,7 +1158,7 @@ def draw_read_couple(propensities : np.array) -> int:
 
 def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", bins : int = 2000, d1d2 : dict = "d1d2.npy", mode : str = "full", output_dir : str = None) -> None:
     """
-    Reattribute multi-mapping (ambiguous) reads considering sets of statistical laws.
+    Re-attribute multi-mapping (ambiguous) reads considering sets of statistical laws.
 
     Parameters
     ----------
@@ -1177,7 +1177,7 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     circular : str, optional
         Name of the chromosomes to consider as circular, by default None, by default "".
     trans_ps : dict
-        Dictionary of transchromosomal P(s)
+        Dictionary of trans-chromosomal P(s)
     coverage : dict
         Dictionary containing the coverage of each chromosome.
     bins : int
@@ -1187,7 +1187,7 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     mode : str, optional
         Mode to use to compute propensity among, by default "full"
     output_dir : str, optional
-        Path to the reattributed ambiguous reads alignement files are saved, by default None
+        Path to the re-attributed ambiguous reads alignment files are saved, by default None
     """ 
 
     if output_dir is None:

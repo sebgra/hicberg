@@ -184,18 +184,18 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
         output_path / "group1.2.out.bam", "wb", template = reverse_file_handler
     )
 
-    # get acces to dictionary containing chromosomes sizes to pick random position for transchromosomal duplication
+    # get acces to dictionary containing chromosomes sizes to pick random position for trans-chromosomal duplication
     cs_disctionary = hio.load_dictionary(chrom_sizes_path)
 
 
     if auto is None:
-        # check intervals overlaping
+        # check intervals overlapping
         # print("----------------")
         # print(f"position : {type(position)}")
         # print(f"chromosome : {type(chromosome)}")
         # print(f"stride : {type(strides)}")
 
-        ## set areas and boundaries for intrachromosomal duplications
+        ## set areas and boundaries for intra-chromosomal duplications
         forward_intervals = [
             get_boundaries(
                 position = position + stride,
@@ -257,7 +257,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
                 if random:
 
-                    # print(f"Chrom : {chrom}")
 
                     trans_target_interval = [
                         get_boundaries(
@@ -271,7 +270,7 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
                     ]
 
 
-                # set areas and boundaries for interchromosomal duplications
+                # set areas and boundaries for inter-chromosomal duplications
                 else:
 
                     trans_target_interval = [
@@ -307,7 +306,7 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
         # Default save status
         save = True
 
-        ## Order reads by corrdinates
+        ## Order reads by coordinates
         ordered_forward_read, ordered_reverse_read = hut.get_ordered_reads(
             forward_read, reverse_read
         )
@@ -527,7 +526,7 @@ def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", n
     # Compute relative proportion of each chromosome through genome
     chr_proportions  = {k : (v / tot_genome_length)  for (k, v) in zip(chrom_sizes.keys(), chrom_sizes.values())}
 
-    # Draw chromosomes considering their relative prpoportion in genome
+    # Draw chromosomes considering their relative proportion in genome
     proportions_choice = choice(a = list(chr_proportions.keys()), size = nb_intervals, replace = True, p = list(chr_proportions.values()))
 
     # Get and return chromosomes picked and counts
@@ -618,7 +617,7 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = 
     Parameters
     ----------
     position : int, optional
-        Position to get surounding boundaries from, by default None
+        Position to get surrounding boundaries from, by default None
     bins : int, optional
         Size of the desired bin, by default 2000., by default 2000
     chromosome : str, optional
@@ -668,7 +667,7 @@ def check_emptiness(intervals : dict[str, list[(int, int)]], matrix : cooler.Coo
         Lists of intervals (sets) where the value is not in between as element 0 and where the value is  in between as element 1.
         One list per chromosome in a dictionary.
     matrix : cooler.Cooler, optional
-        Cooler Hi-C matrix to be checked for emptyness, by default None
+        Cooler Hi-C matrix to be checked for emptiness, by default None
 
     Returns
     -------
@@ -771,7 +770,7 @@ def get_bin_indexes(matrix : str = None, dictionary : dict = None):
     matrix : str, optional
         Path to a cooler matrix file, by default None
     dictionary : dict, optional
-        Dictionary of genomic coordintes where reads are going to be selected for duplication, by default None
+        Dictionary of genomic coordinates where reads are going to be selected for duplication, by default None
     """    
 
     bin_list = []

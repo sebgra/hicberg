@@ -29,6 +29,88 @@ TRANS_PS = "trans_ps.npy"
 CLR = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
 
+
+#TODO : complete docstrings
+def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, rescued_matrix : str = None, chromosomes : list[str] = None, output_dir : str = None) -> None:
+    """AI is creating summary for plot_benchmark
+
+    Parameters
+    ----------
+    original_matrix : str, optional
+        [description], by default None
+    rescued_matrix : str, optional
+        [description], by default None
+    chromosomes : list[str], optional
+        [description], by default None
+    output_dir : str, optional
+        [description], by default None
+    """
+
+    if output_dir is None:  # if no output directory is provided, save in current directory     
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)    
+
+    # reload matricies
+
+    original_matrix_path = output_dir / original_matrix
+    depleted_matrix_path = output_dir / depleted_matrix
+    rescued_matrix_path = output_dir / rescued_matrix
+
+    if not original_matrix_path.is_file():
+        raise FileNotFoundError(f"Original matrix not found at {original_matrix_path}. Please provide a valid path.")
+
+    if not depleted_matrix_path.is_file():
+        raise FileNotFoundError(f"Depleted matrix not found at {depleted_matrix_path}. Please provide a valid path.")
+    if not rescued_matrix_path.is_file():
+        raise FileNotFoundError(f"Rescued matrix not found at {rescued_matrix_path}. Please provide a valid path.")
+    
+    
+    # Relaod matricies
+
+    original_matrix = load_cooler(original_matrix_path)
+    depleted_matrix = load_cooler(depleted_matrix_path)
+    rescued_matrix = load_cooler(rescued_matrix_path)
+
+    print(f"Chromosomes : {chromosomes}")
+
+    for chrm in chromosomes.split(","):
+
+        print(f"chrm : {chrm}")
+
+        ori_matrix = original_matrix.matrix(balance=False).fetch(chrm)
+        dep_matrix = depleted_matrix.matrix(balance=False).fetch(chrm)
+        res_matrix = rescued_matrix.matrix(balance=False).fetch(chrm)
+        ratio = np.divide(
+            res_matrix,
+            ori_matrix,
+            out=np.ones(res_matrix.shape),
+            where=ori_matrix != 0,
+        )
+        log_ratio = np.log10(ratio)
+
+
+        # TODO : Adjust log non log and exponent
+        plt.figure(figsize=(10, 10))
+        plt.subplot(141)
+        plt.imshow(ori_matrix ** 0.15, cmap = "afmhot_r", vmin = 0, vmax = np.max(ori_matrix ** 0.15))
+        plt.title(f"Original map - {chrm}")
+        plt.subplot(142)
+        plt.imshow(dep_matrix ** 0.15, cmap = "afmhot_r", vmin = 0, vmax = np.max(ori_matrix ** 0.15))
+        plt.title(f"Depleted map - {chrm}")
+        plt.subplot(143)
+        plt.imshow(res_matrix ** 0.15, cmap = "afmhot_r", vmin = 0, vmax = np.max(ori_matrix ** 0.15))
+        plt.title(f"Rescued map - {chrm}")
+        plt.subplot(144)
+        plt.imshow(log_ratio, cmap = "bwr") # , vmin = -1, vmax = 1
+        plt.title(f"Log ratio - {chrm}")
+        plt.savefig(output_path / f"benchmark_{chrm}.pdf", format = "pdf")
+        plt.close()
+
+    return
+
 def plot_d1d2(output_dir : str = None) -> None:
     """
     Plot d1d2 law

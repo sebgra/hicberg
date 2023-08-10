@@ -16,11 +16,11 @@ from hicberg import logger
 
 def create_folder(sample_name : str  = None, output_dir : str = None, force : bool = False) -> None:
     """
-    Creates folder architecture to store results and intermediate files for the full HiCBERG pipeline.
+    Creates folder architecture to store results and intermediate files for the full HiC-BERG pipeline.
 
     Parameters
     ----------
-    samlpe_name : str
+    sample_name : str
         Name of the folder to be created.
     force : bool
         Set if existing folder has to be deleted before folder creation.
@@ -79,16 +79,16 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
     bam_rev_rescued : str, optional
         Path to reverse .bam file for the construction of the .pairs equivalent file (rescued)., by default "group2.2.rescued.bam"
     mode : bool, optional
-        Choose weither the mode is rescued or unrescued to construct associated .pairs file, by default False
+        Choose wether the mode is rescued or unrescued to construct associated .pairs file, by default False
     output_dir : str, optional
-        Path where the alignement files (.sam) should be stored, by default None
+        Path where the alignment files (.sam) should be stored, by default None
     """
 
     output_path = Path(output_dir)
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
 
     if not mode:
 
@@ -187,7 +187,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
     pairs : str, optional
         Path to pairs file, by default "group1.pairs"
     mode : bool, optional
-        Choose weither the mode is rescued or unrescued to construct associated .cool file, by default False
+        Choose wether the mode is rescued or unrescued to construct associated .cool file, by default False
     output_dir : str, optional
         Path to the folder where to save the cooler matrix file, by default None, by default None
     """

@@ -24,6 +24,7 @@ import hicberg.utils as hut
 # import hicberg.align as hal
 import hicberg.statistics as hst
 import hicberg.eval as hev
+import hicberg.plot as hpl
 
 BASE_MATRIX = "original_map.cool"
 UNRESCUED_MATRIX = "unrescued_map.cool"
@@ -84,8 +85,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     results = output_path / "benchmark.csv"
 
-    
-    base_matrix = hio.load_cooler(output_path / BASE_MATRIX)
+    base_matrix_path = output_path / BASE_MATRIX
+    base_matrix = hio.load_cooler(base_matrix_path)
 
     restriction_map = hio.load_dictionary(restriction_map_path)
 
@@ -116,6 +117,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     for mode in mode.split(","):
 
         print(f"mode : {mode}")
+        print(f'CHRI : {CHROMOSOME}')
 
         # Pick reads
 
@@ -163,31 +165,35 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = mode, output_dir = output_path)
         hio.merge_predictions(output_dir = output_path, clean = True)
-        hio.build_pairs(mode = True, output_dir = output_path)
+        hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_path)
         hio.build_matrix(mode = True, output_dir = output_path)
 
         rescued_matrix = hio.load_cooler(output_path / RESCUED_MATRIX)
         rescued_matrix_array = rescued_matrix.matrix(balance = False)
 
+        rescued_matrix_path = output_path / RESCUED_MATRIX
+
         pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
+
+        hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = CHROMOSOME, output_dir = output_path)
 
         # number_reads = np.sum(rescued_matrix_array[indexes])
         number_reads = 10
 
-        print(f"Pearson score : {pearson} in mode {mode}")
+        print(f"Pearson score : {pearson:9.4f} in mode {mode}")
 
         if not results.exists():
             with open(results, "w") as f_out:
                 f_out.write(header)
 
-                date = datetime.now().dststrftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{date}\t{CHROMOSOME}\t{POSITION}\t{STRIDES}\t{TRANS_CHROMOSOME}\t{TRANS_POSITION}\t{m}\t{number_reads}\t{pearson}\n")
+                date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                f_out.write(f"{date}\t{CHROMOSOME}\t{POSITION}\t{STRIDES}\t{TRANS_CHROMOSOME}\t{TRANS_POSITION}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
 
         else :
             with open(results, "a") as f_out:
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{date}\t{CHROMOSOME}\t{POSITION}\t{STRIDES}\t{TRANS_CHROMOSOME}\t{TRANS_POSITION}\t{m}\t{number_reads}\t{pearson}\n")
+                f_out.write(f"{date}\t{CHROMOSOME}\t{POSITION}\t{STRIDES}\t{TRANS_CHROMOSOME}\t{TRANS_POSITION}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
                 
                 
