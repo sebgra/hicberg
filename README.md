@@ -151,6 +151,24 @@ hicberg alignment -g genome.fa --fq-for reads_for.fq --fq-rev rev_reads.fq -o ~/
 
 The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created.
 
+### Classification
+
+```bash
+hicberg classify --output=DIR [--mapq=35] 
+```
+
+Considering the previous example, to classify the reads in a folder named "test" previously created on the desktop:
+
+```bash
+hicberg classify -o ~/Desktop/test/
+```
+
+The files created are: 
+
+- __*group0.1.bam*__ and __*group0.2.bam*__ : bam files containing the reads of **group0** i.e. where at least one read of the pair is unaligned.
+- __*group1.1.bam*__ and __*group1.2.bam*__ : bam files containing the reads of **group1** i.e. where both reads of the pair are aligned only one time.
+- __*group2.1.bam*__ and __*group2.2.bam*__ : bam files containing the reads of **group2** i.e. where at least one reads of the pair are aligned more than one time.
+
 ### Pairs and matrix building
 
 #### Build pairs
@@ -206,23 +224,6 @@ hicberg build-matrix -o ~/Desktop/test/ --recover
 Thus, the built matrix file will be  __*rescued_map.cool*__.
 
 
-### Classification
-
-```bash
-hicberg classify --output=DIR [--mapq=35] 
-```
-
-Considering the previous example, to classify the reads in a folder named "test" previously created on the desktop:
-
-```bash
-hicberg classify -o ~/Desktop/test/
-```
-
-The files created are: 
-
-- __*group0.1.bam*__ and __*group0.2.bam*__ : bam files containing the reads of **group0** i.e. where at least one read of the pair is unaligned.
-- __*group1.1.bam*__ and __*group1.2.bam*__ : bam files containing the reads of **group1** i.e. where both reads of the pair are aligned only one time.
-- __*group2.1.bam*__ and __*group2.2.bam*__ : bam files containing the reads of **group2** i.e. where at least one reads of the pair are aligned more than one time.
 
 ### Statistics
 
