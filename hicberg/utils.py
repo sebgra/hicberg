@@ -48,6 +48,70 @@ DEFAULT_ENZYME = "DpnII"
 DEFAULT_MIN_CHUNK_SIZE = 50
 
 
+def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:
+    """
+    Function for matrix diffusion to get local contact density
+
+    Parameters
+    ----------
+    matrix : np.array, optional
+        Matrix or subpart of the matrix as a np.array, by default None
+    rounds : int, optional
+        Number of times the matrix has to be shaken, by default 1
+    magnitude : float, optional
+        Blending ratio between the native matrix and the shaken one, by default 1.0
+    mode : str, optional
+        Set wether the sub-matrix is intra or inter-chromosome, and so the direction of diffusion, by default "intra"
+
+    Returns
+    -------
+    np.array
+        Contact density map.
+    """
+
+    arr = matrix.astype(np.float64)
+
+    if mode == "intra" :
+        for _ in range(rounds):
+
+            #South East
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
+
+            # North West
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
+
+            # North East
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
+
+            # South West
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
+
+    elif mode == "inter":
+        for _ in range(rounds):
+
+            # East
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
+
+            # West
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
+            
+            #South
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
+            
+            #North
+            shift = np.random.randint(5)
+            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
+
+    return arr
+
+
 def get_num_lines_alignment_file():
     pass
 

@@ -104,7 +104,7 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
         plt.imshow(res_matrix ** 0.15, cmap = "afmhot_r", vmin = 0, vmax = np.max(ori_matrix ** 0.15))
         plt.title(f"Rescued map - {chrm}")
         plt.subplot(144)
-        plt.imshow(log_ratio, cmap = "bwr") # , vmin = -1, vmax = 1
+        plt.imshow(log_ratio, cmap = "bwr" , vmin = -1, vmax = 1) 
         plt.title(f"Log ratio - {chrm}")
         plt.savefig(output_path / f"benchmark_{chrm}.pdf", format = "pdf")
         plt.close()

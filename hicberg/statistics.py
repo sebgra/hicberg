@@ -25,7 +25,6 @@ import cooler
 import hicberg.utils as hut
 import hicberg.io as hio
 
-import hicberg.utils as hut
 from hicberg import logger
 
 
@@ -41,6 +40,72 @@ WEIRDS = "weirds.npy"
 LOOPS = "loops.npy"
 TRANS_PS = "trans_ps.npy"
 RESTRICTION_MAP = "restriction_map.npy"
+
+
+def get_density_map(matrix : str = None, rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
+    """
+    Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
+
+    Parameters
+    ----------
+    matrix : str, optional
+        Path to a cooler matrix, by default None
+    rounds : int, optional
+        Number of times the matrix has to be shaken, by default 1
+    magnitude : float, optional
+        Blending ratio between the native matrix and the shaken one, by default 1.0
+    output_dir : str, optional
+        Path to the folder where to save the density map, by default None
+    Returns
+    -------
+    dict[str, np.ndarray[float]]
+        Density maps as a dictionary where keys are chromosomes names and values are density maps.
+    """
+
+    if output_dir is None:
+            
+        folder_path = Path(getcwd())
+
+    else:
+            
+        folder_path = Path(output_dir)
+
+    matrix_path = folder_path / matrix
+
+    if not matrix_path.is_file():
+
+        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
+    
+    density_map = {}
+
+    # Load cooler matrix
+
+    matrix = hio.load_cooler(matrix_path)
+
+    # Get chromosomes names
+
+    chromosomes = matrix.chromnames
+
+    chromosomes_combination = itertools.product(chromosomes, chromosomes)
+
+    for chromosome_1, chromosome_2 in chromosomes_combination:
+
+        # Get matrix for each chromosome pair
+
+        matrix_chromosome = matrix.matrix(balance = False).fetch(chromosome_1, chromosome_2)
+
+        # Get density map for each chromosome pair
+
+        if chromosome_1 == chromosome_2:
+
+            density_map[chromosomes_combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "intra")
+
+        elif chromosome_1 != chromosome_2:
+
+            density_map[chromosomes_combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "inter")
+
+
+    return density_map
 
 def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], output_dir : str = None) -> dict[str, np.ndarray[int]]:
     """

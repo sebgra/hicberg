@@ -6413,3 +6413,91 @@ Command: /usr/bin/bowtie2-align-l --wrapper basic-0 --very-sensitive -p 8 -k 3 -
 2023-08-10 --  18:05:01 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
 2023-08-10 --  18:05:04 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
 2023-08-10 --  18:06:37 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-10 --  18:08:51 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-10 --  18:10:28 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-10 --  18:12:41 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-10 --  18:12:56 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-10 --  18:12:58 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-10 --  18:14:34 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-10 --  18:16:48 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  08:57:20 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  08:59:35 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:05:46 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:05:53 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:17:59 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-11 --  09:18:36 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:18:39 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:20:12 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:22:25 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:24:00 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:26:12 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:26:42 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:26:45 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:28:16 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:30:29 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:32:03 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:34:16 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:34:30 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:34:32 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:36:03 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  09:38:17 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:21:01 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:23:14 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:29:38 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:29:46 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:42:27 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-11 --  10:43:04 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:43:07 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:44:39 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:46:52 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:48:29 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:50:41 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:51:13 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:51:16 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:52:49 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  10:55:02 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  11:09:15 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  11:11:30 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  11:25:01 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  11:34:48 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  11:37:03 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  11:43:10 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-11 --  11:43:17 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:00:53 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-11 --  12:01:05 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:01:06 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:02:37 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:04:48 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:06:24 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:08:39 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:08:49 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:08:50 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:10:23 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:12:40 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:25:02 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:27:14 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:33:22 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:33:29 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:51:32 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-11 --  12:51:47 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:51:48 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:53:20 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  12:55:33 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  13:35:46 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  13:38:00 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  13:44:16 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-11 --  13:44:23 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:02:17 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-11 --  14:02:33 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:02:34 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:04:08 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:06:21 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:36:09 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:38:26 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:44:45 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-11 --  14:44:52 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-11 --  15:02:53 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-11 --  15:03:09 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-11 --  15:03:10 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-11 --  15:04:41 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-11 --  15:06:55 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench

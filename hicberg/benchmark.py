@@ -93,7 +93,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     OTHER = [[chromosome, position, trans_chromosome, trans_position, strides, auto, bins]]
 
 
-    CHROMOSOME = chromosome
+    CHROMOSOME = list(chromosome)
 
     if trans_chromosome is not None:
         TRANS_CHROMOSOME = [str(t) for t in trans_chromosome.split(",")]
@@ -115,9 +115,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     STRIDES = [int(s) for s in strides.split(",")]
 
     for mode in mode.split(","):
-
-        print(f"mode : {mode}")
-        print(f'CHRI : {CHROMOSOME}')
 
         # Pick reads
 
@@ -144,8 +141,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         
         # Reattribute reads from inner group
 
-
-
         if not learning_status : 
             ## Compute statistics
 
@@ -162,7 +157,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             learning_status = True
 
         # Reattribute reads
-
         hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = mode, output_dir = output_path)
         hio.merge_predictions(output_dir = output_path, clean = True)
         hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_path)
@@ -175,7 +169,19 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
 
-        hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = CHROMOSOME, output_dir = output_path)
+        print(f"CHROMOSOME : {CHROMOSOME}")
+        print(f"dtype : {type(CHROMOSOME)}")
+        print(f"TRANS_CHROMOSOME : {TRANS_CHROMOSOME}")
+        print(f"dtype : {type(TRANS_CHROMOSOME)}")
+
+
+        chromosome_set = CHROMOSOME + TRANS_CHROMOSOME if TRANS_CHROMOSOME is not None else CHROMOSOME
+
+        print(f"Chromosome set : {chromosome_set}")
+
+        hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_path)
+
+        #TODO implement tidying plot function
 
         # number_reads = np.sum(rescued_matrix_array[indexes])
         number_reads = 10
