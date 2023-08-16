@@ -101,10 +101,10 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         hst.log_bin_genome(genome = genome, output_dir = output_folder)
 
-        p1 = Process(target = hst.get_patterns(circular = circular, output_dir = output_folder))
-        p2 = Process(target = hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output_folder))
-        p3 = Process(target = hst.generate_coverages(genome = genome, bins = bins, output_dir = output_folder))
-        p4 = Process(target = hst.generate_d1d2(output_dir = output_folder))
+        p1 = Process(target = hst.get_patterns, kwargs = dict(circular = circular, output_dir = output_folder))
+        p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_folder))
+        p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
+        p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
 
         # Launch processes
         for process in [p1, p2, p3, p4]:
@@ -143,16 +143,18 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage <= 5:
 
-        p1 = Process(target = hpl.plot_laws(output_dir = output_folder))
-        p2 = Process(target = hpl.plot_trans_ps(output_dir = output_folder))
-        p3 = Process(target = hpl.plot_coverages(bins = bins, output_dir = output_folder))
-        p4 = Process(target = hpl.plot_couple_repartition(output_dir = output_folder))
-        p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output_folder))
-        p6 = Process(target = hpl.plot_d1d2(output_dir = output_folder))
+        p1 = Process(target = hpl.plot_laws, kwargs = dict(output_dir = output_folder))
+        p2 = Process(target = hpl.plot_trans_ps, kwargs = dict(output_dir = output_folder))
+        p3 = Process(target = hpl.plot_coverages, kwargs = dict(bins = bins, output_dir = output_folder))
+        p4 = Process(target = hpl.plot_couple_repartition, kwargs = dict(output_dir = output_folder))
+        p5 = Process(target = hpl.plot_matrix, kwargs = dict(genome = genome, output_dir = output_folder))
+        p6 = Process(target = hpl.plot_d1d2, kwargs = dict(output_dir = output_folder))
 
         # Launch processees
         for process in [p1, p2, p3, p4, p5, p6]:
             process.start()
+
+        for process in [p1, p2, p3, p4, p5, p6]:
             process.join()        
 
     # Tidy outputs

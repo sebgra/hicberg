@@ -475,6 +475,8 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
 
     np.save(output_path / COVERAGE_DICO, smoothed_coverages)
 
+    logger.info(f"Coverage dictionary saved in {output_path}")
+
 
 
 def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", restriction_map : str = "restriction_map.npy", output_dir : str = None) -> None:

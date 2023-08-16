@@ -26,6 +26,9 @@ import hicberg.statistics as hst
 import hicberg.eval as hev
 import hicberg.plot as hpl
 
+from hicberg import benchmark_logger
+
+
 BASE_MATRIX = "original_map.cool"
 UNRESCUED_MATRIX = "unrescued_map.cool"
 RESCUED_MATRIX = "rescued_map.cool"
@@ -61,6 +64,15 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         [description], by default None
     """
 
+    # logger.addHandler('hicberg_benchmark.log')
+
+    args = locals()
+
+    # Keep track of the arguments used
+    for arg in args:
+
+        benchmark_logger.info("%s: %s", arg, args[arg])
+
     learning_status = False #False bckp
     picking_status = False # False bckp
 
@@ -93,7 +105,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     OTHER = [[chromosome, position, trans_chromosome, trans_position, strides, auto, bins]]
 
 
-    CHROMOSOME = list(chromosome)
+    CHROMOSOME = chromosome
 
     if trans_chromosome is not None:
         TRANS_CHROMOSOME = [str(t) for t in trans_chromosome.split(",")]
@@ -114,12 +126,13 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     STRIDES = [int(s) for s in strides.split(",")]
 
-    for mode in mode.split(","):
+    for sub_mode in mode.split(","):
 
         # Pick reads
 
         if not picking_status:
-
+            
+            benchmark_logger.info("Picking reads")
             intervals_dictionary = hev.select_reads(matrix_file = output_path / BASE_MATRIX, position = POSITION, chromosome = CHROMOSOME, strides = STRIDES, trans_chromosome = TRANS_CHROMOSOME, trans_position = TRANS_POSITION, auto = auto, nb_bins = NB_BINS, output_dir = output_dir)
             indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
 
@@ -144,20 +157,79 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         if not learning_status : 
             ## Compute statistics
 
-            p1 = Process(target = hst.get_patterns(forward_bam_file  = forward_out_path, reverse_bam_file = reverse_out_path, circular = circular, output_dir = output_path))
-            p2 = Process(target = hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output_path))
-            p3 = Process(target = hst.generate_coverages(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, genome = genome, bins = bins, output_dir = output_path))
-            p4 = Process(target = hst.generate_d1d2(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_path))
+            p1 = Process(target = hst.get_patterns, kwargs = dict(forward_bam_file  = forward_out_path, reverse_bam_file = reverse_out_path, circular = circular, output_dir = output_path))
+            p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_path))
+            p3 = Process(target = hst.generate_coverages, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, genome = genome, bins = bins, output_dir = output_path))
+            p4 = Process(target = hst.generate_d1d2, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_path))
 
-            # Launch processes
-            for process in [p1, p2, p3, p4]:
-                process.start()
-                process.join()
+            if  "full" in mode.split(","):
 
-            learning_status = True
+                print("Case 0 ")
+
+                # Launch processes
+                for process in [p1, p2, p3, p4]:
+                    process.start()
+
+                for process in [p1, p2, p3, p4]:
+                    process.join()
+
+            elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
+
+                print("Case 1 ")
+
+                # Launch processes
+                for process in [p1, p2, p3]:
+                    process.start()
+
+                for process in [p1, p2, p3]:
+                    process.join()
+
+            elif "d1d2_only" in mode.split(",") and len(mode.split(",")) == 1:
+
+
+                print("Case 2")
+
+                # Launch processes
+                for process in [p4]:
+                    process.start()
+
+                for process in [p4]:
+                    process.join()
+
+            elif "ps_only" in mode.split(",") and len(mode.split(",")) == 1:
+
+                print("Case 3")
+
+                # Launch processes
+                for process in [p1, p2]:
+                    process.start()
+
+                for process in [p1, p2]:
+                    process.join()
+
+            elif "cover_only" in mode.split(",") and len(mode.split(",")) == 1:
+
+                print("Case 4")
+
+                # Launch processes
+                for process in [p3]:
+                    process.start()
+
+                for process in [p3]:
+                    process.join()
+
+            elif  "random" in mode.split(",") and len(mode.split(",")) == 1:
+
+                print("Case 5")
+
+                benchmark_logger.info("Random mode selected. No learning step will be performed.")
+
+        learning_status = True
 
         # Reattribute reads
-        hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = mode, output_dir = output_path)
+
+        benchmark_logger.info("Reattributing reads")
+        hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = sub_mode, output_dir = output_path)
         hio.merge_predictions(output_dir = output_path, clean = True)
         hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_path)
         hio.build_matrix(mode = True, output_dir = output_path)
@@ -186,7 +258,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         # number_reads = np.sum(rescued_matrix_array[indexes])
         number_reads = 10
 
-        print(f"Pearson score : {pearson:9.4f} in mode {mode}")
+        benchmark_logger.info(f"Pearson score : {pearson:9.4f} in mode {sub_mode}")
 
         if not results.exists():
             with open(results, "w") as f_out:

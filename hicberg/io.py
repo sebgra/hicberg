@@ -224,7 +224,8 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
 
         cooler_cmd = f"cooler cload pairs --zero-based -c1 2 -p1 3 -p2 5 -c2 6 {bins_path} {pairs_path} {cool_path}"
 
-    balance_cmd = f"cooler balance {cool_path}"
+    # TODO : Implement nproc as arg
+    balance_cmd = f"cooler balance --nproc 12 {cool_path}"
 
     sp.check_call(cooler_cmd, shell=True)
     sp.check_call(balance_cmd, shell=True)
