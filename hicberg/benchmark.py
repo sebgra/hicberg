@@ -149,8 +149,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         # Get corresponding indexes to the duplicated reads coordinates.
 
-        print(f"indexes : {indexes}")
-
         # Re-build pairs and cooler matrix 
 
         hio.build_pairs(bam_for = forward_out_path, bam_rev = reverse_out_path, output_dir = output_path)
@@ -232,15 +230,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
 
-        print(f"CHROMOSOME : {CHROMOSOME}")
-        print(f"dtype : {type(CHROMOSOME)}")
-        print(f"TRANS_CHROMOSOME : {TRANS_CHROMOSOME}")
-        print(f"dtype : {type(TRANS_CHROMOSOME)}")
-
-
         chromosome_set = list(CHROMOSOME) + TRANS_CHROMOSOME if TRANS_CHROMOSOME is not None else CHROMOSOME
 
-        print(f"Chromosome set : {chromosome_set}")
 
         hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_path)
 
