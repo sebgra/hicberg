@@ -76,7 +76,7 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
 
     print(f"Chromosomes : {chromosomes}")
 
-    for chrm in chromosomes.split(","):
+    for chrm in chromosomes : #.split(","):
 
         print(f"chrm : {chrm}")
 

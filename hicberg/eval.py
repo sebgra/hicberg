@@ -79,7 +79,7 @@ def get_interval_index(chromosome : str = "", value : int = None, intervals_dict
     return out_dict
 
 
-def select_reads(bam_for :str = "group1.1.bam", bam_rev : str = "group1.2.bam", matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
+def select_reads(bam_for :str = "group1.1.bam", bam_rev : str = "group1.2.bam", matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str | list[str] = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
 trans_chromosome :  str = None, output_dir : str = None, trans_position : list[int] = None, nb_bins : int = 1, random : bool = False, auto : int = None) -> None:
     """
     AI is creating summary for select_reads
@@ -136,6 +136,10 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
         raise ValueError(f"Chromosome sizes file {chrom_sizes_path} does not exist. Please provide existing chromosome sizes file.")
     
+
+    if type(chromosome) == "list":
+
+        chromosome = chromosome[0]
 
     chs = hio.load_dictionary(chrom_sizes_path)
 
@@ -216,6 +220,10 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
         ]
 
         # Define list of chromosome to target/duplicate read on.
+
+        if type(chromosome) == list:
+
+            chromosome = chromosome[0]
 
 
         if trans_chromosome is not None:
@@ -493,8 +501,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
     forward_file_handler.close()
     reverse_file_handler.close()
 
-    print(f"Saved in : {output_path / 'group1.1_in.bam'}")
-
     return dictionary_of_intervals
 
     
@@ -610,7 +616,7 @@ def is_overlapping():
     pass
 
 # TODO : implement associated test
-def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = None, chrom_sizes_dict : str = "chromosome_sizes.npy") -> tuple[int, int]:
+def get_boundaries(position : int = None, bins : int = 2000, chromosome : str | list[str] = None, chrom_sizes_dict : str = "chromosome_sizes.npy") -> tuple[int, int]:
     """
     Return boundaries surrounding position considering regular binning of bins.
 
@@ -620,8 +626,8 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = 
         Position to get surrounding boundaries from, by default None
     bins : int, optional
         Size of the desired bin, by default 2000., by default 2000
-    chromosome : str, optional
-        [description], by default None
+    chromosome : str or list[str], optional
+        Chromosomes associated to positions to get surrounding boundaries from, by default None
     chrom_sizes_dict : str
         Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format. By default chromosome_sizes.npy
 
@@ -633,6 +639,10 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str = 
 
     chrom_sizes_path = Path(chrom_sizes_dict)
     chrom_sizes = hio.load_dictionary(chrom_sizes_path)
+
+    if type(chromosome) == list:
+
+        chromosome = chromosome[0]
 
     area_to_search = np.append(
         np.arange(2 * bins, chrom_sizes.get(chromosome) - 3 * bins, bins), # np.arange(0, cs_disctionary.item().get(chromosome) - bin_size, bin_size)

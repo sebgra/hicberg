@@ -105,7 +105,9 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     OTHER = [[chromosome, position, trans_chromosome, trans_position, strides, auto, bins]]
 
 
-    CHROMOSOME = chromosome
+    # CHROMOSOME = 
+    
+    CHROMOSOME = [str(c) for c in chromosome.split(",")]
 
     if trans_chromosome is not None:
         TRANS_CHROMOSOME = [str(t) for t in trans_chromosome.split(",")]
@@ -134,6 +136,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             
             benchmark_logger.info("Picking reads")
             intervals_dictionary = hev.select_reads(matrix_file = output_path / BASE_MATRIX, position = POSITION, chromosome = CHROMOSOME, strides = STRIDES, trans_chromosome = TRANS_CHROMOSOME, trans_position = TRANS_POSITION, auto = auto, nb_bins = NB_BINS, output_dir = output_dir)
+            
+            benchmark_logger.info(f"intervals_dictionary : {intervals_dictionary}")
             indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
 
             picking_status = True
@@ -164,8 +168,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             if  "full" in mode.split(","):
 
-                print("Case 0 ")
-
                 # Launch processes
                 for process in [p1, p2, p3, p4]:
                     process.start()
@@ -174,8 +176,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                     process.join()
 
             elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
-
-                print("Case 1 ")
 
                 # Launch processes
                 for process in [p1, p2, p3]:
@@ -186,9 +186,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             elif "d1d2_only" in mode.split(",") and len(mode.split(",")) == 1:
 
-
-                print("Case 2")
-
                 # Launch processes
                 for process in [p4]:
                     process.start()
@@ -197,8 +194,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                     process.join()
 
             elif "ps_only" in mode.split(",") and len(mode.split(",")) == 1:
-
-                print("Case 3")
 
                 # Launch processes
                 for process in [p1, p2]:
@@ -209,8 +204,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             elif "cover_only" in mode.split(",") and len(mode.split(",")) == 1:
 
-                print("Case 4")
-
                 # Launch processes
                 for process in [p3]:
                     process.start()
@@ -219,8 +212,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                     process.join()
 
             elif  "random" in mode.split(",") and len(mode.split(",")) == 1:
-
-                print("Case 5")
 
                 benchmark_logger.info("Random mode selected. No learning step will be performed.")
 
@@ -247,7 +238,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         print(f"dtype : {type(TRANS_CHROMOSOME)}")
 
 
-        chromosome_set = CHROMOSOME + TRANS_CHROMOSOME if TRANS_CHROMOSOME is not None else CHROMOSOME
+        chromosome_set = list(CHROMOSOME) + TRANS_CHROMOSOME if TRANS_CHROMOSOME is not None else CHROMOSOME
 
         print(f"Chromosome set : {chromosome_set}")
 

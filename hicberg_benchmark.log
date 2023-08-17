@@ -402,3 +402,347 @@
 2023-08-16 --  17:24:53 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
 2023-08-16 --  17:25:44 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
 2023-08-16 --  17:25:45 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-16 --  17:30:08 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/test_bench
+2023-08-16 --  17:30:08 :: INFO :: Reattributing reads
+2023-08-16 --  17:30:11 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-16 --  17:30:11 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-16 --  17:30:23 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-16 --  17:30:52 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:10:27 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  11:10:27 :: INFO :: chromosome: chr7
+2023-08-17 --  11:10:27 :: INFO :: position: 168000
+2023-08-17 --  11:10:27 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  11:10:27 :: INFO :: trans_position: 50000
+2023-08-17 --  11:10:27 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  11:10:27 :: INFO :: mode: full
+2023-08-17 --  11:10:27 :: INFO :: auto: None
+2023-08-17 --  11:10:27 :: INFO :: bins: 2
+2023-08-17 --  11:10:27 :: INFO :: circular: 
+2023-08-17 --  11:10:27 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  11:10:27 :: INFO :: Picking reads
+2023-08-17 --  11:11:47 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:12:16 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:12:19 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:13:10 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-17 --  11:13:11 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:17:45 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:17:45 :: INFO :: Reattributing reads
+2023-08-17 --  11:17:47 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:17:47 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:18:00 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:18:29 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:25:06 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  11:25:06 :: INFO :: chromosome: chr7
+2023-08-17 --  11:25:06 :: INFO :: position: 168000
+2023-08-17 --  11:25:06 :: INFO :: trans_chromosome: None
+2023-08-17 --  11:25:06 :: INFO :: trans_position: None
+2023-08-17 --  11:25:06 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  11:25:06 :: INFO :: mode: full
+2023-08-17 --  11:25:06 :: INFO :: auto: None
+2023-08-17 --  11:25:06 :: INFO :: bins: 2
+2023-08-17 --  11:25:06 :: INFO :: circular: 
+2023-08-17 --  11:25:06 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  11:25:06 :: INFO :: Picking reads
+2023-08-17 --  11:25:16 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  11:25:16 :: INFO :: chromosome: chr7
+2023-08-17 --  11:25:16 :: INFO :: position: 168000
+2023-08-17 --  11:25:16 :: INFO :: trans_chromosome: None
+2023-08-17 --  11:25:16 :: INFO :: trans_position: None
+2023-08-17 --  11:25:16 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  11:25:16 :: INFO :: mode: ps_only
+2023-08-17 --  11:25:16 :: INFO :: auto: None
+2023-08-17 --  11:25:16 :: INFO :: bins: 2
+2023-08-17 --  11:25:16 :: INFO :: circular: 
+2023-08-17 --  11:25:16 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  11:25:16 :: INFO :: Picking reads
+2023-08-17 --  11:26:29 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:26:57 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:27:00 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:27:50 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:27:50 :: INFO :: Reattributing reads
+2023-08-17 --  11:27:51 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:27:51 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:28:04 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:28:32 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:28:34 :: INFO :: Pearson score :    0.9844 in mode ps_only
+2023-08-17 --  11:33:21 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  11:33:21 :: INFO :: chromosome: chr7
+2023-08-17 --  11:33:21 :: INFO :: position: 168000
+2023-08-17 --  11:33:21 :: INFO :: trans_chromosome: None
+2023-08-17 --  11:33:21 :: INFO :: trans_position: None
+2023-08-17 --  11:33:21 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  11:33:21 :: INFO :: mode: full
+2023-08-17 --  11:33:21 :: INFO :: auto: None
+2023-08-17 --  11:33:21 :: INFO :: bins: 2
+2023-08-17 --  11:33:21 :: INFO :: circular: 
+2023-08-17 --  11:33:21 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  11:33:21 :: INFO :: Picking reads
+2023-08-17 --  11:34:33 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:35:01 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:35:04 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:35:53 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-17 --  11:35:54 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:40:19 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:40:19 :: INFO :: Reattributing reads
+2023-08-17 --  11:40:21 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:40:21 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:40:35 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:41:03 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:41:05 :: INFO :: Pearson score :    0.9822 in mode full
+2023-08-17 --  11:43:35 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  11:43:35 :: INFO :: chromosome: chr7
+2023-08-17 --  11:43:35 :: INFO :: position: 168000
+2023-08-17 --  11:43:35 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  11:43:35 :: INFO :: trans_position: 50000
+2023-08-17 --  11:43:35 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  11:43:35 :: INFO :: mode: no_d1d2
+2023-08-17 --  11:43:35 :: INFO :: auto: None
+2023-08-17 --  11:43:35 :: INFO :: bins: 2
+2023-08-17 --  11:43:35 :: INFO :: circular: 
+2023-08-17 --  11:43:35 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  11:43:35 :: INFO :: Picking reads
+2023-08-17 --  11:44:52 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:45:21 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:45:21 :: INFO :: Reattributing reads
+2023-08-17 --  11:45:23 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:45:23 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:45:37 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  11:46:07 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:34:37 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:34:37 :: INFO :: chromosome: chr7
+2023-08-17 --  12:34:37 :: INFO :: position: 168000
+2023-08-17 --  12:34:37 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:34:37 :: INFO :: trans_position: 50000
+2023-08-17 --  12:34:37 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:34:37 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:34:37 :: INFO :: auto: None
+2023-08-17 --  12:34:37 :: INFO :: bins: 2
+2023-08-17 --  12:34:37 :: INFO :: circular: 
+2023-08-17 --  12:34:37 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:34:37 :: INFO :: Picking reads
+2023-08-17 --  12:35:51 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:36:20 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:36:20 :: INFO :: Reattributing reads
+2023-08-17 --  12:36:22 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:36:23 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:36:36 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:37:05 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:37:44 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:37:44 :: INFO :: chromosome: chr7
+2023-08-17 --  12:37:44 :: INFO :: position: 168000
+2023-08-17 --  12:37:44 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:37:44 :: INFO :: trans_position: 50000
+2023-08-17 --  12:37:44 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:37:44 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:37:44 :: INFO :: auto: None
+2023-08-17 --  12:37:44 :: INFO :: bins: 2
+2023-08-17 --  12:37:44 :: INFO :: circular: 
+2023-08-17 --  12:37:44 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:37:44 :: INFO :: Picking reads
+2023-08-17 --  12:39:01 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:39:30 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:39:30 :: INFO :: Reattributing reads
+2023-08-17 --  12:39:32 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:39:32 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:39:46 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:40:15 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:43:03 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:43:03 :: INFO :: chromosome: chr7
+2023-08-17 --  12:43:03 :: INFO :: position: 168000
+2023-08-17 --  12:43:03 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:43:03 :: INFO :: trans_position: 50000
+2023-08-17 --  12:43:03 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:43:03 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:43:03 :: INFO :: auto: None
+2023-08-17 --  12:43:03 :: INFO :: bins: 2
+2023-08-17 --  12:43:03 :: INFO :: circular: 
+2023-08-17 --  12:43:03 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:43:03 :: INFO :: Picking reads
+2023-08-17 --  12:44:20 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:44:49 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:44:49 :: INFO :: Reattributing reads
+2023-08-17 --  12:44:51 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:44:51 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:45:04 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:45:33 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  12:47:54 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:47:54 :: INFO :: chromosome: chr7
+2023-08-17 --  12:47:54 :: INFO :: position: 168000
+2023-08-17 --  12:47:54 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:47:54 :: INFO :: trans_position: 50000
+2023-08-17 --  12:47:54 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:47:54 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:47:54 :: INFO :: auto: None
+2023-08-17 --  12:47:54 :: INFO :: bins: 2
+2023-08-17 --  12:47:54 :: INFO :: circular: 
+2023-08-17 --  12:47:54 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:47:54 :: INFO :: Picking reads
+2023-08-17 --  12:50:55 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:50:55 :: INFO :: chromosome: chr7
+2023-08-17 --  12:50:55 :: INFO :: position: 168000
+2023-08-17 --  12:50:55 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:50:55 :: INFO :: trans_position: 50000
+2023-08-17 --  12:50:55 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:50:55 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:50:55 :: INFO :: auto: None
+2023-08-17 --  12:50:55 :: INFO :: bins: 2
+2023-08-17 --  12:50:55 :: INFO :: circular: 
+2023-08-17 --  12:50:55 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:51:06 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:51:06 :: INFO :: chromosome: chr7
+2023-08-17 --  12:51:06 :: INFO :: position: 168000
+2023-08-17 --  12:51:06 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:51:06 :: INFO :: trans_position: 50000
+2023-08-17 --  12:51:06 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:51:06 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:51:06 :: INFO :: auto: None
+2023-08-17 --  12:51:06 :: INFO :: bins: 2
+2023-08-17 --  12:51:06 :: INFO :: circular: 
+2023-08-17 --  12:51:06 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:56:19 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:56:19 :: INFO :: chromosome: chr7
+2023-08-17 --  12:56:19 :: INFO :: position: 168000
+2023-08-17 --  12:56:19 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:56:19 :: INFO :: trans_position: 50000
+2023-08-17 --  12:56:19 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:56:19 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:56:19 :: INFO :: auto: None
+2023-08-17 --  12:56:19 :: INFO :: bins: 2
+2023-08-17 --  12:56:19 :: INFO :: circular: 
+2023-08-17 --  12:56:19 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:56:47 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:56:47 :: INFO :: chromosome: chr7
+2023-08-17 --  12:56:47 :: INFO :: position: 168000
+2023-08-17 --  12:56:47 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:56:47 :: INFO :: trans_position: 50000
+2023-08-17 --  12:56:47 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:56:47 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:56:47 :: INFO :: auto: None
+2023-08-17 --  12:56:47 :: INFO :: bins: 2
+2023-08-17 --  12:56:47 :: INFO :: circular: 
+2023-08-17 --  12:56:47 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:56:47 :: INFO :: Picking reads
+2023-08-17 --  12:57:05 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:57:05 :: INFO :: chromosome: chr7
+2023-08-17 --  12:57:05 :: INFO :: position: 168000
+2023-08-17 --  12:57:05 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:57:05 :: INFO :: trans_position: 50000
+2023-08-17 --  12:57:05 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:57:05 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:57:05 :: INFO :: auto: None
+2023-08-17 --  12:57:05 :: INFO :: bins: 2
+2023-08-17 --  12:57:05 :: INFO :: circular: 
+2023-08-17 --  12:57:05 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:57:05 :: INFO :: Picking reads
+2023-08-17 --  12:58:18 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:58:18 :: INFO :: chromosome: chr7
+2023-08-17 --  12:58:18 :: INFO :: position: 168000
+2023-08-17 --  12:58:18 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:58:18 :: INFO :: trans_position: 50000
+2023-08-17 --  12:58:18 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:58:18 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:58:18 :: INFO :: auto: None
+2023-08-17 --  12:58:18 :: INFO :: bins: 2
+2023-08-17 --  12:58:18 :: INFO :: circular: 
+2023-08-17 --  12:58:18 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:58:19 :: INFO :: Picking reads
+2023-08-17 --  12:59:26 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  12:59:26 :: INFO :: chromosome: chr7
+2023-08-17 --  12:59:26 :: INFO :: position: 168000
+2023-08-17 --  12:59:26 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  12:59:26 :: INFO :: trans_position: 50000
+2023-08-17 --  12:59:26 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  12:59:26 :: INFO :: mode: no_d1d2
+2023-08-17 --  12:59:26 :: INFO :: auto: None
+2023-08-17 --  12:59:26 :: INFO :: bins: 2
+2023-08-17 --  12:59:26 :: INFO :: circular: 
+2023-08-17 --  12:59:26 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  12:59:26 :: INFO :: Picking reads
+2023-08-17 --  13:00:22 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  13:00:22 :: INFO :: chromosome: chr7
+2023-08-17 --  13:00:22 :: INFO :: position: 168000
+2023-08-17 --  13:00:22 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  13:00:22 :: INFO :: trans_position: 50000
+2023-08-17 --  13:00:22 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  13:00:22 :: INFO :: mode: no_d1d2
+2023-08-17 --  13:00:22 :: INFO :: auto: None
+2023-08-17 --  13:00:22 :: INFO :: bins: 2
+2023-08-17 --  13:00:22 :: INFO :: circular: 
+2023-08-17 --  13:00:22 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  13:00:22 :: INFO :: Picking reads
+2023-08-17 --  13:01:27 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  13:01:27 :: INFO :: chromosome: chr7
+2023-08-17 --  13:01:27 :: INFO :: position: 168000
+2023-08-17 --  13:01:27 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  13:01:27 :: INFO :: trans_position: 50000
+2023-08-17 --  13:01:27 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  13:01:27 :: INFO :: mode: no_d1d2
+2023-08-17 --  13:01:27 :: INFO :: auto: None
+2023-08-17 --  13:01:27 :: INFO :: bins: 2
+2023-08-17 --  13:01:27 :: INFO :: circular: 
+2023-08-17 --  13:01:27 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  13:01:27 :: INFO :: Picking reads
+2023-08-17 --  13:02:43 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:03:13 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:03:13 :: INFO :: Reattributing reads
+2023-08-17 --  13:03:14 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:03:15 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:03:28 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:03:57 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:03:58 :: INFO :: Pearson score :    0.9604 in mode no_d1d2
+2023-08-17 --  13:05:13 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  13:05:13 :: INFO :: chromosome: chr7
+2023-08-17 --  13:05:13 :: INFO :: position: 168000
+2023-08-17 --  13:05:13 :: INFO :: trans_chromosome: None
+2023-08-17 --  13:05:13 :: INFO :: trans_position: None
+2023-08-17 --  13:05:13 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  13:05:13 :: INFO :: mode: full
+2023-08-17 --  13:05:13 :: INFO :: auto: None
+2023-08-17 --  13:05:13 :: INFO :: bins: 2
+2023-08-17 --  13:05:13 :: INFO :: circular: 
+2023-08-17 --  13:05:13 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  13:05:13 :: INFO :: Picking reads
+2023-08-17 --  13:06:27 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:06:56 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:06:59 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:07:49 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-17 --  13:07:52 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:12:24 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:12:24 :: INFO :: Reattributing reads
+2023-08-17 --  13:12:25 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:12:25 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:12:38 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:13:07 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:13:08 :: INFO :: Pearson score :    0.9777 in mode full
+2023-08-17 --  13:23:44 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  13:23:44 :: INFO :: chromosome: chr7
+2023-08-17 --  13:23:44 :: INFO :: position: 168000
+2023-08-17 --  13:23:44 :: INFO :: trans_chromosome: None
+2023-08-17 --  13:23:44 :: INFO :: trans_position: None
+2023-08-17 --  13:23:44 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  13:23:44 :: INFO :: mode: full
+2023-08-17 --  13:23:44 :: INFO :: auto: None
+2023-08-17 --  13:23:44 :: INFO :: bins: 2
+2023-08-17 --  13:23:44 :: INFO :: circular: 
+2023-08-17 --  13:23:44 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  13:23:44 :: INFO :: Picking reads
+2023-08-17 --  13:23:53 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  13:23:53 :: INFO :: chromosome: chr7
+2023-08-17 --  13:23:53 :: INFO :: position: 168000
+2023-08-17 --  13:23:53 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  13:23:53 :: INFO :: trans_position: 50000
+2023-08-17 --  13:23:53 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  13:23:53 :: INFO :: mode: no_d1d2
+2023-08-17 --  13:23:53 :: INFO :: auto: None
+2023-08-17 --  13:23:53 :: INFO :: bins: 2
+2023-08-17 --  13:23:53 :: INFO :: circular: 
+2023-08-17 --  13:23:53 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  13:23:53 :: INFO :: Picking reads
+2023-08-17 --  13:25:08 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:25:36 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:25:36 :: INFO :: Reattributing reads
+2023-08-17 --  13:25:38 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:25:38 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:25:51 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:26:19 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  13:26:21 :: INFO :: Pearson score :    0.9620 in mode no_d1d2
