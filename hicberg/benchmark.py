@@ -101,32 +101,29 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     base_matrix = hio.load_cooler(base_matrix_path)
 
     restriction_map = hio.load_dictionary(restriction_map_path)
-
-    OTHER = [[chromosome, position, trans_chromosome, trans_position, strides, auto, bins]]
-
-
-    # CHROMOSOME = 
     
-    CHROMOSOME = [str(c) for c in chromosome.split(",")]
+    # reformat inputs
+
+    chromosome = [str(c) for c in chromosome.split(",")]
 
     if trans_chromosome is not None:
-        TRANS_CHROMOSOME = [str(t) for t in trans_chromosome.split(",")]
+        trans_chromosome = [str(t) for t in trans_chromosome.split(",")]
     else : 
-        TRANS_CHROMOSOME = None
+        trans_chromosome = None
 
     if trans_position is not None:
-        TRANS_POSITION = [int(p) for p in trans_position.split(",")]
+        trans_position = [int(p) for p in trans_position.split(",")]
 
     else :
-        TRANS_POSITION = None
+        trans_position = None
 
 
-    NB_BINS = bins
+    nb_bins = bins
     # POSITION = [int(p) for p in str(position).split(",")]
-    POSITION = position
-    BIN_SIZE = bins
+    # POSITION = position
 
-    STRIDES = [int(s) for s in strides.split(",")]
+
+    strides = [int(s) for s in strides.split(",")]
 
     for sub_mode in mode.split(","):
 
@@ -135,7 +132,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         if not picking_status:
             
             benchmark_logger.info("Picking reads")
-            intervals_dictionary = hev.select_reads(matrix_file = output_path / BASE_MATRIX, position = POSITION, chromosome = CHROMOSOME, strides = STRIDES, trans_chromosome = TRANS_CHROMOSOME, trans_position = TRANS_POSITION, auto = auto, nb_bins = NB_BINS, output_dir = output_dir)
+            intervals_dictionary = hev.select_reads(matrix_file = output_path / BASE_MATRIX, position = position, chromosome = chromosome, strides = strides, trans_chromosome = trans_chromosome, trans_position = trans_position, auto = auto, nb_bins = nb_bins, output_dir = output_dir)
             
             benchmark_logger.info(f"intervals_dictionary : {intervals_dictionary}")
             indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
@@ -230,7 +227,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
 
-        chromosome_set = list(CHROMOSOME) + TRANS_CHROMOSOME if TRANS_CHROMOSOME is not None else CHROMOSOME
+        chromosome_set = list(chromosome) + trans_chromosome if trans_chromosome is not None else chromosome
 
 
         hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_path)
@@ -247,13 +244,13 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 f_out.write(header)
 
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{date}\t{CHROMOSOME}\t{POSITION}\t{STRIDES}\t{TRANS_CHROMOSOME}\t{TRANS_POSITION}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
 
         else :
             with open(results, "a") as f_out:
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{date}\t{CHROMOSOME}\t{POSITION}\t{STRIDES}\t{TRANS_CHROMOSOME}\t{TRANS_POSITION}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
                 
                 

@@ -416,7 +416,7 @@ The benchmark can be performed considering several modes. The modes are defined 
 - no_cover
 - no_d1d2
 
-_N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corrsponding statistics will not be computed._ 
+_N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
 
 
 

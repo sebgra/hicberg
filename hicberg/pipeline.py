@@ -22,6 +22,8 @@ import hicberg.statistics as hst
 
 from hicberg import logger
 
+UNRESCUED_MATRIX = "unrescued_map.cool"
+
 
 def check_tool(name):
     """Check whether `name` is on PATH and marked as executable."""
@@ -32,7 +34,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             fq_for : str = None, fq_rev : str = None, sensitivity : str = "very-sensitive",
             max_alignment : int = None, mapq : int = 35, enzyme  : list[str] = ["DpnII", "HinfI"],
             circular : str = "", rate : float = 1.0, bins : int = 2000, nb_chunks : int = 1,
-            mode : str = "full",  verbose : bool = False, cpus : int = 1, output_dir : str = None, force : bool = False) -> None :
+            mode : str = "full", rounds : int = 1, magnitude : float = 1.0,  verbose : bool = False, cpus : int = 1, output_dir : str = None, force : bool = False) -> None :
 
 
 
@@ -99,16 +101,21 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hio.build_pairs(output_dir = output_folder)
         hio.build_matrix(output_dir = output_folder)
 
+        
+
         hst.log_bin_genome(genome = genome, output_dir = output_folder)
 
         p1 = Process(target = hst.get_patterns, kwargs = dict(circular = circular, output_dir = output_folder))
         p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_folder))
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
+        p5 = Process(target = hst.get_density_map, kwargs = dict(matrix = UNRESCUED_MATRIX, rounds = rounds, magnitude = magnitude, output_dir = output_folder))
 
         # Launch processes
-        for process in [p1, p2, p3, p4]:
+        for process in [p1, p2, p3, p4, p5]:
             process.start()
+
+        for process in [p1, p2, p3, p4, p5]:
             process.join()
 
 

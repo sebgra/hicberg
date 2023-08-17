@@ -2,7 +2,7 @@ from os import getcwd
 from os.path import join
 from pathlib import Path
 
-from itertools import product
+from itertools import product, combinations
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -76,9 +76,9 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
 
     print(f"Chromosomes : {chromosomes}")
 
-    for chrm in chromosomes : #.split(","):
+    print(f"combinations :{list(combinations(chromosomes, 2))}")
 
-        print(f"chrm : {chrm}")
+    for chrm in chromosomes : 
 
         ori_matrix = original_matrix.matrix(balance=False).fetch(chrm)
         dep_matrix = depleted_matrix.matrix(balance=False).fetch(chrm)

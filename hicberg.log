@@ -7328,3 +7328,307 @@ Command: /usr/bin/bowtie2-align-l --wrapper basic-0 --very-sensitive -p 8 -k 3 -
 2023-08-17 --  13:54:00 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
 2023-08-17 --  13:56:12 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
 2023-08-17 --  13:56:15 :: INFO :: Pearson score :    0.9673 in mode no_d1d2
+2023-08-17 --  14:05:21 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  14:05:21 :: INFO :: chromosome: chr7
+2023-08-17 --  14:05:21 :: INFO :: position: 168000
+2023-08-17 --  14:05:21 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  14:05:21 :: INFO :: trans_position: 50000
+2023-08-17 --  14:05:21 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  14:05:21 :: INFO :: mode: no_d1d2
+2023-08-17 --  14:05:21 :: INFO :: auto: None
+2023-08-17 --  14:05:21 :: INFO :: bins: 2
+2023-08-17 --  14:05:21 :: INFO :: circular: 
+2023-08-17 --  14:05:21 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  14:05:21 :: INFO :: Picking reads
+2023-08-17 --  14:06:25 :: INFO :: intervals_dictionary : {'chr7': [(166000, 172000), (216000, 222000), (266000, 272000)], 'chr5': [(50000, 52000)]}
+2023-08-17 --  14:06:38 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:07:08 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:07:08 :: INFO :: Reattributing reads
+2023-08-17 --  14:07:10 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:07:10 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:07:24 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:07:53 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:07:55 :: INFO :: Pearson score :    0.9631 in mode no_d1d2
+2023-08-17 --  14:11:20 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  14:11:20 :: INFO :: chromosome: chr7
+2023-08-17 --  14:11:20 :: INFO :: position: 168000
+2023-08-17 --  14:11:20 :: INFO :: trans_chromosome: None
+2023-08-17 --  14:11:20 :: INFO :: trans_position: None
+2023-08-17 --  14:11:20 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  14:11:20 :: INFO :: mode: full
+2023-08-17 --  14:11:20 :: INFO :: auto: None
+2023-08-17 --  14:11:20 :: INFO :: bins: 2
+2023-08-17 --  14:11:20 :: INFO :: circular: 
+2023-08-17 --  14:11:20 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  14:11:20 :: INFO :: Picking reads
+2023-08-17 --  14:12:21 :: INFO :: intervals_dictionary : {'chr7': [(166000, 172000), (216000, 222000), (266000, 272000)]}
+2023-08-17 --  14:12:35 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:13:05 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:13:08 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:14:00 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-17 --  14:14:01 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:18:33 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:18:33 :: INFO :: Reattributing reads
+2023-08-17 --  14:18:35 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:18:35 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:18:48 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:19:17 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:19:19 :: INFO :: Pearson score :    0.9853 in mode full
+2023-08-17 --  14:30:34 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  14:30:34 :: INFO :: chromosome: chr7
+2023-08-17 --  14:30:34 :: INFO :: position: 168000
+2023-08-17 --  14:30:34 :: INFO :: trans_chromosome: None
+2023-08-17 --  14:30:34 :: INFO :: trans_position: None
+2023-08-17 --  14:30:34 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  14:30:34 :: INFO :: mode: d1d2_only
+2023-08-17 --  14:30:34 :: INFO :: auto: None
+2023-08-17 --  14:30:34 :: INFO :: bins: 2
+2023-08-17 --  14:30:34 :: INFO :: circular: 
+2023-08-17 --  14:30:34 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  14:30:34 :: INFO :: Picking reads
+2023-08-17 --  14:31:35 :: INFO :: intervals_dictionary : {'chr7': [(166000, 172000), (216000, 222000), (266000, 272000)]}
+2023-08-17 --  14:31:48 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:32:17 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:33:10 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/test_bench/d1d2.npy
+2023-08-17 --  14:33:10 :: INFO :: Reattributing reads
+2023-08-17 --  14:33:11 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:33:11 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:33:24 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:33:52 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:33:54 :: INFO :: Pearson score :    0.4876 in mode d1d2_only
+2023-08-17 --  14:35:55 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-08-17 --  14:35:55 :: INFO :: chromosome: chr7
+2023-08-17 --  14:35:55 :: INFO :: position: 168000
+2023-08-17 --  14:35:55 :: INFO :: trans_chromosome: chr5
+2023-08-17 --  14:35:55 :: INFO :: trans_position: 50000
+2023-08-17 --  14:35:55 :: INFO :: strides: 0,50000,100000
+2023-08-17 --  14:35:55 :: INFO :: mode: no_d1d2
+2023-08-17 --  14:35:55 :: INFO :: auto: None
+2023-08-17 --  14:35:55 :: INFO :: bins: 2
+2023-08-17 --  14:35:55 :: INFO :: circular: 
+2023-08-17 --  14:35:55 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-08-17 --  14:35:55 :: INFO :: Picking reads
+2023-08-17 --  14:36:58 :: INFO :: intervals_dictionary : {'chr7': [(166000, 172000), (216000, 222000), (266000, 272000)], 'chr5': [(50000, 52000)]}
+2023-08-17 --  14:37:11 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:37:40 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:37:40 :: INFO :: Reattributing reads
+2023-08-17 --  14:37:42 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:37:42 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:37:56 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:38:25 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-08-17 --  14:38:27 :: INFO :: Pearson score :    0.9579 in mode no_d1d2
+2023-08-17 --  15:03:23 :: INFO :: Start HiCBERG pipeline
+2023-08-17 --  15:03:23 :: INFO :: name: AC_1_bis_sub
+2023-08-17 --  15:03:23 :: INFO :: start_stage: fastq
+2023-08-17 --  15:03:23 :: INFO :: exit_stage: None
+2023-08-17 --  15:03:23 :: INFO :: genome: /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa
+2023-08-17 --  15:03:23 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-08-17 --  15:03:23 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-08-17 --  15:03:23 :: INFO :: sensitivity: very-sensitive
+2023-08-17 --  15:03:23 :: INFO :: max_alignment: None
+2023-08-17 --  15:03:23 :: INFO :: mapq: 35
+2023-08-17 --  15:03:23 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-08-17 --  15:03:23 :: INFO :: circular: 
+2023-08-17 --  15:03:23 :: INFO :: rate: 1.0
+2023-08-17 --  15:03:23 :: INFO :: bins: 2000
+2023-08-17 --  15:03:23 :: INFO :: nb_chunks: 32
+2023-08-17 --  15:03:23 :: INFO :: mode: full
+2023-08-17 --  15:03:23 :: INFO :: rounds: 10
+2023-08-17 --  15:03:23 :: INFO :: magnitude: 0.8
+2023-08-17 --  15:03:23 :: INFO :: verbose: False
+2023-08-17 --  15:03:23 :: INFO :: cpus: 16
+2023-08-17 --  15:03:23 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-08-17 --  15:03:23 :: INFO :: force: True
+2023-08-17 --  15:03:23 :: INFO :: Folder /home/sardine/Bureau/AC_1_bis_sub created.
+2023-08-17 --  15:03:23 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/AC_1_bis_sub/chromosome_sizes.npy
+2023-08-17 --  15:03:32 :: INFO :: Index built at /home/sardine/Bureau/AC_1_bis_sub/SC288_with_micron
+2023-08-17 --  15:03:32 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/AC_1_bis_sub/SC288_with_micron -S /home/sardine/Bureau/AC_1_bis_sub/1.sam /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-08-17 --  15:03:32 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/AC_1_bis_sub/SC288_with_micron -S /home/sardine/Bureau/AC_1_bis_sub/2.sam /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-08-17 --  15:03:33 :: INFO :: 125000 reads; of these:
+  125000 (100.00%) were unpaired; of these:
+    7487 (5.99%) aligned 0 times
+    104630 (83.70%) aligned exactly 1 time
+    12883 (10.31%) aligned >1 times
+94.01% overall alignment rate
+
+2023-08-17 --  15:03:33 :: INFO :: 125000 reads; of these:
+  125000 (100.00%) were unpaired; of these:
+    6097 (4.88%) aligned 0 times
+    105749 (84.60%) aligned exactly 1 time
+    13154 (10.52%) aligned >1 times
+95.12% overall alignment rate
+
+2023-08-17 --  15:03:33 :: INFO :: Alignement saved at /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:03:33 :: INFO :: samtools view -S -b /home/sardine/Bureau/AC_1_bis_sub/1.sam -o /home/sardine/Bureau/AC_1_bis_sub/1.bam --threads 16
+2023-08-17 --  15:03:33 :: INFO :: samtools view -S -b /home/sardine/Bureau/AC_1_bis_sub/2.sam -o /home/sardine/Bureau/AC_1_bis_sub/2.bam --threads 16
+2023-08-17 --  15:03:33 :: INFO :: Compressed alignemnet alignement done at /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:03:33 :: INFO :: samtools sort -n /home/sardine/Bureau/AC_1_bis_sub/1.bam -o /home/sardine/Bureau/AC_1_bis_sub/1.sorted.bam --threads 16
+2023-08-17 --  15:03:33 :: INFO :: samtools sort -n /home/sardine/Bureau/AC_1_bis_sub/2.bam -o /home/sardine/Bureau/AC_1_bis_sub/2.sorted.bam --threads 16
+2023-08-17 --  15:03:34 :: INFO :: Sorted alignement done at /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:03:37 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:03:37 :: INFO :: Number of unmapped reads in forward file : 24164
+2023-08-17 --  15:03:37 :: INFO :: Number of unmapped reads in reverse file : 24593
+2023-08-17 --  15:03:37 :: INFO :: Number of uniquely mapped reads in forward file : 93594
+2023-08-17 --  15:03:37 :: INFO :: Number of uniquely mapped reads in reverse file : 93594
+2023-08-17 --  15:03:37 :: INFO :: Number of multi mapped reads in forward file : 156379
+2023-08-17 --  15:03:37 :: INFO :: Number of multi mapped reads in reverse file : 142675
+2023-08-17 --  15:03:37 :: INFO :: Saved restriction map at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:02 :: INFO :: Saved restriction map at : /home/sardine/Bureau/AC_1_bis_sub/dist.frag.npy
+2023-08-17 --  15:13:02 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:05 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:05 :: INFO :: Log binning of genome /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa saved in /home/sardine/Bureau/AC_1_bis_sub/xs.npy.
+2023-08-17 --  15:13:06 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:08 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:09 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:10 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/AC_1_bis_sub/d1d2.npy
+2023-08-17 --  15:13:11 :: INFO :: Chunks saved in /home/sardine/Bureau/AC_1_bis_sub/chunks
+2023-08-17 --  15:13:12 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:12 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:12 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:12 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:12 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:13 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:14 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:15 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:17 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:18 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:18 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:19 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:21 :: INFO :: Saved coverages at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:25 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:27 :: INFO :: Tidying : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:13:27 :: INFO :: Ending HiCBERG pipeline
+2023-08-17 --  15:22:38 :: INFO :: Start HiCBERG pipeline
+2023-08-17 --  15:22:38 :: INFO :: name: AC_1_bis_sub
+2023-08-17 --  15:22:38 :: INFO :: start_stage: fastq
+2023-08-17 --  15:22:38 :: INFO :: exit_stage: None
+2023-08-17 --  15:22:38 :: INFO :: genome: /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa
+2023-08-17 --  15:22:38 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-08-17 --  15:22:38 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-08-17 --  15:22:38 :: INFO :: sensitivity: very-sensitive
+2023-08-17 --  15:22:38 :: INFO :: max_alignment: None
+2023-08-17 --  15:22:38 :: INFO :: mapq: 35
+2023-08-17 --  15:22:38 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-08-17 --  15:22:38 :: INFO :: circular: 
+2023-08-17 --  15:22:38 :: INFO :: rate: 0.5
+2023-08-17 --  15:22:38 :: INFO :: bins: 2000
+2023-08-17 --  15:22:38 :: INFO :: nb_chunks: 32
+2023-08-17 --  15:22:38 :: INFO :: mode: full
+2023-08-17 --  15:22:38 :: INFO :: rounds: 10
+2023-08-17 --  15:22:38 :: INFO :: magnitude: 0.8
+2023-08-17 --  15:22:38 :: INFO :: verbose: False
+2023-08-17 --  15:22:38 :: INFO :: cpus: 16
+2023-08-17 --  15:22:38 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-08-17 --  15:22:38 :: INFO :: force: True
+2023-08-17 --  15:22:38 :: INFO :: Folder /home/sardine/Bureau/AC_1_bis_sub created.
+2023-08-17 --  15:22:38 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/AC_1_bis_sub/chromosome_sizes.npy
+2023-08-17 --  15:22:48 :: INFO :: Index built at /home/sardine/Bureau/AC_1_bis_sub/SC288_with_micron
+2023-08-17 --  15:22:48 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/AC_1_bis_sub/SC288_with_micron -S /home/sardine/Bureau/AC_1_bis_sub/1.sam /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-08-17 --  15:22:48 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/AC_1_bis_sub/SC288_with_micron -S /home/sardine/Bureau/AC_1_bis_sub/2.sam /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-08-17 --  15:22:49 :: INFO :: 125000 reads; of these:
+  125000 (100.00%) were unpaired; of these:
+    7487 (5.99%) aligned 0 times
+    104630 (83.70%) aligned exactly 1 time
+    12883 (10.31%) aligned >1 times
+94.01% overall alignment rate
+
+2023-08-17 --  15:22:49 :: INFO :: 125000 reads; of these:
+  125000 (100.00%) were unpaired; of these:
+    6097 (4.88%) aligned 0 times
+    105749 (84.60%) aligned exactly 1 time
+    13154 (10.52%) aligned >1 times
+95.12% overall alignment rate
+
+2023-08-17 --  15:22:49 :: INFO :: Alignement saved at /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:22:49 :: INFO :: samtools view -S -b /home/sardine/Bureau/AC_1_bis_sub/1.sam -o /home/sardine/Bureau/AC_1_bis_sub/1.bam --threads 16
+2023-08-17 --  15:22:49 :: INFO :: samtools view -S -b /home/sardine/Bureau/AC_1_bis_sub/2.sam -o /home/sardine/Bureau/AC_1_bis_sub/2.bam --threads 16
+2023-08-17 --  15:22:49 :: INFO :: Compressed alignemnet alignement done at /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:22:49 :: INFO :: samtools sort -n /home/sardine/Bureau/AC_1_bis_sub/1.bam -o /home/sardine/Bureau/AC_1_bis_sub/1.sorted.bam --threads 16
+2023-08-17 --  15:22:49 :: INFO :: samtools sort -n /home/sardine/Bureau/AC_1_bis_sub/2.bam -o /home/sardine/Bureau/AC_1_bis_sub/2.sorted.bam --threads 16
+2023-08-17 --  15:22:50 :: INFO :: Sorted alignement done at /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:22:53 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:22:53 :: INFO :: Number of unmapped reads in forward file : 24164
+2023-08-17 --  15:22:53 :: INFO :: Number of unmapped reads in reverse file : 24593
+2023-08-17 --  15:22:53 :: INFO :: Number of uniquely mapped reads in forward file : 93594
+2023-08-17 --  15:22:53 :: INFO :: Number of uniquely mapped reads in reverse file : 93594
+2023-08-17 --  15:22:53 :: INFO :: Number of multi mapped reads in forward file : 156379
+2023-08-17 --  15:22:53 :: INFO :: Number of multi mapped reads in reverse file : 142675
+2023-08-17 --  15:22:53 :: INFO :: Saved restriction map at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:08 :: INFO :: Saved restriction map at : /home/sardine/Bureau/AC_1_bis_sub/dist.frag.npy
+2023-08-17 --  15:25:08 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:11 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:11 :: INFO :: Log binning of genome /home/sardine/Bureau/codes/hicberg/data_test/SC288_with_micron.fa saved in /home/sardine/Bureau/AC_1_bis_sub/xs.npy.
+2023-08-17 --  15:25:12 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:12 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/AC_1_bis_sub/d1d2.npy
+2023-08-17 --  15:25:12 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:13 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:29 :: INFO :: Saved restriction map at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:30 :: INFO :: Chunks saved in /home/sardine/Bureau/AC_1_bis_sub/chunks
+2023-08-17 --  15:25:31 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:31 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:31 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:31 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:31 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:31 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:31 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:32 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Predictions written in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:33 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:36 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:37 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:37 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:38 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:40 :: INFO :: Saved coverages at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:44 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:46 :: INFO :: Tidying : /home/sardine/Bureau/AC_1_bis_sub
+2023-08-17 --  15:25:46 :: INFO :: Ending HiCBERG pipeline

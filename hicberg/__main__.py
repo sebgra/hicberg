@@ -44,6 +44,8 @@ def cli(chain=True):
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
 @click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
+@click.option("--rounds", "-R", required = False, default = 1, type = int, help = "Number of rounds to perform for matrix diffusion.")
+@click.option("--magnitude", "-M", required = False, default = 1.0, type = float, help = "Magnitude of matrix diffusion.")
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("--max-alignment", '-k', required = False, type = int, default = None, help = "Set the number of alignments to report in ambiguous reads case.")
 @click.option("--sensitivity", "-s", required = False, type = click.Choice(["very-sensitive", "sensitive", "fast", "very-fast"]), default = "very-sensitive", help = "Set sensitivity level for Bowtie2")
@@ -55,8 +57,8 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "stats", "pairs", "rescue", "cool"]), default = "fastq", help = "Stage to start the pipeline")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "stats", "pairs", "rescue", "cool"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
-    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, rounds, magnitude, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, rounds = rounds, magnitude = magnitude, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")

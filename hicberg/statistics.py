@@ -40,6 +40,7 @@ WEIRDS = "weirds.npy"
 LOOPS = "loops.npy"
 TRANS_PS = "trans_ps.npy"
 RESTRICTION_MAP = "restriction_map.npy"
+DENSITY_MAP = "density_map.npy"
 
 
 def get_density_map(matrix : str = None, rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
@@ -59,18 +60,18 @@ def get_density_map(matrix : str = None, rounds : int = 1, magnitude : float = 1
     Returns
     -------
     dict[str, np.ndarray[float]]
-        Density maps as a dictionary where keys are chromosomes names and values are density maps.
+        Density maps as a dictionary where keys are chromosomes names couples as tuples and values are density maps.
     """
 
     if output_dir is None:
-            
-        folder_path = Path(getcwd())
 
-    else:
-            
-        folder_path = Path(output_dir)
+        output_path = Path(getcwd())
 
-    matrix_path = folder_path / matrix
+    else : 
+
+        output_path = Path(output_dir)
+
+    matrix_path = output_path / matrix
 
     if not matrix_path.is_file():
 
@@ -86,24 +87,29 @@ def get_density_map(matrix : str = None, rounds : int = 1, magnitude : float = 1
 
     chromosomes = matrix.chromnames
 
-    chromosomes_combination = itertools.product(chromosomes, chromosomes)
+    chromosomes_combination = list(itertools.product(chromosomes, chromosomes))
 
-    for chromosome_1, chromosome_2 in chromosomes_combination:
+    for combination in chromosomes_combination:
+
+        # print(f"Processing {chromosome_1} - {chromosome_2} pair... ")
 
         # Get matrix for each chromosome pair
 
-        matrix_chromosome = matrix.matrix(balance = False).fetch(chromosome_1, chromosome_2)
+        matrix_chromosome = matrix.matrix(balance = False).fetch(combination[0], combination[1])
 
         # Get density map for each chromosome pair
 
-        if chromosome_1 == chromosome_2:
+        if combination[0] == combination[1]:
 
-            density_map[chromosomes_combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "intra")
+            density_map[combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "intra")
 
-        elif chromosome_1 != chromosome_2:
+        elif combination[0] != combination[1]:
 
-            density_map[chromosomes_combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "inter")
+            density_map[combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "inter")
 
+    np.save(output_path / DENSITY_MAP, density_map)
+
+    logger.info(f"Saved restriction map at : {output_path}")
 
     return density_map
 
