@@ -28,7 +28,47 @@ LOOPS = "loops.npy"
 TRANS_PS = "trans_ps.npy"
 CLR = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
+DENSITY_MAP = "density_map.npy"
 
+
+def plot_density(output_dir : str = None) -> None:
+    """
+    Plot density maps
+    
+    Parameters
+    ----------
+    output_dir : str, optional
+        Path to the folder where to save the plot, by default None, by default None.
+    """
+
+    if output_dir is None:
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    # reload dictionaries
+
+    density_map = load_dictionary(output_path / DENSITY_MAP)
+
+
+    for chromosome_couple in density_map.keys():
+
+        # print(f"Plotting density for {chromosome_couple}")
+        
+        
+        plt.figure(figsize=(10, 10))
+
+        matrix = density_map[chromosome_couple]
+
+        # TODO : switch to log
+        plt.imshow(matrix ** 0.15, cmap="afmhot_r")
+        # plt.title(f"Contatct density for  {chromosome_couple}")
+        plt.savefig(output_path / f"density_{chromosome_couple}.pdf", format = "pdf")
+        plt.close()
+
+    logger.info(f"Saved plots of densities at : {output_path}")
 
 #TODO : complete docstrings
 def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, rescued_matrix : str = None, chromosomes : list[str] = None, output_dir : str = None) -> None:
@@ -516,7 +556,7 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
         ax5.plot(tot_coverage_unrescued[lower:upper], label="Before recovery")
-        ax5.plot(tot_coverage[lower:upper], label="Afetr recovery")
+        ax5.plot(tot_coverage[lower:upper], label="After recovery")
         ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])
         ax5.set_ylabel("Coverage")
         ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))

@@ -109,7 +109,7 @@ def get_density_map(matrix : str = None, rounds : int = 1, magnitude : float = 1
 
     np.save(output_path / DENSITY_MAP, density_map)
 
-    logger.info(f"Saved restriction map at : {output_path}")
+    logger.info(f"Saved density map at : {output_path}")
 
     return density_map
 
@@ -792,8 +792,6 @@ def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.Aligne
 
 def get_trans_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, trans_ps : dict) -> float:
     """
-    
-
     Parameters
     ----------
     read_forward : pysam.AlignedSegment
@@ -960,8 +958,52 @@ def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
 def get_d1d2_distance():
     pass
 
+# TODO : complete docstrings
+def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, density_map : dict, bin_size : int = 2000) -> float:
+    """
+    AI is creating summary for get_density
 
-def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, mode : str = "full") -> float:
+    Parameters
+    ----------
+    read_forward : pysam.AlignedSegment
+        [description]
+    read_reverse : pysam.AlignedSegment
+        [description]
+    density_map : dict
+        [description]
+    bin_size : int, optional
+        [description], by default 2000
+
+    Returns
+    -------
+    float
+        [description]
+
+    Raises
+    ------
+    ValueError
+        [description]
+    """    
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not coming from the same pair.")
+    
+    # TODO : to adjust with reads orientation
+    position_for = int(read_forward.reference_start // bin_size)
+    position_rev = int(read_reverse.reference_start // bin_size)
+
+    # print(f"position for : {position_for}")
+    # print(f"position rev : {position_rev}")
+
+    # print(f"read forward : {read_forward.reference_name}")
+    # print(f"read reverse : {read_reverse.reference_name}")
+
+    couple_density = density_map.get((read_forward.reference_name, read_reverse.reference_name))[position_for, position_rev]
+
+    # print(f"couple density : {couple_density}")
+    return couple_density
+
+
+def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, density_map : dict = None,  mode : str = "full") -> float:
     """
     Compute propensity for read pair to be selected among all plausible pairs related to multi-mapping reads.
 
@@ -991,6 +1033,8 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
         Size of the desired bin, by default 2000
     d1d2 : np.array, optional
         Distribution of d1d2 values, by default None
+    density : dict
+        Dictionary of contact density by chromosome couple.
     mode : str, optional
         Mode to use to compute propensity among, by default "full"
 
@@ -999,6 +1043,8 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
     float
         Propensity to use for read couple drawing
     """
+
+    # print(f"density map : {density_map}") # OK
 
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
@@ -1168,16 +1214,21 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
+
             # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
             if ps == 0:
 
                 ps = 1
+
+        # print(f"ps : {ps}")
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
         # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
+
+        # print(f"cover : {cover}")
 
         try:
             d1d2 = get_d1d2(
@@ -1191,7 +1242,16 @@ def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysa
 
             d1d2 = 1
 
-        return ps * d1d2 * cover
+        # print(f"d1d2 : {d1d2}")
+        # print(f'result : {ps * d1d2 * cover * density}')
+
+        density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        # print(f"density : {density}")
+
+    
+
+        return ps * d1d2 * cover * density
     
 
 def decompose_propentsity():
@@ -1229,7 +1289,7 @@ def draw_read_couple(propensities : np.array) -> int:
 
     return index
 
-def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", bins : int = 2000, d1d2 : dict = "d1d2.npy", mode : str = "full", output_dir : str = None) -> None:
+def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", bins : int = 2000, d1d2 : dict = "d1d2.npy", density_map = "density_map.npy",  mode : str = "full", output_dir : str = None) -> None:
     """
     Re-attribute multi-mapping (ambiguous) reads considering sets of statistical laws.
 
@@ -1257,6 +1317,8 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         Size of the desired bin, by default 2000
     d1d2 : np.array, optional
         Distribution of d1d2 values, by default None
+    density : np.array, optional
+        Dictionary containing density maps per chromosome couples as, by default None
     mode : str, optional
         Mode to use to compute propensity among, by default "full"
     output_dir : str, optional
@@ -1279,6 +1341,11 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     trans_ps = hio.load_dictionary(output_path / trans_ps)
     coverage = hio.load_dictionary(output_path / coverage)
     d1d2 = hio.load_dictionary(output_path / d1d2)
+    density = hio.load_dictionary(output_path / density_map)
+
+    # print(f"density loaded")
+    
+    # print(f"density : {density}")
 
     forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
     file_id = time.time()
@@ -1300,10 +1367,15 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
 
         for combination in combinations:
+            # print(f"combination : {combination}")
 
-            propensities.append(compute_propentsity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, mode = mode))
+            propensities.append(compute_propentsity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode))
+
+        # print(f"Propensities : {propensities}")
 
         selected_couple_index = draw_read_couple(propensities)
+
+        # print(f"Selected couple index : {selected_couple_index}")
         selected_read_forward, selected_read_reverse = combinations[selected_couple_index]
         selected_read_forward.set_tag("XL", len(forward_block))
         selected_read_reverse.set_tag("XL", len(reverse_block))

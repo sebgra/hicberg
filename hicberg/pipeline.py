@@ -131,7 +131,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         forward_chunks, reverse_chunks = hut.get_chunks(output_folder)
 
         # Reattribute reads
-        with multiprocessing.Pool(processes = cpus) as pool:
+        with multiprocessing.Pool(processes = cpus) as pool: # cpus
 
             results = pool.map_async(partial(hst.reattribute_reads, mode = mode,  restriction_map = restriction_map, output_dir = output_folder),
             zip(forward_chunks, reverse_chunks))
@@ -156,12 +156,13 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         p4 = Process(target = hpl.plot_couple_repartition, kwargs = dict(output_dir = output_folder))
         p5 = Process(target = hpl.plot_matrix, kwargs = dict(genome = genome, output_dir = output_folder))
         p6 = Process(target = hpl.plot_d1d2, kwargs = dict(output_dir = output_folder))
+        p7 = Process(target = hpl.plot_density, kwargs = dict(output_dir = output_folder))
 
         # Launch processees
-        for process in [p1, p2, p3, p4, p5, p6]:
+        for process in [p1, p2, p3, p4, p5, p6, p7]:
             process.start()
 
-        for process in [p1, p2, p3, p4, p5, p6]:
+        for process in [p1, p2, p3, p4, p5, p6, p7]:
             process.join()        
 
     # Tidy outputs
