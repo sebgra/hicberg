@@ -43,7 +43,7 @@ RESTRICTION_MAP = "restriction_map.npy"
 DENSITY_MAP = "density_map.npy"
 
 
-def get_density_map(matrix : str = None, rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
+def get_density_map(matrix : str = "unrescued_map.cool", rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 
@@ -1097,6 +1097,12 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             cover = 1
 
         return cover
+    
+    elif mode == "density_only":
+
+        density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        return density
 
     elif mode == "no_d1d2":
 

@@ -156,6 +156,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         hio.build_pairs(bam_for = forward_out_path, bam_rev = reverse_out_path, output_dir = output_path)
         hio.build_matrix(output_dir = output_path)
+
+        unrescued_map_path = output_path / UNRESCUED_MATRIX
         
         # Reattribute reads from inner group
 
@@ -166,14 +168,16 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_path))
             p3 = Process(target = hst.generate_coverages, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, genome = genome, bins = bins, output_dir = output_path))
             p4 = Process(target = hst.generate_d1d2, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_path))
-
+            
+            # TODO : Parametrize with rounds and magnitude
+            p5 = Process(target = hst.get_density_map, kwargs = dict(matrix = unrescued_map_path, output_dir = output_path))
             if  "full" in mode.split(","):
 
                 # Launch processes
-                for process in [p1, p2, p3, p4]:
+                for process in [p1, p2, p3, p4, p5]:
                     process.start()
 
-                for process in [p1, p2, p3, p4]:
+                for process in [p1, p2, p3, p4, p5]:
                     process.join()
 
             elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
@@ -212,6 +216,15 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 for process in [p3]:
                     process.join()
 
+            elif "density_only" in mode.split(",") and len(mode.split(",")) == 1:
+
+                # Launch processes
+                for process in [p5]:
+                    process.start()
+
+                for process in [p5]:
+                    process.join()
+
             elif  "random" in mode.split(",") and len(mode.split(",")) == 1:
 
                 benchmark_logger.info("Random mode selected. No learning step will be performed.")
@@ -238,7 +251,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_path)
 
-        #TODO implement tidying plot function
         # Define unique id to keep track of the experiments
         id_tag = str(uuid.uuid4())[:8]
 
@@ -261,7 +273,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 f_out.close()
 
         # tidy plots
-
         folder_path = Path(output_dir, id_tag)
 
         if folder_path.exists() and force: 
