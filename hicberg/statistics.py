@@ -958,52 +958,49 @@ def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
 def get_d1d2_distance():
     pass
 
-# TODO : complete docstrings
-def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, density_map : dict, bin_size : int = 2000) -> float:
+def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, density_map : dict[(str, str) : np.array], bin_size : int = 2000) -> float:
     """
-    AI is creating summary for get_density
+    Get density from density map dictionary.
 
     Parameters
     ----------
     read_forward : pysam.AlignedSegment
-        [description]
+        Forward read to get density from.
     read_reverse : pysam.AlignedSegment
-        [description]
+        Reverse read to get density from.
     density_map : dict
-        [description]
+        Dictionary containing density maps for each chromosome couple.
     bin_size : int, optional
-        [description], by default 2000
+        Resolution of the matrix on which density map has been computed, by default 2000
 
     Returns
     -------
     float
-        [description]
+        Density corresponding to the pair of reads.
 
-    Raises
-    ------
-    ValueError
-        [description]
     """    
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
-    
-    # TODO : to adjust with reads orientation
-    position_for = int(read_forward.reference_start // bin_size)
-    position_rev = int(read_reverse.reference_start // bin_size)
 
-    # print(f"position for : {position_for}")
-    # print(f"position rev : {position_rev}")
+    if hut.is_reverse(read_forward):
+        position_for = int(read_forward.reference_end // bin_size)
 
-    # print(f"read forward : {read_forward.reference_name}")
-    # print(f"read reverse : {read_reverse.reference_name}")
+    elif not hut.is_reverse(read_forward):
+        position_for = int(read_forward.reference_start // bin_size)
+
+    if hut.is_reverse(read_reverse):
+        position_rev = int(read_reverse.reference_end // bin_size)
+
+    elif not hut.is_reverse(read_reverse):
+
+        position_rev = int(read_reverse.reference_start // bin_size)
 
     couple_density = density_map.get((read_forward.reference_name, read_reverse.reference_name))[position_for, position_rev]
 
-    # print(f"couple density : {couple_density}")
     return couple_density
 
 
-def compute_propentsity(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, density_map : dict = None,  mode : str = "full") -> float:
+def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, density_map : dict = None,  mode : str = "full") -> float:
     """
     Compute propensity for read pair to be selected among all plausible pairs related to multi-mapping reads.
 
@@ -1369,7 +1366,7 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         for combination in combinations:
             # print(f"combination : {combination}")
 
-            propensities.append(compute_propentsity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode))
+            propensities.append(compute_propensity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode))
 
         # print(f"Propensities : {propensities}")
 

@@ -108,8 +108,9 @@ def build_pairs_cmd(output, recover):
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
 @click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if .cool matrix are bulit after reads reassignment.")
-def build_matrix_cmd(output, recover):
-    hio.build_matrix(output_dir = output, mode = recover)
+@click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for matrix building.")
+def build_matrix_cmd(output, recover, cpus):
+    hio.build_matrix(cpus = cpus, output_dir = output, mode = recover)
 
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")

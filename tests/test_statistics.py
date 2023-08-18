@@ -421,7 +421,7 @@ def test_compute_propentsity(test_get_restriction_map_mono, test_log_bin_genome,
     d1d2 = hio.load_dictionary(test_generate_d1d2)
 
     restriction_map = test_get_restriction_map_mono
-    propensity = hst.compute_propentsity(read_forward = read_forward, read_reverse = read_reverse, restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
+    propensity = hst.compute_propensity(read_forward = read_forward, read_reverse = read_reverse, restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
 
     assert propensity >= 0
 
@@ -481,7 +481,7 @@ def test_draw_read_couple(test_get_restriction_map_mono, test_log_bin_genome, te
     
     for couple in all_couples:
         
-        propensity =  hst.compute_propentsity(read_forward = couple[0], read_reverse = couple[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
+        propensity =  hst.compute_propensity(read_forward = couple[0], read_reverse = couple[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
         propensities.append(propensity)
 
     read_couple_index = hst.draw_read_couple(propensities = propensities)

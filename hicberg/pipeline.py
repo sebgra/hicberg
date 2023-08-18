@@ -99,7 +99,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output_folder)
         hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
         hio.build_pairs(output_dir = output_folder)
-        hio.build_matrix(output_dir = output_folder)
+        hio.build_matrix(cpus = cpus, output_dir = output_folder)
 
         
 
@@ -146,7 +146,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
 
         hio.build_pairs(mode = True, output_dir = output_folder)
-        hio.build_matrix(mode = True, output_dir = output_folder)
+        hio.build_matrix(cpus = cpus, mode = True, output_dir = output_folder)
 
     if start_stage <= 5:
 
@@ -158,10 +158,10 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         p6 = Process(target = hpl.plot_d1d2, kwargs = dict(output_dir = output_folder))
         p7 = Process(target = hpl.plot_density, kwargs = dict(output_dir = output_folder))
 
-        # Launch processees
+        # Instanciate processees
         for process in [p1, p2, p3, p4, p5, p6, p7]:
             process.start()
-
+        # Launch processes
         for process in [p1, p2, p3, p4, p5, p6, p7]:
             process.join()        
 

@@ -234,7 +234,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         #TODO implement tidying plot function
 
-        # number_reads = np.sum(rescued_matrix_array[indexes])
         number_reads = 10
 
         benchmark_logger.info(f"Pearson score : {pearson:9.4f} in mode {sub_mode}")

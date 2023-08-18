@@ -80,48 +80,50 @@ def get_interval_index(chromosome : str = "", value : int = None, intervals_dict
 
 
 def select_reads(bam_for :str = "group1.1.bam", bam_rev : str = "group1.2.bam", matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str | list[str] = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
-trans_chromosome :  str = None, output_dir : str = None, trans_position : list[int] = None, nb_bins : int = 1, random : bool = False, auto : int = None) -> None:
+trans_chromosome :  str = None, output_dir : str = None, trans_position : list[int] = None, nb_bins : int = 1, random : bool = False, auto : int = None) -> dict[str, list[(int, int)]]:
     """
-    AI is creating summary for select_reads
+    Select reads from a given matrix and alignment files. Two groups of alignment files are produced (.bam):
+    - group1.1.in.bam and group1.2.in.bam : Forward and reverse reads from the source and target genomic interval. These reads are going to be duplicated un each intervals.
+    - group1.1.out.bam and group1.2.out.bam : Forward and reverse reads not included the source and target genomic interval. These reads are going to be conserved and not duplicated.
 
     Parameters
     ----------
     bam_for : str, optional
-        [description], by default "group1.1.bam"
+        Forward alignment file to select reads from, by default "group1.1.bam"
     bam_rev : str, optional
-        [description], by default "group1.2.bam"
+        Reverse alignment file to select reads from, by default "group1.2.bam"
     matrix_file : str, optional
-        [description], by default "unrescued_map.cool"
+        Name of the matrix from which the selection will be based (.cool format), by default "unrescued_map.cool"
     position : int, optional
-        [description], by default 0
-    chromosome : str, optional
-        [description], by default ""
+        Genomic coordinates (0-based) used to defined the source genomic interval, by default 0
+    chromosome : str or list[str], optional
+        Chromosome associated to the 0-based coordinates given by "position', by default ""
     bin_size : int, optional
-        [description], by default 2000
+        Resolution of the given matrix, by default 2000
     chrom_sizes_dict : str, optional
-        [description], by default "chromosome_sizes.npy"
+        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format, by default "chromosome_sizes.npy"
     strides : list[int], optional
-        [description], by default [0]
+        List of strides to apply from "position" to define target genomics intervals (in bp.), by default [0]
     trans_chromosome : str, optional
-        [description], by default None
-    output_dir : str, optional
-        [description], by default None
+        Chromosomes to consider as trans-chromosomes to define genomic target intervals, by default None
     trans_position : list[int], optional
-        [description], by default None
+        Genomic coordinates (0-based) used to defined the trans-chromosomal target genomic interval, by default None
     nb_bins : int, optional
-        [description], by default 1
+        Number of bins to consider on each side of the defined source and target intervals, by default 1
     random : bool, optional
-        [description], by default False
+        Set wether or not the source and target intervals are defined at random, by default False
     auto : int, optional
-        [description], by default None
+        Set the number of intervals to get while picking at random, by default None
+    output_dir : str, optional
+        Path to the folder where to save alignments, by default None
 
     Returns
     -------
-    [type]
-        [description]
+    dict[str, list[(int, int)]]
+        Dictionary of intervals as key : chromosome, value : [(low_limit_0, up_limit_0), (low_limit_1, up_limit_1), ..., (low_limit_n, up_limit_n)].
 
-    """    
-    # TODO : complete docstrings    
+    """   
+    
     output_path = Path(output_dir)
 
     if not output_path.exists():

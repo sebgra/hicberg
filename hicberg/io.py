@@ -176,7 +176,7 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
     
 
-def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1.pairs", mode : bool = False, output_dir : str = None) -> None:
+def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1.pairs", mode : bool = False, cpus : int = 8, output_dir : str = None) -> None:
     """
     Take table of bins and .pairs file and build a matrix in .cool format.
 
@@ -224,8 +224,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
 
         cooler_cmd = f"cooler cload pairs --zero-based -c1 2 -p1 3 -p2 5 -c2 6 {bins_path} {pairs_path} {cool_path}"
 
-    # TODO : Implement nproc as arg
-    balance_cmd = f"cooler balance --nproc 12 {cool_path}"
+    balance_cmd = f"cooler balance --nproc {cpus} {cool_path}"
 
     sp.check_call(cooler_cmd, shell=True)
     sp.check_call(balance_cmd, shell=True)

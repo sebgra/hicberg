@@ -38,52 +38,44 @@ def plot_density(output_dir : str = None) -> None:
     Parameters
     ----------
     output_dir : str, optional
-        Path to the folder where to save the plot, by default None, by default None.
+        Path to the folder where to save the plots (one plot per chromosome couple), by default None.
     """
 
     if output_dir is None:
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     # reload dictionaries
-
     density_map = load_dictionary(output_path / DENSITY_MAP)
-
 
     for chromosome_couple in density_map.keys():
 
-        # print(f"Plotting density for {chromosome_couple}")
-        
-        
-        plt.figure(figsize=(10, 10))
-
         matrix = density_map[chromosome_couple]
 
-        # TODO : switch to log
-        plt.imshow(matrix ** 0.15, cmap="afmhot_r")
-        # plt.title(f"Contatct density for  {chromosome_couple}")
+        plt.figure(figsize=(10, 10))
+        plt.imshow(np.log10(matrix), cmap="afmhot_r", vmin = 0.0, vmax = 3.5)
+        plt.title(f"Contatct density for  {chromosome_couple}")
         plt.savefig(output_path / f"density_{chromosome_couple}.pdf", format = "pdf")
         plt.close()
 
     logger.info(f"Saved plots of densities at : {output_path}")
 
-#TODO : complete docstrings
 def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, rescued_matrix : str = None, chromosomes : list[str] = None, output_dir : str = None) -> None:
-    """AI is creating summary for plot_benchmark
+    """
+    Plot benchmark results (original, depleted and rescued matrices with associated log ratios). One plot per chromosome.
 
     Parameters
     ----------
     original_matrix : str, optional
-        [description], by default None
+        Path to the original matrix, by default None
     rescued_matrix : str, optional
-        [description], by default None
+        Path to the rescued matrix (reattributed reads), by default None
     chromosomes : list[str], optional
-        [description], by default None
+        List of chromosomes to plot, by default None
     output_dir : str, optional
-        [description], by default None
+        Path to where to save plots, by default None
     """
 
     if output_dir is None:  # if no output directory is provided, save in current directory     
@@ -93,8 +85,7 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
 
         output_path = Path(output_dir)    
 
-    # reload matricies
-
+    # define paths
     original_matrix_path = output_dir / original_matrix
     depleted_matrix_path = output_dir / depleted_matrix
     rescued_matrix_path = output_dir / rescued_matrix
@@ -131,7 +122,6 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
         )
         log_ratio = np.log10(ratio)
 
-
         # TODO : Adjust log non log and exponent
         plt.figure(figsize=(10, 10))
         plt.subplot(141)
@@ -146,10 +136,10 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
         plt.subplot(144)
         plt.imshow(log_ratio, cmap = "bwr" , vmin = -1, vmax = 1) 
         plt.title(f"Log ratio - {chrm}")
+        plt.colorbar(fraction=0.046)
         plt.savefig(output_path / f"benchmark_{chrm}.pdf", format = "pdf")
         plt.close()
 
-    return
 
 def plot_d1d2(output_dir : str = None) -> None:
     """
@@ -490,11 +480,6 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         lower = rescued_matrix.extent(str(i))[0]
         upper = rescued_matrix.extent(str(i))[1]
 
-
-
-        # TODO : to correct
-        
-        # binned_restriction_sites = np.floor_divide(restriction_map[i], bins)
         # Unrescued
         cis_coverage_unrescued, tot_coverage_unrescued = cooltools.coverage(
             unrescued_matrix, ignore_diags=False
@@ -545,14 +530,9 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         ax3.legend(loc="lower left", bbox_to_anchor=(1, 0.5))
         ax3.set_xticks([])
 
-
-        ax9 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
-        ax9.plot(list(gc_cov["GC"][lower:upper]), color="purple")
-        ax9.set_ylabel("GC Content")
-
-        # ax12 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
-        # ax12.plot(binned_restriction_sites, color="green")
-        # ax12.set_ylabel("Number of \n restriction sites")
+        ax4 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        ax4.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        ax4.set_ylabel("GC Content")
 
         ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
         ax5.plot(tot_coverage_unrescued[lower:upper], label="Before recovery")
@@ -562,14 +542,9 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))
         ax5.set_xticks([])
 
-
-        ax10 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
-        ax10.plot(list(gc_cov["GC"][lower:upper]), color="purple")
-        ax10.set_ylabel("GC Content")
-
-        # ax11 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
-        # ax11.plot(binned_restriction_sites, color="green")
-        # ax11.set_ylabel("Number of \n restriction sites")
+        ax6 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        ax6.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        ax6.set_ylabel("GC Content")
 
         plt.savefig(
             output_path / f"chr_{i}.pdf",
