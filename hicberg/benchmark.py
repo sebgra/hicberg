@@ -1,4 +1,6 @@
-from os import path
+import uuid
+from os import path, mkdir
+from shutil import rmtree
 from pathlib import Path
 from multiprocessing import Process
 
@@ -38,7 +40,8 @@ REVERSE_IN_FILE = "group1.2.in.bam"
 FORWARD_OUT_FILE = "group1.1.out.bam"
 REVERSE_OUT_FILE = "group1.2.out.bam"
 
-def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0, trans_chromosome : str = None, trans_position : int = None, strides : list[int] = [], mode : str = "full", auto : int = None, bins : int = None, circular :str = "", genome : str = None):
+# TODO : Complete docstring
+def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0, trans_chromosome : str = None, trans_position : int = None, strides : list[int] = [], mode : str = "full", auto : int = None, bins : int = None, circular :str = "", genome : str = None, force : bool = False):
     """
     AI is creating summary for benchmark
 
@@ -62,6 +65,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         [description], by default None
     bins : int, optional
         [description], by default None
+    force : bool, optional
+        [description], by default False
     """
 
     # logger.addHandler('hicberg_benchmark.log')
@@ -91,9 +96,10 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     if not restriction_map_path.exists():
         raise ValueError(f"Restriction map file {restriction_map_path} does not exist. PLease provide an existing restriction map file.")
     
+    
+    
     # Define file to store results
-
-    header = f"date\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tscore\n"
+    header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tscore\n"
 
     results = output_path / "benchmark.csv"
 
@@ -233,6 +239,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_path)
 
         #TODO implement tidying plot function
+        # Define unique id to keep track of the experiments
+        id_tag = str(uuid.uuid4())[:8]
 
         number_reads = 10
 
@@ -243,15 +251,33 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 f_out.write(header)
 
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
 
         else :
             with open(results, "a") as f_out:
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
+
+        # tidy plots
+
+        folder_path = Path(output_dir, id_tag)
+
+        if folder_path.exists() and force: 
+
+            rmtree(folder_path)
+
+        if not folder_path.exists() : 
+            
+            mkdir(folder_path)
                 
-                
+        files = [p for  p in output_path.glob("*")]
+
+        for file in files :
+
+            if Path(file).suffix == ".pdf" or Path(file).suffix == ".svg":
+
+                Path(file).rename(folder_path / Path(file).name)
     return
 

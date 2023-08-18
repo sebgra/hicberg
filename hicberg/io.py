@@ -1,4 +1,5 @@
 import logging
+import uuid
 from os import getcwd, mkdir
 from os.path import join
 from pathlib import Path
@@ -379,5 +380,4 @@ def tidy_folder(output_dir : str = None) -> None:
         elif Path(file).suffix == ".pdf" or Path(file).suffix == ".svg":
 
             Path(file).rename(output_path / "plots" / Path(file).name)
-
 

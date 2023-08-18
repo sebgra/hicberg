@@ -206,9 +206,10 @@ def tidy_cmd(output):
 @click.option("--strides", "-s", required = False, default = None, type = str, help = "Strides to apply from source genomic coordinates to define targets intervals.")
 @click.option("--auto", "-a", required = False, default = None, type = int, help = "Automatically select auto intervals for duplication.")
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
-def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, mode, output):
+@click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
+def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, mode, force, output):
 
-    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, bins = bins, auto = auto)
+    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto)
 
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
