@@ -183,17 +183,6 @@ def plot_cmd(genome, bins, output):
 def tidy_cmd(output):
     hio.tidy_folder(output_dir = output)
 
-# @click.command()
-# @click.option("-a", "--aaa", type = str, multiple = True)
-# @click.option("-b", "--bbb", type = str)
-# def test_cmd(aaa, bbb):
-#     print(f"aaa = {aaa}")
-#     print(f"Splitted aaa : {aaa.split(',')}")
-#     print(f"bbb = {bbb.split(',')}")
-#     c = [int(t) for t in bbb.split(",")]
-
-#     print(np.sum(c))
-    
 
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
@@ -225,5 +214,4 @@ cli.add_command(statistics_cmd, name="statistics")
 cli.add_command(rescue_cmd, name="rescue")
 cli.add_command(plot_cmd, name="plot")
 cli.add_command(tidy_cmd, name="tidy")
-# cli.add_command(test_cmd, name="test")
 cli.add_command(benchmark_cmd, name="benchmark")

@@ -42,8 +42,7 @@ REVERSE_OUT_FILE = "group1.2.out.bam"
 
 # TODO : Complete docstring
 def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0, trans_chromosome : str = None, trans_position : int = None, strides : list[int] = [], mode : str = "full", auto : int = None, rounds : int = 1, magnitude : float = 1.0, bins : int = None, circular :str = "", genome : str = None, force : bool = False):
-    """
-    AI is creating summary for benchmark
+    """AI is creating summary for benchmark
 
     Parameters
     ----------
@@ -63,12 +62,28 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         [description], by default "full"
     auto : int, optional
         [description], by default None
+    rounds : int, optional
+        [description], by default 1
+    magnitude : float, optional
+        [description], by default 1.0
     bins : int, optional
+        [description], by default None
+    circular : str, optional
+        [description], by default ""
+    genome : str, optional
         [description], by default None
     force : bool, optional
         [description], by default False
-    """
 
+    Raises
+    ------
+    ValueError
+        [description]
+    ValueError
+        [description]
+    ValueError
+        [description]
+    """    
     # logger.addHandler('hicberg_benchmark.log')
 
     args = locals()

@@ -242,8 +242,10 @@ The statistical laws are going to be saved as:
 
 - __*xs.npy*__ : dictionary containing the log binned genome as dictionary such as ```{chromosome: [log bins]}```
 - __*uncuts.npy*__, __*loops*__, __*weirds*__ : dictionary containing the distribution of uncuts, loops and weirds as dictionary such as ```{chromosome: [distribution]}```
+- __*pseudo_ps.pdf*__ : plot of the distribution of the pseudo ps, i.e. ps equivalent for trans-chromosomal cases, extracted from the reads of **group1**.
 - __*coverage*__: dictionary containing the coverage of the genome as dictionary such as ```{chromosome: [coverage]}```
 - __*d1d2.npy*__: np.array containing the d1d2 law as dictionary such as ```[distribution]```
+- __*density_map.npy*__ : dictionary containing the density map as dictionary such as ```{chromosome_pair: [density map]}```
 
 
 ### Reconstruction
@@ -282,6 +284,7 @@ The plots created are:
 - __*patterns_distribution_X.pdf*__ : plot of the distribution of the different patterns extracted from the reads of **group1**.
 - __*coverage_X.png*__ : plot of the genome coverage extracted from the reads of **group1**.
 - __*d1d2.pdf*__ : plot of the d1d2 law extracted from the reads of **group1**.
+- __*density_X-Y.pdf*__ : plot of the density map extracted from the reads of **group1**.
 - __*Couple_sizes_distribution.pdf*__ : plot of the distribution of the plausible couple sizes extracted from the reads of **group2**.
 - __*chr_X.pdf*__ : plot of the original map and reconstructed one for each chromosome.
 
@@ -336,7 +339,8 @@ After tidying the folders architecture will be the following:
 │   ├── Couple_sizes_distribution.pdf
 │   ├── coverage_X.pdf
 │   ├── patterns_distribution_X.pdf
-│   └── pseudo_ps.pdf
+│   ├── pseudo_ps.pdf
+│   └── density_X-Y.pdf
 └── statistics
     ├── chromosome_sizes.npy
     ├── coverage.npy
@@ -469,6 +473,15 @@ All the steps described here are handled automatically when running the ```hicbe
 
 * npy files: This format is used to store dictionaries containing information about genomic coordinates, binning or statistical laws. Dictionaries are stores with * chromosome * as key and * arrays* as values. Such file can be handled using `numpy` Python library. 
 
+  * *chromosome_sizes.npy* : This file is used to store the size of each chromosome. Structure is the following : ```{chromosome: size}```
+  * *xs.npy* : This file is used to store the log binned genome. Structure is the following : ```{chromosome: [log bins]}``` with log bins a list of integers.
+  * *uncuts.npy* : This file is used to store the distribution of uncuts. Structure is the following : ```{chromosome: [distribution]}``` with distribution a list of integers.
+  * *loops.npy* : This file is used to store the distribution of loops. Structure is the following : ```{chromosome: [distribution]}``` with distribution a list of integers.
+  * *weirds.npy* : This file is used to store the distribution of weirds. Structure is the following : ```{chromosome: [distribution]}``` with distribution a list of integers.
+  * *pseudo_ps.npy* : This file is used to store the distribution of pseudo ps. Structure is the following : ```{(chrom1, chrom2): [map]}``` with (chrom1, chrom2) a tuple of chromosomes where chom1 is different than chrom2 and map a float value.
+  * *coverage.npy* : This file is used to store the coverage of the genome. Structure is the following : ```{chromosome: [coverage]}``` with coverage a list of integers.
+  * *d1d2.npy* : This file is used to store the d1d2 law. Structure is the following : ```[distribution]``` with distribution a list of integers.
+  * *density_map.npy* : This file is used to store the density map. Structure is the following : ```{(chrom1, chrom2): [density map]}``` with (chrom1, chrom2) a tuple of chromosomes density map a 2D numpy array.
 
 * bt2l files: Thi format is used to store index of genomes performer using Bowtie2. 
 

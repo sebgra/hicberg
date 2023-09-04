@@ -1098,6 +1098,7 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         return cover
     
+
     elif mode == "density_only":
 
         density = get_density(read_forward, read_reverse, density_map = density_map)
