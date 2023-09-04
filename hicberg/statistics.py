@@ -43,7 +43,7 @@ RESTRICTION_MAP = "restriction_map.npy"
 DENSITY_MAP = "density_map.npy"
 
 
-def get_density_map(matrix : str = "unrescued_map.cool", rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
+def generate_density_map(matrix : str = "unrescued_map.cool", rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 

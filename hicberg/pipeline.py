@@ -109,7 +109,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_folder))
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
-        p5 = Process(target = hst.get_density_map, kwargs = dict(matrix = UNRESCUED_MATRIX, rounds = rounds, magnitude = magnitude, output_dir = output_folder))
+        p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = UNRESCUED_MATRIX, rounds = rounds, magnitude = magnitude, output_dir = output_folder))
 
         # Launch processes
         for process in [p1, p2, p3, p4, p5]:

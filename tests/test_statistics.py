@@ -42,6 +42,9 @@ UNCUTS = "uncuts.npy"
 WEIRDS = "weirds.npy"
 LOOPS = "loops.npy"
 TRANS_PS = "trans_ps.npy"
+UNRESCUED_MAP = "unrescued_map.cool"
+DENSITY_MAP = "density_map.npy"
+
 
 DICT_FIRST_KEY = "chr10"
 DICT_FIRST_CHR_LAST_POS = 745751
@@ -391,7 +394,7 @@ def test_get_d1d2_distance():
     pass
 
 
-def test_compute_propentsity(test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2):
+def test_compute_propensity(test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2, test_generate_density_map):
     """
     Test if the compute_propensity function returns the right propensity regarding a pair of reads.
     """
@@ -419,9 +422,10 @@ def test_compute_propentsity(test_get_restriction_map_mono, test_log_bin_genome,
     trans_ps = hio.load_dictionary(test_generate_trans_ps)
     coverage = hio.load_dictionary(test_generate_coverages)
     d1d2 = hio.load_dictionary(test_generate_d1d2)
+    density_map = hio.load_dictionary(test_generate_density_map)
 
     restriction_map = test_get_restriction_map_mono
-    propensity = hst.compute_propensity(read_forward = read_forward, read_reverse = read_reverse, restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
+    propensity = hst.compute_propensity(read_forward = read_forward, read_reverse = read_reverse, restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, density_map = density_map, mode = MODE)
 
     assert propensity >= 0
 
@@ -431,7 +435,7 @@ def test_decompose_propentsity():
 def test_check_propensity():
     pass
 
-def test_draw_read_couple(test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2):
+def test_draw_read_couple(test_get_restriction_map_mono, test_log_bin_genome, test_get_patterns, test_generate_trans_ps, test_generate_coverages, test_generate_d1d2, test_generate_density_map):
     """
     Test if the draw_read_couple function returns the right read couple index.
     """
@@ -467,6 +471,9 @@ def test_draw_read_couple(test_get_restriction_map_mono, test_log_bin_genome, te
     trans_ps = hio.load_dictionary(test_generate_trans_ps)
     coverage = hio.load_dictionary(test_generate_coverages)
     d1d2 = hio.load_dictionary(test_generate_d1d2)
+    density_map = hio.load_dictionary(test_generate_density_map)
+
+    
 
     restriction_map = test_get_restriction_map_mono
 
@@ -481,7 +488,7 @@ def test_draw_read_couple(test_get_restriction_map_mono, test_log_bin_genome, te
     
     for couple in all_couples:
         
-        propensity =  hst.compute_propensity(read_forward = couple[0], read_reverse = couple[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, mode = MODE)
+        propensity =  hst.compute_propensity(read_forward = couple[0], read_reverse = couple[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = BINS, d1d2 = d1d2, density_map = density_map, mode = MODE)
         propensities.append(propensity)
 
     read_couple_index = hst.draw_read_couple(propensities = propensities)
@@ -520,3 +527,31 @@ def test_reattribute_reads(temporary_folder, test_classify_reads, test_get_restr
     # yield temp_dir_path
 
     assert True
+
+@pytest.fixture(scope = "module")
+def test_generate_density_map(temporary_folder, test_get_bin_table, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads, test_build_pairs):
+    """
+    Test if the density map is correctly generated.
+    """
+    temp_dir_path = Path(temporary_folder)
+    hio.build_matrix(output_dir = temp_dir_path, mode = False)
+
+    unrescued_map_path = temp_dir_path / UNRESCUED_MAP
+    hst.generate_density_map(matrix = unrescued_map_path, output_dir = temp_dir_path)
+    density_map_path = temp_dir_path / DENSITY_MAP
+    yield density_map_path
+    assert density_map_path.is_file()
+
+
+# @pytest.fixture(scope = "module")
+# def test_generate_coverages(temporary_folder, test_classify_reads):
+#     """
+#     Test if the coverages are correctly generated.
+#     """
+#     temp_dir_path = Path(temporary_folder)
+#     hst.generate_coverages(genome = GENOME, forward_bam_file = test_classify_reads[0], reverse_bam_file = test_classify_reads[1], bins = BINS, output_dir = temp_dir_path)
+#     coverage_dictionary_path = temp_dir_path / COVERAGE_DICO
+
+#     yield coverage_dictionary_path
+    
+#     assert coverage_dictionary_path.is_file()
