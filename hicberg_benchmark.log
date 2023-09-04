@@ -5102,3 +5102,48 @@
 2023-09-04 --  17:20:55 :: INFO :: Cooler matrix successfully created in /tmp/tmpzkigs0hm
 2023-09-04 --  17:20:59 :: INFO :: Saved density map at : /tmp/tmpzkigs0hm
 2023-09-04 --  17:21:18 :: INFO :: Predictions written in /tmp/tmpzkigs0hm
+2023-09-04 --  17:23:44 :: INFO :: bowtie2-build -q -f  --large-index data_test/SC288_with_micron.fa /tmp/tmpr2c631nt/SC288_with_micron
+2023-09-04 --  17:23:52 :: INFO :: Index built at /tmp/tmpr2c631nt/SC288_with_micron
+2023-09-04 --  17:23:52 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpr2c631nt/SC288_with_micron -S /tmp/tmpr2c631nt/1.sam data_test/reverse_reads_test.fq.gz
+2023-09-04 --  17:23:52 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpr2c631nt/SC288_with_micron -S /tmp/tmpr2c631nt/2.sam data_test/forward_reads_test.fq.gz
+2023-09-04 --  17:24:01 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-09-04 --  17:24:01 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-09-04 --  17:24:01 :: INFO :: Alignement saved at /tmp/tmpr2c631nt
+2023-09-04 --  17:24:01 :: INFO :: samtools view -S -b /tmp/tmpr2c631nt/1.sam -o /tmp/tmpr2c631nt/1.bam --threads 1
+2023-09-04 --  17:24:01 :: INFO :: samtools view -S -b /tmp/tmpr2c631nt/2.sam -o /tmp/tmpr2c631nt/2.bam --threads 1
+2023-09-04 --  17:24:01 :: INFO :: Compressed alignemnet alignement done at /tmp/tmpr2c631nt
+2023-09-04 --  17:24:01 :: INFO :: samtools sort -n /tmp/tmpr2c631nt/1.bam -o /tmp/tmpr2c631nt/1.sorted.bam --threads 1
+2023-09-04 --  17:24:01 :: INFO :: samtools sort -n /tmp/tmpr2c631nt/2.bam -o /tmp/tmpr2c631nt/2.sorted.bam --threads 1
+2023-09-04 --  17:24:03 :: INFO :: Sorted alignement done at /tmp/tmpr2c631nt
+2023-09-04 --  17:24:03 :: INFO :: Chromosome sizes have been saved in /tmp/tmpr2c631nt/chromosome_sizes.npy
+2023-09-04 --  17:24:05 :: INFO :: Files for the different groups have been saved in /tmp/tmpr2c631nt
+2023-09-04 --  17:24:05 :: INFO :: Number of unmapped reads in forward file : 19576
+2023-09-04 --  17:24:05 :: INFO :: Number of unmapped reads in reverse file : 19286
+2023-09-04 --  17:24:05 :: INFO :: Number of uniquely mapped reads in forward file : 74819
+2023-09-04 --  17:24:05 :: INFO :: Number of uniquely mapped reads in reverse file : 74819
+2023-09-04 --  17:24:05 :: INFO :: Number of multi mapped reads in forward file : 125539
+2023-09-04 --  17:24:05 :: INFO :: Number of multi mapped reads in reverse file : 114340
+2023-09-04 --  17:24:05 :: INFO :: Log binning of genome data_test/SC288_with_micron.fa saved in /tmp/tmpr2c631nt/xs.npy.
+2023-09-04 --  17:24:05 :: INFO :: Saved restriction map at : /home/sardine/Bureau/codes/hicberg
+2023-09-04 --  17:26:15 :: INFO :: Saved restriction map at : /tmp/tmpr2c631nt/dist.frag.npy
+2023-09-04 --  17:26:16 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /tmp/tmpr2c631nt
+2023-09-04 --  17:26:16 :: INFO :: Pairs file successfully created in /tmp/tmpr2c631nt
+2023-09-04 --  17:26:20 :: INFO :: Cooler matrix successfully created in /tmp/tmpr2c631nt
+2023-09-04 --  17:26:22 :: INFO :: Trans P(s) saved in /tmp/tmpr2c631nt
+2023-09-04 --  17:26:22 :: INFO :: Coverage dictionary saved in /tmp/tmpr2c631nt
+2023-09-04 --  17:26:23 :: INFO :: Saved d1d2 law at : /tmp/tmpr2c631nt/d1d2.npy
+2023-09-04 --  17:26:27 :: INFO :: Cooler matrix successfully created in /tmp/tmpr2c631nt
+2023-09-04 --  17:26:31 :: INFO :: Saved density map at : /tmp/tmpr2c631nt
+2023-09-04 --  17:26:49 :: INFO :: Predictions written in /tmp/tmpr2c631nt

@@ -561,7 +561,6 @@ def test_get_density(temporary_folder, test_generate_density_map):
     read_reverse.cigarstring = "100M"
     read_reverse.flag = 0
 
-    temp_dir_path = Path(temporary_folder)
     density_map = hio.load_dictionary(test_generate_density_map)
     density = hst.get_density(read_forward = read_forward, read_reverse = read_reverse, density_map = density_map, bin_size = BINS)
 

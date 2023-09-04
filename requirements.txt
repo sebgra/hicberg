@@ -5,7 +5,7 @@ click
 cooler
 cooltools
 funcy
-hicstuff
+#hicstuff
 matplotlib
 numpy
 pandas

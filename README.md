@@ -56,7 +56,19 @@ Install HiC-BERG locally by using
 
 ```
 
-### Conda
+### Conda / Mamba
+
+We highly recommand installing HiC-BERG through [Mamba]()
+
+```bash
+
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+bash Mambaforge-$(uname)-$(uname -m).sh
+mamba create -n hicberg python=3.11.4
+mamba activate hicberg
+mamba install -c bioconda samtools
+
+```
 
 TO BE COMPLETED
 
