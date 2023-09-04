@@ -542,16 +542,27 @@ def test_generate_density_map(temporary_folder, test_get_bin_table, test_hic_bui
     yield density_map_path
     assert density_map_path.is_file()
 
+def test_get_density(temporary_folder, test_generate_density_map):
+    """
+    Test if the get_d1d2 function returns the right d1d2 regarding a pair of reads.
+    """
 
-# @pytest.fixture(scope = "module")
-# def test_generate_coverages(temporary_folder, test_classify_reads):
-#     """
-#     Test if the coverages are correctly generated.
-#     """
-#     temp_dir_path = Path(temporary_folder)
-#     hst.generate_coverages(genome = GENOME, forward_bam_file = test_classify_reads[0], reverse_bam_file = test_classify_reads[1], bins = BINS, output_dir = temp_dir_path)
-#     coverage_dictionary_path = temp_dir_path / COVERAGE_DICO
+    read_forward = pysam.AlignedSegment(header = HEADER)
+    read_forward.query_name = "TEST"
+    read_forward.reference_name = DICT_FIRST_KEY
+    read_forward.reference_start = 100
+    read_forward.cigarstring = "100M"
+    read_forward.flag = 16
 
-#     yield coverage_dictionary_path
-    
-#     assert coverage_dictionary_path.is_file()
+    read_reverse = pysam.AlignedSegment(header = HEADER)
+    read_reverse.query_name = "TEST"
+    read_reverse.reference_name = DICT_SECOND_KEY
+    read_reverse.reference_start = 10000
+    read_reverse.cigarstring = "100M"
+    read_reverse.flag = 0
+
+    temp_dir_path = Path(temporary_folder)
+    density_map = hio.load_dictionary(test_generate_density_map)
+    density = hst.get_density(read_forward = read_forward, read_reverse = read_reverse, density_map = density_map, bin_size = BINS)
+
+    assert density >= 0.0
