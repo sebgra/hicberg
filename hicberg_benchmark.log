@@ -4470,3 +4470,28 @@
 2023-08-18 --  17:12:27 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
 2023-08-18 --  17:14:46 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
 2023-08-18 --  17:14:48 :: INFO :: Pearson score :    0.9222 in mode density_only
+2023-09-04 --  11:21:11 :: INFO :: output_dir: /home/sardine/Bureau/test_bench
+2023-09-04 --  11:21:11 :: INFO :: chromosome: chr7
+2023-09-04 --  11:21:11 :: INFO :: position: 168000
+2023-09-04 --  11:21:11 :: INFO :: trans_chromosome: chr5
+2023-09-04 --  11:21:11 :: INFO :: trans_position: 50000
+2023-09-04 --  11:21:11 :: INFO :: strides: 0,50000,100000
+2023-09-04 --  11:21:11 :: INFO :: mode: density_only
+2023-09-04 --  11:21:11 :: INFO :: auto: None
+2023-09-04 --  11:21:11 :: INFO :: rounds: 10
+2023-09-04 --  11:21:11 :: INFO :: magnitude: 0.8
+2023-09-04 --  11:21:11 :: INFO :: bins: 2
+2023-09-04 --  11:21:11 :: INFO :: circular: 
+2023-09-04 --  11:21:11 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-04 --  11:21:11 :: INFO :: force: False
+2023-09-04 --  11:21:11 :: INFO :: Picking reads
+2023-09-04 --  11:28:35 :: INFO :: intervals_dictionary : {'chr7': [(166000, 172000), (216000, 222000), (266000, 272000)], 'chr5': [(50000, 52000)]}
+2023-09-04 --  11:30:07 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-09-04 --  11:32:21 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-09-04 --  11:32:30 :: INFO :: Saved density map at : /home/sardine/Bureau/test_bench
+2023-09-04 --  11:32:30 :: INFO :: Reattributing reads
+2023-09-04 --  11:32:37 :: INFO :: Predictions written in /home/sardine/Bureau/test_bench
+2023-09-04 --  11:32:38 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/test_bench
+2023-09-04 --  11:34:10 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/test_bench
+2023-09-04 --  11:36:22 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/test_bench
+2023-09-04 --  11:36:24 :: INFO :: Pearson score :    0.9606 in mode density_only
