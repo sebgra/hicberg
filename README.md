@@ -80,7 +80,7 @@ WEBSITE TO BE ADDED
 
 hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
 [--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] 
-[--bins=2000] [--circular=""] [--mapq=35] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
+[--bins=2000] [--circular=""] [--mapq=35] [--rounds=1] [--magnitude=1.0] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
 
 ```
 
@@ -412,6 +412,7 @@ The benchmark can be performed considering several modes. The modes are defined 
 - ps_only
 - cover_only
 - d1d2_only
+- density_only
 - no_ps
 - no_cover
 - no_d1d2
@@ -424,7 +425,7 @@ The evaluation can be run using the following command :
 
 
 ```bash
-hicberg benchmark  --output=DIR [--chromosome] [--position] [--trans-chromosome] [--trans-position] [--stride] [--bins] [--auto] [--modes]
+hicberg benchmark  --output=DIR [--chromosome] [--position] [--trans-chromosome] [--trans-position] [--stride] [--bins] [--auto] [--modes] 
 ```
 
 Considering a benchmark with 4 artificially duplicated sequences set at __chr1:100000-102000 (source)__, __chr1:200000-202000 (target 1)__ __chr4:50000-52000 (target 2)__ and __chr7:300000-302000 (target 3)__, with 2000bp as bin size and considering __full and ps_only modes__ to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
