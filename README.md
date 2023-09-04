@@ -58,7 +58,7 @@ Install HiC-BERG locally by using
 
 ### Conda / Mamba
 
-We highly recommand installing HiC-BERG through [Mamba]()
+We highly recommend installing HiC-BERG through [Mamba](https://mamba.readthedocs.io/en/latest/mamba-installation.html#mamba-install).
 
 ```bash
 
@@ -432,6 +432,7 @@ The benchmark can be performed considering several modes. The modes are defined 
 - no_ps
 - no_cover
 - no_d1d2
+- no_density
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
 

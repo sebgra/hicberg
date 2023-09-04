@@ -1195,6 +1195,63 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             d1d2 = 1
 
         return cover * d1d2
+    
+    elif mode == "no_density":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+        )
+
+        except:
+
+            d1d2 = 1
+
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
+        if cover <= 0:
+            cover = 1
+
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+
+        )
+
+        except:
+
+            d1d2 = 1
+
+        return ps * cover * d1d2
 
     elif mode == "random":
 
