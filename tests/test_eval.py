@@ -42,6 +42,8 @@ INTERVALS_DICT = {'chr2': [(0, 1000), (1000, 2000)], 'chr4': [(0, 1000), (1000, 
 
 DRAWN_INTERVALS =   {'chr2': [(756000, 758000)], 'chr3': [(54000, 56000)]}
 
+BIN_INDEXES = [569, 1104, 1705, 1804, 1920, 4360, 4797, 5110, 5806, 5935]
+
 
 
 def test_get_interval_index(test_get_chromosomes_sizes):
@@ -105,7 +107,7 @@ def test_get_boundaries(test_get_chromosomes_sizes):
 
     assert boundaries == BOUNDARIES
 
-def test_emptyness(test_get_chromosomes_sizes):
+def test_check_emptyness(test_get_chromosomes_sizes):
     """
     Test if emptiness checking before considering genomic intervals is correctly computed.
     """
@@ -115,6 +117,18 @@ def test_emptyness(test_get_chromosomes_sizes):
     emptiness = hev.check_emptiness(intervals = dictionary_of_intervals, matrix = clr)
 
     assert not emptiness
+
+def test_get_bin_indexes(test_get_chromosomes_sizes):
+    """
+    Test if bin indexes are correctly computed.
+    """
+    clr = cooler.Cooler(MATRIX)
+    dictionary_of_intervals = hev.draw_intervals(chrom_sizes_dict  = test_get_chromosomes_sizes, nb_intervals = NB_INTERVALS_EMPTINESS, bins = BINS)
+    bin_indexes = hev.get_bin_indexes(dictionary = dictionary_of_intervals, matrix = clr)
+
+    print(f"Bin indexes: {bin_indexes}")
+
+    assert bin_indexes == BIN_INDEXES
 
 
 

@@ -4,6 +4,7 @@ import numpy as np
 import pysam
 
 import hicberg.utils as hut
+import hicberg.io as hio
 
 from .conftest import temporary_folder
 
@@ -22,6 +23,9 @@ REVERSE_UNIQUE_BAM = "group1.2.bam"
 FORWARD_MULTI_BAM = "group2.1.bam"
 REVERSE_MULTI_BAM = "group2.2.bam"
 
+UNRESCUED_MAP = "data_test/unrescued_map.cool"
+
+
 MIN_READ_MAPQ = 30
 DICT_FIRST_KEY = "chr10"
 DICT_FIRST_CHR_LAST_POS = 745751
@@ -34,18 +38,6 @@ HEADER = pysam.AlignmentHeader().from_dict({
                 {"SN": DICT_FIRST_KEY, "LN": DICT_FIRST_CHR_LAST_POS},
             ],
         })
-
-# DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
-# DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
-# DEFAULT_SPARSE_MATRIX_FILE_NAME = "abs_fragments_contacts_weighted.txt"
-# DEFAULT_KB_BINNING = 1
-# DEFAULT_THRESHOLD_SIZE = 0
-# # Most used enzyme for eukaryotes
-# DEFAULT_ENZYME = "DpnII"
-# # If using evenly-sized chunks instead of restriction
-# # enzymes, they shouldn't be too short
-# DEFAULT_MIN_CHUNK_SIZE = 50
-
 BINS = 2000
 MODE = "full"
 
@@ -441,13 +433,15 @@ def test_max_consecutive_nans():
 
     assert max_consecutive_nans == 2
 
-# def test_mad_smoothing():
-#     """
-#     Test if the function correctly smooth a vector using MAD smoothing.
-#     """
-
-#     # TODO :  to implement
-#     assert True
+def test_mad_smoothing(temporary_folder):
+    """
+    Test if the function correctly smooth a vector using MAD smoothing.
+    """
+    clr = hio.load_cooler(Path(UNRESCUED_MAP))
+    matrix = clr.matrix(balance = False).fetch(DICT_FIRST_KEY)
+    smoothed_matrix = hut.mad_smoothing(matrix.flatten())
+    
+    assert np.sum(smoothed_matrix) != 0
 
 
 def test_get_chunks(test_chunk_bam):

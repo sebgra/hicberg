@@ -24,8 +24,6 @@ import cooler
 import hicberg.io as hio
 import hicberg.utils as hut
 
-# TODO : Implement associated test
-
 def get_interval_index(chromosome : str = "", value : int = None, intervals_dict : dict[str, list[(int, int)]] = None, chrom_sizes_dict : dict[str, int] = None) -> dict[str, list[(int, int)]]:
     """
 
@@ -504,8 +502,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
     return dictionary_of_intervals
 
-    
-# TODO : Implement associated test
 
 def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", nb_intervals : int = 1) -> dict[str, float]:
     """
@@ -542,7 +538,6 @@ def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", n
     return dict(zip(unique, counts))
 
 
-# TODO : Implement associated test
 def get_chromosomes_intervals(bins : int = 2000, chrom_sizes_dict : str = "chromosome_sizes.npy", chromosome : str = "") -> list[(int, int)]:
     """
     Get all possible intervals from a given chromosome considering a chromosome sizes dictionary.

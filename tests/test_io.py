@@ -21,7 +21,6 @@ PREDICTED_BAM_REVERSE = "group2.2.rescued.bam"
 DICT_FIRST_KEY = "chr10"
 DICT_FIRST_SIZE = 745751
 
-#TODO : Improve with force mode
 def test_create_folder(temporary_folder):
     """
     Test if the function creates a folder in the specified path.
