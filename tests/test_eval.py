@@ -126,7 +126,6 @@ def test_get_bin_indexes(test_get_chromosomes_sizes):
     dictionary_of_intervals = hev.draw_intervals(chrom_sizes_dict  = test_get_chromosomes_sizes, nb_intervals = NB_INTERVALS_EMPTINESS, bins = BINS)
     bin_indexes = hev.get_bin_indexes(dictionary = dictionary_of_intervals, matrix = clr)
 
-    print(f"Bin indexes: {bin_indexes}")
 
     assert bin_indexes == BIN_INDEXES
 

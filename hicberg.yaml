@@ -9,7 +9,7 @@ dependencies:
   - pip
   - samtools
   - pysam
-  - cooler=0.9.2
+  
   - cooltools
   - matplotlib
   - numpy
@@ -24,3 +24,4 @@ dependencies:
 
   - pip:
     - Cython
+    - cooler==0.9.2
