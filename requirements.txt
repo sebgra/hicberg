@@ -12,5 +12,5 @@ pandas
 pysam
 # samtools
 scipy
-sklearn
+scikit-learn
 statsmodels

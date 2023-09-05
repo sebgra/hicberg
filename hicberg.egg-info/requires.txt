@@ -10,5 +10,5 @@ numpy
 pandas
 pysam
 scipy
-sklearn
+scikit-learn
 statsmodels

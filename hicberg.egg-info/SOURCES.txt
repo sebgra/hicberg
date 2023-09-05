@@ -1,5 +1,5 @@
 LICENSE
-README.rst
+README.md
 setup.py
 hicberg/__init__.py
 hicberg/__main__.py

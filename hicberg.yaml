@@ -1,0 +1,26 @@
+name: hicberg_test
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python==3.10
+  - requests
+  - pip
+  - samtools
+  - pysam
+  - cooler
+  - cooltools
+  - matplotlib
+  - numpy
+  - scipy
+  - pandas
+  - click
+  - scikit-learn
+  - bioframe
+  - biopython
+  - statsmodels
+  - bowtie2
+
+  - pip:
+    - Cython

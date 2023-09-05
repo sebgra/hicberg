@@ -22,8 +22,8 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 Create environment by using following command : 
 
-```
-conda create -f hicberg_env.yaml
+```bash
+mamba env create -n [ENV_NAME] -f hicberg.yaml;
 ```
 
 
@@ -43,7 +43,8 @@ mamba install samtools -c bioconda;
 Install my-project with pip
 
 ```bash
-  pip install -e .
+  mamba activate [ENV_NAME];
+  pip install -e . ;
 ```
 
 ## pip

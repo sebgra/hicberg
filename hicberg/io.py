@@ -268,7 +268,7 @@ def load_cooler(matrix : str = None) -> cooler.Cooler:
 
     return cooler.Cooler(matrix.as_posix())
 
-def merge_predictions(output_dir : str = None, clean : bool = True) -> None:
+def merge_predictions(output_dir : str = None, clean : bool = True, cpus : int = 1) -> None:
     """
     Merge predictions of all chunks of ambiguous reads predictions.
 
@@ -278,6 +278,8 @@ def merge_predictions(output_dir : str = None, clean : bool = True) -> None:
         Path to the folder where to save the fused alignment file, by default None
     clean : bool, optional
         Set weither or not to remove temporary chunks, by default True
+    cpus : int, optional
+        Number of cpus to use for the merging, by default 1
     """
     if output_dir is None:
         output_path = Path(getcwd())
@@ -289,35 +291,48 @@ def merge_predictions(output_dir : str = None, clean : bool = True) -> None:
     forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
     reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
 
-    template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
+    # template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
 
-    merged_forward_alignment_path = output_path / "group2.1.rescued.bam"
-    merged_reverse_alignment_path = output_path / "group2.2.rescued.bam"
+    # merged_forward_alignment_path = output_path / "group2.1.rescued.bam"
+    # merged_reverse_alignment_path = output_path / "group2.2.rescued.bam"
 
-    merged_forward_alignment_file_handler = ps.AlignmentFile(merged_forward_alignment_path, "wb", template=template_file_for)
-    merged_reverse_alignment_file_handler = ps.AlignmentFile(merged_reverse_alignment_path, "wb", template=template_file_rev)
+    # merged_forward_alignment_file_handler = ps.AlignmentFile(merged_forward_alignment_path, "wb", template=template_file_for)
+    # merged_reverse_alignment_file_handler = ps.AlignmentFile(merged_reverse_alignment_path, "wb", template=template_file_rev)
 
 
-    for for_chunk in forward_alignment_chunk_files:
+    # for for_chunk in forward_alignment_chunk_files:
 
-        alignement_file = ps.AlignmentFile(for_chunk, "rb")
-        for read in alignement_file:
-            merged_forward_alignment_file_handler.write(read)
+    #     alignement_file = ps.AlignmentFile(for_chunk, "rb")
+    #     for read in alignement_file:
+    #         merged_forward_alignment_file_handler.write(read)
 
-        alignement_file.close()
+    #     alignement_file.close()
 
-    for rev_chunk in reverse_alignment_chunk_files:
+    # for rev_chunk in reverse_alignment_chunk_files:
 
-        alignement_file = ps.AlignmentFile(rev_chunk, "rb")
-        for read in alignement_file:
-            merged_reverse_alignment_file_handler.write(read)
+    #     alignement_file = ps.AlignmentFile(rev_chunk, "rb")
+    #     for read in alignement_file:
+    #         merged_reverse_alignment_file_handler.write(read)
 
-        alignement_file.close()
+    #     alignement_file.close()
 
-    template_file_for.close()
-    template_file_rev.close()
-    merged_forward_alignment_file_handler.close()
-    merged_reverse_alignment_file_handler.close()
+    # template_file_for.close()
+    # template_file_rev.close()
+    # merged_forward_alignment_file_handler.close()
+    # merged_reverse_alignment_file_handler.close()
+
+    # TODO : implement fusion through samtools merge
+
+    forward_merge_cmd = f"samtools merge -f --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
+    reverse_merge_cmd = f"samtools merge -f --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
+
+    logger.info(f"Launching forward merge with command : {forward_merge_cmd}")
+    # Launch merge
+    sp.check_call(forward_merge_cmd, shell=True)
+
+    logger.info(f"Launching reverse merge with command : {reverse_merge_cmd}")
+    # Launch merge
+    sp.check_call(reverse_merge_cmd, shell=True)
 
     if clean:
 
