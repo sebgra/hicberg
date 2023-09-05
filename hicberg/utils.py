@@ -28,21 +28,7 @@ import hicberg.io as hio
 import hicberg.statistics as hst
 from hicberg import logger
 
-
-
-# DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
-# DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
-# DEFAULT_SPARSE_MATRIX_FILE_NAME = "abs_fragments_contacts_weighted.txt"
-
-# DEFAULT_KB_BINNING = 1
-# DEFAULT_THRESHOLD_SIZE = 0
-# # Most used enzyme for eukaryotes
-# DEFAULT_ENZYME = "DpnII"
-# # If using evenly-sized chunks instead of restriction
-# # enzymes, they shouldn't be too short
-# DEFAULT_MIN_CHUNK_SIZE = 50
-
-
+# TODO : replace 10 by a variable indicating the strengh of the diffusion
 def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:
     """
     Function for matrix diffusion to get local contact density
@@ -70,38 +56,38 @@ def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float
         for _ in range(rounds):
 
             #South East
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
 
             # North West
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
 
             # North East
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
 
             # South West
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
 
     elif mode == "inter":
         for _ in range(rounds):
 
             # East
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
 
             # West
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
             
             #South
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
             
             #North
-            shift = np.random.randint(5)
+            shift = np.random.randint(10)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
 
     return arr
