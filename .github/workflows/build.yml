@@ -1,0 +1,38 @@
+name: build
+
+on: [push]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    
+    - name: Create micromamba env. for package
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        generate-run-shell: true
+        environment-file: hicberg.yaml
+
+    - name: Install package
+      run: |
+        pip install .
+      shell: micromamba-shell {0}
+
+    - name: Check installed package
+      run: |
+        hicberg --version
+      shell: micromamba-shell {0}
+
+    - name: Lint and test
+      run: |
+        pip install pytest-pylint pytest pytest-cov pylint codecov mappy
+        pytest --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
+        pytest --cov=hicberg
+        codecov
+      shell: micromamba-shell {0}
