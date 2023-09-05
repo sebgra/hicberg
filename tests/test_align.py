@@ -1,7 +1,5 @@
 import pytest
-import os
 from pathlib import Path
-import tempfile
 import hicberg.align as hal
 
 from .conftest import temporary_folder

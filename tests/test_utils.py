@@ -1,34 +1,9 @@
 import pytest
-import tempfile
-import re
-import glob
-import subprocess as sp
-from os.path import join
-from pathlib import Path, PurePath
-import multiprocessing
-from functools import partial
-import itertools
-
+from pathlib import Path
 import numpy as np
-from numpy.random import choice
-import pandas as pd
-import scipy.stats as stats
-from scipy.stats import median_abs_deviation
-
-import hicstuff.io as hico
-from hicstuff.log import logger
-import hicstuff.digest as hd
-
 import pysam
-from Bio import SeqIO, SeqUtils
-from Bio.Seq import Seq
-from Bio.Restriction import RestrictionBatch, Analysis
-
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
 import hicberg.utils as hut
-import hicberg.io as hio
 
 from .conftest import temporary_folder
 
@@ -47,8 +22,6 @@ REVERSE_UNIQUE_BAM = "group1.2.bam"
 FORWARD_MULTI_BAM = "group2.1.bam"
 REVERSE_MULTI_BAM = "group2.2.bam"
 
-
-
 MIN_READ_MAPQ = 30
 DICT_FIRST_KEY = "chr10"
 DICT_FIRST_CHR_LAST_POS = 745751
@@ -62,32 +35,20 @@ HEADER = pysam.AlignmentHeader().from_dict({
             ],
         })
 
-
-DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
-DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
-DEFAULT_SPARSE_MATRIX_FILE_NAME = "abs_fragments_contacts_weighted.txt"
-DEFAULT_KB_BINNING = 1
-DEFAULT_THRESHOLD_SIZE = 0
-# Most used enzyme for eukaryotes
-DEFAULT_ENZYME = "DpnII"
-# If using evenly-sized chunks instead of restriction
-# enzymes, they shouldn't be too short
-DEFAULT_MIN_CHUNK_SIZE = 50
+# DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
+# DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
+# DEFAULT_SPARSE_MATRIX_FILE_NAME = "abs_fragments_contacts_weighted.txt"
+# DEFAULT_KB_BINNING = 1
+# DEFAULT_THRESHOLD_SIZE = 0
+# # Most used enzyme for eukaryotes
+# DEFAULT_ENZYME = "DpnII"
+# # If using evenly-sized chunks instead of restriction
+# # enzymes, they shouldn't be too short
+# DEFAULT_MIN_CHUNK_SIZE = 50
 
 BINS = 2000
 MODE = "full"
 
-
-
-
-def test_get_num_lines_alignment_file():
-    pass
-
-def test_get_restriction_table():
-    pass
-
-def test_write_frag_info():
-    pass
 
 @pytest.fixture(scope = "session")
 def test_get_chromosomes_sizes(temporary_folder):
@@ -211,9 +172,6 @@ def test_classify_reads(temporary_folder, test_hic_sort, test_get_chromosomes_si
     assert reverse_unique_path.is_file()
     assert forward_multi_path.is_file()
     assert reverse_multi_path.is_file()
-
-def test_classify_reads_multi():
-    pass
 
 def test_is_intra_chromosome():
     
@@ -427,14 +385,10 @@ def test_get_cis_distance():
 
     assert distance == 400
 
-def test_get_event_stats():
-    pass
-
 def test_bam_iterator(bam_file = FORWARD_SORTED_BAM):
     """
     Test if the bam_iterator function is correctly built by returning the first iteration.
     """
-
 
     bam_path = Path(bam_file)
     bam_iterator = hut.bam_iterator(bam_path)
@@ -450,7 +404,6 @@ def test_block_counter(test_classify_reads):
     Test if the block counter function is correctly counting the number of blocks in a bam file.
     """
 
-
     forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
 
     nb_forward_block, nb_reverse_block = hut.block_counter(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file)
@@ -465,33 +418,17 @@ def test_chunk_bam(temporary_folder, test_classify_reads):
 
     temp_dir_path = Path(temporary_folder)
     forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
-
-
     hut.chunk_bam(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file, nb_chunks = 12, output_dir = temp_dir_path)
 
     chunks_path = temp_dir_path / 'chunks'
     
     is_full =  any(chunks_path.iterdir())
 
-
     yield chunks_path
 
     assert is_full
 
-def test_inspect_reads():
-    pass
 
-def test_get_bin_rsites():
-    pass
-
-def test_get_full_bin_rsites():
-    pass
-
-def test_subsample_restriction_map():
-    pass
-
-def test_fill_zeros_with_last():
-    pass
 
 def test_max_consecutive_nans():
     """
@@ -514,7 +451,9 @@ def test_max_consecutive_nans():
 
 
 def test_get_chunks(test_chunk_bam):
-
+    """
+    Test if chunks are correctly get.
+    """
     ret = test_chunk_bam
 
     assert True

@@ -3,7 +3,6 @@ import subprocess as sp
 # import glob
 from pathlib import Path
 # import tempfile as tmpf
-import shutil
 from itertools import combinations
 
 import numpy as np

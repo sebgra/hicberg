@@ -1,14 +1,5 @@
 import pytest
-from os.path import join
 from pathlib import Path
-
-import glob
-import shutil
-import tempfile
-
-import subprocess as sp
-
-import numpy as np
 import cooler
 
 import hicberg.io as hio

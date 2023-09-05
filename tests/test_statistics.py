@@ -1,24 +1,12 @@
 import pytest
-from os.path import join
 from pathlib import Path
-import statistics 
-import random
 import itertools
 
-import numpy as np
-import scipy
-from scipy.spatial.distance import pdist
-import statsmodels.api as sm
-import pandas as pd
-import matplotlib.pyplot as plt
+
 
 import pysam
 from Bio import SeqIO, Restriction
-from Bio.Seq import Seq
-from Bio.SeqUtils import GC
-from Bio.Restriction import *
 
-import cooler
 
 from .conftest import temporary_folder
 from.test_utils import test_classify_reads, test_get_chromosomes_sizes, test_get_bin_table, test_chunk_bam
@@ -31,7 +19,6 @@ import hicberg.utils as hut
 import hicberg.io as hio
 
 
-lowess = sm.nonparametric.lowess
 
 GENOME = "data_test/SC288_with_micron.fa"
 XS = "xs.npy"
