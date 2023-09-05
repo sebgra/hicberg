@@ -323,8 +323,8 @@ def merge_predictions(output_dir : str = None, clean : bool = True, cpus : int =
 
     # TODO : implement fusion through samtools merge
 
-    forward_merge_cmd = f"samtools merge -f --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
-    reverse_merge_cmd = f"samtools merge -f --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
+    forward_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
+    reverse_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
 
     logger.info(f"Launching forward merge with command : {forward_merge_cmd}")
     # Launch merge

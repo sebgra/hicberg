@@ -65,6 +65,9 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         logger.info("%s: %s", arg, args[arg])
 
+    # Check if the output directory exists
+    output_folder = Path(output_dir, name)
+
 
     if start_stage < 1 : 
 
@@ -138,7 +141,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             pool.close()
             pool.join()
 
-        hio.merge_predictions(output_dir = output_folder, clean = True)
+        hio.merge_predictions(output_dir = output_folder, clean = True, cpus = cpus)
 
         # Delete chunks
         folder_to_delete = Path(output_folder) / 'chunks'
