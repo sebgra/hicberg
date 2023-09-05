@@ -441,7 +441,6 @@ def test_mad_smoothing(temporary_folder):
 
     assert np.sum(smoothed_matrix) != 0
 
-
 def test_get_chunks(test_chunk_bam):
     """
     Test if chunks are correctly get.
