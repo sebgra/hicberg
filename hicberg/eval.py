@@ -1,22 +1,22 @@
-import os
+# import os
 import subprocess as sp
-import glob
+# import glob
 from pathlib import Path
-import tempfile as tmpf
+# import tempfile as tmpf
 import shutil
 from itertools import combinations
 
 import numpy as np
 from numpy.random import choice
 
-from scipy import spatial
+# from scipy import spatial
 from scipy.stats import median_abs_deviation, pearsonr
 import bioframe as bf
-import pysam
+# import pysam
 import pysam as ps
 
 import matplotlib.pyplot as plt
-import matplotlib.colors
+# import matplotlib.colors
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -607,16 +607,6 @@ def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict :
     
     return selected_intervals
 
-def draw_positions():
-
-    pass
-
-def is_overlapping():
-    pass
-
-def is_overlapping():
-    pass
-
 # TODO : implement associated test
 def get_boundaries(position : int = None, bins : int = 2000, chromosome : str | list[str] = None, chrom_sizes_dict : str = "chromosome_sizes.npy") -> tuple[int, int]:
     """
@@ -694,84 +684,6 @@ def check_emptiness(intervals : dict[str, list[(int, int)]], matrix : cooler.Coo
 
     return False
 
-
-def get_intervals_indexes():
-    pass
-
-def order_reads():
-    pass
-
-def get_bin_enrichment():
-    pass
-
-def check_empty_bins():
-    pass
-
-
-def get_intervals_gap():
-    pass
-
-def select_pattern_reads():
-    pass
-
-def get_interest_bins():
-    pass
-
-def get_interest_indexes():
-    pass
-
-def build_recovered_pairs():
-    pass
-
-def build_recovered_matrix():
-    pass
-
-def nan_sanitize():
-    pass
-
-def max_consecutive_nans():
-    pass
-
-def new_smoothing():
-    pass
-
-def compute_crop_coordinates():
-    pass
-
-def compute_crop_coordinates():
-    pass
-
-def compute_likelyhood():
-    pass
-
-
-def compute_comat_score():
-    pass
-
-def compute_cosine_score():
-    pass
-
-def compute_matrix_correlation():
-    pass
-
-def plot_1D_correlation():
-    pass
-
-def get_1D_correlation():
-    pass
-
-def sew_maps():
-    pass
-
-def plot_reconstructed_map():
-    pass
-
-def get_trans_bins():
-    pass
-
-def zoom_stripe():
-    pass
-
 # TODO :  Implement associated test
 def get_bin_indexes(matrix : str = None, dictionary : dict = None):
     """
@@ -792,10 +704,6 @@ def get_bin_indexes(matrix : str = None, dictionary : dict = None):
 
     return bin_list
 
-
-
-def grid_search(mode : list[str] = [], chromosome : list[str] = [], trans_chromosome : list[str] = [], position : list[str] = [], trans_position : list[str] = [], stride : list[int] = []) -> None:
-    pass
 
 
 

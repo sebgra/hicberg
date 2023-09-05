@@ -1,13 +1,13 @@
 import uuid
-from os import path, mkdir
+from os import mkdir #path
 from shutil import rmtree
 from pathlib import Path
 from multiprocessing import Process
 
 
 from glob import glob
-import tempfile as tmpf
-import multiprocessing as mp
+# import tempfile as tmpf
+# import multiprocessing as mp
 import subprocess as sp
 from datetime import datetime
 
@@ -185,7 +185,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             p4 = Process(target = hst.generate_d1d2, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_path))
             
             # TODO : Parametrize with rounds and magnitude
-            p5 = Process(target = hst.get_density_map, kwargs = dict(matrix = unrescued_map_path, output_dir = output_path))
+            p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = unrescued_map_path, output_dir = output_path))
             if  "full" in mode.split(","):
 
                 # Launch processes
@@ -255,7 +255,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         hio.build_matrix(mode = True, output_dir = output_path)
 
         rescued_matrix = hio.load_cooler(output_path / RESCUED_MATRIX)
-        rescued_matrix_array = rescued_matrix.matrix(balance = False)
+        # rescued_matrix_array = rescued_matrix.matrix(balance = False)
 
         rescued_matrix_path = output_path / RESCUED_MATRIX
 

@@ -2,13 +2,11 @@ import time
 from os import getcwd
 from os.path import join
 from pathlib import Path
-import statistics 
-import random
+
 import itertools
 
 import numpy as np
 from numpy.random import choice
-import scipy
 from scipy.spatial.distance import pdist
 from scipy.stats import pearsonr
 import statsmodels.api as sm
@@ -17,8 +15,6 @@ import matplotlib.pyplot as plt
 
 import pysam
 from Bio import SeqIO, Restriction
-from Bio.Seq import Seq
-from Bio.SeqUtils import GC
 from Bio.Restriction import *
 
 import cooler
@@ -409,11 +405,6 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
 
     logger.info(f"Trans P(s) saved in {output_path}")
 
-def generate_probabilities():
-    pass
-
-def filter_poor_covered():
-    pass
 
 def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", output_dir : str = None) -> None:
     """
@@ -952,11 +943,6 @@ def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
         distance = np.add(distance_1, distance_2)
         
     return d1d2[distance]
-    
-
-
-def get_d1d2_distance():
-    pass
 
 def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, density_map : dict[(str, str) : np.array], bin_size : int = 2000) -> float:
     """
@@ -1314,12 +1300,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         return ps * d1d2 * cover * density
     
-
-def decompose_propentsity():
-    pass
-
-def check_propensity():
-    pass
 
 def draw_read_couple(propensities : np.array) -> int:
     """

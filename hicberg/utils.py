@@ -1,10 +1,8 @@
-import re
 from glob import glob
 import subprocess as sp
 import shutil as sh
 from os import getcwd, mkdir
-from os.path import join
-from pathlib import Path, PurePath
+from pathlib import Path
 import multiprocessing
 from functools import partial
 import itertools
@@ -14,17 +12,14 @@ from typing import Iterator, Tuple, List
 import numpy as np
 from numpy.random import choice
 import pandas as pd
-import scipy.stats as stats
 from scipy.stats import median_abs_deviation
 
-import hicstuff.io as hico
-from hicstuff.log import logger
-import hicstuff.digest as hd
+# import hicstuff.digest as hd
 
 import pysam
-from Bio import SeqIO, SeqUtils
-from Bio.Seq import Seq
-from Bio.Restriction import RestrictionBatch, Analysis
+from Bio import SeqIO
+# from Bio.Seq import Seq
+# from Bio.Restriction import RestrictionBatch, Analysis
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -35,17 +30,17 @@ from hicberg import logger
 
 
 
-DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
-DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
-DEFAULT_SPARSE_MATRIX_FILE_NAME = "abs_fragments_contacts_weighted.txt"
+# DEFAULT_FRAGMENTS_LIST_FILE_NAME = "fragments_list.txt"
+# DEFAULT_INFO_CONTIGS_FILE_NAME = "info_contigs.txt"
+# DEFAULT_SPARSE_MATRIX_FILE_NAME = "abs_fragments_contacts_weighted.txt"
 
-DEFAULT_KB_BINNING = 1
-DEFAULT_THRESHOLD_SIZE = 0
-# Most used enzyme for eukaryotes
-DEFAULT_ENZYME = "DpnII"
-# If using evenly-sized chunks instead of restriction
-# enzymes, they shouldn't be too short
-DEFAULT_MIN_CHUNK_SIZE = 50
+# DEFAULT_KB_BINNING = 1
+# DEFAULT_THRESHOLD_SIZE = 0
+# # Most used enzyme for eukaryotes
+# DEFAULT_ENZYME = "DpnII"
+# # If using evenly-sized chunks instead of restriction
+# # enzymes, they shouldn't be too short
+# DEFAULT_MIN_CHUNK_SIZE = 50
 
 
 def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:
@@ -110,16 +105,6 @@ def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
 
     return arr
-
-
-def get_num_lines_alignment_file():
-    pass
-
-def get_restriction_table():
-    pass
-
-def write_frag_info():
-    pass
 
 def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     """
@@ -490,13 +475,6 @@ def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : s
     forward_bam_file_path.unlink()
     reverse_bam_file_path.unlink()
 
-
-def classify_reads_multi():
-    pass
-
-def classify_reads_multi():
-    pass
-
 def is_intra_chromosome(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> bool:
     """
     Return True if two reads of a pair came from the same chromosome.
@@ -722,9 +700,6 @@ def get_cis_distance(read_forward : pysam.AlignedSegment, read_reverse : pysam.A
         else:
             return distance
 
-
-def get_event_stats():
-    pass
 
 def bam_iterator(bam_file : str = None) -> Iterator[pysam.AlignedSegment]:
     """
@@ -952,17 +927,6 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
     logger.info(f"Chunks saved in {output_dir / 'chunks'}")
 
 
-
-
-def inspect_reads():
-    pass
-
-def get_bin_rsites():
-    pass
-
-def get_full_bin_rsites():
-    pass
-
 def subsample_restriction_map(restriction_map : dict = None, rate : float = 1.0) -> dict[str, np.ndarray[int]]:
     """
     Subsample a restriction map by a given rate.
@@ -1014,8 +978,6 @@ def subsample_restriction_map(restriction_map : dict = None, rate : float = 1.0)
 
     return subsampled_restriction_map
 
-def fill_zeros_with_last():
-    pass
 
 def max_consecutive_nans(vector : np.ndarray) -> int:
     """

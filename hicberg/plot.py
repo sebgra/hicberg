@@ -241,7 +241,7 @@ def plot_trans_ps(output_dir : str = None) -> None:
 
 
     clr_unambiguous = load_cooler(output_path / CLR)
-    map_table = clr_unambiguous.matrix(balance=False, as_pixels=True, join=True)[:]
+    # map_table = clr_unambiguous.matrix(balance=False, as_pixels=True, join=True)[:]
     # chrm_sets = itertools.combinations_with_replacement(sorted(restriction_maps.keys()), 2)
     chrm_sets = product((dist_frag.keys()), repeat=2)
 
@@ -338,11 +338,6 @@ def plot_coverages(bins : int = 2000, output_dir : str = None ) -> None:
 
     logger.info(f"Saved coverages at : {output_path}")
 
-
-
-def plot_hic_matrix():
-    pass
-
 def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", reverse_bam_file : str = "group2.2.rescued.bam",  output_dir : str = None ) -> None:
     """
     Plot read couples sizes distribution
@@ -423,8 +418,6 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
 
     logger.info(f"Saved couple size distribution at : {output_path}")
 
-def plot_matrix_detailled():
-    pass
 
 def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : str = "rescued_map.cool", restriction_map : str = "restriction_map.npy", genome : str = "", vmin : float = 0.0, vmax : float = 3.5, bins : int = 2000, output_dir : str = None) -> None:
     """
@@ -553,11 +546,3 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         plt.close()
 
-def plot_differences():
-    pass
-
-def plot_probability_maps():
-    pass
-
-def show_results():
-    pass
