@@ -194,24 +194,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 for process in [p1, p2, p3, p4, p5]:
                     process.join()
 
-            elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
-
-                # Launch processes
-                for process in [p1, p2, p3]:
-                    process.start()
-
-                for process in [p1, p2, p3]:
-                    process.join()
-
-            elif "d1d2_only" in mode.split(",") and len(mode.split(",")) == 1:
-
-                # Launch processes
-                for process in [p4]:
-                    process.start()
-
-                for process in [p4]:
-                    process.join()
-
             elif "ps_only" in mode.split(",") and len(mode.split(",")) == 1:
 
                 # Launch processes
@@ -230,6 +212,16 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 for process in [p3]:
                     process.join()
 
+            elif "d1d2_only" in mode.split(",") and len(mode.split(",")) == 1:
+
+                # Launch processes
+                for process in [p4]:
+                    process.start()
+
+                for process in [p4]:
+                    process.join()
+
+
             elif "density_only" in mode.split(",") and len(mode.split(",")) == 1:
 
                 # Launch processes
@@ -239,8 +231,50 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 for process in [p5]:
                     process.join()
 
-            # TODO : implement missing modes
-            
+            elif "no_ps" in mode.split(",") and len(mode.split(",")) == 1:
+
+                # Launch processes
+                for process in [p3, p4, p5]:
+                    process.start()
+
+                for process in [p3, p4, p5]:
+                    process.join()
+
+            elif "no_cover" in mode.split(",") and len(mode.split(",")) == 1:
+
+                # Launch processes
+                for process in [p1, p2, p4, p5]:
+                    process.start()
+
+                for process in [p1, p2, p4, p5]:
+                    process.join()
+
+            elif "no_d1d2" in mode.split(",") and len(mode.split(",")) == 1:
+
+                # Launch processes
+                for process in [p1, p2, p3, p5]:
+                    process.start()
+
+                for process in [p1, p2, p3, p5]:
+                    process.join()
+
+            elif "no_density" in mode.split(",") and len(mode.split(",")) == 1:
+
+                # Launch processes
+                for process in [p1, p2, p3, p4]:
+                    process.start()
+
+                for process in [p1, p2, p3, p4]:
+                    process.join()
+
+            elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
+
+                # Launch processes
+                for process in [p1, p2, p3]:
+                    process.start()
+
+                for process in [p1, p2, p3]:
+                    process.join()
 
             elif  "random" in mode.split(",") and len(mode.split(",")) == 1:
 
@@ -250,7 +284,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         # Reattribute reads
 
-        benchmark_logger.info("Reattributing reads")
+        benchmark_logger.info("Re-attributing reads")
         hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = sub_mode, output_dir = output_path)
         hio.merge_predictions(output_dir = output_path, clean = True)
         hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_path)

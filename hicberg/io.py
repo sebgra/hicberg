@@ -127,9 +127,6 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
         bam_for_path_rescued = Path(output_path / bam_for_rescued)
         bam_rev_path_rescued = Path(output_path / bam_rev_rescued)
 
-        print(f"bam_for_path : {bam_for_path}")
-        print(f"bam_for_path_rescued : {bam_for_path_rescued}")
-
         if not bam_for_path.exists():
 
             raise ValueError(f"Forward bam file {bam_for_rescued} not found")
@@ -188,7 +185,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
     pairs : str, optional
         Path to pairs file, by default "group1.pairs"
     mode : bool, optional
-        Choose wether the mode is rescued or unrescued to construct associated .cool file, by default False
+        Choose wether the mode is rescued or un-rescued to construct associated .cool file, by default False
     output_dir : str, optional
         Path to the folder where to save the cooler matrix file, by default None, by default None
     """
@@ -292,9 +289,6 @@ def merge_predictions(output_dir : str = None, clean : bool = True) -> None:
     forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
     reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
 
-    print(f'Forward chunks : {forward_alignment_chunk_files}')
-    print(f'Reverse chunks : {reverse_alignment_chunk_files}')
-
     template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
 
     merged_forward_alignment_path = output_path / "group2.1.rescued.bam"
@@ -352,7 +346,6 @@ def tidy_folder(output_dir : str = None) -> None:
         output_path = Path(output_dir)
 
     # Tidy folder
-    # files = glob(str(output_path))
     files = [p for  p in output_path.glob("*")]
 
     for file in files :

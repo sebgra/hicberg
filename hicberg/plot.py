@@ -57,7 +57,7 @@ def plot_density(output_dir : str = None) -> None:
         plt.figure(figsize=(10, 10))
         plt.imshow(np.log10(matrix), cmap="afmhot_r", vmin = 0.0, vmax = 3.5)
         plt.title(f"Contatct density for  {chromosome_couple}")
-        plt.savefig(output_path / f"density_{chromosome_couple}.pdf", format = "pdf")
+        plt.savefig(output_path / f"density_{chromosome_couple[0]}-{chromosome_couple[1]}.pdf", format = "pdf")
         plt.close()
 
     logger.info(f"Saved plots of densities at : {output_path}")
@@ -71,7 +71,7 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
     original_matrix : str, optional
         Path to the original matrix, by default None
     rescued_matrix : str, optional
-        Path to the rescued matrix (reattributed reads), by default None
+        Path to the rescued matrix (re-attributed reads), by default None
     chromosomes : list[str], optional
         List of chromosomes to plot, by default None
     output_dir : str, optional
@@ -98,16 +98,11 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
     if not rescued_matrix_path.is_file():
         raise FileNotFoundError(f"Rescued matrix not found at {rescued_matrix_path}. Please provide a valid path.")
     
-    
     # Relaod matricies
-
     original_matrix = load_cooler(original_matrix_path)
     depleted_matrix = load_cooler(depleted_matrix_path)
     rescued_matrix = load_cooler(rescued_matrix_path)
 
-    print(f"Chromosomes : {chromosomes}")
-
-    print(f"combinations :{list(combinations(chromosomes, 2))}")
 
     for chrm in chromosomes : 
 

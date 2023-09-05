@@ -129,8 +129,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
     
     chrom_sizes_path = output_path / Path(chrom_sizes_dict)
 
-    print(f"Chromosome sizes path: {chrom_sizes_path}")
-
     if not chrom_sizes_path.exists():
 
         raise ValueError(f"Chromosome sizes file {chrom_sizes_path} does not exist. Please provide existing chromosome sizes file.")
@@ -192,11 +190,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
 
     if auto is None:
-        # check intervals overlapping
-        # print("----------------")
-        # print(f"position : {type(position)}")
-        # print(f"chromosome : {type(chromosome)}")
-        # print(f"stride : {type(strides)}")
 
         ## set areas and boundaries for intra-chromosomal duplications
         forward_intervals = [
@@ -256,8 +249,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
         dictionary_of_intervals = dict()  # Backup
         dictionary_of_intervals[chromosome] = forward_intervals
 
-        # print(f"trans_chromosome : {trans_chromosome}")
-
         if trans_chromosome is not None:
 
             for chrom, pos in zip(trans_chromosome, trans_position):
@@ -292,8 +283,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
                 if chrom not in dictionary_of_intervals.keys():
 
                     dictionary_of_intervals[chrom] = trans_target_interval
-
-            # print(f"-- forward_intervals : {forward_intervals} --")
 
 
     if auto is not None:
@@ -565,7 +554,6 @@ def get_chromosomes_intervals(bins : int = 2000, chrom_sizes_dict : str = "chrom
     return intervals
     
     
-# TODO : implement associated test
 def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict : str = "chromosome_sizes.npy") -> dict[str, list[tuple[int, int]]]:
     """
     Draw intervals from a given chromosome sizes dictionary.
@@ -601,7 +589,6 @@ def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict :
     
     return selected_intervals
 
-# TODO : implement associated test
 def get_boundaries(position : int = None, bins : int = 2000, chromosome : str | list[str] = None, chrom_sizes_dict : str = "chromosome_sizes.npy") -> tuple[int, int]:
     """
     Return boundaries surrounding position considering regular binning of bins.
@@ -635,9 +622,6 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str | 
         chrom_sizes.get(chromosome),
     )
 
-    # print(f"position : {position}")
-    # print(f"bins : {bins}")
-
     if position % bins == 0:
 
         before_index = np.searchsorted(area_to_search, position, side="left")
@@ -652,7 +636,6 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str | 
 
     return (lower_bound, upper_bound)
 
-# TODO : implement test function
 def check_emptiness(intervals : dict[str, list[(int, int)]], matrix : cooler.Cooler = None) -> bool:
     """
     Check if intervals are empty in a given matrix.
@@ -678,7 +661,6 @@ def check_emptiness(intervals : dict[str, list[(int, int)]], matrix : cooler.Coo
 
     return False
 
-# TODO :  Implement associated test
 def get_bin_indexes(matrix : str = None, dictionary : dict = None):
     """
     Return the bins indexes (in the cooler matrix) corresponding to the genomic coordinates in the dictionary.

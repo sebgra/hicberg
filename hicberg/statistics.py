@@ -87,8 +87,6 @@ def generate_density_map(matrix : str = "unrescued_map.cool", rounds : int = 1, 
 
     for combination in chromosomes_combination:
 
-        # print(f"Processing {chromosome_1} - {chromosome_2} pair... ")
-
         # Get matrix for each chromosome pair
 
         matrix_chromosome = matrix.matrix(balance = False).fetch(combination[0], combination[1])
@@ -1027,8 +1025,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
         Propensity to use for read couple drawing
     """
 
-    # print(f"density map : {density_map}") # OK
-
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
     
@@ -1267,15 +1263,11 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
                 ps = 1
 
-        # print(f"ps : {ps}")
-
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
         # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
-
-        # print(f"cover : {cover}")
 
         try:
             d1d2 = get_d1d2(
@@ -1289,13 +1281,7 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
             d1d2 = 1
 
-        # print(f"d1d2 : {d1d2}")
-        # print(f'result : {ps * d1d2 * cover * density}')
-
         density = get_density(read_forward, read_reverse, density_map = density_map)
-
-        # print(f"density : {density}")
-
     
 
         return ps * d1d2 * cover * density
@@ -1384,10 +1370,6 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     d1d2 = hio.load_dictionary(output_path / d1d2)
     density = hio.load_dictionary(output_path / density_map)
 
-    # print(f"density loaded")
-    
-    # print(f"density : {density}")
-
     forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
     file_id = time.time()
 
@@ -1408,15 +1390,11 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
 
         for combination in combinations:
-            # print(f"combination : {combination}")
 
             propensities.append(compute_propensity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode))
 
-        # print(f"Propensities : {propensities}")
-
         selected_couple_index = draw_read_couple(propensities)
 
-        # print(f"Selected couple index : {selected_couple_index}")
         selected_read_forward, selected_read_reverse = combinations[selected_couple_index]
         selected_read_forward.set_tag("XL", len(forward_block))
         selected_read_reverse.set_tag("XL", len(reverse_block))
@@ -1431,7 +1409,6 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     logger.info(f"Predictions written in {output_path}")
 
 
-# TODO : implement associated test
 def pearson_score(original_matrix, rescued_matrix , markers):
 
     ori_matrix = original_matrix.matrix(balance=False)[:]

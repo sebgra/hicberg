@@ -420,8 +420,6 @@ def test_chunk_bam(temporary_folder, test_classify_reads):
 
     assert is_full
 
-
-
 def test_max_consecutive_nans():
     """
     Test if the function correctly return the maximum number of consecutive NaNs in a vector.
@@ -440,7 +438,7 @@ def test_mad_smoothing(temporary_folder):
     clr = hio.load_cooler(Path(UNRESCUED_MAP))
     matrix = clr.matrix(balance = False).fetch(DICT_FIRST_KEY)
     smoothed_matrix = hut.mad_smoothing(matrix.flatten())
-    
+
     assert np.sum(smoothed_matrix) != 0
 
 
