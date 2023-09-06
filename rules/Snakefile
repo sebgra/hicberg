@@ -1,0 +1,37 @@
+#!/bin/env snakemake -s
+
+# Rules to generates the build bowtie2 index and split fastq for alignement.
+
+OUTPUT = "/home/sardine/Bureau/"
+BANK_NAME = "hic_test"
+THREADS = 16
+RATE = 0.2
+MODE = "random"
+START = "fastq"
+EXIT = "bam"
+ROUNDS = 10
+MAGNITUDE = 0.8
+SENSITIVITY = "very-fast"
+ENZYMES_0 = "DpnII"
+ENZYMES_1  = "HinfI"
+
+rule hicberg_step_0:
+    input: 
+            genome = "/home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa",
+            r1 = "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz",
+            r2 = "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
+    output: 
+        idx1 = "/home/sardine/Bureau/hic_test/SC288_with_micron.1.bt2l",
+        idx2 = "/home/sardine/Bureau/hic_test/SC288_with_micron.2.bt2l",
+        idx3 = "/home/sardine/Bureau/hic_test/SC288_with_micron.3.bt2l",
+        idx4 = "/home/sardine/Bureau/hic_test/SC288_with_micron.4.bt2l",
+        chrom_sizes = "/home/sardine/Bureau/hic_test/chromosome_sizes.npy",
+        fragments_file = "/home/sardine/Bureau/hic_test/fragments_fixed_sizes.txt",
+        for_sam = "/home/sardine/Bureau/hic_test/1.sam",
+        rev_sam = "/home/sardine/Bureau/hic_test/2.sam",
+    shell: 
+        "hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUTPUT} -r {RATE}  -t {THREADS} -m {MODE}  -e {ENZYMES_0} -e {ENZYMES_1} -s {SENSITIVITY} -n {BANK_NAME} -R {ROUNDS} -M {MAGNITUDE} -f --start-stage {START}  --exit-stage {EXIT}"
+
+
+rule all:
+    input: "/home/sardine/Bureau/hic_test",
