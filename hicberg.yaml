@@ -1,4 +1,4 @@
-name: hicberg_test
+name: hicberg
 channels:
   - conda-forge
   - bioconda
