@@ -244,7 +244,6 @@ def test_generate_d1d2(temporary_folder, test_classify_reads, test_get_restricti
 
     assert d1d2_dictionary_path.is_file()
 
-# TODO : Add argument dist_frag
 
 @pytest.fixture(scope = "module")
 def test_get_patterns(temporary_folder, test_classify_reads, test_log_bin_genome, test_get_dist_frags):
@@ -294,7 +293,6 @@ def test_get_pair_ps(temporary_folder, test_log_bin_genome, test_get_patterns):
 
     # assert ps == PS_VALUE
 
-    # TODO : To be checked
     assert ps >= 0
 
 def test_get_trans_ps(test_generate_trans_ps):
