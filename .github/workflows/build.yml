@@ -34,10 +34,10 @@ jobs:
         cooler --version
       shell: micromamba-shell {0}
 
-    # - name: Lint and test
-    #   run: |
-    #     pip install pytest-pylint pytest pytest-cov pylint codecov mappy
-    #     pytest --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
-    #     pytest --cov=hicberg
-    #     codecov
-    #   shell: micromamba-shell {0}
+    - name: Lint and test
+      run: |
+        pip install pytest-pylint pytest pytest-cov pylint codecov mappy
+        pytest --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
+        pytest --cov=hicberg
+        codecov
+      shell: micromamba-shell {0}

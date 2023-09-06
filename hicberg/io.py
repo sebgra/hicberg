@@ -224,8 +224,8 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
 
     balance_cmd = f"cooler balance --nproc {cpus} {cool_path}"
 
-    sp.check_call(cooler_cmd, shell=True)
-    sp.check_call(balance_cmd, shell=True)
+    sp.run(cooler_cmd, shell=True)
+    sp.run(balance_cmd, shell=True)
 
     logger.info(f"Cooler matrix successfully created in {output_path}")
 
@@ -328,11 +328,11 @@ def merge_predictions(output_dir : str = None, clean : bool = True, cpus : int =
 
     logger.info(f"Launching forward merge with command : {forward_merge_cmd}")
     # Launch merge
-    sp.check_call(forward_merge_cmd, shell=True)
+    sp.run(forward_merge_cmd, shell=True)
 
     logger.info(f"Launching reverse merge with command : {reverse_merge_cmd}")
     # Launch merge
-    sp.check_call(reverse_merge_cmd, shell=True)
+    sp.run(reverse_merge_cmd, shell=True)
 
     if clean:
 

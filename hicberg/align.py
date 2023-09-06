@@ -60,7 +60,7 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
 
         logger.info(cmd_index)
 
-    sp.check_call([cmd_index], shell=True)
+    sp.run([cmd_index], shell=True)
 
     logger.info(f"Index built at {index_path}")
 
@@ -320,8 +320,8 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
         logger.info(cmd_index_for)
         logger.info(cmd_index_rev)
 
-    sp.check_call([cmd_index_for], shell=True)
-    sp.check_call([cmd_index_rev], shell=True)
+    sp.run([cmd_index_for], shell=True)
+    sp.run([cmd_index_rev], shell=True)
 
     logger.info(f"Indexed alignement done at {output_path}")
 
