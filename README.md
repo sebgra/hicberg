@@ -367,11 +367,30 @@ After tidying the folders architecture will be the following:
     └── xs.npy
 ```
 
+## Chaining pipeline steps
+
+It is possible to chain the different steps of the pipeline by using the following command:
+
+```bash
+# 1. Align reads
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME --start-stage fastq  --exit-stage bam
+
+# 2. Build pairs & cool
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME --start-stage bam  --exit-stage stats
+
+# 3. Compute statistics
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME --start-stage stats  --exit-stage pairs
+
+# 4. Reassign reads & get results
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME  --start-stage pairs  --exit-stage rescue
+
+``````
+
 ## Evaluating the model
 
 HiC-BERG provide a method to evaluate the infered reconstructed maps. The evaluation is based on first a split of the original uniquely mapping reads into two sets :
   
-  - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the orginal alignment files) and used to learn the statistics for read couple inference.
+  - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the original alignment files) and used to learn the statistics for read couple inference.
   - __*group1.X_in.bam*__: alignment files where selected reads are duplicated  between all possible genomic intervals defined by the user. Thus ambiguity is introduced in the alignment of the reads.
 
 Hence, the most plausible couple from fakely duplicated reads in __*group1.X.in.bam*__ is inferred and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.

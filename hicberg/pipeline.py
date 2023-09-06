@@ -23,6 +23,8 @@ import hicberg.statistics as hst
 from hicberg import logger
 
 UNRESCUED_MATRIX = "unrescued_map.cool"
+RESTRICTION_MAP = "restriction_map.npy"
+
 
 
 def check_tool(name):
@@ -127,6 +129,8 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         return
     
     if start_stage < 4:
+
+        restriction_map = hio.load_dictionary(Path(output_folder) / RESTRICTION_MAP)
 
         hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
         

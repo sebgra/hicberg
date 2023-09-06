@@ -379,7 +379,6 @@ def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : s
     for forward_block, reverse_block in zip(forward_bam_file_iter, reverse_bam_file_iter):
         
 
-
         unmapped_couple, multi_mapped_couple = False, False
 
         forward_reverse_combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
@@ -1027,8 +1026,8 @@ def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "au
 
 def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
 
-    forward_chunks = sorted(glob(output_dir + '/chunks/chunk_for_*.bam'))
-    reverse_chunks = sorted(glob(output_dir + '/chunks/chunk_rev_*.bam'))
+    forward_chunks = sorted(glob(output_dir.name + '/chunks/chunk_for_*.bam'))
+    reverse_chunks = sorted(glob(output_dir.name + '/chunks/chunk_rev_*.bam'))
 
 
     return (forward_chunks, reverse_chunks)
