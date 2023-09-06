@@ -38,6 +38,6 @@ jobs:
       run: |
         pip install pytest-pylint pytest pytest-cov pylint codecov mappy
         pytest -x --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
-        pytest --cov=hicberg
+        pytest -x --cov=hicberg
         codecov
       shell: micromamba-shell {0}
