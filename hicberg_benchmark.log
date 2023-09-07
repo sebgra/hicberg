@@ -152,3 +152,82 @@
 2023-09-06 --  17:10:04 :: INFO :: Number of multi mapped reads in forward file : 125539
 2023-09-06 --  17:10:04 :: INFO :: Number of multi mapped reads in reverse file : 114340
 2023-09-06 --  17:10:12 :: INFO :: Chunks saved in /tmp/tmpc0c3ga0c/chunks
+2023-09-07 --  15:01:11 :: INFO :: Start HiCBERG pipeline
+2023-09-07 --  15:01:11 :: INFO :: name: hic_test
+2023-09-07 --  15:01:11 :: INFO :: start_stage: fastq
+2023-09-07 --  15:01:11 :: INFO :: exit_stage: bam
+2023-09-07 --  15:01:11 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-07 --  15:01:11 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-07 --  15:01:11 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-07 --  15:01:11 :: INFO :: sensitivity: very-fast
+2023-09-07 --  15:01:11 :: INFO :: max_alignment: None
+2023-09-07 --  15:01:11 :: INFO :: mapq: 35
+2023-09-07 --  15:01:11 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-07 --  15:01:11 :: INFO :: circular: 
+2023-09-07 --  15:01:11 :: INFO :: rate: 0.2
+2023-09-07 --  15:01:11 :: INFO :: bins: 2000
+2023-09-07 --  15:01:11 :: INFO :: nb_chunks: 32
+2023-09-07 --  15:01:11 :: INFO :: mode: random
+2023-09-07 --  15:01:11 :: INFO :: rounds: 10
+2023-09-07 --  15:01:11 :: INFO :: magnitude: 0.8
+2023-09-07 --  15:01:11 :: INFO :: verbose: False
+2023-09-07 --  15:01:11 :: INFO :: cpus: 16
+2023-09-07 --  15:01:11 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-07 --  15:01:11 :: INFO :: force: True
+2023-09-07 --  15:01:11 :: INFO :: Folder /home/sardine/Bureau/hic_test created.
+2023-09-07 --  15:01:11 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/hic_test/chromosome_sizes.npy
+2023-09-07 --  15:01:20 :: INFO :: Index built at /home/sardine/Bureau/hic_test/SC288_with_micron
+2023-09-07 --  15:01:20 :: INFO :: bowtie2 --very-fast -p 16 -a -x /home/sardine/Bureau/hic_test/SC288_with_micron -S /home/sardine/Bureau/hic_test/1.sam /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-07 --  15:01:20 :: INFO :: bowtie2 --very-fast -p 16 -a -x /home/sardine/Bureau/hic_test/SC288_with_micron -S /home/sardine/Bureau/hic_test/2.sam /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-07 --  15:01:21 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    13625 (6.81%) aligned 0 times
+    166964 (83.48%) aligned exactly 1 time
+    19411 (9.71%) aligned >1 times
+93.19% overall alignment rate
+
+2023-09-07 --  15:01:21 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    10570 (5.29%) aligned 0 times
+    169498 (84.75%) aligned exactly 1 time
+    19932 (9.97%) aligned >1 times
+94.72% overall alignment rate
+
+2023-09-07 --  15:01:21 :: INFO :: Alignement saved at /home/sardine/Bureau/hic_test
+2023-09-07 --  15:01:21 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-07 --  15:01:23 :: INFO :: Start HiCBERG pipeline
+2023-09-07 --  15:01:23 :: INFO :: name: hic_test
+2023-09-07 --  15:01:23 :: INFO :: start_stage: bam
+2023-09-07 --  15:01:23 :: INFO :: exit_stage: stats
+2023-09-07 --  15:01:23 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-07 --  15:01:23 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-07 --  15:01:23 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-07 --  15:01:23 :: INFO :: sensitivity: very-fast
+2023-09-07 --  15:01:23 :: INFO :: max_alignment: None
+2023-09-07 --  15:01:23 :: INFO :: mapq: 35
+2023-09-07 --  15:01:23 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-07 --  15:01:23 :: INFO :: circular: 
+2023-09-07 --  15:01:23 :: INFO :: rate: 0.2
+2023-09-07 --  15:01:23 :: INFO :: bins: 2000
+2023-09-07 --  15:01:23 :: INFO :: nb_chunks: 32
+2023-09-07 --  15:01:23 :: INFO :: mode: random
+2023-09-07 --  15:01:23 :: INFO :: rounds: 10
+2023-09-07 --  15:01:23 :: INFO :: magnitude: 0.8
+2023-09-07 --  15:01:23 :: INFO :: verbose: False
+2023-09-07 --  15:01:23 :: INFO :: cpus: 16
+2023-09-07 --  15:01:23 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-07 --  15:01:23 :: INFO :: force: True
+2023-09-07 --  15:01:23 :: INFO :: samtools view -S -b /home/sardine/Bureau/hic_test/1.sam -o /home/sardine/Bureau/hic_test/1.bam --threads 16
+2023-09-07 --  15:01:23 :: INFO :: samtools view -S -b /home/sardine/Bureau/hic_test/2.sam -o /home/sardine/Bureau/hic_test/2.bam --threads 16
+2023-09-07 --  15:01:23 :: INFO :: Compressed alignemnet alignement done at /home/sardine/Bureau/hic_test
+2023-09-07 --  15:01:23 :: INFO :: samtools sort -n /home/sardine/Bureau/hic_test/1.bam -o /home/sardine/Bureau/hic_test/1.sorted.bam --threads 16
+2023-09-07 --  15:01:23 :: INFO :: samtools sort -n /home/sardine/Bureau/hic_test/2.bam -o /home/sardine/Bureau/hic_test/2.sorted.bam --threads 16
+2023-09-07 --  15:01:24 :: INFO :: Sorted alignement done at /home/sardine/Bureau/hic_test
+2023-09-07 --  15:01:28 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-07 --  15:01:28 :: INFO :: Number of unmapped reads in forward file : 38342
+2023-09-07 --  15:01:28 :: INFO :: Number of unmapped reads in reverse file : 40955
+2023-09-07 --  15:01:28 :: INFO :: Number of uniquely mapped reads in forward file : 149635
+2023-09-07 --  15:01:28 :: INFO :: Number of uniquely mapped reads in reverse file : 149635
+2023-09-07 --  15:01:28 :: INFO :: Number of multi mapped reads in forward file : 205421
+2023-09-07 --  15:01:28 :: INFO :: Number of multi mapped reads in reverse file : 196675
+2023-09-07 --  15:01:28 :: INFO :: Ending HiCBERG pipeline at 2
