@@ -25,11 +25,15 @@ shell.prefix("set -euo pipefail;")
 # Pipeline sub-workflows
 include: 'rules/00_hicberg_step_0.smk'
 include: 'rules/01_hicberg_step_1.smk'
+include: 'rules/02_hicberg_step_2.smk'
+include: 'rules/03_hicberg_step_3.smk'
 
 # Specify at least one output of each rule (or one of the last output)  to ensure rule execution.
 rule all:
     input: 
         "/home/sardine/Bureau/hic_test/index/",
         "/home/sardine/Bureau/hic_test/group0.1.bam",
+        "/home/sardine/Bureau/hic_test/unrescued_map.cool",
+        '/home/sardine/Bureau/hic_test/alignments/rescued_map.cool'
 
 

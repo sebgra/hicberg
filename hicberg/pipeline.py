@@ -68,7 +68,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         logger.info("%s: %s", arg, args[arg])
 
     # Check if the output directory exists
-    output_folder = Path(output_dir, name)
+    output_folder = Path(output_dir, name).as_posix()
 
 
     if start_stage < 1 : 
@@ -133,17 +133,19 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         restriction_map = hio.load_dictionary(Path(output_folder) / RESTRICTION_MAP)
 
         hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
-        
+
         # Get chunks as lists
-        forward_chunks, reverse_chunks = hut.get_chunks(output_folder)
+        forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_folder)
 
         # Reattribute reads
         with multiprocessing.Pool(processes = cpus) as pool: # cpus
 
-            results = pool.map_async(partial(hst.reattribute_reads, mode = mode,  restriction_map = restriction_map, output_dir = output_folder),
+            results = pool.map_async(partial(hst.reattribute_reads, mode = mode, restriction_map = restriction_map, output_dir = output_folder),
             zip(forward_chunks, reverse_chunks))
             pool.close()
             pool.join()
+
+        
 
         hio.merge_predictions(output_dir = output_folder, clean = True, cpus = cpus)
 

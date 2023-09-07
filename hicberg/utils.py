@@ -1025,10 +1025,22 @@ def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "au
 
 
 def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
+    """
+    Return a tuple containing the paths to the forward and reverse chunks.
 
-    forward_chunks = sorted(glob(output_dir.name + '/chunks/chunk_for_*.bam'))
-    reverse_chunks = sorted(glob(output_dir.name + '/chunks/chunk_rev_*.bam'))
+    Parameters
+    ----------
+    output_dir : str, optional
+        Path to get chunks from, by default None
 
+    Returns
+    -------
+    tuple([List[str], List[str]]
+        Tuple containing the paths to the forward and reverse chunks.
+    """    
+
+    forward_chunks = sorted(glob(output_dir + '/chunks/chunk_for_*.bam'))
+    reverse_chunks = sorted(glob(output_dir + '/chunks/chunk_rev_*.bam'))
 
     return (forward_chunks, reverse_chunks)
 
