@@ -42,7 +42,7 @@ def cli(chain=True):
 @click.option("--name", "-n", required = False, default = "sample", type = str, help = "Name of the analysis.")
 @click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to analyze.")
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
-@click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
+@click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for sub-sampling restriction map.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
 @click.option("--rounds", "-R", required = False, default = 1, type = int, help = "Number of rounds to perform for matrix diffusion.")
 @click.option("--magnitude", "-M", required = False, default = 1.0, type = float, help = "Magnitude of matrix diffusion.")
@@ -54,8 +54,8 @@ def cli(chain=True):
 @click.option("--circular", "-c", required = False, type = str, default = "", help = "Name of the chromosome to consider as circular")
 @click.option("--mapq", "-q", required = False, type = int, default = 35, help = "Minimum MAPQ to consider a read as valid")
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "stats", "pairs", "rescue", "cool"]), default = "fastq", help = "Stage to start the pipeline")
-@click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "stats", "pairs", "rescue", "cool"]), default = "None", help = "Stage to exit the pipeline")
+@click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "groups", "build", "stats", "rescue", "final"]), default = "fastq", help = "Stage to start the pipeline")
+@click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "groups", "build", "stats", "rescue", "final"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
 def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, rounds, magnitude, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
     hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, rounds = rounds, magnitude = magnitude, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
@@ -101,7 +101,7 @@ def classify_cmd(mapq, output):
 
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if pairs are bulit after reads reassignment.")
+@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if pairs are built after reads reassignment.")
 def build_pairs_cmd(output, recover):
     hio.build_pairs(output_dir = output, mode = recover)
 
@@ -115,7 +115,7 @@ def build_matrix_cmd(output, recover, cpus):
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
 @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
-@click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for subsampling restriction map.")
+@click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for sub-sampling restriction map.")
 @click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
 @click.option("--circular", "-c", required = False, type = str, default = "", help = "Name of the chromosome to consider as circular")
 @click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
@@ -150,7 +150,7 @@ def rescue_cmd(genome, enzyme, nb_chunks, mode, output, cpus):
     # Get chunks as lists
     forward_chunks, reverse_chunks = hut.get_chunks(output)
 
-    # Reattribute reads
+    # Re-attribute reads
     with multiprocessing.Pool(processes = cpus) as pool:
 
         results = pool.map_async(partial(hst.reattribute_reads, mode = mode,  restriction_map = restriction_map, output_dir = output),
@@ -173,7 +173,7 @@ def plot_cmd(genome, bins, output):
     p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output))
     p6 = Process(target = hpl.plot_d1d2(output_dir = output))
 
-    # Launch processees
+    # Launch processes
     for process in [p1, p2, p3, p4, p5, p6]:
         process.start()
         process.join()

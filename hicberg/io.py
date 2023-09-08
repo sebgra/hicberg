@@ -55,7 +55,7 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
     mkdir(folder_path / "alignments")
     mkdir(folder_path / "statistics")
     mkdir(folder_path / "contacts")
-    mkdir(folder_path / "contacts" / "matricies")
+    mkdir(folder_path / "contacts" / "matrices")
     mkdir(folder_path / "contacts" / "pairs")
     mkdir(folder_path / "plots")
 
@@ -383,7 +383,7 @@ def tidy_folder(output_dir : str = None) -> None:
 
         elif Path(file).suffix == ".cool":
 
-            Path(file).rename(output_path / "contacts" / "matricies" / Path(file).name)
+            Path(file).rename(output_path / "contacts" / "matrices" / Path(file).name)
 
         elif Path(file).suffix == ".pdf" or Path(file).suffix == ".svg":
 

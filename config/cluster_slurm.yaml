@@ -4,17 +4,17 @@ __default__:
     mem: 16G
     ntasks: 1
     partition : common,dedicated
-    name: T7.{rule}.{wildcards}
+    name: hicberg.{rule}.{wildcards}
     output: logs/cluster/{rule}.{wildcards}.out
     error: logs/cluster/{rule}.{wildcards}.err
 
-split_fastq:
+hicberg_step_0:
     queue: normal
     partition: common
-    ncpus: 8
-    mem: 16G
+    ncpus: 16
+    mem: 32G
     ntasks: 1
-    name: T7.{rule}.{wildcards}
+    name: hicberg.{rule}.{wildcards}
     output: logs/cluster/{rule}.{wildcards}.out
     error: logs/cluster/{rule}.{wildcards}.err
 

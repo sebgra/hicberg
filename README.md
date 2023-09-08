@@ -333,7 +333,7 @@ After tidying the folders architecture will be the following:
 │   ├── chunk_for_X.bam
 │   └── chunk_rev_X.bam
 ├── contacts
-│   ├── matricies
+│   ├── matrices
 │   │   ├── rescued_map.cool
 │   │   └── unrescued_map.cool
 │   └── pairs
@@ -372,18 +372,26 @@ After tidying the folders architecture will be the following:
 It is possible to chain the different steps of the pipeline by using the following command:
 
 ```bash
+# 0. Prepare analysis
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage fastq  --exit-stage bam
+
 # 1. Align reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME --start-stage fastq  --exit-stage bam
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage bam  --exit-stage groups
 
-# 2. Build pairs & cool
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME --start-stage bam  --exit-stage stats
+# 2. Group reads
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage groups  --exit-stage build
 
-# 3. Compute statistics
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME --start-stage stats  --exit-stage pairs
+# 3. Build pairs & cool
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage build  --exit-stage stats
 
-# 4. Reassign reads & get results
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME  --start-stage pairs  --exit-stage rescue
+# 4. Compute statistics
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage stats  --exit-stage rescue
 
+# 5. Reassign ambiguous reads
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage rescue  --exit-stage final
+
+# 6. Build pairs & cool then get results
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage rescue  --exit-stage final
 ``````
 
 ## Evaluating the model
@@ -393,7 +401,7 @@ HiC-BERG provide a method to evaluate the infered reconstructed maps. The evalua
   - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the original alignment files) and used to learn the statistics for read couple inference.
   - __*group1.X_in.bam*__: alignment files where selected reads are duplicated  between all possible genomic intervals defined by the user. Thus ambiguity is introduced in the alignment of the reads.
 
-Hence, the most plausible couple from fakely duplicated reads in __*group1.X.in.bam*__ is inferred and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.
+Hence, the most plausible couple from fake duplicated reads in __*group1.X.in.bam*__ is inferred and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.
 
 The evaluation pipeline can be illustrated as follow : 
 
@@ -518,7 +526,7 @@ All the steps described here are handled automatically when running the ```hicbe
 
 * bt2l files: Thi format is used to store index of genomes performer using Bowtie2. 
 
-* bam files: This format is used to built analyses on, by several functions of hicberg. It is a compressed standard alignement format file providing multiple informations about read alignments performer by [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml). Such files can be handled through [Samtools](http://www.htslib.org/doc/) and it's Python wrapper [PySam](https://pysam.readthedocs.io/en/latest/api.html). More details about SAM and BAM format can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
+* bam files: This format is used to built analyses on, by several functions of hicberg. It is a compressed standard alignment format file providing multiple information about read alignments performer by [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml). Such files can be handled through [Samtools](http://www.htslib.org/doc/) and it's Python wrapper [PySam](https://pysam.readthedocs.io/en/latest/api.html). More details about SAM and BAM format can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
 
 * fragments_fixed_sizes.txt: 
 

@@ -1510,3 +1510,311 @@
 2023-09-07 --  16:57:03 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/hic_test
 2023-09-07 --  16:57:03 :: INFO :: Tidying : /home/sardine/Bureau/hic_test
 2023-09-07 --  16:57:03 :: INFO :: Ending HiCBERG pipeline
+2023-09-08 --  14:33:25 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:33:25 :: INFO :: name: hic_test
+2023-09-08 --  14:33:25 :: INFO :: start_stage: fastq
+2023-09-08 --  14:33:25 :: INFO :: exit_stage: bam
+2023-09-08 --  14:33:25 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:33:25 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:33:25 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:33:25 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:33:25 :: INFO :: max_alignment: None
+2023-09-08 --  14:33:25 :: INFO :: mapq: 35
+2023-09-08 --  14:33:25 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:33:25 :: INFO :: circular: 
+2023-09-08 --  14:33:25 :: INFO :: rate: 0.2
+2023-09-08 --  14:33:25 :: INFO :: bins: 2000
+2023-09-08 --  14:33:25 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:33:25 :: INFO :: mode: random
+2023-09-08 --  14:33:25 :: INFO :: rounds: 10
+2023-09-08 --  14:33:25 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:33:25 :: INFO :: verbose: False
+2023-09-08 --  14:33:25 :: INFO :: cpus: 16
+2023-09-08 --  14:33:25 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:33:25 :: INFO :: force: False
+2023-09-08 --  14:33:25 :: INFO :: Folder /home/sardine/Bureau/hic_test created.
+2023-09-08 --  14:33:25 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/hic_test/chromosome_sizes.npy
+2023-09-08 --  14:33:34 :: INFO :: Index built at /home/sardine/Bureau/hic_test/SC288_with_micron
+2023-09-08 --  14:33:34 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-08 --  14:35:42 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:35:42 :: INFO :: name: hic_test
+2023-09-08 --  14:35:42 :: INFO :: start_stage: bam
+2023-09-08 --  14:35:42 :: INFO :: exit_stage: groups
+2023-09-08 --  14:35:42 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:35:42 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:35:42 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:35:42 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:35:42 :: INFO :: max_alignment: None
+2023-09-08 --  14:35:42 :: INFO :: mapq: 35
+2023-09-08 --  14:35:42 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:35:42 :: INFO :: circular: 
+2023-09-08 --  14:35:42 :: INFO :: rate: 0.2
+2023-09-08 --  14:35:42 :: INFO :: bins: 2000
+2023-09-08 --  14:35:42 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:35:42 :: INFO :: mode: random
+2023-09-08 --  14:35:42 :: INFO :: rounds: 10
+2023-09-08 --  14:35:42 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:35:42 :: INFO :: verbose: False
+2023-09-08 --  14:35:42 :: INFO :: cpus: 16
+2023-09-08 --  14:35:42 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:35:42 :: INFO :: force: False
+2023-09-08 --  14:37:02 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:37:02 :: INFO :: name: hic_test
+2023-09-08 --  14:37:02 :: INFO :: start_stage: bam
+2023-09-08 --  14:37:02 :: INFO :: exit_stage: groups
+2023-09-08 --  14:37:02 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:37:02 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:37:02 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:37:02 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:37:02 :: INFO :: max_alignment: None
+2023-09-08 --  14:37:02 :: INFO :: mapq: 35
+2023-09-08 --  14:37:02 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:37:02 :: INFO :: circular: 
+2023-09-08 --  14:37:02 :: INFO :: rate: 0.2
+2023-09-08 --  14:37:02 :: INFO :: bins: 2000
+2023-09-08 --  14:37:02 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:37:02 :: INFO :: mode: random
+2023-09-08 --  14:37:02 :: INFO :: rounds: 10
+2023-09-08 --  14:37:02 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:37:02 :: INFO :: verbose: False
+2023-09-08 --  14:37:02 :: INFO :: cpus: 16
+2023-09-08 --  14:37:02 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:37:02 :: INFO :: force: False
+2023-09-08 --  14:37:10 :: INFO :: Index built at /home/sardine/Bureau/hic_test/SC288_with_micron
+2023-09-08 --  14:37:10 :: INFO :: bowtie2 --very-fast -p 16 -a -x /home/sardine/Bureau/hic_test/SC288_with_micron -S /home/sardine/Bureau/hic_test/1.sam /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:37:10 :: INFO :: bowtie2 --very-fast -p 16 -a -x /home/sardine/Bureau/hic_test/SC288_with_micron -S /home/sardine/Bureau/hic_test/2.sam /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:37:12 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    13625 (6.81%) aligned 0 times
+    166964 (83.48%) aligned exactly 1 time
+    19411 (9.71%) aligned >1 times
+93.19% overall alignment rate
+
+2023-09-08 --  14:37:12 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    10570 (5.29%) aligned 0 times
+    169498 (84.75%) aligned exactly 1 time
+    19932 (9.97%) aligned >1 times
+94.72% overall alignment rate
+
+2023-09-08 --  14:37:12 :: INFO :: Alignement saved at /home/sardine/Bureau/hic_test
+2023-09-08 --  14:37:12 :: INFO :: samtools view -S -b /home/sardine/Bureau/hic_test/1.sam -o /home/sardine/Bureau/hic_test/1.bam --threads 16
+2023-09-08 --  14:37:12 :: INFO :: samtools view -S -b /home/sardine/Bureau/hic_test/2.sam -o /home/sardine/Bureau/hic_test/2.bam --threads 16
+2023-09-08 --  14:37:12 :: INFO :: Compressed alignemnet alignement done at /home/sardine/Bureau/hic_test
+2023-09-08 --  14:37:12 :: INFO :: samtools sort -n /home/sardine/Bureau/hic_test/1.bam -o /home/sardine/Bureau/hic_test/1.sorted.bam --threads 16
+2023-09-08 --  14:37:12 :: INFO :: samtools sort -n /home/sardine/Bureau/hic_test/2.bam -o /home/sardine/Bureau/hic_test/2.sorted.bam --threads 16
+2023-09-08 --  14:37:13 :: INFO :: Sorted alignement done at /home/sardine/Bureau/hic_test
+2023-09-08 --  14:37:13 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-08 --  14:37:39 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:37:39 :: INFO :: name: hic_test
+2023-09-08 --  14:37:39 :: INFO :: start_stage: groups
+2023-09-08 --  14:37:39 :: INFO :: exit_stage: build
+2023-09-08 --  14:37:39 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:37:39 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:37:39 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:37:39 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:37:39 :: INFO :: max_alignment: None
+2023-09-08 --  14:37:39 :: INFO :: mapq: 35
+2023-09-08 --  14:37:39 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:37:39 :: INFO :: circular: 
+2023-09-08 --  14:37:39 :: INFO :: rate: 0.2
+2023-09-08 --  14:37:39 :: INFO :: bins: 2000
+2023-09-08 --  14:37:39 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:37:39 :: INFO :: mode: random
+2023-09-08 --  14:37:39 :: INFO :: rounds: 10
+2023-09-08 --  14:37:39 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:37:39 :: INFO :: verbose: False
+2023-09-08 --  14:37:39 :: INFO :: cpus: 16
+2023-09-08 --  14:37:39 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:37:39 :: INFO :: force: False
+2023-09-08 --  14:37:44 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:37:44 :: INFO :: Number of unmapped reads in forward file : 38342
+2023-09-08 --  14:37:44 :: INFO :: Number of unmapped reads in reverse file : 40955
+2023-09-08 --  14:37:44 :: INFO :: Number of uniquely mapped reads in forward file : 149635
+2023-09-08 --  14:37:44 :: INFO :: Number of uniquely mapped reads in reverse file : 149635
+2023-09-08 --  14:37:44 :: INFO :: Number of multi mapped reads in forward file : 205421
+2023-09-08 --  14:37:44 :: INFO :: Number of multi mapped reads in reverse file : 196675
+2023-09-08 --  14:37:44 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-08 --  14:38:07 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:38:07 :: INFO :: name: hic_test
+2023-09-08 --  14:38:07 :: INFO :: start_stage: build
+2023-09-08 --  14:38:07 :: INFO :: exit_stage: stats
+2023-09-08 --  14:38:07 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:38:07 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:38:07 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:38:07 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:38:07 :: INFO :: max_alignment: None
+2023-09-08 --  14:38:07 :: INFO :: mapq: 35
+2023-09-08 --  14:38:07 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:38:07 :: INFO :: circular: 
+2023-09-08 --  14:38:07 :: INFO :: rate: 0.2
+2023-09-08 --  14:38:07 :: INFO :: bins: 2000
+2023-09-08 --  14:38:07 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:38:07 :: INFO :: mode: random
+2023-09-08 --  14:38:07 :: INFO :: rounds: 10
+2023-09-08 --  14:38:07 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:38:07 :: INFO :: verbose: False
+2023-09-08 --  14:38:07 :: INFO :: cpus: 16
+2023-09-08 --  14:38:07 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:38:07 :: INFO :: force: False
+2023-09-08 --  14:38:07 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:38:11 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:38:11 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-08 --  14:39:18 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:39:18 :: INFO :: name: hic_test
+2023-09-08 --  14:39:18 :: INFO :: start_stage: stats
+2023-09-08 --  14:39:18 :: INFO :: exit_stage: rescue
+2023-09-08 --  14:39:18 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:39:18 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:39:18 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:39:18 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:39:18 :: INFO :: max_alignment: None
+2023-09-08 --  14:39:18 :: INFO :: mapq: 35
+2023-09-08 --  14:39:18 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:39:18 :: INFO :: circular: 
+2023-09-08 --  14:39:18 :: INFO :: rate: 0.2
+2023-09-08 --  14:39:18 :: INFO :: bins: 2000
+2023-09-08 --  14:39:18 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:39:18 :: INFO :: mode: random
+2023-09-08 --  14:39:18 :: INFO :: rounds: 10
+2023-09-08 --  14:39:18 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:39:18 :: INFO :: verbose: False
+2023-09-08 --  14:39:18 :: INFO :: cpus: 16
+2023-09-08 --  14:39:18 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:39:18 :: INFO :: force: False
+2023-09-08 --  14:39:18 :: INFO :: Saved restriction map at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:39:40 :: INFO :: Saved restriction map at : /home/sardine/Bureau/hic_test/dist.frag.npy
+2023-09-08 --  14:39:40 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa saved in /home/sardine/Bureau/hic_test/xs.npy.
+2023-09-08 --  14:39:41 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:39:41 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/hic_test/d1d2.npy
+2023-09-08 --  14:39:41 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:39:41 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:39:58 :: INFO :: Saved density map at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:39:58 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-08 --  14:40:49 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:40:49 :: INFO :: name: hic_test
+2023-09-08 --  14:40:49 :: INFO :: start_stage: rescue
+2023-09-08 --  14:40:49 :: INFO :: exit_stage: final
+2023-09-08 --  14:40:49 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:40:49 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:40:49 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:40:49 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:40:49 :: INFO :: max_alignment: None
+2023-09-08 --  14:40:49 :: INFO :: mapq: 35
+2023-09-08 --  14:40:49 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:40:49 :: INFO :: circular: 
+2023-09-08 --  14:40:49 :: INFO :: rate: 0.2
+2023-09-08 --  14:40:49 :: INFO :: bins: 2000
+2023-09-08 --  14:40:49 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:40:49 :: INFO :: mode: random
+2023-09-08 --  14:40:49 :: INFO :: rounds: 10
+2023-09-08 --  14:40:49 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:40:49 :: INFO :: verbose: False
+2023-09-08 --  14:40:49 :: INFO :: cpus: 16
+2023-09-08 --  14:40:49 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:40:49 :: INFO :: force: False
+2023-09-08 --  14:40:51 :: INFO :: Chunks saved in /home/sardine/Bureau/hic_test/chunks
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:51 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Launching forward merge with command : samtools merge -f -n --threads 16 /home/sardine/Bureau/hic_test/group2.1.rescued.bam /home/sardine/Bureau/hic_test/forward_1694176851.7210002_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7311168_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7324004_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7349868_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7416828_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7417803_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.741793_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7418797_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7418883_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7419696_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7431839_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7718604_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7756994_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7757523_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7821658_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176851.7843225_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.0047348_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.0624034_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.0914755_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.095321_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1160314_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1189282_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1220138_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1251528_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1434345_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1434634_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.153919_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.160656_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.161552_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1615787_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176852.1615877_predicted.bam
+2023-09-08 --  14:40:52 :: INFO :: Launching reverse merge with command : samtools merge -f -n --threads 16 /home/sardine/Bureau/hic_test/group2.2.rescued.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7210002_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7311168_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7324004_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7349868_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7416828_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7417803_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.741793_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7418797_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7418883_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7419696_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7431839_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7718604_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7756994_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7757523_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7821658_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176851.7843225_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.0047348_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.0624034_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.0914755_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.095321_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1160314_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1189282_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1220138_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1251528_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1434345_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1434634_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.153919_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.160656_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.161552_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1615787_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176852.1615877_predicted.bam
+2023-09-08 --  14:40:52 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:52 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:55 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:40:55 :: INFO :: Ending HiCBERG pipeline at 6
+2023-09-08 --  14:42:28 :: INFO :: Start HiCBERG pipeline
+2023-09-08 --  14:42:28 :: INFO :: name: hic_test
+2023-09-08 --  14:42:28 :: INFO :: start_stage: rescue
+2023-09-08 --  14:42:28 :: INFO :: exit_stage: final
+2023-09-08 --  14:42:28 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-08 --  14:42:28 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-08 --  14:42:28 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-08 --  14:42:28 :: INFO :: sensitivity: very-fast
+2023-09-08 --  14:42:28 :: INFO :: max_alignment: None
+2023-09-08 --  14:42:28 :: INFO :: mapq: 35
+2023-09-08 --  14:42:28 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-08 --  14:42:28 :: INFO :: circular: 
+2023-09-08 --  14:42:28 :: INFO :: rate: 0.2
+2023-09-08 --  14:42:28 :: INFO :: bins: 2000
+2023-09-08 --  14:42:28 :: INFO :: nb_chunks: 32
+2023-09-08 --  14:42:28 :: INFO :: mode: random
+2023-09-08 --  14:42:28 :: INFO :: rounds: 10
+2023-09-08 --  14:42:28 :: INFO :: magnitude: 0.8
+2023-09-08 --  14:42:28 :: INFO :: verbose: False
+2023-09-08 --  14:42:28 :: INFO :: cpus: 16
+2023-09-08 --  14:42:28 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-08 --  14:42:28 :: INFO :: force: False
+2023-09-08 --  14:42:29 :: INFO :: Chunks saved in /home/sardine/Bureau/hic_test/chunks
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:30 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:31 :: INFO :: Launching forward merge with command : samtools merge -f -n --threads 16 /home/sardine/Bureau/hic_test/group2.1.rescued.bam /home/sardine/Bureau/hic_test/forward_1694176950.3565035_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.3745866_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.374957_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.3749673_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.3749764_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.3750014_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.3750796_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.3844383_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.3877532_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.4185102_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.4196708_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.4196749_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.419738_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.4197407_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.4306576_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.4306595_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.5708518_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.600045_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.6329937_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.64433_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.728996_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.7479331_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.7597575_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.761539_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.7615411_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.7643034_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.7785254_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.796713_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.801801_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.802052_predicted.bam /home/sardine/Bureau/hic_test/forward_1694176950.8093457_predicted.bam
+2023-09-08 --  14:42:31 :: INFO :: Launching reverse merge with command : samtools merge -f -n --threads 16 /home/sardine/Bureau/hic_test/group2.2.rescued.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3565035_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3745866_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.374957_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3749673_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3749764_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3750014_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3750796_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3844383_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.3877532_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.4185102_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.4196708_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.4196749_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.419738_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.4197407_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.4306576_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.4306595_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.5708518_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.600045_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.6329937_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.64433_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.728996_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.7479331_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.7597575_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.761539_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.7615411_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.7643034_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.7785254_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.796713_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.801801_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.802052_predicted.bam /home/sardine/Bureau/hic_test/reverse_1694176950.8093457_predicted.bam
+2023-09-08 --  14:42:31 :: INFO :: Predictions successfully merged in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:31 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:34 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:35 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:35 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:37 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:39 :: INFO :: Saved coverages at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:42:43 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:43:38 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:43:38 :: INFO :: Tidying : /home/sardine/Bureau/hic_test
+2023-09-08 --  14:43:38 :: INFO :: Ending HiCBERG pipeline

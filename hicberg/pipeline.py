@@ -50,9 +50,14 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         logger.error("samtools is not available on your system.")
         raise ValueError("samtools is not available on your system.")
     
-    stages = {"fastq": 0, "bam": 1, "stats": 2, "pairs": 3, "rescue": 4, "cool": 5}
+    # stages = {"fastq": 0, "bam": 1, "stats": 2, "pairs": 3, "rescue": 4, "cool": 5}
 
-    out_stage = {"None": None, "bam": 1, "stats": 2, "pairs": 3, "rescue": 4, "cool": 5}
+    # out_stage = {"None": None, "bam": 1, "stats": 2, "pairs": 3, "rescue": 4, "cool": 5}
+
+
+    stages = {"fastq": 0, "bam": 1, "groups": 2, "build": 3, "stats": 4, "rescue": 5, "final": 6}
+
+    out_stage = {"None": None,  "bam": 1, "groups": 2, "build": 3, "stats": 4, "rescue": 5, "final": 6}
 
     start_stage = stages[
         start_stage
@@ -78,9 +83,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hut.get_chromosomes_sizes(genome = genome, output_dir = output_folder)
         hut.get_bin_table(bins = bins, output_dir = output_folder)
 
-        index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
 
-        hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output_folder, cpus = cpus, verbose = True)
 
     if exit_stage == 1:
 
@@ -90,9 +93,10 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage < 2: 
 
+        index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
+        hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output_folder, cpus = cpus, verbose = True)
         hal.hic_view(cpus = cpus, output_dir = output_folder, verbose = True)
         hal.hic_sort(cpus = cpus, output_dir = output_folder, verbose = True)
-        hut.classify_reads(mapq = mapq, output_dir = output_folder)
 
     if exit_stage == 2:
 
@@ -101,13 +105,26 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     
     if start_stage < 3:
 
-        restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output_folder)
-        hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
+        hut.classify_reads(mapq = mapq, output_dir = output_folder)
+
+    if exit_stage == 3:
+
+        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        return
+    
+    if start_stage < 4:
+
         hio.build_pairs(output_dir = output_folder)
         hio.build_matrix(cpus = cpus, output_dir = output_folder)
 
-        
+    if exit_stage == 4:
+        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        return
+    
+    if start_stage < 5:
 
+        restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output_folder)
+        hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
         hst.log_bin_genome(genome = genome, output_dir = output_folder)
 
         p1 = Process(target = hst.get_patterns, kwargs = dict(circular = circular, output_dir = output_folder))
@@ -122,13 +139,15 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         for process in [p1, p2, p3, p4, p5]:
             process.join()
+        
 
+    if exit_stage == 5:
 
-    if exit_stage == 3:
         logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
         return
+
     
-    if start_stage < 4:
+    if start_stage < 6:
 
         restriction_map = hio.load_dictionary(Path(output_folder) / RESTRICTION_MAP)
 
@@ -154,10 +173,18 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         rmtree(folder_to_delete)
 
 
+    if exit_stage == 5:
+
+        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        return
+
+    if start_stage < 6:
+
         hio.build_pairs(mode = True, output_dir = output_folder)
         hio.build_matrix(cpus = cpus, mode = True, output_dir = output_folder)
 
-    if start_stage <= 5:
+
+    if start_stage <= 6:
 
         p1 = Process(target = hpl.plot_laws, kwargs = dict(output_dir = output_folder))
         p2 = Process(target = hpl.plot_trans_ps, kwargs = dict(output_dir = output_folder))
@@ -174,6 +201,11 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         for process in [p1, p2, p3, p4, p5, p6, p7]:
             process.join()        
 
+    # if exit_stage == 6:
+
+    #     logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+    #     return
+    
     # Tidy outputs
 
     logger.info(f"Tidying : {output_folder}")
