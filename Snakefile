@@ -28,6 +28,7 @@ include: 'rules/01_hicberg_step_1.smk'
 include: 'rules/02_hicberg_step_2.smk'
 include: 'rules/03_hicberg_step_3.smk'
 include: 'rules/04_hicberg_step_4.smk'
+include: 'rules/05_hicberg_step_5.smk'
 
 # Specify at least one output of each rule (or one of the last output)  to ensure rule execution.
 rule all:
@@ -37,6 +38,7 @@ rule all:
         "/home/sardine/Bureau/hic_test/group1.1.bam",
         "/home/sardine/Bureau/hic_test/unrescued_map.cool",
         "/home/sardine/Bureau/hic_test/restriction_map.npy",
+        "/home/sardine/Bureau/hic_test/contacts/rescued_map.cool",
         # '/home/sardine/Bureau/hic_test/alignments/rescued_map.cool'
 
 
