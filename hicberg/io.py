@@ -291,38 +291,6 @@ def merge_predictions(output_dir : str = None, clean : bool = True, cpus : int =
     forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
     reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
 
-    # template_file_for, template_file_rev = ps.AlignmentFile(reverse_alignment_chunk_files[0]), ps.AlignmentFile(reverse_alignment_chunk_files[0])
-
-    # merged_forward_alignment_path = output_path / "group2.1.rescued.bam"
-    # merged_reverse_alignment_path = output_path / "group2.2.rescued.bam"
-
-    # merged_forward_alignment_file_handler = ps.AlignmentFile(merged_forward_alignment_path, "wb", template=template_file_for)
-    # merged_reverse_alignment_file_handler = ps.AlignmentFile(merged_reverse_alignment_path, "wb", template=template_file_rev)
-
-
-    # for for_chunk in forward_alignment_chunk_files:
-
-    #     alignement_file = ps.AlignmentFile(for_chunk, "rb")
-    #     for read in alignement_file:
-    #         merged_forward_alignment_file_handler.write(read)
-
-    #     alignement_file.close()
-
-    # for rev_chunk in reverse_alignment_chunk_files:
-
-    #     alignement_file = ps.AlignmentFile(rev_chunk, "rb")
-    #     for read in alignement_file:
-    #         merged_reverse_alignment_file_handler.write(read)
-
-    #     alignement_file.close()
-
-    # template_file_for.close()
-    # template_file_rev.close()
-    # merged_forward_alignment_file_handler.close()
-    # merged_reverse_alignment_file_handler.close()
-
-    # TODO : implement fusion through samtools merge
-
     forward_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
     reverse_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
 

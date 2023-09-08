@@ -18,7 +18,7 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 ## Environment and dependencies
 
-### Environement 
+### Environnement  
 
 Create environment by using following command : 
 
@@ -392,11 +392,11 @@ hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--c
 
 # 6. Build pairs & cool then get results
 hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage rescue  --exit-stage final
-``````
+```
 
 ## Evaluating the model
 
-HiC-BERG provide a method to evaluate the infered reconstructed maps. The evaluation is based on first a split of the original uniquely mapping reads into two sets :
+HiC-BERG provide a method to evaluate the inferred reconstructed maps. The evaluation is based on first a split of the original uniquely mapping reads into two sets :
   
   - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the original alignment files) and used to learn the statistics for read couple inference.
   - __*group1.X_in.bam*__: alignment files where selected reads are duplicated  between all possible genomic intervals defined by the user. Thus ambiguity is introduced in the alignment of the reads.
