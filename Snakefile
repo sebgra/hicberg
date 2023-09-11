@@ -3,8 +3,8 @@
 # Rules to generates the build bowtie2 index and split fastq for alignement.
 
 GENOME = "/home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa"
-R1 = "/home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq"
-R2 = "/home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq"
+R1 = "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz"
+R2 = "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
 
 OUTPUT = "/home/sardine/Bureau/"
 BANK_NAME = "hic_test"
