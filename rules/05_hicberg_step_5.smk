@@ -11,11 +11,11 @@ rule hicberg_step_5:
         
     
     output:
-        rescued_matrix = "/home/sardine/Bureau/hic_test/contacts/rescued_map.cool",
+        rescued_matrix = temp("/home/sardine/Bureau/hic_test/contacts/matrices/rescued_map.cool")
     
     shell:
         """
         hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUTPUT} -r {RATE} \
         -t {THREADS} -m {MODE}  -e {ENZYMES_0} -e {ENZYMES_1} -s {SENSITIVITY} -n {BANK_NAME} -R {ROUNDS} \
-        -M {MAGNITUDE} -f --start-stage rescue  --exit-stage final
+        -M {MAGNITUDE} --start-stage rescue  --exit-stage final
         """

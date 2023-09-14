@@ -11,12 +11,12 @@ rule hicberg_step_3:
         
     
     output:
-        unrescued_matrix = "/home/sardine/Bureau/hic_test/unrescued_map.cool",
+        unrescued_matrix = temp("/home/sardine/Bureau/hic_test/unrescued_map.cool"),
 
     
     shell:
         """
         hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUTPUT} -r {RATE} \
         -t {THREADS} -m {MODE}  -e {ENZYMES_0} -e {ENZYMES_1} -s {SENSITIVITY} -n {BANK_NAME} -R {ROUNDS} \
-        -M {MAGNITUDE} -f --start-stage build  --exit-stage stats
+        -M {MAGNITUDE}  --start-stage build  --exit-stage stats
         """

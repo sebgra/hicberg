@@ -105,6 +105,14 @@ hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq
 
 ```
 
+## Snakemake usage
+
+The hicberg pipeline can be run using snakemake. The pipeline is defined in the file Snakefile. The pipeline can be run using the following command:
+
+```bash
+snakemake --cores [cpus] 
+```
+
 ## Individual components
 
 ### I/O

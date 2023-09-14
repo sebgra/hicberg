@@ -268,7 +268,7 @@ def load_cooler(matrix : str = None) -> cooler.Cooler:
 
     return cooler.Cooler(matrix.as_posix())
 
-def merge_predictions(output_dir : str = None, clean : bool = True, cpus : int = 1) -> None:
+def merge_predictions(output_dir : str = None, clean : bool = True, stage = "prediction", cpus : int = 1) -> None:
     """
     Merge predictions of all chunks of ambiguous reads predictions.
 
@@ -278,6 +278,8 @@ def merge_predictions(output_dir : str = None, clean : bool = True, cpus : int =
         Path to the folder where to save the fused alignment file, by default None
     clean : bool, optional
         Set weither or not to remove temporary chunks, by default True
+    stage : str, optional
+        Set the stage of the merging, by default "prediction". Can be "prediction" or "classification"
     cpus : int, optional
         Number of cpus to use for the merging, by default 1
     """
@@ -288,28 +290,92 @@ def merge_predictions(output_dir : str = None, clean : bool = True, cpus : int =
 
         output_path = Path(output_dir)
 
-    forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
-    reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
+    if stage == "prediction":
 
-    forward_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
-    reverse_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
+        forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
+        reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
 
-    logger.info(f"Launching forward merge with command : {forward_merge_cmd}")
-    # Launch merge
-    sp.run(forward_merge_cmd, shell=True)
+        forward_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
+        reverse_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
 
-    logger.info(f"Launching reverse merge with command : {reverse_merge_cmd}")
-    # Launch merge
-    sp.run(reverse_merge_cmd, shell=True)
+    
 
-    if clean:
+        # logger.info(f"Launching forward merge with command : {forward_merge_cmd}")
+        # Launch merge
+        sp.run(forward_merge_cmd, shell=True)
 
-        for forward_chunk, reverse_chunk in zip(forward_alignment_chunk_files, reverse_alignment_chunk_files):
+        # logger.info(f"Launching reverse merge with command : {reverse_merge_cmd}")
+        # Launch merge
+        sp.run(reverse_merge_cmd, shell=True)
 
-            Path(forward_chunk).unlink()
-            Path(reverse_chunk).unlink()
+        # logger.info(f"Predictions successfully merged in {output_path}")
 
-    logger.info(f"Predictions successfully merged in {output_path}")
+        if clean:
+
+            for forward_chunk, reverse_chunk in zip(forward_alignment_chunk_files, reverse_alignment_chunk_files):
+
+                Path(forward_chunk).unlink()
+                Path(reverse_chunk).unlink()
+
+    elif stage == "classification":
+
+        forward_unaligned_chunk_files = sorted(glob(str(output_path / "group_*_0.1.bam")))
+        reverse_unaligned_chunk_files = sorted(glob(str(output_path / "group_*_0.2.bam")))
+        forward_aligned_chunk_files = sorted(glob(str(output_path / "group_*_1.1.bam")))
+        reverse_aligned_chunk_files = sorted(glob(str(output_path / "group_*_1.2.bam")))
+        forward_multi_aligned_chunk_files = sorted(glob(str(output_path / "group_*_2.1.bam")))
+        reverse_multi_aligned_chunk_files = sorted(glob(str(output_path / "group_*_2.2.bam")))
+
+
+        forward_group0_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group0.1.bam'} {' '.join(forward_unaligned_chunk_files)}"
+        reverse_group0_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group0.2.bam'} {' '.join(reverse_unaligned_chunk_files)}"
+
+
+        forward_group1_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group1.1.bam'} {' '.join(forward_aligned_chunk_files)}"
+        reverse_group1_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group1.2.bam'} {' '.join(reverse_aligned_chunk_files)}"
+
+        forward_group2_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.bam'} {' '.join(forward_multi_aligned_chunk_files)}"
+        reverse_group2_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.bam'} {' '.join(reverse_multi_aligned_chunk_files)}"
+
+        # Unaligned reads
+        # Launch merge
+        sp.run(forward_group0_merge_cmd, shell=True)
+
+        # Launch merge
+        sp.run(reverse_group0_merge_cmd, shell=True)
+
+        # Aligned once reads
+        # Launch merge
+        sp.run(forward_group1_merge_cmd, shell=True)
+
+        # Launch merge
+        sp.run(reverse_group1_merge_cmd, shell=True)
+
+        # Multi-aligned reads
+        # Launch merge
+        sp.run(forward_group2_merge_cmd, shell=True)
+
+        # Launch merge
+        sp.run(reverse_group2_merge_cmd, shell=True)
+
+        logger.info(f"Groups successfully merged in {output_path}")
+
+        if clean:
+
+            for forward_chunk, reverse_chunk in zip(forward_unaligned_chunk_files, reverse_unaligned_chunk_files):
+
+                Path(forward_chunk).unlink()
+                Path(reverse_chunk).unlink()
+
+            for forward_chunk, reverse_chunk in zip(forward_aligned_chunk_files, reverse_aligned_chunk_files):
+
+                Path(forward_chunk).unlink()
+                Path(reverse_chunk).unlink()
+    
+            for forward_chunk, reverse_chunk in zip(forward_multi_aligned_chunk_files, reverse_multi_aligned_chunk_files):
+
+                Path(forward_chunk).unlink()
+                Path(reverse_chunk).unlink()
 
 def tidy_folder(output_dir : str = None) -> None:
     """

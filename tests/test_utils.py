@@ -147,7 +147,7 @@ def test_classify_reads(temporary_folder, test_hic_sort, test_get_chromosomes_si
     """
 
     temp_dir_path = Path(temporary_folder)
-    hut.classify_reads(forward_bam_file = test_hic_sort[0], reverse_bam_file = test_hic_sort[1] , chromosome_sizes = test_get_chromosomes_sizes, mapq = MIN_READ_MAPQ,  output_dir = temp_dir_path)
+    hut.classify_reads(bam_couple =  (test_hic_sort[0], test_hic_sort[1]) , chromosome_sizes = test_get_chromosomes_sizes, mapq = MIN_READ_MAPQ,  output_dir = temp_dir_path)
     
     forward_unmapped_path = temp_dir_path / FORWARD_UNMAPPED_BAM
     reverse_unmapped_path = temp_dir_path / REVERSE_UNMAPPED_BAM
@@ -396,11 +396,32 @@ def test_block_counter(test_classify_reads):
     Test if the block counter function is correctly counting the number of blocks in a bam file.
     """
 
-    forward_bam_file, reverse_bam_file = str(test_classify_reads[2]), str(test_classify_reads[3])
+    forward_bam_file, reverse_bam_file = str(test_classify_reads[0]), str(test_classify_reads[1])
+
+    print(f"forward_bam_file: {forward_bam_file}")
+    print(f"reverse_bam_file: {reverse_bam_file}")
 
     nb_forward_block, nb_reverse_block = hut.block_counter(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file)
     
     assert nb_forward_block != 0 and nb_reverse_block != 0
+
+@pytest.fixture(scope = "module")
+def test_chunk_bam_classification(temporary_folder, test_hic_sort):
+    """
+    Test if the chunk bam function is correctly chunking a couple of bam file (classification stage).
+    """
+
+    temp_dir_path = Path(temporary_folder)
+    forward_bam_file, reverse_bam_file = str(test_hic_sort[0]), str(test_hic_sort[1])
+    hut.chunk_bam(forward_bam_file = forward_bam_file, reverse_bam_file = reverse_bam_file, nb_chunks = 12, output_dir = temp_dir_path)
+
+    chunks_path = temp_dir_path / 'chunks'
+    
+    is_full =  any(chunks_path.iterdir())
+
+    yield chunks_path
+
+    assert is_full
 
 @pytest.fixture(scope = "module")
 def test_chunk_bam(temporary_folder, test_classify_reads):
@@ -441,12 +462,12 @@ def test_mad_smoothing(temporary_folder):
 
     assert np.sum(smoothed_matrix) != 0
 
-def test_get_chunks(test_chunk_bam):
-    """
-    Test if chunks are correctly get.
-    """
-    ret = test_chunk_bam
+# def test_get_chunks(test_chunk_bam):
+#     """
+#     Test if chunks are correctly get.
+#     """
+#     ret = test_chunk_bam
 
-    assert True
+#     assert True
 
 

@@ -6,11 +6,11 @@ rule hicberg_step_2:
         genome = GENOME,
         r1 = R1,
         r2 = R2,
-        forward_sorted_bam = temp("/home/sardine/Bureau/hic_test/1.sorted.bam"),
-        reverse_sorted_bam = temp("/home/sardine/Bureau/hic_test/2.sorted.bam")
+        forward_sorted_bam = "/home/sardine/Bureau/hic_test/1.sorted.bam",
+        reverse_sorted_bam = "/home/sardine/Bureau/hic_test/2.sorted.bam"
     
     output:
-        forward_mapped_bam = "/home/sardine/Bureau/hic_test/group1.1.bam",
+        forward_mapped_bam = temp("/home/sardine/Bureau/hic_test/group1.1.bam")
 
 
     shell:

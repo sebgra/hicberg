@@ -3,14 +3,14 @@
 # Rules to generates the build bowtie2 index and split fastq for alignement.
 
 GENOME = "/home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa"
-R1 = "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz"
-R2 = "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
+R1 = "/home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq"
+R2 = "/home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq"
 
 OUTPUT = "/home/sardine/Bureau/"
 BANK_NAME = "hic_test"
 THREADS = 16
 RATE = 0.2
-MODE = "random"
+MODE = "full"
 # START = "fastq"
 # EXIT = "bam"
 ROUNDS = 10
@@ -38,7 +38,6 @@ rule all:
         "/home/sardine/Bureau/hic_test/group1.1.bam",
         "/home/sardine/Bureau/hic_test/unrescued_map.cool",
         "/home/sardine/Bureau/hic_test/restriction_map.npy",
-        "/home/sardine/Bureau/hic_test/contacts/rescued_map.cool",
-        # '/home/sardine/Bureau/hic_test/alignments/rescued_map.cool'
+        "/home/sardine/Bureau/hic_test/contacts/matrices/rescued_map.cool",
 
 

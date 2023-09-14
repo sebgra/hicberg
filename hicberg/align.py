@@ -9,7 +9,7 @@ from hicberg import logger
 
 def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , verbose : bool = False) -> None:
     """
-    Building of bowtie2 index (.bt2l files) for read alignement.
+    Building of bowtie2 index (.bt2l files) for read alignment.
 
     Parameters
     ----------
@@ -20,7 +20,7 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
     output_dir : str, optional
         Path where the Bowtie2 index files should be stored, by default None
     verbose : bool, optional
-        Set weither or not the shell command should be printed, by default False
+        Set wether or not the shell command should be printed, by default False
     """
 
     try:
@@ -54,7 +54,7 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
     sample = Path(genome).stem
     index_path = Path(output_dir, sample)
 
-    cmd_index = f"bowtie2-build -q -f  --large-index {genome} {index_path}"
+    cmd_index = f"bowtie2-build -q -f --threads {cpus} --large-index {genome} {index_path}"
 
     if verbose:
 
@@ -70,7 +70,7 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
 
 def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
-    lignement of reads from HiC experiments along an indexed genome.
+    Alignment of reads from HiC experiments along an indexed genome.
 
     Parameters
     ----------
@@ -98,7 +98,7 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
 
     if not fq_for_path.is_file() or not fq_rev_path.is_file():
 
-        raise IOError(f"Wront path to fastq files : {fq_for_path} or {fq_rev_path} given. \
+        raise IOError(f"Wrong path to fastq files : {fq_for_path} or {fq_rev_path} given. \
                     Pease provide existing files.")
     
     if output_dir is None:    
@@ -144,12 +144,12 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
     if stderr_rev:
         logger.info(stderr_rev.decode('ascii'))
 
-    logger.info(f"Alignement saved at {output_path}")
+    logger.info(f"Alignment saved at {output_path}")
 
 
 def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
-    Conversion of .sam alignement files to .bam alignement format (using samtools).
+    Conversion of .sam alignment files to .bam alignment format (using samtools).
 
     Parameters
     ----------
@@ -160,9 +160,9 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
     output_dir : str, optional
-        Path where the alignement files (.bam) should be stored, by default None
+        Path where the alignment files (.bam) should be stored, by default None
     verbose : bool, optional
-        Set weither or not the shell command should be printed, by default False
+        Set wether or not the shell command should be printed, by default False
     """
 
     try:
@@ -184,7 +184,7 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
     
 
     cmd_view_for = f"samtools view -S -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
@@ -203,27 +203,27 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
     (output_path / sam_for).unlink()
     (output_path / sam_rev).unlink()
 
-    logger.info(f"Compressed alignemnet alignement done at {output_path}")
+    logger.info(f"Compressed  alignment done at {output_path}")
 
 
 
 
 def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
-    Sort .bam alignement files by read_name  (using samtools).
+    Sort .bam alignment files by read_name  (using samtools).
 
     Parameters
     ----------
     bam_for : str, optional
-        Forward alignement file to be sorted, by default "1.bam"
+        Forward alignment file to be sorted, by default "1.bam"
     bam_rev : str, optional
-        Reverse alignement file to be sorted, by default "2.bam"
+        Reverse alignment file to be sorted, by default "2.bam"
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
     output_dir : str, optional
-        Path where the alignement files (.bam) should be stored, by default None
+        Path where the alignment files (.bam) should be stored, by default None
     verbose : bool, optional
-        Set weither or not the shell command should be printed, by default False
+        Set wether or not the shell command should be printed, by default False
 
     """
 
@@ -264,7 +264,7 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
     (output_path / '1.bam').unlink()
     (output_path / '2.bam').unlink()
 
-    logger.info(f"Sorted alignement done at {output_path}")
+    logger.info(f"Sorted alignment done at {output_path}")
 
 
 
@@ -275,20 +275,16 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
     Parameters
     ----------
     bam_for : str, optional
-        Forward alignement file to be indexed, by default "1.sorted.bam"
+        Forward alignment file to be indexed, by default "1.sorted.bam"
     bam_rev : str, optional
-        Reverse alignement file to be indexed,, by default "2.sorted.bam"
+        Reverse alignment file to be indexed,, by default "2.sorted.bam"
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
     output_dir : str, optional
-        Path where the alignement files (.bam) should be stored, by default None
+        Path where the alignment files (.bam) should be stored, by default None
     verbose : bool, optional
-        Set weither or not the shell command should be printed, by default False
+        Set wether or not the shell command should be printed, by default False
 
-    Returns
-    -------
-    [type]
-        [description]
     """
 
     try:
@@ -323,7 +319,7 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
     sp.run([cmd_index_for], shell=True)
     sp.run([cmd_index_rev], shell=True)
 
-    logger.info(f"Indexed alignement done at {output_path}")
+    logger.info(f"Indexed alignment done at {output_path}")
 
 
 

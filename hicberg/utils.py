@@ -1,3 +1,4 @@
+import time
 from glob import glob
 import subprocess as sp
 import shutil as sh
@@ -306,7 +307,7 @@ def is_reverse(read : pysam.AlignedSegment) -> bool:
     else:
         return False
 
-def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : str = "2.sorted.bam", chromosome_sizes : str = "chromosome_sizes.npy", mapq : int = 35, output_dir : str = None) -> None:
+def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam"), chromosome_sizes : str = "chromosome_sizes.npy", mapq : int = 35, output_dir : str = None) -> None:
     """
     Classification of pairs of reads in 2 different groups:
         Group 0) --> (Unmappable) - files :group0.1.bam and group0.2.bam
@@ -315,10 +316,8 @@ def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : s
 
     Parameters
     ----------
-    forward_bam_file : str, optional
-        Path to forward .bam alignment file, by default 1.sorted.bam
-    reverse_bam_file : str, optional
-        Path to reverse .bam alignment file, by default 2.sorted.bam
+    bam_couple : tuple[str, str]
+        Tuple containing the paths to the forward and reverse alignment files. By default ("1.sorted.bam", "2.sorted.bam")
     chromosome_sizes : str, optional
         Path to a chromosome size dictionary save in .npy format, by default chromosome_sizes.npy
     mapq : int, optional
@@ -327,7 +326,7 @@ def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : s
         Path to the folder where to save the classified alignment files, by default None
     """
 
-    forward_bam_file_path, reverse_bam_file_path = Path(output_dir, forward_bam_file), Path(output_dir, reverse_bam_file)
+    forward_bam_file_path, reverse_bam_file_path = Path(output_dir, bam_couple[0]), Path(output_dir, bam_couple[1])
 
     chromosome_sizes_path = Path(output_dir, chromosome_sizes)
 
@@ -356,21 +355,20 @@ def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : s
     forward_bam_file = pysam.AlignmentFile(forward_bam_file_path, "rb")
     reverse_bam_file = pysam.AlignmentFile(reverse_bam_file_path, "rb")
 
-
     # create iterators
-
     forward_bam_file_iter = bam_iterator(forward_bam_file_path)
     reverse_bam_file_iter = bam_iterator(reverse_bam_file_path)
 
-    # open the output files handlers
-    unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / "group0.1.bam", "wb", template = forward_bam_file)
-    unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / "group0.2.bam", "wb", template = reverse_bam_file)
+    file_id = time.time()
 
-    uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / "group1.1.bam", "wb", template = forward_bam_file)
-    uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / "group1.2.bam", "wb", template = reverse_bam_file)
+    unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{file_id}_0.1.bam", "wb", template = forward_bam_file)
+    unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{file_id}_0.2.bam", "wb", template = reverse_bam_file)
 
-    multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / "group2.1.bam", "wb", template = forward_bam_file)
-    multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / "group2.2.bam", "wb", template = reverse_bam_file)
+    uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{file_id}_1.1.bam", "wb", template = forward_bam_file)
+    uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{file_id}_1.2.bam", "wb", template = reverse_bam_file)
+
+    multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{file_id}_2.1.bam", "wb", template = forward_bam_file)
+    multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{file_id}_2.2.bam", "wb", template = reverse_bam_file)
 
     unmapped_forward_counter, unmapped_reverse_counter = 0, 0
     uniquely_mapped_forward_counter, uniquely_mapped_reverse_counter = 0, 0
@@ -449,12 +447,12 @@ def classify_reads(forward_bam_file : str = "1.sorted.bam", reverse_bam_file : s
 
     logger.info(f"Files for the different groups have been saved in {output_dir}")
 
-    logger.info(f"Number of unmapped reads in forward file : {unmapped_forward_counter}")
-    logger.info(f"Number of unmapped reads in reverse file : {unmapped_reverse_counter}")
-    logger.info(f"Number of uniquely mapped reads in forward file : {uniquely_mapped_forward_counter}")
-    logger.info(f"Number of uniquely mapped reads in reverse file : {uniquely_mapped_reverse_counter}")
-    logger.info(f"Number of multi mapped reads in forward file : {multi_mapped_forward_counter}")
-    logger.info(f"Number of multi mapped reads in reverse file : {multi_mapped_reverse_counter}")
+    # logger.info(f"Number of unmapped reads in forward file : {unmapped_forward_counter}")
+    # logger.info(f"Number of unmapped reads in reverse file : {unmapped_reverse_counter}")
+    # logger.info(f"Number of uniquely mapped reads in forward file : {uniquely_mapped_forward_counter}")
+    # logger.info(f"Number of uniquely mapped reads in reverse file : {uniquely_mapped_reverse_counter}")
+    # logger.info(f"Number of multi mapped reads in forward file : {multi_mapped_forward_counter}")
+    # logger.info(f"Number of multi mapped reads in reverse file : {multi_mapped_reverse_counter}")
 
     # Cleaning files after classification
     forward_bam_file_path.unlink()
@@ -875,6 +873,10 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
                 for read_rev in block_rev:
 
                     outfile_rev.write(read_rev)
+            
+            # Close current chunk
+            outfile_for.close()
+            outfile_rev.close()
 
             # Switch to next chunk
             chunk_size_index += 1
@@ -905,6 +907,10 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
         for read_rev in block_rev:
 
             outfile_rev.write(read_rev)
+    
+    # Close last chunk
+    outfile_for.close()
+    outfile_rev.close()
 
     forward_bam_handler.close()
     reverse_bam_handler.close()
@@ -1033,14 +1039,18 @@ def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
     output_dir : str, optional
         Path to get chunks from, by default None
 
+
     Returns
     -------
     tuple([List[str], List[str]]
         Tuple containing the paths to the forward and reverse chunks.
-    """    
+    """
+
+
 
     forward_chunks = sorted(glob(output_dir + '/chunks/chunk_for_*.bam'))
     reverse_chunks = sorted(glob(output_dir + '/chunks/chunk_rev_*.bam'))
+
 
     return (forward_chunks, reverse_chunks)
 
