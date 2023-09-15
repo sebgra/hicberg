@@ -381,25 +381,25 @@ It is possible to chain the different steps of the pipeline by using the followi
 
 ```bash
 # 0. Prepare analysis
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage fastq  --exit-stage bam
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage fastq  --exit-stage bam
 
 # 1. Align reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage bam  --exit-stage groups
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage bam  --exit-stage groups
 
 # 2. Group reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage groups  --exit-stage build
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage groups  --exit-stage build
 
 # 3. Build pairs & cool
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage build  --exit-stage stats
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage build  --exit-stage stats
 
 # 4. Compute statistics
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage stats  --exit-stage rescue
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage stats  --exit-stage rescue
 
 # 5. Reassign ambiguous reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage rescue  --exit-stage final
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
 
 # 6. Build pairs & cool then get results
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=["DpnII", "HinfI"]] [--mode="full"] --name=NAME   --start-stage rescue  --exit-stage final
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
 ```
 
 ## Evaluating the model
@@ -471,8 +471,6 @@ The benchmark can be performed considering several modes. The modes are defined 
 - no_density
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
-
-
 
 The evaluation can be run using the following command :
 
