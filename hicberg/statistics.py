@@ -117,7 +117,7 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     genome : str, optional
         Path to the genome to digest, by default None, by default None
     enzyme : list[str], optional
-        Enzyme or list of enzyme to digest the genome with., by default None, by default ["DpnII"]
+        Enzyme or list of enzyme to digest the genome with. If integer passed, micro-C mode using Mnase is used, and the integer correspond to the size of nucleosomal fragment, by default None, by default ["DpnII"]
     output_dir : str, optional
         Path to the folder where to save the plot, by default None
 
@@ -143,28 +143,45 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     
     
     restriction_map_dictionary = dict()
-    
-    restriction_batch = Restriction.RestrictionBatch()
-    for enz in enzyme:
-        restriction_batch.add(enz)
 
-    # parse sequence from fasta file
-    for seq_record in SeqIO.parse(genome, "fasta"):
+    if len(enzyme) == 1 and enzyme[0].isnumeric():
+        enzyme = int(enzyme[0])
 
-        # Get restriction map from the restriction batch.
-        restriction_map = restriction_batch.search(seq_record.seq)
+        for seq_record in SeqIO.parse(genome, "fasta"):
 
-        # Convert dictionary values to numpy array
-        restriction_map_array = np.sort(
-            np.array([pos for sites in restriction_map.values() for pos in sites])
-        )
-        restriction_map_array = np.insert(
-            restriction_map_array,
-            [0, len(restriction_map_array)],
-            [0, len(seq_record.seq)],
-        )
+            # Get restriction map from the restriction batch.
+            restriction_map = np.arange(0, len(seq_record.seq), enzyme)
+            restriction_map = np.insert(
+                restriction_map,
+                [len(restriction_map)],
+                [len(seq_record.seq)],
+            )
+            restriction_map_dictionary[seq_record.id] = restriction_map
 
-        restriction_map_dictionary[seq_record.id] = restriction_map_array
+    elif type(enzyme) == str or type(enzyme) == list:
+
+        restriction_batch = Restriction.RestrictionBatch()
+        for enz in enzyme:
+            restriction_batch.add(enz)
+
+        # parse sequence from fasta file
+        for seq_record in SeqIO.parse(genome, "fasta"):
+
+            # Get restriction map from the restriction batch.
+            restriction_map = restriction_batch.search(seq_record.seq)
+
+            # Convert dictionary values to numpy array
+            restriction_map_array = np.sort(
+                np.array([pos for sites in restriction_map.values() for pos in sites])
+            )
+            restriction_map_array = np.insert(
+                restriction_map_array,
+                [0, len(restriction_map_array)],
+                [0, len(seq_record.seq)],
+            )
+
+            restriction_map_dictionary[seq_record.id] = restriction_map_array
+
 
     np.save(output_path / RESTRICTION_MAP, restriction_map_dictionary)
 

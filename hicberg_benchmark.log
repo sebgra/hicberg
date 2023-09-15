@@ -7269,3 +7269,138 @@
 2023-09-14 --  18:06:19 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/hic_test
 2023-09-14 --  18:06:19 :: INFO :: Tidying : /home/sardine/Bureau/hic_test
 2023-09-14 --  18:06:19 :: INFO :: Ending HiCBERG pipeline
+2023-09-14 --  18:11:06 :: INFO :: Start HiCBERG pipeline
+2023-09-14 --  18:11:06 :: INFO :: name: hic_test
+2023-09-14 --  18:11:06 :: INFO :: start_stage: fastq
+2023-09-14 --  18:11:06 :: INFO :: exit_stage: None
+2023-09-14 --  18:11:06 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-14 --  18:11:06 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-14 --  18:11:06 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-14 --  18:11:06 :: INFO :: sensitivity: very-fast
+2023-09-14 --  18:11:06 :: INFO :: max_alignment: None
+2023-09-14 --  18:11:06 :: INFO :: mapq: 35
+2023-09-14 --  18:11:06 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-14 --  18:11:06 :: INFO :: circular: 
+2023-09-14 --  18:11:06 :: INFO :: rate: 0.2
+2023-09-14 --  18:11:06 :: INFO :: bins: 2000
+2023-09-14 --  18:11:06 :: INFO :: nb_chunks: 32
+2023-09-14 --  18:11:06 :: INFO :: mode: full
+2023-09-14 --  18:11:06 :: INFO :: rounds: 10
+2023-09-14 --  18:11:06 :: INFO :: magnitude: 0.8
+2023-09-14 --  18:11:06 :: INFO :: verbose: False
+2023-09-14 --  18:11:06 :: INFO :: cpus: 16
+2023-09-14 --  18:11:06 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-14 --  18:11:06 :: INFO :: force: True
+2023-09-14 --  18:11:06 :: INFO :: Folder /home/sardine/Bureau/hic_test created.
+2023-09-14 --  18:11:06 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/hic_test/chromosome_sizes.npy
+2023-09-14 --  18:11:11 :: INFO :: Index built at /home/sardine/Bureau/hic_test/SC288_with_micron
+2023-09-14 --  18:11:11 :: INFO :: bowtie2 --very-fast -p 16 -a -x /home/sardine/Bureau/hic_test/SC288_with_micron -S /home/sardine/Bureau/hic_test/1.sam /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-14 --  18:11:11 :: INFO :: bowtie2 --very-fast -p 16 -a -x /home/sardine/Bureau/hic_test/SC288_with_micron -S /home/sardine/Bureau/hic_test/2.sam /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-14 --  18:11:13 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    13625 (6.81%) aligned 0 times
+    166964 (83.48%) aligned exactly 1 time
+    19411 (9.71%) aligned >1 times
+93.19% overall alignment rate
+
+2023-09-14 --  18:11:13 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    10570 (5.29%) aligned 0 times
+    169498 (84.75%) aligned exactly 1 time
+    19932 (9.97%) aligned >1 times
+94.72% overall alignment rate
+
+2023-09-14 --  18:11:13 :: INFO :: Alignment saved at /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:13 :: INFO :: samtools view -S -b /home/sardine/Bureau/hic_test/1.sam -o /home/sardine/Bureau/hic_test/1.bam --threads 16
+2023-09-14 --  18:11:13 :: INFO :: samtools view -S -b /home/sardine/Bureau/hic_test/2.sam -o /home/sardine/Bureau/hic_test/2.bam --threads 16
+2023-09-14 --  18:11:13 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:13 :: INFO :: samtools sort -n /home/sardine/Bureau/hic_test/1.bam -o /home/sardine/Bureau/hic_test/1.sorted.bam --threads 16
+2023-09-14 --  18:11:13 :: INFO :: samtools sort -n /home/sardine/Bureau/hic_test/2.bam -o /home/sardine/Bureau/hic_test/2.sorted.bam --threads 16
+2023-09-14 --  18:11:14 :: INFO :: Sorted alignment done at /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:18 :: INFO :: Chunks saved in /home/sardine/Bureau/hic_test/chunks
+2023-09-14 --  18:11:18 :: INFO :: Starting reads classification
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:19 :: INFO :: Groups successfully merged in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:20 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:24 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:24 :: INFO :: Saved restriction map at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:45 :: INFO :: Saved restriction map at : /home/sardine/Bureau/hic_test/dist.frag.npy
+2023-09-14 --  18:11:45 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa saved in /home/sardine/Bureau/hic_test/xs.npy.
+2023-09-14 --  18:11:46 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:47 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/hic_test/d1d2.npy
+2023-09-14 --  18:11:47 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:11:47 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:03 :: INFO :: Saved density map at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:05 :: INFO :: Chunks saved in /home/sardine/Bureau/hic_test/chunks
+2023-09-14 --  18:12:06 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:06 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:07 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:08 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:09 :: INFO :: Predictions written in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:10 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:13 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:14 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:14 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:16 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:18 :: INFO :: Saved coverages at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:12:22 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:13:16 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:13:16 :: INFO :: Tidying : /home/sardine/Bureau/hic_test
+2023-09-14 --  18:13:16 :: INFO :: Ending HiCBERG pipeline
