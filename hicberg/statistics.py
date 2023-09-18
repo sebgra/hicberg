@@ -309,9 +309,11 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
 
     for seq_record in SeqIO.parse(genome, "fasta"):
 
+        seq_name = seq_record.id
+
+        
         if seq_record.id in restriction_map.keys():
 
-            seq_name = seq_record.id
             map_size = restriction_map[seq_name].shape[0]
 
             forward_distances = pdist(

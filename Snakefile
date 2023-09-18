@@ -25,7 +25,7 @@ TMP = join(config['base_dir'], config['tmp_dir'])
 REF_DIR = join(config['base_dir'], config['ref_dir'])
 FASTQ_DIR = join(config['base_dir'], config['fastq_dir'])
 
-SAMPLES = config.[samples.library]
+SAMPLES = samples
 
 
 

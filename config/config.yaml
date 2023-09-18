@@ -32,16 +32,29 @@ Sc288:
     mode: "full"
     res: 2000
 
-
 # Species arguments
-Sc288:
-    name : "P_falciparum"
-    ref: "p_flaciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
+E_coli:
+    name : "CC336"
+    ref: "/home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa"
     annotation: ""
-    circular: ["Pf3D7_MIT_v3", "Pf3D7_API_v3"]
-    enzyme : ["MboI"]
+    circular: ["NC-000913.3"]
+    enzyme : ["DpnII", "HinfI"]
     sampling_rate: 0.3
     rounds : 10
     magnitude : 0.8
     mode: "full"
-    res: 10000
+    res: 2000
+
+
+# # Species arguments
+# P_falciparum:
+#     name : "P_falciparum"
+#     ref: "p_flaciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
+#     annotation: ""
+#     circular: ["Pf3D7_MIT_v3", "Pf3D7_API_v3"]
+#     enzyme : ["MboI"]
+#     sampling_rate: 0.3
+#     rounds : 10
+#     magnitude : 0.8
+#     mode: "full"
+#     res: 10000
