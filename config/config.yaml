@@ -1,149 +1,47 @@
 samples: "config/samples.csv"
-base_dir: "/pasteur/appa/homes/ambignau/rsg_fast/T7/"
-out_dir: "data"
+base_dir: "/pasteur/zeus/projets/p02/rsg_fast/sgradit"
+out_dir: "results"
 tmp_dir: "tmp"
-ref_dir: "fasta/"
-fastq_dir: "fastq/"
+ref_dir: "genomes/"
+fastq_dir: "reads/"
 
-threads: 32
-threads_small: 8
-threads_serp: 25
+threads: 64
+threads_small: 32
+threads_big : 128
 
 # Alignment arguments
-n_splits: 10
-bowtie2_args: "--sensitive-local"
+max_alignment: 100
+bowtie2_args: "--very-sensitive"
 
 # Contatc map arguments
 balance_args: "--mad-max 10 --min-nnz 5"
 cmap: Reds
 zoom_width: 32000
 
-# EPODs
-epods: "wt_m9_rdm_glu_epod_calls.gff"
 
 # Species arguments
-E_coli:
-    ref: "ecoli_k12_mg1655.fa"
-    annotation: "ecoli_k12_mg1655.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
+Sc288:
+    name : "Sc288"
+    ref: "Sc288/SC288_with_micron.fa"
+    annotation: ""
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzyme : ["DpnII", "HinfI"]
+    sampling_rate: 0.5
+    rounds : 10
+    magnitude : 0.8
+    mode: "full"
+    res: 2000
 
-RSG_B12:
-    ref: "RSG_B12.fa"
-    annotation: "RSG_B12.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
 
-RSG_B834:
-    ref: "RSG_B834.fa"
-    annotation: "RSG_B834.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
-
-RSG_B835:
-    ref: "RSG_B835.fa"
-    annotation: "RSG_B835.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
-
-RSG_B836:
-    ref: "RSG_B836.fa"
-    annotation: "RSG_B836.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
-
-RSG_B837:
-    ref: "RSG_B837.fa"
-    annotation: "RSG_B837.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
-
-RSG_B838:
-    ref: "RSG_B838.fa"
-    annotation: "RSG_B838.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
-
-RSG_B229:
-    ref: "RSG_B229.fa"
-    annotation: "RSG_B229.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 5000, 8000]
-
-V_cholerae:
-    ref: "v_cholerae.fa"
-    annotation: "v_cholerae.gff3"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 8000]
-
-H_volcanii:
-    ref: "h_volcanii.fa"
-    annotation: "h_volcanii.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 8000]
-
-H_salinarum:
-    ref: "h_salinarum.fa"
-    annotation: "h_salinarum.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 8000]
-
-T_kodakarensis:
-    ref: "t_kodakarensis.fa"
-    annotation: "t_kodakarensis.gff"
-    circular: True
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 8000]
-
-S_cerevisiae:
-    ref: "W303.fa"
-    annotation: "W303.gff3"
-    circular: False
-    window: 50000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 8000]
-
-A_castellanii:
-    ref: "a_castellanii.fa"
-    annotation: "a_castellanii.gff3"
-    circular: False
-    window: 100000
-    threshold: 20
-    unit_length: 3000
-    res: [500, 1000, 2000, 4000, 8000, 20000, 50000]
+# Species arguments
+Sc288:
+    name : "P_falciparum"
+    ref: "p_flaciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
+    annotation: ""
+    circular: ["Pf3D7_MIT_v3", "Pf3D7_API_v3"]
+    enzyme : ["MboI"]
+    sampling_rate: 0.3
+    rounds : 10
+    magnitude : 0.8
+    mode: "full"
+    res: 10000

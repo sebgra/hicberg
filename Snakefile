@@ -1,5 +1,46 @@
 #!/bin/env snakemake -s
 
+import numpy as np
+import pandas as pd
+from os.path import join
+from snakemake.utils import validate
+
+# Set parameters.
+shell.prefix("set -euo pipefail;")
+
+# LOAD CONFIG FILES
+configfile: 'config/config.yaml'
+
+samples = pd.read_csv(
+    config['samples'], 
+    sep=';', 
+    dtype=str,
+    comment='#',
+).set_index(['library'], drop=False)
+
+# Set paths for both input and output files.
+
+OUT_DIR = join(config['base_dir'], config['out_dir'])
+TMP = join(config['base_dir'], config['tmp_dir'])
+REF_DIR = join(config['base_dir'], config['ref_dir'])
+FASTQ_DIR = join(config['base_dir'], config['fastq_dir'])
+
+SAMPLES = config.[samples.library]
+
+
+
+
+
+print(f"OUT_DIR: {OUT_DIR}")
+print(f"TMP: {TMP}")
+print(f"REF_DIR: {REF_DIR}")
+print(f"FASTQ_DIR: {FASTQ_DIR}")
+print(f"SAMPLES: {SAMPLES}")
+
+########################################################################
+########################### TEST PART ##################################
+########################################################################
+
 # Rules to generates the build bowtie2 index and split fastq for alignement.
 
 GENOME = "/home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa"
