@@ -172,9 +172,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         # Get chunks as lists
         forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_folder)
 
-
-        print(f"Starting reads reattribution")
-
         # Reattribute reads
         with multiprocessing.Pool(processes = cpus) as pool: # cpus
 

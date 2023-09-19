@@ -102,11 +102,11 @@ shell.prefix("set -euo pipefail;")
 
 # Pipeline sub-workflows
 include: 'rules/00_hicberg_step_0.smk'
-# include: 'rules/01_hicberg_step_1.smk'
-# include: 'rules/02_hicberg_step_2.smk'
-# include: 'rules/03_hicberg_step_3.smk'
-# include: 'rules/04_hicberg_step_4.smk'
-# include: 'rules/05_hicberg_step_5.smk'
+include: 'rules/01_hicberg_step_1.smk'
+include: 'rules/02_hicberg_step_2.smk'
+include: 'rules/03_hicberg_step_3.smk'
+include: 'rules/04_hicberg_step_4.smk'
+include: 'rules/05_hicberg_step_5.smk'
 
 # print(f"test : {expand(join(OUT_DIR, '{libraries}', 'index/'), libraries=libraries)}")
 
@@ -115,10 +115,15 @@ rule all:
     input: 
         # expand(join(OUT_DIR, '{libraries}', 'index/'), libraries=libraries), 
         expand(join(OUT_DIR, '{libraries}', "fragments_fixed_sizes.txt"), libraries=libraries),
+        expand(join(OUT_DIR, '{libraries}', "1.sorted.bam"), libraries=libraries),
         # "/home/sardine/Bureau/hic_test/1.sorted.bam",
         # "/home/sardine/Bureau/hic_test/group1.1.bam",
+        expand(join(OUT_DIR, '{libraries}', "group1.1.bam"), libraries=libraries),
         # "/home/sardine/Bureau/hic_test/unrescued_map.cool",
+        expand(join(OUT_DIR, '{libraries}', "unrescued_map.cool"), libraries=libraries),
         # "/home/sardine/Bureau/hic_test/restriction_map.npy",
+        expand(join(OUT_DIR, '{libraries}', "restriction_map.npy"), libraries=libraries),
+        expand(join(OUT_DIR, '{libraries}', "contacts", "matrices", "rescued_map.cool"), libraries = libraries)
         # "/home/sardine/Bureau/hic_test/contacts/matrices/rescued_map.cool",
 
 
