@@ -11,6 +11,12 @@ rule hicberg_step_1:
     params:
     #     main_directory = directory("/home/sardine/Bureau/hic_test/"),
         name = '{libraries}',
+        sampling_rate = lambda w: samples.sampling_rates[w.libraries],
+        enzyme = lambda w: samples.enzymes[w.libraries],
+        mode = lambda w: samples.modes[w.libraries],
+        rounds = lambda w: samples.rounds[w.libraries],
+        magnitude = lambda w: samples.magnitudes[w.libraries],
+        max_reports = lambda w: samples.max_reports[w.libraries],
 
     output: 
         # forward_sorted_bam = temp("/home/sardine/Bureau/hic_test/1.sorted.bam"),
@@ -20,7 +26,7 @@ rule hicberg_step_1:
 
     shell: 
         """
-        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {RATE} \
-        -t {THREADS} -m {MODE}  -e {ENZYMES_0} -e {ENZYMES_1} -s {SENSITIVITY} -n {params.name} -R {ROUNDS} \
-        -M {MAGNITUDE}   --start-stage bam  --exit-stage groups
+        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate} -t {THREADS} \
+        -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -R {params.rounds} -M {params.magnitude} -k {params.max_reports} \
+        --start-stage bam  --exit-stage groups -f
         """

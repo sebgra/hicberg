@@ -107,11 +107,57 @@ hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq
 
 ## Snakemake usage
 
+### Configuration
+
+Several parameters and Hi-C banks can be set in the file config.yaml. The parameters are the following:
+
+```yaml
+samples: "config/samples.csv"
+base_dir: Path to the base directory containing data
+out_dir: Path where to save results
+ref_dir: Path to the folder containing genomes 
+fastq_dir:  Path to the folder containing fastq files
+
+name : library_name
+    ref: Path to the reference genome from ref_dir 
+    R1: Path to the foward reads file from fastq_dir
+    R2: Path to the reverse read file from fastq_dir
+    circular: Coma separated list of circular chromosomes
+    enzymes : Coma separated list of enzymes used for the experiment
+    sampling_rate: Sampling rate of the restriction map
+    rounds : Number of rounds for the reconstruction (diffusion mode)
+    magnitude : Magnitude of the sampling rate (diffusion mode)
+    mode: Mode to use for reconstruction
+    res: Resolution of the contact matrix (in bp)
+```
+
+The samples.csv file can be used to set the parameters for each library. The file is a csv file with the following columns:
+
+```csv
+library;species;sampling_rates;enzymes;rounds;magnitudes;modes;resolutions;max_reports
+
+#sample_1
+library_name_1;species_1;sampling_rate_1;enzymes_1;rounds_1;magnitude_1;mode_1;resolutions_1;max_reports_1
+
+#sample_2
+library_name_2;species_2;sampling_rate_2;enzymes_2;rounds_2;magnitude_2;mode_2;resolutions_2;max_reports_2
+```
+
+
+
+### Run
+
+#### Locally
+
 The hicberg pipeline can be run using snakemake. The pipeline is defined in the file Snakefile. The pipeline can be run using the following command:
 
 ```bash
-snakemake --cores [cpus] 
+snakemake --cores [cpus]
 ```
+
+#### Cluster
+
+To be completed
 
 ## Individual components
 

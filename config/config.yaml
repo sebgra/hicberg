@@ -1,7 +1,6 @@
 samples: "config/samples.csv"
 base_dir: "/home/sardine/Documents/"
 out_dir: "/home/sardine/Bureau/results"
-tmp_dir: "tmp"
 ref_dir: "genomes/"
 fastq_dir: "reads/"
 
@@ -13,11 +12,6 @@ threads_big : 128
 max_alignment: 100
 bowtie2_args: "--very-sensitive"
 
-# Contatc map arguments
-balance_args: "--mad-max 10 --min-nnz 5"
-cmap: Reds
-zoom_width: 32000
-
 # Species arguments
 
 Sc288_2m:
@@ -26,9 +20,8 @@ Sc288_2m:
     ref: "Sc288_2m/SC288_with_micron.fa"
     R1: "/home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq"
     R2: "/home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq"
-    annotation: ""
     circular: ["plasmid_p2-micron", "chrM"]
-    enzyme : ["DpnII", "HinfI"]
+    enzymes : ["DpnII", "HinfI"]
     sampling_rate: 0.5
     rounds : 10
     magnitude : 0.8
@@ -40,77 +33,10 @@ CC336:
     ref: "e_coli/ecoli_k12_mg1655.fa"
     R1 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq"
     R2 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq"
-    annotation: ""
     circular: ["NC-000913.3"]
-    enzyme : ["DpnII", "HinfI"]
+    enzymes : ["DpnII", "HinfI"]
     sampling_rate: 0.3
     rounds : 10
     magnitude : 0.8
     mode: "full"
     res: 2000
-
-
-# samples:
-
-#     Sc288:
-
-#         - "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz"
-#         - "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
-
-#     E_coli:
-
-#         - "/home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz"
-#         - "/home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz"
-
-
-# # Species arguments
-# Sc288:
-#     name : "Sc288"
-#     ref: "Sc288_2m/SC288_with_micron.fa"
-#     annotation: ""
-#     circular: ["plasmid_p2-micron", "chrM"]
-#     enzyme : ["DpnII", "HinfI"]
-#     sampling_rate: 0.5
-#     rounds : 10
-#     magnitude : 0.8
-#     mode: "full"
-#     res: 2000
-
-# # Species arguments
-# E_coli:
-#     name : "CC336"
-#     ref: "e_coli/ecoli_k12_mg1655.fa"
-#     annotation: ""
-#     circular: ["NC-000913.3"]
-#     enzyme : ["DpnII", "HinfI"]
-#     sampling_rate: 0.3
-#     rounds : 10
-#     magnitude : 0.8
-#     mode: "full"
-#     res: 2000
-
-# # Species arguments
-# Sc288:
-#     name : "Sc288"
-#     ref: "Sc288/SC288_with_micron.fa"
-#     annotation: ""
-#     circular: ["plasmid_p2-micron", "chrM"]
-#     enzyme : ["DpnII", "HinfI"]
-#     sampling_rate: 0.5
-#     rounds : 10
-#     magnitude : 0.8
-#     mode: "full"
-
-
-# # Species arguments
-# P_falciparum:
-#     name : "P_falciparum"
-#     ref: "p_flaciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
-#     annotation: ""
-#     circular: ["Pf3D7_MIT_v3", "Pf3D7_API_v3"]
-#     enzyme : ["MboI"]
-#     sampling_rate: 0.3
-#     rounds : 10
-#     magnitude : 0.8
-#     mode: "full"
-#     res: 10000
