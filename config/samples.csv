@@ -1,6 +1,9 @@
 # TODO : To modify
 
-library;sampling_rate;rounds;magnitude;;mode;resoltuion
+library;species;sampling_rate;enzymes;rounds;magnitude;mode;resoltuion
 
-#SC288
-Sc288;0.5;10;0.8;full;2000
+#SC288_2m
+Sc288_2m;s_cerevisiae;0.5;DpnII,HinfI;10;0.8;full;2000
+
+#CC336
+CC336;e_coli;0.3;DpnII,HinfI;10;0.8;full;2000

@@ -7404,3 +7404,528 @@
 2023-09-14 --  18:13:16 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/hic_test
 2023-09-14 --  18:13:16 :: INFO :: Tidying : /home/sardine/Bureau/hic_test
 2023-09-14 --  18:13:16 :: INFO :: Ending HiCBERG pipeline
+2023-09-18 --  13:59:42 :: INFO :: Start HiCBERG pipeline
+2023-09-18 --  13:59:42 :: INFO :: name: hic_test
+2023-09-18 --  13:59:42 :: INFO :: start_stage: fastq
+2023-09-18 --  13:59:42 :: INFO :: exit_stage: bam
+2023-09-18 --  13:59:42 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-18 --  13:59:42 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-18 --  13:59:42 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-18 --  13:59:42 :: INFO :: sensitivity: very-fast
+2023-09-18 --  13:59:42 :: INFO :: max_alignment: None
+2023-09-18 --  13:59:42 :: INFO :: mapq: 35
+2023-09-18 --  13:59:42 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-18 --  13:59:42 :: INFO :: circular: 
+2023-09-18 --  13:59:42 :: INFO :: rate: 0.2
+2023-09-18 --  13:59:42 :: INFO :: bins: 2000
+2023-09-18 --  13:59:42 :: INFO :: nb_chunks: 32
+2023-09-18 --  13:59:42 :: INFO :: mode: full
+2023-09-18 --  13:59:42 :: INFO :: rounds: 10
+2023-09-18 --  13:59:42 :: INFO :: magnitude: 0.8
+2023-09-18 --  13:59:42 :: INFO :: verbose: False
+2023-09-18 --  13:59:42 :: INFO :: cpus: 16
+2023-09-18 --  13:59:42 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-18 --  13:59:42 :: INFO :: force: True
+2023-09-18 --  13:59:42 :: INFO :: Folder /home/sardine/Bureau/hic_test created.
+2023-09-18 --  13:59:42 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/hic_test/chromosome_sizes.npy
+2023-09-18 --  13:59:42 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:30:33 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:30:33 :: INFO :: name: [CC336 Sc288_2m]
+2023-09-19 --  11:30:33 :: INFO :: start_stage: fastq
+2023-09-19 --  11:30:33 :: INFO :: exit_stage: bam
+2023-09-19 --  11:30:33 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:30:33 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:30:33 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:30:33 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:30:33 :: INFO :: max_alignment: None
+2023-09-19 --  11:30:33 :: INFO :: mapq: 35
+2023-09-19 --  11:30:33 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:30:33 :: INFO :: circular: 
+2023-09-19 --  11:30:33 :: INFO :: rate: 0.2
+2023-09-19 --  11:30:33 :: INFO :: bins: 2000
+2023-09-19 --  11:30:33 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:30:33 :: INFO :: mode: full
+2023-09-19 --  11:30:33 :: INFO :: rounds: 10
+2023-09-19 --  11:30:33 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:30:33 :: INFO :: verbose: False
+2023-09-19 --  11:30:33 :: INFO :: cpus: 16
+2023-09-19 --  11:30:33 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:30:33 :: INFO :: force: True
+2023-09-19 --  11:30:33 :: INFO :: Folder /home/sardine/Bureau/[CC336 Sc288_2m] created.
+2023-09-19 --  11:30:33 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/[CC336 Sc288_2m]/chromosome_sizes.npy
+2023-09-19 --  11:30:33 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:30:33 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:30:33 :: INFO :: name: [CC336 Sc288_2m]
+2023-09-19 --  11:30:33 :: INFO :: start_stage: fastq
+2023-09-19 --  11:30:33 :: INFO :: exit_stage: bam
+2023-09-19 --  11:30:33 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:30:33 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:30:33 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:30:33 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:30:33 :: INFO :: max_alignment: None
+2023-09-19 --  11:30:33 :: INFO :: mapq: 35
+2023-09-19 --  11:30:33 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:30:33 :: INFO :: circular: 
+2023-09-19 --  11:30:33 :: INFO :: rate: 0.2
+2023-09-19 --  11:30:33 :: INFO :: bins: 2000
+2023-09-19 --  11:30:33 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:30:33 :: INFO :: mode: full
+2023-09-19 --  11:30:33 :: INFO :: rounds: 10
+2023-09-19 --  11:30:33 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:30:33 :: INFO :: verbose: False
+2023-09-19 --  11:30:33 :: INFO :: cpus: 16
+2023-09-19 --  11:30:33 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:30:33 :: INFO :: force: True
+2023-09-19 --  11:30:33 :: INFO :: Folder /home/sardine/Bureau/[CC336 Sc288_2m] created.
+2023-09-19 --  11:30:33 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/[CC336 Sc288_2m]/chromosome_sizes.npy
+2023-09-19 --  11:30:33 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:32:57 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:32:57 :: INFO :: name: [CC336 Sc288_2m]
+2023-09-19 --  11:32:57 :: INFO :: start_stage: fastq
+2023-09-19 --  11:32:57 :: INFO :: exit_stage: bam
+2023-09-19 --  11:32:57 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:32:57 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:32:57 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:32:57 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:32:57 :: INFO :: max_alignment: None
+2023-09-19 --  11:32:57 :: INFO :: mapq: 35
+2023-09-19 --  11:32:57 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:32:57 :: INFO :: circular: 
+2023-09-19 --  11:32:57 :: INFO :: rate: 0.2
+2023-09-19 --  11:32:57 :: INFO :: bins: 2000
+2023-09-19 --  11:32:57 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:32:57 :: INFO :: mode: full
+2023-09-19 --  11:32:57 :: INFO :: rounds: 10
+2023-09-19 --  11:32:57 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:32:57 :: INFO :: verbose: False
+2023-09-19 --  11:32:57 :: INFO :: cpus: 16
+2023-09-19 --  11:32:57 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:32:57 :: INFO :: force: True
+2023-09-19 --  11:32:57 :: INFO :: Folder /home/sardine/Bureau/[CC336 Sc288_2m] created.
+2023-09-19 --  11:32:57 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/[CC336 Sc288_2m]/chromosome_sizes.npy
+2023-09-19 --  11:32:57 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:32:57 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:32:57 :: INFO :: name: [CC336 Sc288_2m]
+2023-09-19 --  11:32:57 :: INFO :: start_stage: fastq
+2023-09-19 --  11:32:57 :: INFO :: exit_stage: bam
+2023-09-19 --  11:32:57 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:32:57 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:32:57 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:32:57 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:32:57 :: INFO :: max_alignment: None
+2023-09-19 --  11:32:57 :: INFO :: mapq: 35
+2023-09-19 --  11:32:57 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:32:57 :: INFO :: circular: 
+2023-09-19 --  11:32:57 :: INFO :: rate: 0.2
+2023-09-19 --  11:32:57 :: INFO :: bins: 2000
+2023-09-19 --  11:32:57 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:32:57 :: INFO :: mode: full
+2023-09-19 --  11:32:57 :: INFO :: rounds: 10
+2023-09-19 --  11:32:57 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:32:57 :: INFO :: verbose: False
+2023-09-19 --  11:32:57 :: INFO :: cpus: 16
+2023-09-19 --  11:32:57 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:32:57 :: INFO :: force: True
+2023-09-19 --  11:32:57 :: INFO :: Folder /home/sardine/Bureau/[CC336 Sc288_2m] created.
+2023-09-19 --  11:32:57 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/[CC336 Sc288_2m]/chromosome_sizes.npy
+2023-09-19 --  11:32:57 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:35:37 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:35:37 :: INFO :: name: CC336
+2023-09-19 --  11:35:37 :: INFO :: start_stage: fastq
+2023-09-19 --  11:35:37 :: INFO :: exit_stage: bam
+2023-09-19 --  11:35:37 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:35:37 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:35:37 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:35:37 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:35:37 :: INFO :: max_alignment: None
+2023-09-19 --  11:35:37 :: INFO :: mapq: 35
+2023-09-19 --  11:35:37 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:35:37 :: INFO :: circular: 
+2023-09-19 --  11:35:37 :: INFO :: rate: 0.2
+2023-09-19 --  11:35:37 :: INFO :: bins: 2000
+2023-09-19 --  11:35:37 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:35:37 :: INFO :: mode: full
+2023-09-19 --  11:35:37 :: INFO :: rounds: 10
+2023-09-19 --  11:35:37 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:35:37 :: INFO :: verbose: False
+2023-09-19 --  11:35:37 :: INFO :: cpus: 16
+2023-09-19 --  11:35:37 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:35:37 :: INFO :: force: True
+2023-09-19 --  11:35:37 :: INFO :: Folder /home/sardine/Bureau/CC336 created.
+2023-09-19 --  11:35:37 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/CC336/chromosome_sizes.npy
+2023-09-19 --  11:35:37 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:35:37 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:35:37 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:35:37 :: INFO :: start_stage: fastq
+2023-09-19 --  11:35:37 :: INFO :: exit_stage: bam
+2023-09-19 --  11:35:37 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:35:37 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:35:37 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:35:37 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:35:37 :: INFO :: max_alignment: None
+2023-09-19 --  11:35:37 :: INFO :: mapq: 35
+2023-09-19 --  11:35:37 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:35:37 :: INFO :: circular: 
+2023-09-19 --  11:35:37 :: INFO :: rate: 0.2
+2023-09-19 --  11:35:37 :: INFO :: bins: 2000
+2023-09-19 --  11:35:37 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:35:37 :: INFO :: mode: full
+2023-09-19 --  11:35:37 :: INFO :: rounds: 10
+2023-09-19 --  11:35:37 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:35:37 :: INFO :: verbose: False
+2023-09-19 --  11:35:37 :: INFO :: cpus: 16
+2023-09-19 --  11:35:37 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:35:37 :: INFO :: force: True
+2023-09-19 --  11:35:37 :: INFO :: Folder /home/sardine/Bureau/Sc288_2m created.
+2023-09-19 --  11:35:37 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:35:37 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:36:19 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:36:19 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:36:19 :: INFO :: start_stage: fastq
+2023-09-19 --  11:36:19 :: INFO :: exit_stage: bam
+2023-09-19 --  11:36:19 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:36:19 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:36:19 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:36:19 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:36:19 :: INFO :: max_alignment: None
+2023-09-19 --  11:36:19 :: INFO :: mapq: 35
+2023-09-19 --  11:36:19 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:36:19 :: INFO :: circular: 
+2023-09-19 --  11:36:19 :: INFO :: rate: 0.2
+2023-09-19 --  11:36:19 :: INFO :: bins: 2000
+2023-09-19 --  11:36:19 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:36:19 :: INFO :: mode: full
+2023-09-19 --  11:36:19 :: INFO :: rounds: 10
+2023-09-19 --  11:36:19 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:36:19 :: INFO :: verbose: False
+2023-09-19 --  11:36:19 :: INFO :: cpus: 16
+2023-09-19 --  11:36:19 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:36:19 :: INFO :: force: True
+2023-09-19 --  11:36:19 :: INFO :: Folder /home/sardine/Bureau/Sc288_2m created.
+2023-09-19 --  11:36:19 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:36:19 :: INFO :: name: CC336
+2023-09-19 --  11:36:19 :: INFO :: start_stage: fastq
+2023-09-19 --  11:36:19 :: INFO :: exit_stage: bam
+2023-09-19 --  11:36:19 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:36:19 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:36:19 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:36:19 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:36:19 :: INFO :: max_alignment: None
+2023-09-19 --  11:36:19 :: INFO :: mapq: 35
+2023-09-19 --  11:36:19 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:36:19 :: INFO :: circular: 
+2023-09-19 --  11:36:19 :: INFO :: rate: 0.2
+2023-09-19 --  11:36:19 :: INFO :: bins: 2000
+2023-09-19 --  11:36:19 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:36:19 :: INFO :: mode: full
+2023-09-19 --  11:36:19 :: INFO :: rounds: 10
+2023-09-19 --  11:36:19 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:36:19 :: INFO :: verbose: False
+2023-09-19 --  11:36:19 :: INFO :: cpus: 16
+2023-09-19 --  11:36:19 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:36:19 :: INFO :: force: True
+2023-09-19 --  11:36:19 :: INFO :: Folder /home/sardine/Bureau/CC336 created.
+2023-09-19 --  11:36:19 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:36:19 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:36:19 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/CC336/chromosome_sizes.npy
+2023-09-19 --  11:36:19 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:36:52 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:36:52 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:36:52 :: INFO :: start_stage: fastq
+2023-09-19 --  11:36:52 :: INFO :: exit_stage: bam
+2023-09-19 --  11:36:52 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:36:52 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:36:52 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:36:52 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:36:52 :: INFO :: max_alignment: None
+2023-09-19 --  11:36:52 :: INFO :: mapq: 35
+2023-09-19 --  11:36:52 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:36:52 :: INFO :: circular: 
+2023-09-19 --  11:36:52 :: INFO :: rate: 0.2
+2023-09-19 --  11:36:52 :: INFO :: bins: 2000
+2023-09-19 --  11:36:52 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:36:52 :: INFO :: mode: full
+2023-09-19 --  11:36:52 :: INFO :: rounds: 10
+2023-09-19 --  11:36:52 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:36:52 :: INFO :: verbose: False
+2023-09-19 --  11:36:52 :: INFO :: cpus: 16
+2023-09-19 --  11:36:52 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:36:52 :: INFO :: force: True
+2023-09-19 --  11:36:52 :: INFO :: Folder /home/sardine/Bureau/Sc288_2m created.
+2023-09-19 --  11:36:52 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:36:52 :: INFO :: name: CC336
+2023-09-19 --  11:36:52 :: INFO :: start_stage: fastq
+2023-09-19 --  11:36:52 :: INFO :: exit_stage: bam
+2023-09-19 --  11:36:52 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:36:52 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:36:52 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:36:52 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:36:52 :: INFO :: max_alignment: None
+2023-09-19 --  11:36:52 :: INFO :: mapq: 35
+2023-09-19 --  11:36:52 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:36:52 :: INFO :: circular: 
+2023-09-19 --  11:36:52 :: INFO :: rate: 0.2
+2023-09-19 --  11:36:52 :: INFO :: bins: 2000
+2023-09-19 --  11:36:52 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:36:52 :: INFO :: mode: full
+2023-09-19 --  11:36:52 :: INFO :: rounds: 10
+2023-09-19 --  11:36:52 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:36:52 :: INFO :: verbose: False
+2023-09-19 --  11:36:52 :: INFO :: cpus: 16
+2023-09-19 --  11:36:52 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:36:52 :: INFO :: force: True
+2023-09-19 --  11:36:52 :: INFO :: Folder /home/sardine/Bureau/CC336 created.
+2023-09-19 --  11:36:52 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:36:52 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:36:52 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/CC336/chromosome_sizes.npy
+2023-09-19 --  11:36:52 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:37:56 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:37:56 :: INFO :: name: CC336
+2023-09-19 --  11:37:56 :: INFO :: start_stage: fastq
+2023-09-19 --  11:37:56 :: INFO :: exit_stage: bam
+2023-09-19 --  11:37:56 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:37:56 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:37:56 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:37:56 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:37:56 :: INFO :: max_alignment: None
+2023-09-19 --  11:37:56 :: INFO :: mapq: 35
+2023-09-19 --  11:37:56 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:37:56 :: INFO :: circular: 
+2023-09-19 --  11:37:56 :: INFO :: rate: 0.2
+2023-09-19 --  11:37:56 :: INFO :: bins: 2000
+2023-09-19 --  11:37:56 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:37:56 :: INFO :: mode: full
+2023-09-19 --  11:37:56 :: INFO :: rounds: 10
+2023-09-19 --  11:37:56 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:37:56 :: INFO :: verbose: False
+2023-09-19 --  11:37:56 :: INFO :: cpus: 16
+2023-09-19 --  11:37:56 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:37:56 :: INFO :: force: True
+2023-09-19 --  11:37:56 :: INFO :: Folder /home/sardine/Bureau/CC336 created.
+2023-09-19 --  11:37:56 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:37:56 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:37:56 :: INFO :: start_stage: fastq
+2023-09-19 --  11:37:56 :: INFO :: exit_stage: bam
+2023-09-19 --  11:37:56 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:37:56 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:37:56 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:37:56 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:37:56 :: INFO :: max_alignment: None
+2023-09-19 --  11:37:56 :: INFO :: mapq: 35
+2023-09-19 --  11:37:56 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:37:56 :: INFO :: circular: 
+2023-09-19 --  11:37:56 :: INFO :: rate: 0.2
+2023-09-19 --  11:37:56 :: INFO :: bins: 2000
+2023-09-19 --  11:37:56 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:37:56 :: INFO :: mode: full
+2023-09-19 --  11:37:56 :: INFO :: rounds: 10
+2023-09-19 --  11:37:56 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:37:56 :: INFO :: verbose: False
+2023-09-19 --  11:37:56 :: INFO :: cpus: 16
+2023-09-19 --  11:37:56 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:37:56 :: INFO :: force: True
+2023-09-19 --  11:37:56 :: INFO :: Folder /home/sardine/Bureau/Sc288_2m created.
+2023-09-19 --  11:37:56 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/CC336/chromosome_sizes.npy
+2023-09-19 --  11:37:56 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:37:56 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:37:56 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:39:05 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:39:05 :: INFO :: name: CC336
+2023-09-19 --  11:39:05 :: INFO :: start_stage: fastq
+2023-09-19 --  11:39:05 :: INFO :: exit_stage: bam
+2023-09-19 --  11:39:05 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:39:05 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:39:05 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:39:05 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:39:05 :: INFO :: max_alignment: None
+2023-09-19 --  11:39:05 :: INFO :: mapq: 35
+2023-09-19 --  11:39:05 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:39:05 :: INFO :: circular: 
+2023-09-19 --  11:39:05 :: INFO :: rate: 0.2
+2023-09-19 --  11:39:05 :: INFO :: bins: 2000
+2023-09-19 --  11:39:05 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:39:05 :: INFO :: mode: full
+2023-09-19 --  11:39:05 :: INFO :: rounds: 10
+2023-09-19 --  11:39:05 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:39:05 :: INFO :: verbose: False
+2023-09-19 --  11:39:05 :: INFO :: cpus: 16
+2023-09-19 --  11:39:05 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:39:05 :: INFO :: force: True
+2023-09-19 --  11:39:05 :: INFO :: Folder /home/sardine/Bureau/CC336 created.
+2023-09-19 --  11:39:05 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/CC336/chromosome_sizes.npy
+2023-09-19 --  11:39:05 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:39:05 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:39:05 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:39:05 :: INFO :: start_stage: fastq
+2023-09-19 --  11:39:05 :: INFO :: exit_stage: bam
+2023-09-19 --  11:39:05 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:39:05 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:39:05 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:39:05 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:39:05 :: INFO :: max_alignment: None
+2023-09-19 --  11:39:05 :: INFO :: mapq: 35
+2023-09-19 --  11:39:05 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:39:05 :: INFO :: circular: 
+2023-09-19 --  11:39:05 :: INFO :: rate: 0.2
+2023-09-19 --  11:39:05 :: INFO :: bins: 2000
+2023-09-19 --  11:39:05 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:39:05 :: INFO :: mode: full
+2023-09-19 --  11:39:05 :: INFO :: rounds: 10
+2023-09-19 --  11:39:05 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:39:05 :: INFO :: verbose: False
+2023-09-19 --  11:39:05 :: INFO :: cpus: 16
+2023-09-19 --  11:39:05 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:39:05 :: INFO :: force: True
+2023-09-19 --  11:39:05 :: INFO :: Folder /home/sardine/Bureau/Sc288_2m created.
+2023-09-19 --  11:39:05 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:39:05 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:42:47 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:42:47 :: INFO :: name: CC336
+2023-09-19 --  11:42:47 :: INFO :: start_stage: fastq
+2023-09-19 --  11:42:47 :: INFO :: exit_stage: bam
+2023-09-19 --  11:42:47 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:42:47 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:42:47 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:42:47 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:42:47 :: INFO :: max_alignment: None
+2023-09-19 --  11:42:47 :: INFO :: mapq: 35
+2023-09-19 --  11:42:47 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:42:47 :: INFO :: circular: 
+2023-09-19 --  11:42:47 :: INFO :: rate: 0.2
+2023-09-19 --  11:42:47 :: INFO :: bins: 2000
+2023-09-19 --  11:42:47 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:42:47 :: INFO :: mode: full
+2023-09-19 --  11:42:47 :: INFO :: rounds: 10
+2023-09-19 --  11:42:47 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:42:47 :: INFO :: verbose: False
+2023-09-19 --  11:42:47 :: INFO :: cpus: 16
+2023-09-19 --  11:42:47 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:42:47 :: INFO :: force: True
+2023-09-19 --  11:42:47 :: INFO :: Folder /home/sardine/Bureau/CC336 created.
+2023-09-19 --  11:42:47 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:42:47 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:42:47 :: INFO :: start_stage: fastq
+2023-09-19 --  11:42:47 :: INFO :: exit_stage: bam
+2023-09-19 --  11:42:47 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:42:47 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:42:47 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:42:47 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:42:47 :: INFO :: max_alignment: None
+2023-09-19 --  11:42:47 :: INFO :: mapq: 35
+2023-09-19 --  11:42:47 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:42:47 :: INFO :: circular: 
+2023-09-19 --  11:42:47 :: INFO :: rate: 0.2
+2023-09-19 --  11:42:47 :: INFO :: bins: 2000
+2023-09-19 --  11:42:47 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:42:47 :: INFO :: mode: full
+2023-09-19 --  11:42:47 :: INFO :: rounds: 10
+2023-09-19 --  11:42:47 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:42:47 :: INFO :: verbose: False
+2023-09-19 --  11:42:47 :: INFO :: cpus: 16
+2023-09-19 --  11:42:47 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:42:47 :: INFO :: force: True
+2023-09-19 --  11:42:47 :: INFO :: Folder /home/sardine/Bureau/Sc288_2m created.
+2023-09-19 --  11:42:47 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/CC336/chromosome_sizes.npy
+2023-09-19 --  11:42:47 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:42:47 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:42:47 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:50:13 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:50:13 :: INFO :: name: CC336
+2023-09-19 --  11:50:13 :: INFO :: start_stage: fastq
+2023-09-19 --  11:50:13 :: INFO :: exit_stage: bam
+2023-09-19 --  11:50:13 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:50:13 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:50:13 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:50:13 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:50:13 :: INFO :: max_alignment: None
+2023-09-19 --  11:50:13 :: INFO :: mapq: 35
+2023-09-19 --  11:50:13 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:50:13 :: INFO :: circular: 
+2023-09-19 --  11:50:13 :: INFO :: rate: 0.2
+2023-09-19 --  11:50:13 :: INFO :: bins: 2000
+2023-09-19 --  11:50:13 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:50:13 :: INFO :: mode: full
+2023-09-19 --  11:50:13 :: INFO :: rounds: 10
+2023-09-19 --  11:50:13 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:50:13 :: INFO :: verbose: False
+2023-09-19 --  11:50:13 :: INFO :: cpus: 16
+2023-09-19 --  11:50:13 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:50:13 :: INFO :: force: True
+2023-09-19 --  11:50:13 :: INFO :: Folder /home/sardine/Bureau/CC336 created.
+2023-09-19 --  11:50:13 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/CC336/chromosome_sizes.npy
+2023-09-19 --  11:50:13 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:50:13 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:50:13 :: INFO :: start_stage: fastq
+2023-09-19 --  11:50:13 :: INFO :: exit_stage: bam
+2023-09-19 --  11:50:13 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:50:13 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:50:13 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:50:13 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:50:13 :: INFO :: max_alignment: None
+2023-09-19 --  11:50:13 :: INFO :: mapq: 35
+2023-09-19 --  11:50:13 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:50:13 :: INFO :: circular: 
+2023-09-19 --  11:50:13 :: INFO :: rate: 0.2
+2023-09-19 --  11:50:13 :: INFO :: bins: 2000
+2023-09-19 --  11:50:13 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:50:13 :: INFO :: mode: full
+2023-09-19 --  11:50:13 :: INFO :: rounds: 10
+2023-09-19 --  11:50:13 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:50:13 :: INFO :: verbose: False
+2023-09-19 --  11:50:13 :: INFO :: cpus: 16
+2023-09-19 --  11:50:13 :: INFO :: output_dir: /home/sardine/Bureau/
+2023-09-19 --  11:50:13 :: INFO :: force: True
+2023-09-19 --  11:50:13 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:50:13 :: INFO :: Folder /home/sardine/Bureau/Sc288_2m created.
+2023-09-19 --  11:50:13 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:50:13 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:52:36 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:52:36 :: INFO :: name: CC336
+2023-09-19 --  11:52:36 :: INFO :: start_stage: fastq
+2023-09-19 --  11:52:36 :: INFO :: exit_stage: bam
+2023-09-19 --  11:52:36 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-19 --  11:52:36 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-19 --  11:52:36 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-19 --  11:52:36 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:52:36 :: INFO :: max_alignment: None
+2023-09-19 --  11:52:36 :: INFO :: mapq: 35
+2023-09-19 --  11:52:36 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:52:36 :: INFO :: circular: 
+2023-09-19 --  11:52:36 :: INFO :: rate: 0.2
+2023-09-19 --  11:52:36 :: INFO :: bins: 2000
+2023-09-19 --  11:52:36 :: INFO :: Start HiCBERG pipeline
+2023-09-19 --  11:52:36 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:52:36 :: INFO :: mode: full
+2023-09-19 --  11:52:36 :: INFO :: rounds: 10
+2023-09-19 --  11:52:36 :: INFO :: name: Sc288_2m
+2023-09-19 --  11:52:36 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:52:36 :: INFO :: start_stage: fastq
+2023-09-19 --  11:52:36 :: INFO :: verbose: False
+2023-09-19 --  11:52:36 :: INFO :: exit_stage: bam
+2023-09-19 --  11:52:36 :: INFO :: cpus: 16
+2023-09-19 --  11:52:36 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-19 --  11:52:36 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-19 --  11:52:36 :: INFO :: force: True
+2023-09-19 --  11:52:36 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-19 --  11:52:36 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-19 --  11:52:36 :: INFO :: sensitivity: very-fast
+2023-09-19 --  11:52:36 :: INFO :: max_alignment: None
+2023-09-19 --  11:52:36 :: INFO :: mapq: 35
+2023-09-19 --  11:52:36 :: INFO :: enzyme: ('DpnII', 'HinfI')
+2023-09-19 --  11:52:36 :: INFO :: circular: 
+2023-09-19 --  11:52:36 :: INFO :: rate: 0.2
+2023-09-19 --  11:52:36 :: INFO :: bins: 2000
+2023-09-19 --  11:52:36 :: INFO :: Folder /home/sardine/Bureau/results/CC336 created.
+2023-09-19 --  11:52:36 :: INFO :: nb_chunks: 32
+2023-09-19 --  11:52:36 :: INFO :: mode: full
+2023-09-19 --  11:52:36 :: INFO :: rounds: 10
+2023-09-19 --  11:52:36 :: INFO :: magnitude: 0.8
+2023-09-19 --  11:52:36 :: INFO :: verbose: False
+2023-09-19 --  11:52:36 :: INFO :: cpus: 16
+2023-09-19 --  11:52:36 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-19 --  11:52:36 :: INFO :: force: True
+2023-09-19 --  11:52:36 :: INFO :: Folder /home/sardine/Bureau/results/Sc288_2m created.
+2023-09-19 --  11:52:36 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/CC336/chromosome_sizes.npy
+2023-09-19 --  11:52:36 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-19 --  11:52:36 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/Sc288_2m/chromosome_sizes.npy
+2023-09-19 --  11:52:36 :: INFO :: Ending HiCBERG pipeline at 1

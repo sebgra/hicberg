@@ -145,6 +145,7 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     restriction_map_dictionary = dict()
 
     if len(enzyme) == 1 and enzyme[0].isnumeric():
+        print("Micro-C mode activated.")
         enzyme = int(enzyme[0])
 
         for seq_record in SeqIO.parse(genome, "fasta"):
@@ -158,10 +159,14 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
             )
             restriction_map_dictionary[seq_record.id] = restriction_map
 
-    elif type(enzyme) == str or type(enzyme) == list:
+    elif type(enzyme) == str or type(enzyme) == list or type(enzyme) == tuple:
 
         restriction_batch = Restriction.RestrictionBatch()
+
+        if len(enzyme) == 1:
+            enzyme = enzyme[0].split(",")
         for enz in enzyme:
+            print(f"enz : {enz}")
             restriction_batch.add(enz)
 
         # parse sequence from fasta file

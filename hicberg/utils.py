@@ -163,6 +163,8 @@ def get_bin_table(chrom_sizes_dict : str = "chromosome_sizes.npy", bins : int = 
 
     output_file = folder_path / "fragments_fixed_sizes.txt"
 
+    print(f"output_file : {output_file}")
+
     chrom_size_dic = np.load(chrom_sizes_dict_path, allow_pickle=True).item()
     chr_count = 0
 
