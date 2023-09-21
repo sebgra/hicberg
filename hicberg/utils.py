@@ -1,4 +1,5 @@
 import time
+import uuid
 from glob import glob
 import subprocess as sp
 import shutil as sh
@@ -162,8 +163,6 @@ def get_bin_table(chrom_sizes_dict : str = "chromosome_sizes.npy", bins : int = 
         folder_path = Path(output_dir)
 
     output_file = folder_path / "fragments_fixed_sizes.txt"
-
-    # print(f"output_file : {output_file}")
 
     chrom_size_dic = np.load(chrom_sizes_dict_path, allow_pickle=True).item()
     chr_count = 0
@@ -362,15 +361,17 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     reverse_bam_file_iter = bam_iterator(reverse_bam_file_path)
 
     file_id = time.time()
+    id_for = uuid.uuid4()
+    id_rev = uuid.uuid4()
 
-    unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{file_id}_0.1.bam", "wb", template = forward_bam_file)
-    unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{file_id}_0.2.bam", "wb", template = reverse_bam_file)
+    unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_0.1.bam", "wb", template = forward_bam_file)
+    unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_0.2.bam", "wb", template = reverse_bam_file)
 
-    uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{file_id}_1.1.bam", "wb", template = forward_bam_file)
-    uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{file_id}_1.2.bam", "wb", template = reverse_bam_file)
+    uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_1.1.bam", "wb", template = forward_bam_file)
+    uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_1.2.bam", "wb", template = reverse_bam_file)
 
-    multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{file_id}_2.1.bam", "wb", template = forward_bam_file)
-    multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{file_id}_2.2.bam", "wb", template = reverse_bam_file)
+    multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_2.1.bam", "wb", template = forward_bam_file)
+    multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_2.2.bam", "wb", template = reverse_bam_file)
 
     unmapped_forward_counter, unmapped_reverse_counter = 0, 0
     uniquely_mapped_forward_counter, uniquely_mapped_reverse_counter = 0, 0
@@ -708,31 +709,31 @@ def bam_iterator(bam_file : str = None) -> Iterator[pysam.AlignedSegment]:
 
         raise IOError(f"BAM file {bam_path.name} not found. Please provide a valid path.")
 
-    bam_handler = pysam.AlignmentFile(bam_path, "rb")
+    with pysam.AlignmentFile(bam_path, "rb") as bam_handler:
     
-    alignments = bam_handler.fetch(until_eof=True)
-    current_aln = next(alignments)
-    current_read_name = current_aln.query_name
+        alignments = bam_handler.fetch(until_eof=True)
+        current_aln = next(alignments)
+        current_read_name = current_aln.query_name
 
-    block = []
-    block.append(current_aln)
+        block = []
+        block.append(current_aln)
 
-    while True:
-        try:
-            next_aln = next(alignments)
-            next_read_name = next_aln.query_name
-            if next_read_name != current_read_name:
-                yield (block)
-                current_read_name = next_read_name
-                block = []
-                block.append(next_aln)
+        while True:
+            try:
+                next_aln = next(alignments)
+                next_read_name = next_aln.query_name
+                if next_read_name != current_read_name:
+                    yield (block)
+                    current_read_name = next_read_name
+                    block = []
+                    block.append(next_aln)
 
-            else:
-                block.append(next_aln)
-        except StopIteration:
-            break
+                else:
+                    block.append(next_aln)
+            except StopIteration:
+                break
 
-    yield (block)
+        yield (block)
 
 def block_counter(forward_bam_file : str, reverse_bam_file : str) -> Tuple[int, int] : 
     """

@@ -116,10 +116,11 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         # Classify reads
         with multiprocessing.Pool(processes = cpus) as pool: # cpus
 
-            results = pool.map_async(partial(hut.classify_reads, mapq  = mapq, output_dir = output_folder),
+            results = pool.map(partial(hut.classify_reads, mapq  = mapq, output_dir = output_folder),
             zip(forward_chunks, reverse_chunks))
             pool.close()
             pool.join()
+
 
         hio.merge_predictions(output_dir = output_folder, clean = True, stage = "classification", cpus = cpus)
 
@@ -175,14 +176,13 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         # Reattribute reads
         with multiprocessing.Pool(processes = cpus) as pool: # cpus
 
-            results = pool.map_async(partial(hst.reattribute_reads, mode = mode, restriction_map = restriction_map, output_dir = output_folder),
+            results = pool.map(partial(hst.reattribute_reads, mode = mode, restriction_map = restriction_map, output_dir = output_folder),
             zip(forward_chunks, reverse_chunks))
             pool.close()
             pool.join()
 
-        
 
-        hio.merge_predictions(output_dir = output_folder, clean = True, cpus = cpus)
+        hio.merge_predictions(output_dir = output_folder, clean = False, cpus = cpus)
 
         # Delete chunks
         folder_to_delete = Path(output_folder) / 'chunks'
@@ -227,6 +227,8 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     logger.info(f"Tidying : {output_folder}")
 
     hio.tidy_folder(output_dir = output_folder)
+
+    time.sleep(10)
 
     logger.info("Ending HiCBERG pipeline")
 

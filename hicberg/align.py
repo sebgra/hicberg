@@ -2,6 +2,7 @@ from os import getcwd
 from os.path import join
 from pathlib import Path
 import subprocess as sp
+import uuid
 import click
 from hicberg import logger
 
@@ -187,8 +188,8 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
         raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
     
 
-    cmd_view_for = f"samtools view -S -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
-    cmd_view_rev = f"samtools view -S -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
+    cmd_view_for = f"samtools view  -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
+    cmd_view_rev = f"samtools view  -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
 
     if verbose:
 
@@ -248,9 +249,12 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
 
         raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
     
+    id_for = uuid.uuid4()
+    id_rev = uuid.uuid4()
+    
 
-    cmd_sort_for = f"samtools sort -n {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
-    cmd_sort_rev = f"samtools sort -n {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"
+    cmd_sort_for = f"samtools sort -n -T {id_for} {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
+    cmd_sort_rev = f"samtools sort -n -T {id_rev} {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"
 
     if verbose:
 

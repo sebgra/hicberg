@@ -2,6 +2,7 @@ import time
 from os import getcwd
 from os.path import join
 from pathlib import Path
+import uuid
 
 import itertools
 
@@ -145,7 +146,6 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     restriction_map_dictionary = dict()
 
     if len(enzyme) == 1 and enzyme[0].isnumeric():
-        # print("Micro-C mode activated.")
         enzyme = int(enzyme[0])
 
         for seq_record in SeqIO.parse(genome, "fasta"):
@@ -1395,12 +1395,14 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
     forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
     file_id = time.time()
+    id_for = uuid.uuid4()
+    id_rev = uuid.uuid4()
 
     forward_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb")
     reverse_bam_handler = pysam.AlignmentFile(reverse_bam_path, "rb")
 
-    forward_out_bam_handler = pysam.AlignmentFile(output_path / f"forward_{file_id}_predicted.bam", "wb", template=forward_bam_handler)
-    reverse_out_bam_handler = pysam.AlignmentFile(output_path / f"reverse_{file_id}_predicted.bam", "wb", template=reverse_bam_handler)
+    forward_out_bam_handler = pysam.AlignmentFile(output_path / f"forward_{id_for}_{file_id}_predicted.bam", "wb", template=forward_bam_handler)
+    reverse_out_bam_handler = pysam.AlignmentFile(output_path / f"reverse_{id_rev}_{file_id}_predicted.bam", "wb", template=reverse_bam_handler)
 
     # Instanciate generators
     forward_generator = hut.bam_iterator(forward_bam_path)

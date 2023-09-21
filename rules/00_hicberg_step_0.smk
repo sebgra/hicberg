@@ -9,7 +9,7 @@ rule hicberg_step_0:
         r2 = lambda w: join(config[w.libraries]['R2']),
     output:
         chrom_sizes = join(OUT_DIR, '{libraries}', "fragments_fixed_sizes.txt"),
-
+    log: 'hicberg_step_0-{libraries}.log'
     params: # extracted from samples.csv
         name = '{libraries}',
         sampling_rate = lambda w: samples.sampling_rates[w.libraries],

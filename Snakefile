@@ -20,7 +20,6 @@ samples = pd.read_csv(
 
 # Set paths for both input and output files.
 OUT_DIR =  config['out_dir']
-TMP = join(config['base_dir'], config['tmp_dir'])
 REF_DIR = join(config['base_dir'], config['ref_dir'])
 FASTQ_DIR = join(config['base_dir'], config['fastq_dir'])
 

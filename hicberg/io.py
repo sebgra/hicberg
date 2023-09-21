@@ -118,6 +118,8 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
                 f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{forward_read.flag}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{reverse_read.flag}\n")
 
         f_out.close()
+        bam_for_handler.close()
+        bam_rev_handler.close()
 
 
     elif mode: 
@@ -168,6 +170,10 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
                 f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{forward_read.flag}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{reverse_read.flag}\n")
 
         f_out.close()
+        bam_for_handler.close()
+        bam_rev_handler.close()
+        bam_for_handler_rescued.close()
+        bam_rev_handler_rescued.close()
 
     logger.info(f"Pairs file successfully created in {output_path}")
 
