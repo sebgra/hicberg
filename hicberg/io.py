@@ -33,6 +33,8 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
     [str]
         Path of the folder created
     """
+
+    logger.info(f"Creating folder {sample_name} in {output_dir}")
     
     if sample_name is None:
 
@@ -59,7 +61,7 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
     mkdir(folder_path / "contacts" / "pairs")
     mkdir(folder_path / "plots")
 
-    logger.info(f"Folder {folder_path} created.")
+    logger.info(f"Folder {sample_name} in {folder_path} created.")
 
     return folder_path.as_posix()
 
@@ -93,6 +95,8 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
     if not mode:
 
+        logger.info(f"Start building pairs file for unambiguously aligned reads")
+
         bam_for_path = Path(output_path / bam_for)
         bam_rev_path = Path(output_path / bam_rev)
 
@@ -123,6 +127,8 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
 
     elif mode: 
+
+        logger.info(f"Start building pairs file for ambiguously aligned reads")
             
         bam_for_path = Path(output_path / bam_for)
         bam_rev_path = Path(output_path / bam_rev)
@@ -289,6 +295,8 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
     cpus : int, optional
         Number of cpus to use for the merging, by default 1
     """
+
+    logger.info(f"Start merging predictions")
     if output_dir is None:
         output_path = Path(getcwd())
 
@@ -303,8 +311,6 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
 
         forward_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
         reverse_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
-
-    
 
         # logger.info(f"Launching forward merge with command : {forward_merge_cmd}")
         # Launch merge

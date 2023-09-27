@@ -24,6 +24,8 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
         Set wether or not the shell command should be printed, by default False
     """
 
+    logger.info("Start building index for alignment")
+
     try:
 
         sp.check_output(["bowtie2-build", "-h"])
@@ -94,6 +96,8 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
     verbonse : bool, optional
         Set weither or not the shell command should be printed, by default False
     """    
+
+    logger.info("Start aligning reads")
 
     fq_for_path, fq_rev_path  = Path(fq_for), Path(fq_rev)
 
@@ -166,6 +170,8 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
         Set wether or not the shell command should be printed, by default False
     """
 
+    logger.info("Start converting .sam to .bam")
+
     try:
 
         sp.check_output(["samtools", "--help"])
@@ -227,6 +233,7 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
         Set wether or not the shell command should be printed, by default False
 
     """
+    logger.info("Start sorting .bam alignment files")
 
     try:
 

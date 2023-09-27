@@ -58,38 +58,38 @@ def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float
         for _ in range(rounds):
 
             #South East
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
 
             # North West
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
 
             # North East
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
 
             # South West
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
 
     elif mode == "inter":
         for _ in range(rounds):
 
             # East
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
 
             # West
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
             
             #South
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
             
             #North
-            shift = np.random.randint(10)
+            shift = np.random.randint(5)
             arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
 
     return arr
@@ -106,6 +106,8 @@ def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None
     """
+
+    logger.info(f"Start getting chromosome sizes")
 
     genome_path = Path(genome)
 
@@ -146,7 +148,9 @@ def get_bin_table(chrom_sizes_dict : str = "chromosome_sizes.npy", bins : int = 
         Size of the desired bin, by default 2000.
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None
-    """    
+    """
+
+    logger.info(f"Start getting bin table")
 
     chrom_sizes_dict_path = Path(output_dir, chrom_sizes_dict)
 
@@ -792,7 +796,8 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
     output_dir : str, optional
         Path to the folder where to save the classified alignment files, by default None
     """
-    
+    logger.info(f"Start chunking BAM files")
+
     if output_dir is None:
             
             output_dir = Path(getcwd())

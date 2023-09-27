@@ -60,6 +60,8 @@ def generate_density_map(matrix : str = "unrescued_map.cool", rounds : int = 1, 
         Density maps as a dictionary where keys are chromosomes names couples as tuples and values are density maps.
     """
 
+    logger.info("Start generating density map...")
+
     if output_dir is None:
 
         output_path = Path(getcwd())
@@ -127,6 +129,8 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     dict
         Dictionary of the product of digestion where keys are chromosomes names and values are restrictions sites positions.
     """
+
+    logger.info("Generating restriction map...")
 
     genome_path = Path(genome)
 
@@ -222,7 +226,8 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
 
 def log_bin_genome(genome :str, base : float = 1.1, output_dir : str = None) -> dict[str, np.ndarray[int]]:
     
-    
+    logger.info("Start log binning of genome...")
+
     genome_path = Path(genome)
 
     if not genome_path.is_file():
@@ -286,6 +291,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
     dict
         Dictionary of sub-sampled restriction map with keys as chromosome names and values as lists of restriction sites' position.
     """
+    logger.info("Start generating distribution of fragments' distance...")
 
     if output_dir is None:
 
@@ -367,6 +373,8 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
 def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict = None, output_dir : str = None) -> None:
     
 
+    logger.info("Start getting trans-P(s)")
+
     if output_dir is None:
 
         output_path = Path(getcwd())
@@ -445,6 +453,8 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
         Path to the folder where to save the classified alignment files, by default None, by default None
     """        
     
+    logger.info("Start generating coverages...")
+
     if output_dir is None:
 
         output_path = Path(getcwd())
@@ -513,6 +523,7 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
         Path to the folder where to save the dictionary, by default None, by default None
     """    
     
+    logger.info("Start generating d1d2 law...")
     
     if output_dir is None:
 
@@ -646,6 +657,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
         Path to the folder where to save the dictionary, by default None, by default None, by default None
     """    
 
+    logger.info("Start generating patterns distribution...")
 
     if output_dir is None:
             

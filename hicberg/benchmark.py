@@ -127,16 +127,19 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     chromosome = [str(c) for c in chromosome.split(",")]
 
-    if trans_chromosome is not None:
+    if trans_chromosome is not None and trans_chromosome != "-1":
         trans_chromosome = [str(t) for t in trans_chromosome.split(",")]
+
     else : 
         trans_chromosome = None
 
-    if trans_position is not None:
+    if trans_position is not None and trans_position != "-1": # -1 usefull when not using trans cases with benchmark calling through Snakemake
         trans_position = [int(p) for p in trans_position.split(",")]
 
     else :
         trans_position = None
+
+    flag_file = output_path / "flag.txt"
 
 
     nb_bins = bins
@@ -185,100 +188,141 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             p4 = Process(target = hst.generate_d1d2, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_path))
             p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = unrescued_map_path, rounds = rounds, magnitude = magnitude, output_dir = output_path))
             
-            if  "full" in mode.split(","):
+            # if  "full" in mode.split(","):
 
-                # Launch processes
-                for process in [p1, p2, p3, p4, p5]:
-                    process.start()
+            benchmark_logger.info("Full mode selected. Learning step will be performed.")
 
-                for process in [p1, p2, p3, p4, p5]:
-                    process.join()
+            # Launch processes
+            for process in [p1, p2, p3, p4, p5]:
+                process.start()
 
-            elif "ps_only" in mode.split(",") and len(mode.split(",")) == 1:
+            for process in [p1, p2, p3, p4, p5]:
+                process.join()
 
-                # Launch processes
-                for process in [p1, p2]:
-                    process.start()
+            benchmark_logger.info("Learning step completed")
 
-                for process in [p1, p2]:
-                    process.join()
+            # elif "ps_only" in mode.split(",") and len(mode.split(",")) == 1:
 
-            elif "cover_only" in mode.split(",") and len(mode.split(",")) == 1:
+            #     benchmark_logger.info("PS only mode selected. Learning step will be performed.")
 
-                # Launch processes
-                for process in [p3]:
-                    process.start()
+            #     # Launch processes
+            #     for process in [p1, p2]:
+            #         process.start()
 
-                for process in [p3]:
-                    process.join()
+            #     for process in [p1, p2]:
+            #         process.join()
 
-            elif "d1d2_only" in mode.split(",") and len(mode.split(",")) == 1:
-
-                # Launch processes
-                for process in [p4]:
-                    process.start()
-
-                for process in [p4]:
-                    process.join()
+            #     benchmark_logger.info("Learning step completed")
 
 
-            elif "density_only" in mode.split(",") and len(mode.split(",")) == 1:
+            # elif "cover_only" in mode.split(",") and len(mode.split(",")) == 1:
 
-                # Launch processes
-                for process in [p5]:
-                    process.start()
+            #     # Launch processes
+            #     for process in [p3]:
+            #         process.start()
 
-                for process in [p5]:
-                    process.join()
+            #     for process in [p3]:
+            #         process.join()
 
-            elif "no_ps" in mode.split(",") and len(mode.split(",")) == 1:
+            # elif "d1d2_only" in mode.split(",") and len(mode.split(",")) == 1:
 
-                # Launch processes
-                for process in [p3, p4, p5]:
-                    process.start()
+            #     benchmark_logger.info("D1D2 only mode selected. Learning step will be performed.")
 
-                for process in [p3, p4, p5]:
-                    process.join()
+            #     # Launch processes
+            #     for process in [p4]:
+            #         process.start()
 
-            elif "no_cover" in mode.split(",") and len(mode.split(",")) == 1:
+            #     for process in [p4]:
+            #         process.join()
 
-                # Launch processes
-                for process in [p1, p2, p4, p5]:
-                    process.start()
+            #     benchmark_logger.info("Learning step completed")
 
-                for process in [p1, p2, p4, p5]:
-                    process.join()
 
-            elif "no_d1d2" in mode.split(",") and len(mode.split(",")) == 1:
+            # elif "density_only" in mode.split(",") and len(mode.split(",")) == 1:
 
-                # Launch processes
-                for process in [p1, p2, p3, p5]:
-                    process.start()
+            #     benchmark_logger.info("Density only mode selected. Learning step will be performed.")
 
-                for process in [p1, p2, p3, p5]:
-                    process.join()
+            #     # Launch processes
+            #     for process in [p5]:
+            #         process.start()
 
-            elif "no_density" in mode.split(",") and len(mode.split(",")) == 1:
+            #     for process in [p5]:
+            #         process.join()
 
-                # Launch processes
-                for process in [p1, p2, p3, p4]:
-                    process.start()
+            #     benchmark_logger.info("Learning step completed")
 
-                for process in [p1, p2, p3, p4]:
-                    process.join()
 
-            elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
+            # elif "no_ps" in mode.split(",") and len(mode.split(",")) == 1:
 
-                # Launch processes
-                for process in [p1, p2, p3]:
-                    process.start()
+            #     benchmark_logger.info("No PS mode selected. Learning step will be performed.")
 
-                for process in [p1, p2, p3]:
-                    process.join()
+            #     # Launch processes
+            #     for process in [p3, p4, p5]:
+            #         process.start()
 
-            elif  "random" in mode.split(",") and len(mode.split(",")) == 1:
+            #     for process in [p3, p4, p5]:
+            #         process.join()
 
-                benchmark_logger.info("Random mode selected. No learning step will be performed.")
+            #     benchmark_logger.info("Learning step completed")
+
+
+            # elif "no_cover" in mode.split(",") and len(mode.split(",")) == 1:
+
+            #     benchmark_logger.info("No cover mode selected. Learning step will be performed.")
+
+            #     # Launch processes
+            #     for process in [p1, p2, p4, p5]:
+            #         process.start()
+
+            #     for process in [p1, p2, p4, p5]:
+            #         process.join()
+
+            #     benchmark_logger.info("Learning step completed")
+
+
+            # elif "no_d1d2" in mode.split(",") and len(mode.split(",")) == 1:
+
+            #     benchmark_logger.info("No D1D2 mode selected. Learning step will be performed.")
+                
+
+            #     # Launch processes
+            #     for process in [p1, p2, p3, p5]:
+            #         process.start()
+
+            #     for process in [p1, p2, p3, p5]:
+            #         process.join()
+
+            #     benchmark_logger.info("Learning step completed")
+
+            # elif "no_density" in mode.split(",") and len(mode.split(",")) == 1:
+
+            #     benchmark_logger.info("No density mode selected. Learning step will be performed.")
+
+            #     # Launch processes
+            #     for process in [p1, p2, p3, p4]:
+            #         process.start()
+
+            #     for process in [p1, p2, p3, p4]:
+            #         process.join()
+
+            #     benchmark_logger.info("Learning step completed")
+
+            # elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
+
+            #     benchmark_logger.info("D1D2 only mode selected. Learning step will be performed.")
+
+            #     # Launch processes
+            #     for process in [p1, p2, p3]:
+            #         process.start()
+
+            #     for process in [p1, p2, p3]:
+            #         process.join()
+
+            #     benchmark_logger.info("Learning step completed")
+
+            # elif  "random" in mode.split(",") and len(mode.split(",")) == 1:
+
+            #     benchmark_logger.info("Random mode selected. No learning step will be performed.")
 
         learning_status = True
 
@@ -341,5 +385,15 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             if Path(file).suffix == ".pdf" or Path(file).suffix == ".svg":
 
                 Path(file).rename(folder_path / Path(file).name)
+
+        benchmark_logger.info(f"Ending benchmark. Results stored in {folder_path}")
+
+        forward_in_path.unlink()
+        reverse_in_path.unlink()
+        forward_out_path.unlink()
+        reverse_out_path.unlink()
+
+        open(flag_file, 'a').close()
+
     return
 

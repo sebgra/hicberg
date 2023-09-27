@@ -35140,3 +35140,2295 @@
 2023-09-21 --  17:13:44 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/Sc288_2m
 2023-09-21 --  17:13:44 :: INFO :: Tidying : /home/sardine/Bureau/results/Sc288_2m
 2023-09-21 --  17:13:54 :: INFO :: Ending HiCBERG pipeline
+2023-09-21 --  17:16:04 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:04 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:16:04 :: INFO :: start_stage: fastq
+2023-09-21 --  17:16:04 :: INFO :: exit_stage: bam
+2023-09-21 --  17:16:04 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:16:04 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:16:04 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:16:04 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:04 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:04 :: INFO :: mapq: 35
+2023-09-21 --  17:16:04 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:04 :: INFO :: circular: 
+2023-09-21 --  17:16:04 :: INFO :: rate: 0.5
+2023-09-21 --  17:16:04 :: INFO :: bins: 2000
+2023-09-21 --  17:16:04 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:04 :: INFO :: mode: full
+2023-09-21 --  17:16:04 :: INFO :: rounds: 11
+2023-09-21 --  17:16:04 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:16:04 :: INFO :: verbose: False
+2023-09-21 --  17:16:04 :: INFO :: cpus: 16
+2023-09-21 --  17:16:04 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:04 :: INFO :: force: True
+2023-09-21 --  17:16:04 :: INFO :: Folder /home/sardine/Bureau/results/Sc288_2m created.
+2023-09-21 --  17:16:04 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:04 :: INFO :: name: CC336
+2023-09-21 --  17:16:04 :: INFO :: start_stage: fastq
+2023-09-21 --  17:16:04 :: INFO :: exit_stage: bam
+2023-09-21 --  17:16:04 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:16:04 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:16:04 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:16:04 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:04 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:04 :: INFO :: mapq: 35
+2023-09-21 --  17:16:04 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:04 :: INFO :: circular: 
+2023-09-21 --  17:16:04 :: INFO :: rate: 0.3
+2023-09-21 --  17:16:04 :: INFO :: bins: 2000
+2023-09-21 --  17:16:04 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:04 :: INFO :: mode: full
+2023-09-21 --  17:16:04 :: INFO :: rounds: 10
+2023-09-21 --  17:16:04 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:16:04 :: INFO :: verbose: False
+2023-09-21 --  17:16:04 :: INFO :: cpus: 16
+2023-09-21 --  17:16:04 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:04 :: INFO :: force: True
+2023-09-21 --  17:16:04 :: INFO :: Folder /home/sardine/Bureau/results/CC336 created.
+2023-09-21 --  17:16:04 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/CC336/chromosome_sizes.npy
+2023-09-21 --  17:16:04 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-21 --  17:16:04 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/Sc288_2m/chromosome_sizes.npy
+2023-09-21 --  17:16:04 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-21 --  17:16:05 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:05 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:05 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:16:05 :: INFO :: name: CC336
+2023-09-21 --  17:16:05 :: INFO :: start_stage: bam
+2023-09-21 --  17:16:05 :: INFO :: start_stage: bam
+2023-09-21 --  17:16:05 :: INFO :: exit_stage: groups
+2023-09-21 --  17:16:05 :: INFO :: exit_stage: groups
+2023-09-21 --  17:16:05 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:16:05 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:16:05 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:16:05 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:16:05 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:16:05 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:16:05 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:05 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:05 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:05 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:05 :: INFO :: mapq: 35
+2023-09-21 --  17:16:05 :: INFO :: mapq: 35
+2023-09-21 --  17:16:05 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:05 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:05 :: INFO :: circular: 
+2023-09-21 --  17:16:05 :: INFO :: circular: 
+2023-09-21 --  17:16:05 :: INFO :: rate: 0.3
+2023-09-21 --  17:16:05 :: INFO :: rate: 0.5
+2023-09-21 --  17:16:05 :: INFO :: bins: 2000
+2023-09-21 --  17:16:05 :: INFO :: bins: 2000
+2023-09-21 --  17:16:05 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:05 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:05 :: INFO :: mode: full
+2023-09-21 --  17:16:05 :: INFO :: mode: full
+2023-09-21 --  17:16:05 :: INFO :: rounds: 10
+2023-09-21 --  17:16:05 :: INFO :: rounds: 11
+2023-09-21 --  17:16:05 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:16:05 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:16:05 :: INFO :: verbose: False
+2023-09-21 --  17:16:05 :: INFO :: verbose: False
+2023-09-21 --  17:16:05 :: INFO :: cpus: 16
+2023-09-21 --  17:16:05 :: INFO :: cpus: 16
+2023-09-21 --  17:16:05 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:05 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:05 :: INFO :: force: True
+2023-09-21 --  17:16:05 :: INFO :: force: True
+2023-09-21 --  17:16:10 :: INFO :: Index built at /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655
+2023-09-21 --  17:16:10 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/1.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:16:10 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/2.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:16:11 :: INFO :: 25000 reads; of these:
+  25000 (100.00%) were unpaired; of these:
+    1919 (7.68%) aligned 0 times
+    22294 (89.18%) aligned exactly 1 time
+    787 (3.15%) aligned >1 times
+92.32% overall alignment rate
+
+2023-09-21 --  17:16:11 :: INFO :: 25000 reads; of these:
+  25000 (100.00%) were unpaired; of these:
+    1168 (4.67%) aligned 0 times
+    23002 (92.01%) aligned exactly 1 time
+    830 (3.32%) aligned >1 times
+95.33% overall alignment rate
+
+2023-09-21 --  17:16:11 :: INFO :: Alignment saved at /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:11 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/1.sam -o /home/sardine/Bureau/results/CC336/1.bam --threads 16
+2023-09-21 --  17:16:11 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/2.sam -o /home/sardine/Bureau/results/CC336/2.bam --threads 16
+2023-09-21 --  17:16:11 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:11 :: INFO :: samtools sort -n -T 11114ff4-069b-40b7-ace6-865e6f6b6cc9 /home/sardine/Bureau/results/CC336/1.bam -o /home/sardine/Bureau/results/CC336/1.sorted.bam --threads 16
+2023-09-21 --  17:16:11 :: INFO :: samtools sort -n -T 82980898-5e47-4a47-bec8-b36bd6e73ab3 /home/sardine/Bureau/results/CC336/2.bam -o /home/sardine/Bureau/results/CC336/2.sorted.bam --threads 16
+2023-09-21 --  17:16:11 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:11 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-21 --  17:16:13 :: INFO :: Index built at /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron
+2023-09-21 --  17:16:13 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/1.sam /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:16:13 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/2.sam /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:16:13 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:13 :: INFO :: name: CC336
+2023-09-21 --  17:16:13 :: INFO :: start_stage: groups
+2023-09-21 --  17:16:13 :: INFO :: exit_stage: build
+2023-09-21 --  17:16:13 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:16:13 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:16:13 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:16:13 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:13 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:13 :: INFO :: mapq: 35
+2023-09-21 --  17:16:13 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:13 :: INFO :: circular: 
+2023-09-21 --  17:16:13 :: INFO :: rate: 0.3
+2023-09-21 --  17:16:13 :: INFO :: bins: 2000
+2023-09-21 --  17:16:13 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:13 :: INFO :: mode: full
+2023-09-21 --  17:16:13 :: INFO :: rounds: 10
+2023-09-21 --  17:16:13 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:16:13 :: INFO :: verbose: False
+2023-09-21 --  17:16:13 :: INFO :: cpus: 16
+2023-09-21 --  17:16:13 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:13 :: INFO :: force: True
+2023-09-21 --  17:16:14 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-21 --  17:16:14 :: INFO :: Starting reads classification
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:14 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-21 --  17:16:15 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    11951 (5.98%) aligned 0 times
+    167544 (83.77%) aligned exactly 1 time
+    20505 (10.25%) aligned >1 times
+94.02% overall alignment rate
+
+2023-09-21 --  17:16:15 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    9620 (4.81%) aligned 0 times
+    169476 (84.74%) aligned exactly 1 time
+    20904 (10.45%) aligned >1 times
+95.19% overall alignment rate
+
+2023-09-21 --  17:16:15 :: INFO :: Alignment saved at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:15 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/1.sam -o /home/sardine/Bureau/results/Sc288_2m/1.bam --threads 16
+2023-09-21 --  17:16:15 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/2.sam -o /home/sardine/Bureau/results/Sc288_2m/2.bam --threads 16
+2023-09-21 --  17:16:15 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:15 :: INFO :: samtools sort -n -T 07b87fce-a3db-432c-ab91-a839316a6748 /home/sardine/Bureau/results/Sc288_2m/1.bam -o /home/sardine/Bureau/results/Sc288_2m/1.sorted.bam --threads 16
+2023-09-21 --  17:16:15 :: INFO :: samtools sort -n -T 56643981-06e8-4ac0-963d-b321ed226b3c /home/sardine/Bureau/results/Sc288_2m/2.bam -o /home/sardine/Bureau/results/Sc288_2m/2.sorted.bam --threads 16
+2023-09-21 --  17:16:16 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:16 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-21 --  17:16:16 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:16 :: INFO :: name: CC336
+2023-09-21 --  17:16:16 :: INFO :: start_stage: build
+2023-09-21 --  17:16:16 :: INFO :: exit_stage: stats
+2023-09-21 --  17:16:16 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:16:16 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:16:16 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:16:16 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:16 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:16 :: INFO :: mapq: 35
+2023-09-21 --  17:16:16 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:16 :: INFO :: circular: 
+2023-09-21 --  17:16:16 :: INFO :: rate: 0.3
+2023-09-21 --  17:16:16 :: INFO :: bins: 2000
+2023-09-21 --  17:16:16 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:16 :: INFO :: mode: full
+2023-09-21 --  17:16:16 :: INFO :: rounds: 10
+2023-09-21 --  17:16:16 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:16:16 :: INFO :: verbose: False
+2023-09-21 --  17:16:16 :: INFO :: cpus: 16
+2023-09-21 --  17:16:16 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:16 :: INFO :: force: True
+2023-09-21 --  17:16:16 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:17 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:17 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:16:17 :: INFO :: start_stage: groups
+2023-09-21 --  17:16:17 :: INFO :: exit_stage: build
+2023-09-21 --  17:16:17 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:16:17 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:16:17 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:16:17 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:17 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:17 :: INFO :: mapq: 35
+2023-09-21 --  17:16:17 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:17 :: INFO :: circular: 
+2023-09-21 --  17:16:17 :: INFO :: rate: 0.5
+2023-09-21 --  17:16:17 :: INFO :: bins: 2000
+2023-09-21 --  17:16:17 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:17 :: INFO :: mode: full
+2023-09-21 --  17:16:17 :: INFO :: rounds: 11
+2023-09-21 --  17:16:17 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:16:17 :: INFO :: verbose: False
+2023-09-21 --  17:16:17 :: INFO :: cpus: 16
+2023-09-21 --  17:16:17 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:17 :: INFO :: force: True
+2023-09-21 --  17:16:17 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:17 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-21 --  17:16:19 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:19 :: INFO :: name: CC336
+2023-09-21 --  17:16:19 :: INFO :: start_stage: stats
+2023-09-21 --  17:16:19 :: INFO :: exit_stage: rescue
+2023-09-21 --  17:16:19 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:16:19 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:16:19 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:16:19 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:19 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:19 :: INFO :: mapq: 35
+2023-09-21 --  17:16:19 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:19 :: INFO :: circular: 
+2023-09-21 --  17:16:19 :: INFO :: rate: 0.3
+2023-09-21 --  17:16:19 :: INFO :: bins: 2000
+2023-09-21 --  17:16:19 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:19 :: INFO :: mode: full
+2023-09-21 --  17:16:19 :: INFO :: rounds: 10
+2023-09-21 --  17:16:19 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:16:19 :: INFO :: verbose: False
+2023-09-21 --  17:16:19 :: INFO :: cpus: 16
+2023-09-21 --  17:16:19 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:19 :: INFO :: force: True
+2023-09-21 --  17:16:19 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:16:22 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-21 --  17:16:22 :: INFO :: Starting reads classification
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:24 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:24 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-21 --  17:16:25 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:25 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:16:25 :: INFO :: start_stage: build
+2023-09-21 --  17:16:25 :: INFO :: exit_stage: stats
+2023-09-21 --  17:16:25 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:16:25 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:16:25 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:16:25 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:25 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:25 :: INFO :: mapq: 35
+2023-09-21 --  17:16:25 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:25 :: INFO :: circular: 
+2023-09-21 --  17:16:25 :: INFO :: rate: 0.5
+2023-09-21 --  17:16:25 :: INFO :: bins: 2000
+2023-09-21 --  17:16:25 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:25 :: INFO :: mode: full
+2023-09-21 --  17:16:25 :: INFO :: rounds: 11
+2023-09-21 --  17:16:25 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:16:25 :: INFO :: verbose: False
+2023-09-21 --  17:16:25 :: INFO :: cpus: 16
+2023-09-21 --  17:16:25 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:25 :: INFO :: force: True
+2023-09-21 --  17:16:26 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:29 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:16:29 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-21 --  17:16:31 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:16:31 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:16:31 :: INFO :: start_stage: stats
+2023-09-21 --  17:16:31 :: INFO :: exit_stage: rescue
+2023-09-21 --  17:16:31 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:16:31 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:16:31 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:16:31 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:16:31 :: INFO :: max_alignment: -1
+2023-09-21 --  17:16:31 :: INFO :: mapq: 35
+2023-09-21 --  17:16:31 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:16:31 :: INFO :: circular: 
+2023-09-21 --  17:16:31 :: INFO :: rate: 0.5
+2023-09-21 --  17:16:31 :: INFO :: bins: 2000
+2023-09-21 --  17:16:31 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:16:31 :: INFO :: mode: full
+2023-09-21 --  17:16:31 :: INFO :: rounds: 11
+2023-09-21 --  17:16:31 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:16:31 :: INFO :: verbose: False
+2023-09-21 --  17:16:31 :: INFO :: cpus: 16
+2023-09-21 --  17:16:31 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:16:31 :: INFO :: force: True
+2023-09-21 --  17:16:31 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:17:57 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336/dist.frag.npy
+2023-09-21 --  17:17:57 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa saved in /home/sardine/Bureau/results/CC336/xs.npy.
+2023-09-21 --  17:17:57 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:17:57 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/CC336/d1d2.npy
+2023-09-21 --  17:17:57 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:17:57 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:01 :: INFO :: Saved density map at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:01 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-21 --  17:18:03 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:18:03 :: INFO :: name: CC336
+2023-09-21 --  17:18:03 :: INFO :: start_stage: rescue
+2023-09-21 --  17:18:03 :: INFO :: exit_stage: final
+2023-09-21 --  17:18:03 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:18:03 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:18:03 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:18:03 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:18:03 :: INFO :: max_alignment: -1
+2023-09-21 --  17:18:03 :: INFO :: mapq: 35
+2023-09-21 --  17:18:03 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:18:03 :: INFO :: circular: 
+2023-09-21 --  17:18:03 :: INFO :: rate: 0.3
+2023-09-21 --  17:18:03 :: INFO :: bins: 2000
+2023-09-21 --  17:18:03 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:18:03 :: INFO :: mode: full
+2023-09-21 --  17:18:03 :: INFO :: rounds: 10
+2023-09-21 --  17:18:03 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:18:03 :: INFO :: verbose: False
+2023-09-21 --  17:18:03 :: INFO :: cpus: 16
+2023-09-21 --  17:18:03 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:18:03 :: INFO :: force: True
+2023-09-21 --  17:18:03 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:03 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:05 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:05 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:05 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:05 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:05 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:05 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:06 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:06 :: INFO :: Tidying : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:18:16 :: INFO :: Ending HiCBERG pipeline
+2023-09-21 --  17:18:39 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m/dist.frag.npy
+2023-09-21 --  17:18:39 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa saved in /home/sardine/Bureau/results/Sc288_2m/xs.npy.
+2023-09-21 --  17:18:40 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:18:40 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:18:41 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/Sc288_2m/d1d2.npy
+2023-09-21 --  17:18:41 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:18:59 :: INFO :: Saved density map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:18:59 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-21 --  17:19:00 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:19:00 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:19:00 :: INFO :: start_stage: rescue
+2023-09-21 --  17:19:00 :: INFO :: exit_stage: final
+2023-09-21 --  17:19:00 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:19:00 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:19:00 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:19:00 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:19:00 :: INFO :: max_alignment: -1
+2023-09-21 --  17:19:00 :: INFO :: mapq: 35
+2023-09-21 --  17:19:00 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:19:00 :: INFO :: circular: 
+2023-09-21 --  17:19:00 :: INFO :: rate: 0.5
+2023-09-21 --  17:19:00 :: INFO :: bins: 2000
+2023-09-21 --  17:19:00 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:19:00 :: INFO :: mode: full
+2023-09-21 --  17:19:00 :: INFO :: rounds: 11
+2023-09-21 --  17:19:00 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:19:00 :: INFO :: verbose: False
+2023-09-21 --  17:19:00 :: INFO :: cpus: 16
+2023-09-21 --  17:19:00 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:19:00 :: INFO :: force: True
+2023-09-21 --  17:19:03 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-21 --  17:19:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:09 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:13 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:13 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:13 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:15 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:17 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:19:22 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:20:18 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:20:18 :: INFO :: Tidying : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:20:28 :: INFO :: Ending HiCBERG pipeline
+2023-09-21 --  17:31:05 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:05 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:31:05 :: INFO :: start_stage: fastq
+2023-09-21 --  17:31:05 :: INFO :: exit_stage: bam
+2023-09-21 --  17:31:05 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:31:05 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:31:05 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:31:05 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:05 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:05 :: INFO :: mapq: 35
+2023-09-21 --  17:31:05 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:05 :: INFO :: circular: 
+2023-09-21 --  17:31:05 :: INFO :: rate: 0.5
+2023-09-21 --  17:31:05 :: INFO :: bins: 2000
+2023-09-21 --  17:31:05 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:05 :: INFO :: mode: full
+2023-09-21 --  17:31:05 :: INFO :: rounds: 11
+2023-09-21 --  17:31:05 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:31:05 :: INFO :: verbose: False
+2023-09-21 --  17:31:05 :: INFO :: cpus: 16
+2023-09-21 --  17:31:05 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:05 :: INFO :: force: True
+2023-09-21 --  17:31:05 :: INFO :: Creating folder Sc288_2m in /home/sardine/Bureau/results
+2023-09-21 --  17:31:05 :: INFO :: Folder Sc288_2m in /home/sardine/Bureau/results/Sc288_2m created.
+2023-09-21 --  17:31:05 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  17:31:05 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:05 :: INFO :: name: CC336
+2023-09-21 --  17:31:05 :: INFO :: start_stage: fastq
+2023-09-21 --  17:31:05 :: INFO :: exit_stage: bam
+2023-09-21 --  17:31:05 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:31:05 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:31:05 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:31:05 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:05 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:05 :: INFO :: mapq: 35
+2023-09-21 --  17:31:05 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:05 :: INFO :: circular: 
+2023-09-21 --  17:31:05 :: INFO :: rate: 0.3
+2023-09-21 --  17:31:05 :: INFO :: bins: 2000
+2023-09-21 --  17:31:05 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:05 :: INFO :: mode: full
+2023-09-21 --  17:31:05 :: INFO :: rounds: 10
+2023-09-21 --  17:31:05 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:31:05 :: INFO :: verbose: False
+2023-09-21 --  17:31:05 :: INFO :: cpus: 16
+2023-09-21 --  17:31:05 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:05 :: INFO :: force: True
+2023-09-21 --  17:31:05 :: INFO :: Creating folder CC336 in /home/sardine/Bureau/results
+2023-09-21 --  17:31:05 :: INFO :: Folder CC336 in /home/sardine/Bureau/results/CC336 created.
+2023-09-21 --  17:31:05 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  17:31:05 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/Sc288_2m/chromosome_sizes.npy
+2023-09-21 --  17:31:05 :: INFO :: Start getting bin table
+2023-09-21 --  17:31:05 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-21 --  17:31:05 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/CC336/chromosome_sizes.npy
+2023-09-21 --  17:31:05 :: INFO :: Start getting bin table
+2023-09-21 --  17:31:05 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-21 --  17:31:07 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:07 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:31:07 :: INFO :: start_stage: bam
+2023-09-21 --  17:31:07 :: INFO :: exit_stage: groups
+2023-09-21 --  17:31:07 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:31:07 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:31:07 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:31:07 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:07 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:07 :: INFO :: mapq: 35
+2023-09-21 --  17:31:07 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:07 :: INFO :: circular: 
+2023-09-21 --  17:31:07 :: INFO :: rate: 0.5
+2023-09-21 --  17:31:07 :: INFO :: bins: 2000
+2023-09-21 --  17:31:07 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:07 :: INFO :: mode: full
+2023-09-21 --  17:31:07 :: INFO :: rounds: 11
+2023-09-21 --  17:31:07 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:31:07 :: INFO :: verbose: False
+2023-09-21 --  17:31:07 :: INFO :: cpus: 16
+2023-09-21 --  17:31:07 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:07 :: INFO :: force: True
+2023-09-21 --  17:31:07 :: INFO :: Start building index for alignment
+2023-09-21 --  17:31:07 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:07 :: INFO :: name: CC336
+2023-09-21 --  17:31:07 :: INFO :: start_stage: bam
+2023-09-21 --  17:31:07 :: INFO :: exit_stage: groups
+2023-09-21 --  17:31:07 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:31:07 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:31:07 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:31:07 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:07 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:07 :: INFO :: mapq: 35
+2023-09-21 --  17:31:07 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:07 :: INFO :: circular: 
+2023-09-21 --  17:31:07 :: INFO :: rate: 0.3
+2023-09-21 --  17:31:07 :: INFO :: bins: 2000
+2023-09-21 --  17:31:07 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:07 :: INFO :: mode: full
+2023-09-21 --  17:31:07 :: INFO :: rounds: 10
+2023-09-21 --  17:31:07 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:31:07 :: INFO :: verbose: False
+2023-09-21 --  17:31:07 :: INFO :: cpus: 16
+2023-09-21 --  17:31:07 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:07 :: INFO :: force: True
+2023-09-21 --  17:31:07 :: INFO :: Start building index for alignment
+2023-09-21 --  17:31:11 :: INFO :: Index built at /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655
+2023-09-21 --  17:31:11 :: INFO :: Start aligning reads
+2023-09-21 --  17:31:11 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/1.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:31:11 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/2.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:31:11 :: INFO :: 25000 reads; of these:
+  25000 (100.00%) were unpaired; of these:
+    1919 (7.68%) aligned 0 times
+    22294 (89.18%) aligned exactly 1 time
+    787 (3.15%) aligned >1 times
+92.32% overall alignment rate
+
+2023-09-21 --  17:31:11 :: INFO :: 25000 reads; of these:
+  25000 (100.00%) were unpaired; of these:
+    1168 (4.67%) aligned 0 times
+    23002 (92.01%) aligned exactly 1 time
+    830 (3.32%) aligned >1 times
+95.33% overall alignment rate
+
+2023-09-21 --  17:31:11 :: INFO :: Alignment saved at /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:11 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  17:31:11 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/1.sam -o /home/sardine/Bureau/results/CC336/1.bam --threads 16
+2023-09-21 --  17:31:11 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/2.sam -o /home/sardine/Bureau/results/CC336/2.bam --threads 16
+2023-09-21 --  17:31:12 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:12 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  17:31:12 :: INFO :: samtools sort -n -T 9dc3ee02-4e94-4333-9cba-8a0740dba9e2 /home/sardine/Bureau/results/CC336/1.bam -o /home/sardine/Bureau/results/CC336/1.sorted.bam --threads 16
+2023-09-21 --  17:31:12 :: INFO :: samtools sort -n -T 588a7e06-ebf7-46c9-9647-bed4f2842f13 /home/sardine/Bureau/results/CC336/2.bam -o /home/sardine/Bureau/results/CC336/2.sorted.bam --threads 16
+2023-09-21 --  17:31:12 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:12 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-21 --  17:31:14 :: INFO :: Index built at /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron
+2023-09-21 --  17:31:14 :: INFO :: Start aligning reads
+2023-09-21 --  17:31:14 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/1.sam /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:31:14 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/2.sam /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:31:14 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:14 :: INFO :: name: CC336
+2023-09-21 --  17:31:14 :: INFO :: start_stage: groups
+2023-09-21 --  17:31:14 :: INFO :: exit_stage: build
+2023-09-21 --  17:31:14 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:31:14 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:31:14 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:31:14 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:14 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:14 :: INFO :: mapq: 35
+2023-09-21 --  17:31:14 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:14 :: INFO :: circular: 
+2023-09-21 --  17:31:14 :: INFO :: rate: 0.3
+2023-09-21 --  17:31:14 :: INFO :: bins: 2000
+2023-09-21 --  17:31:14 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:14 :: INFO :: mode: full
+2023-09-21 --  17:31:14 :: INFO :: rounds: 10
+2023-09-21 --  17:31:14 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:31:14 :: INFO :: verbose: False
+2023-09-21 --  17:31:14 :: INFO :: cpus: 16
+2023-09-21 --  17:31:14 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:14 :: INFO :: force: True
+2023-09-21 --  17:31:14 :: INFO :: Start chunking BAM files
+2023-09-21 --  17:31:15 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-21 --  17:31:15 :: INFO :: Starting reads classification
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Start merging predictions
+2023-09-21 --  17:31:15 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:15 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-21 --  17:31:16 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    11951 (5.98%) aligned 0 times
+    167544 (83.77%) aligned exactly 1 time
+    20505 (10.25%) aligned >1 times
+94.02% overall alignment rate
+
+2023-09-21 --  17:31:16 :: INFO :: 200000 reads; of these:
+  200000 (100.00%) were unpaired; of these:
+    9620 (4.81%) aligned 0 times
+    169476 (84.74%) aligned exactly 1 time
+    20904 (10.45%) aligned >1 times
+95.19% overall alignment rate
+
+2023-09-21 --  17:31:16 :: INFO :: Alignment saved at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:16 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  17:31:16 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/1.sam -o /home/sardine/Bureau/results/Sc288_2m/1.bam --threads 16
+2023-09-21 --  17:31:16 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/2.sam -o /home/sardine/Bureau/results/Sc288_2m/2.bam --threads 16
+2023-09-21 --  17:31:16 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:16 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  17:31:16 :: INFO :: samtools sort -n -T ff45138c-f2cd-48ab-9815-9a50bdf08164 /home/sardine/Bureau/results/Sc288_2m/1.bam -o /home/sardine/Bureau/results/Sc288_2m/1.sorted.bam --threads 16
+2023-09-21 --  17:31:16 :: INFO :: samtools sort -n -T 52f700fb-f890-49c5-9dbc-8e9a21db9f0f /home/sardine/Bureau/results/Sc288_2m/2.bam -o /home/sardine/Bureau/results/Sc288_2m/2.sorted.bam --threads 16
+2023-09-21 --  17:31:17 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:17 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-21 --  17:31:17 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:17 :: INFO :: name: CC336
+2023-09-21 --  17:31:17 :: INFO :: start_stage: build
+2023-09-21 --  17:31:17 :: INFO :: exit_stage: stats
+2023-09-21 --  17:31:17 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:31:17 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:31:17 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:31:17 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:17 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:17 :: INFO :: mapq: 35
+2023-09-21 --  17:31:17 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:17 :: INFO :: circular: 
+2023-09-21 --  17:31:17 :: INFO :: rate: 0.3
+2023-09-21 --  17:31:17 :: INFO :: bins: 2000
+2023-09-21 --  17:31:17 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:17 :: INFO :: mode: full
+2023-09-21 --  17:31:17 :: INFO :: rounds: 10
+2023-09-21 --  17:31:17 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:31:17 :: INFO :: verbose: False
+2023-09-21 --  17:31:17 :: INFO :: cpus: 16
+2023-09-21 --  17:31:17 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:17 :: INFO :: force: True
+2023-09-21 --  17:31:17 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-21 --  17:31:17 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:18 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:18 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-21 --  17:31:19 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:19 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:31:19 :: INFO :: start_stage: groups
+2023-09-21 --  17:31:19 :: INFO :: exit_stage: build
+2023-09-21 --  17:31:19 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:31:19 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:31:19 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:31:19 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:19 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:19 :: INFO :: mapq: 35
+2023-09-21 --  17:31:19 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:19 :: INFO :: circular: 
+2023-09-21 --  17:31:19 :: INFO :: rate: 0.5
+2023-09-21 --  17:31:19 :: INFO :: bins: 2000
+2023-09-21 --  17:31:19 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:19 :: INFO :: mode: full
+2023-09-21 --  17:31:19 :: INFO :: rounds: 11
+2023-09-21 --  17:31:19 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:31:19 :: INFO :: verbose: False
+2023-09-21 --  17:31:19 :: INFO :: cpus: 16
+2023-09-21 --  17:31:19 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:19 :: INFO :: force: True
+2023-09-21 --  17:31:19 :: INFO :: Start chunking BAM files
+2023-09-21 --  17:31:20 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:20 :: INFO :: name: CC336
+2023-09-21 --  17:31:20 :: INFO :: start_stage: stats
+2023-09-21 --  17:31:20 :: INFO :: exit_stage: rescue
+2023-09-21 --  17:31:20 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:31:20 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:31:20 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:31:20 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:20 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:20 :: INFO :: mapq: 35
+2023-09-21 --  17:31:20 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:20 :: INFO :: circular: 
+2023-09-21 --  17:31:20 :: INFO :: rate: 0.3
+2023-09-21 --  17:31:20 :: INFO :: bins: 2000
+2023-09-21 --  17:31:20 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:20 :: INFO :: mode: full
+2023-09-21 --  17:31:20 :: INFO :: rounds: 10
+2023-09-21 --  17:31:20 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:31:20 :: INFO :: verbose: False
+2023-09-21 --  17:31:20 :: INFO :: cpus: 16
+2023-09-21 --  17:31:20 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:20 :: INFO :: force: True
+2023-09-21 --  17:31:20 :: INFO :: Generating restriction map...
+2023-09-21 --  17:31:20 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:31:20 :: INFO :: Start generating distribution of fragments' distance...
+2023-09-21 --  17:31:24 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-21 --  17:31:24 :: INFO :: Starting reads classification
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:24 :: INFO :: Start merging predictions
+2023-09-21 --  17:31:25 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:25 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-21 --  17:31:27 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:27 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:31:27 :: INFO :: start_stage: build
+2023-09-21 --  17:31:27 :: INFO :: exit_stage: stats
+2023-09-21 --  17:31:27 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:31:27 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:31:27 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:31:27 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:27 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:27 :: INFO :: mapq: 35
+2023-09-21 --  17:31:27 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:27 :: INFO :: circular: 
+2023-09-21 --  17:31:27 :: INFO :: rate: 0.5
+2023-09-21 --  17:31:27 :: INFO :: bins: 2000
+2023-09-21 --  17:31:27 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:27 :: INFO :: mode: full
+2023-09-21 --  17:31:27 :: INFO :: rounds: 11
+2023-09-21 --  17:31:27 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:31:27 :: INFO :: verbose: False
+2023-09-21 --  17:31:27 :: INFO :: cpus: 16
+2023-09-21 --  17:31:27 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:27 :: INFO :: force: True
+2023-09-21 --  17:31:27 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-21 --  17:31:27 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:31 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:31 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-21 --  17:31:32 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:31:32 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:31:32 :: INFO :: start_stage: stats
+2023-09-21 --  17:31:32 :: INFO :: exit_stage: rescue
+2023-09-21 --  17:31:32 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:31:32 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:31:32 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:31:32 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:31:32 :: INFO :: max_alignment: -1
+2023-09-21 --  17:31:32 :: INFO :: mapq: 35
+2023-09-21 --  17:31:32 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:31:32 :: INFO :: circular: 
+2023-09-21 --  17:31:32 :: INFO :: rate: 0.5
+2023-09-21 --  17:31:32 :: INFO :: bins: 2000
+2023-09-21 --  17:31:32 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:31:32 :: INFO :: mode: full
+2023-09-21 --  17:31:32 :: INFO :: rounds: 11
+2023-09-21 --  17:31:32 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:31:32 :: INFO :: verbose: False
+2023-09-21 --  17:31:32 :: INFO :: cpus: 16
+2023-09-21 --  17:31:32 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:31:32 :: INFO :: force: True
+2023-09-21 --  17:31:32 :: INFO :: Generating restriction map...
+2023-09-21 --  17:31:33 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:31:33 :: INFO :: Start generating distribution of fragments' distance...
+2023-09-21 --  17:32:58 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336/dist.frag.npy
+2023-09-21 --  17:32:58 :: INFO :: Start log binning of genome...
+2023-09-21 --  17:32:58 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa saved in /home/sardine/Bureau/results/CC336/xs.npy.
+2023-09-21 --  17:32:58 :: INFO :: Start generating patterns distribution...
+2023-09-21 --  17:32:58 :: INFO :: Start getting trans-P(s)
+2023-09-21 --  17:32:58 :: INFO :: Start generating coverages...
+2023-09-21 --  17:32:58 :: INFO :: Start generating d1d2 law...
+2023-09-21 --  17:32:58 :: INFO :: Start generating density map...
+2023-09-21 --  17:32:59 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:32:59 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:32:59 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/CC336/d1d2.npy
+2023-09-21 --  17:32:59 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:03 :: INFO :: Saved density map at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:03 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-21 --  17:33:05 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:33:05 :: INFO :: name: CC336
+2023-09-21 --  17:33:05 :: INFO :: start_stage: rescue
+2023-09-21 --  17:33:05 :: INFO :: exit_stage: final
+2023-09-21 --  17:33:05 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  17:33:05 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq
+2023-09-21 --  17:33:05 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq
+2023-09-21 --  17:33:05 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:33:05 :: INFO :: max_alignment: -1
+2023-09-21 --  17:33:05 :: INFO :: mapq: 35
+2023-09-21 --  17:33:05 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:33:05 :: INFO :: circular: 
+2023-09-21 --  17:33:05 :: INFO :: rate: 0.3
+2023-09-21 --  17:33:05 :: INFO :: bins: 2000
+2023-09-21 --  17:33:05 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:33:05 :: INFO :: mode: full
+2023-09-21 --  17:33:05 :: INFO :: rounds: 10
+2023-09-21 --  17:33:05 :: INFO :: magnitude: 0.8
+2023-09-21 --  17:33:05 :: INFO :: verbose: False
+2023-09-21 --  17:33:05 :: INFO :: cpus: 16
+2023-09-21 --  17:33:05 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:33:05 :: INFO :: force: True
+2023-09-21 --  17:33:05 :: INFO :: Start chunking BAM files
+2023-09-21 --  17:33:05 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:05 :: INFO :: Start merging predictions
+2023-09-21 --  17:33:05 :: INFO :: Start building pairs file for ambiguously aligned reads
+2023-09-21 --  17:33:05 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:06 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:06 :: INFO :: Start plotting results
+2023-09-21 --  17:33:07 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:07 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:07 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:07 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:07 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:07 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:08 :: INFO :: Results plotted in /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:08 :: INFO :: Tidying : /home/sardine/Bureau/results/CC336
+2023-09-21 --  17:33:18 :: INFO :: Ending HiCBERG pipeline
+2023-09-21 --  17:33:39 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m/dist.frag.npy
+2023-09-21 --  17:33:39 :: INFO :: Start log binning of genome...
+2023-09-21 --  17:33:39 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa saved in /home/sardine/Bureau/results/Sc288_2m/xs.npy.
+2023-09-21 --  17:33:39 :: INFO :: Start generating patterns distribution...
+2023-09-21 --  17:33:39 :: INFO :: Start getting trans-P(s)
+2023-09-21 --  17:33:39 :: INFO :: Start generating coverages...
+2023-09-21 --  17:33:39 :: INFO :: Start generating d1d2 law...
+2023-09-21 --  17:33:39 :: INFO :: Start generating density map...
+2023-09-21 --  17:33:40 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:33:40 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:33:40 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/Sc288_2m/d1d2.npy
+2023-09-21 --  17:33:40 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:33:58 :: INFO :: Saved density map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:33:58 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-21 --  17:34:00 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  17:34:00 :: INFO :: name: Sc288_2m
+2023-09-21 --  17:34:00 :: INFO :: start_stage: rescue
+2023-09-21 --  17:34:00 :: INFO :: exit_stage: final
+2023-09-21 --  17:34:00 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  17:34:00 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq
+2023-09-21 --  17:34:00 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq
+2023-09-21 --  17:34:00 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  17:34:00 :: INFO :: max_alignment: -1
+2023-09-21 --  17:34:00 :: INFO :: mapq: 35
+2023-09-21 --  17:34:00 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  17:34:00 :: INFO :: circular: 
+2023-09-21 --  17:34:00 :: INFO :: rate: 0.5
+2023-09-21 --  17:34:00 :: INFO :: bins: 2000
+2023-09-21 --  17:34:00 :: INFO :: nb_chunks: 32
+2023-09-21 --  17:34:00 :: INFO :: mode: full
+2023-09-21 --  17:34:00 :: INFO :: rounds: 11
+2023-09-21 --  17:34:00 :: INFO :: magnitude: 0.7
+2023-09-21 --  17:34:00 :: INFO :: verbose: False
+2023-09-21 --  17:34:00 :: INFO :: cpus: 16
+2023-09-21 --  17:34:00 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  17:34:00 :: INFO :: force: True
+2023-09-21 --  17:34:00 :: INFO :: Start chunking BAM files
+2023-09-21 --  17:34:02 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-21 --  17:34:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:05 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:07 :: INFO :: Start merging predictions
+2023-09-21 --  17:34:07 :: INFO :: Start building pairs file for ambiguously aligned reads
+2023-09-21 --  17:34:08 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:11 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:11 :: INFO :: Start plotting results
+2023-09-21 --  17:34:12 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:12 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:13 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:16 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:34:20 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:35:13 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:35:13 :: INFO :: Results plotted in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:35:13 :: INFO :: Tidying : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  17:35:23 :: INFO :: Ending HiCBERG pipeline
+2023-09-21 --  17:57:48 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  17:57:48 :: INFO :: Chromosome sizes have been saved in /tmp/tmpn2kun092/chromosome_sizes.npy
+2023-09-21 --  17:57:48 :: INFO :: Start building index for alignment
+2023-09-21 --  17:57:48 :: INFO :: bowtie2-build -q -f --threads 1 --large-index data_test/SC288_with_micron.fa /tmp/tmpn2kun092/SC288_with_micron
+2023-09-21 --  17:57:57 :: INFO :: Index built at /tmp/tmpn2kun092/SC288_with_micron
+2023-09-21 --  17:57:57 :: INFO :: Start aligning reads
+2023-09-21 --  17:57:57 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpn2kun092/SC288_with_micron -S /tmp/tmpn2kun092/1.sam data_test/reverse_reads_test.fq.gz
+2023-09-21 --  17:57:57 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpn2kun092/SC288_with_micron -S /tmp/tmpn2kun092/2.sam data_test/forward_reads_test.fq.gz
+2023-09-21 --  17:58:06 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-09-21 --  17:58:06 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-09-21 --  17:58:06 :: INFO :: Alignment saved at /tmp/tmpn2kun092
+2023-09-21 --  17:58:06 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  17:58:06 :: INFO :: samtools view  -b /tmp/tmpn2kun092/1.sam -o /tmp/tmpn2kun092/1.bam --threads 1
+2023-09-21 --  17:58:06 :: INFO :: samtools view  -b /tmp/tmpn2kun092/2.sam -o /tmp/tmpn2kun092/2.bam --threads 1
+2023-09-21 --  17:58:06 :: INFO :: Compressed  alignment done at /tmp/tmpn2kun092
+2023-09-21 --  17:58:06 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  17:58:06 :: INFO :: samtools sort -n -T a082fceb-d3ab-415e-862c-9d2cd3e2ce38 /tmp/tmpn2kun092/1.bam -o /tmp/tmpn2kun092/1.sorted.bam --threads 1
+2023-09-21 --  17:58:06 :: INFO :: samtools sort -n -T 6eb29494-a818-46ae-b340-d0718c39e4e4 /tmp/tmpn2kun092/2.bam -o /tmp/tmpn2kun092/2.sorted.bam --threads 1
+2023-09-21 --  17:58:08 :: INFO :: Sorted alignment done at /tmp/tmpn2kun092
+2023-09-21 --  17:58:10 :: INFO :: Files for the different groups have been saved in /tmp/tmpn2kun092
+2023-09-21 --  17:58:10 :: INFO :: Start getting bin table
+2023-09-21 --  17:58:10 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-21 --  17:58:10 :: INFO :: Creating folder test_sample in /tmp/tmpgttwlsj3
+2023-09-21 --  17:58:10 :: INFO :: Folder test_sample in /tmp/tmpgttwlsj3/test_sample created.
+2023-09-21 --  17:58:10 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  17:58:10 :: INFO :: Chromosome sizes have been saved in /tmp/tmpgttwlsj3/chromosome_sizes.npy
+2023-09-21 --  17:58:10 :: INFO :: Start getting bin table
+2023-09-21 --  17:58:10 :: INFO :: Start building index for alignment
+2023-09-21 --  17:58:11 :: INFO :: bowtie2-build -q -f --threads 1 --large-index data_test/SC288_with_micron.fa /tmp/tmpgttwlsj3/SC288_with_micron
+2023-09-21 --  17:58:19 :: INFO :: Index built at /tmp/tmpgttwlsj3/SC288_with_micron
+2023-09-21 --  17:58:19 :: INFO :: Start aligning reads
+2023-09-21 --  17:58:19 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpgttwlsj3/SC288_with_micron -S /tmp/tmpgttwlsj3/1.sam data_test/reverse_reads_test.fq.gz
+2023-09-21 --  17:58:19 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpgttwlsj3/SC288_with_micron -S /tmp/tmpgttwlsj3/2.sam data_test/forward_reads_test.fq.gz
+2023-09-21 --  17:58:28 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-09-21 --  17:58:28 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-09-21 --  17:58:28 :: INFO :: Alignment saved at /tmp/tmpgttwlsj3
+2023-09-21 --  17:58:28 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  17:58:28 :: INFO :: samtools view  -b /tmp/tmpgttwlsj3/1.sam -o /tmp/tmpgttwlsj3/1.bam --threads 1
+2023-09-21 --  17:58:28 :: INFO :: samtools view  -b /tmp/tmpgttwlsj3/2.sam -o /tmp/tmpgttwlsj3/2.bam --threads 1
+2023-09-21 --  17:58:29 :: INFO :: Compressed  alignment done at /tmp/tmpgttwlsj3
+2023-09-21 --  17:58:29 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  17:58:29 :: INFO :: samtools sort -n -T 4bef9ecb-4433-460f-b62f-d3cffd66112a /tmp/tmpgttwlsj3/1.bam -o /tmp/tmpgttwlsj3/1.sorted.bam --threads 1
+2023-09-21 --  17:58:29 :: INFO :: samtools sort -n -T 47a8ad5a-076a-4ec1-9c57-9f7ee197ca56 /tmp/tmpgttwlsj3/2.bam -o /tmp/tmpgttwlsj3/2.sorted.bam --threads 1
+2023-09-21 --  17:58:31 :: INFO :: Sorted alignment done at /tmp/tmpgttwlsj3
+2023-09-21 --  17:58:33 :: INFO :: Files for the different groups have been saved in /tmp/tmpgttwlsj3
+2023-09-21 --  17:58:33 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-21 --  17:58:33 :: INFO :: Start chunking BAM files
+2023-09-21 --  17:58:33 :: INFO :: Start building index for alignment
+2023-09-21 --  17:58:33 :: INFO :: bowtie2-build -q -f --threads 1 --large-index data_test/SC288_with_micron.fa /tmp/tmpdup4ci9z/SC288_with_micron
+2023-09-21 --  17:58:42 :: INFO :: Index built at /tmp/tmpdup4ci9z/SC288_with_micron
+2023-09-21 --  17:58:42 :: INFO :: Start aligning reads
+2023-09-21 --  17:58:42 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpdup4ci9z/SC288_with_micron -S /tmp/tmpdup4ci9z/1.sam data_test/reverse_reads_test.fq.gz
+2023-09-21 --  17:58:42 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpdup4ci9z/SC288_with_micron -S /tmp/tmpdup4ci9z/2.sam data_test/forward_reads_test.fq.gz
+2023-09-21 --  17:58:51 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-09-21 --  17:58:51 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-09-21 --  17:58:51 :: INFO :: Alignment saved at /tmp/tmpdup4ci9z
+2023-09-21 --  17:58:51 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  17:58:51 :: INFO :: samtools view  -b /tmp/tmpdup4ci9z/1.sam -o /tmp/tmpdup4ci9z/1.bam --threads 1
+2023-09-21 --  17:58:51 :: INFO :: samtools view  -b /tmp/tmpdup4ci9z/2.sam -o /tmp/tmpdup4ci9z/2.bam --threads 1
+2023-09-21 --  17:58:52 :: INFO :: Compressed  alignment done at /tmp/tmpdup4ci9z
+2023-09-21 --  17:58:52 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  17:58:52 :: INFO :: samtools sort -n -T fb4e9d82-5624-459c-b798-cfab094fe8ad /tmp/tmpdup4ci9z/1.bam -o /tmp/tmpdup4ci9z/1.sorted.bam --threads 1
+2023-09-21 --  17:58:52 :: INFO :: samtools sort -n -T 93b75540-26c7-4d92-93cb-cce2a7f90553 /tmp/tmpdup4ci9z/2.bam -o /tmp/tmpdup4ci9z/2.sorted.bam --threads 1
+2023-09-21 --  17:58:53 :: INFO :: Sorted alignment done at /tmp/tmpdup4ci9z
+2023-09-21 --  17:58:53 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  17:58:54 :: INFO :: Chromosome sizes have been saved in /tmp/tmpdup4ci9z/chromosome_sizes.npy
+2023-09-21 --  17:58:56 :: INFO :: Files for the different groups have been saved in /tmp/tmpdup4ci9z
+2023-09-21 --  17:58:56 :: INFO :: Start log binning of genome...
+2023-09-21 --  17:58:56 :: INFO :: Log binning of genome data_test/SC288_with_micron.fa saved in /tmp/tmpdup4ci9z/xs.npy.
+2023-09-21 --  17:58:56 :: INFO :: Generating restriction map...
+2023-09-21 --  17:58:56 :: INFO :: Saved restriction map at : /home/sardine/Bureau/codes/hicberg
+2023-09-21 --  17:58:56 :: INFO :: Start generating distribution of fragments' distance...
+2023-09-21 --  18:00:58 :: INFO :: Saved restriction map at : /tmp/tmpdup4ci9z/dist.frag.npy
+2023-09-21 --  18:00:58 :: INFO :: Start generating patterns distribution...
+2023-09-21 --  18:00:58 :: INFO :: Start getting bin table
+2023-09-21 --  18:00:58 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-21 --  18:00:58 :: INFO :: Start generating coverages...
+2023-09-21 --  18:00:58 :: INFO :: Start generating d1d2 law...
+2023-09-21 --  18:00:59 :: INFO :: Start building index for alignment
+2023-09-21 --  18:00:59 :: INFO :: bowtie2-build -q -f --threads 1 --large-index data_test/SC288_with_micron.fa /tmp/tmpxggruc6n/SC288_with_micron
+2023-09-21 --  18:01:08 :: INFO :: Index built at /tmp/tmpxggruc6n/SC288_with_micron
+2023-09-21 --  18:01:08 :: INFO :: Start aligning reads
+2023-09-21 --  18:01:08 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpxggruc6n/SC288_with_micron -S /tmp/tmpxggruc6n/1.sam data_test/reverse_reads_test.fq.gz
+2023-09-21 --  18:01:08 :: INFO :: bowtie2 --very-sensitive -p 1 -a -x /tmp/tmpxggruc6n/SC288_with_micron -S /tmp/tmpxggruc6n/2.sam data_test/forward_reads_test.fq.gz
+2023-09-21 --  18:01:17 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    5972 (5.97%) aligned 0 times
+    83671 (83.67%) aligned exactly 1 time
+    10357 (10.36%) aligned >1 times
+94.03% overall alignment rate
+
+2023-09-21 --  18:01:17 :: INFO :: 100000 reads; of these:
+  100000 (100.00%) were unpaired; of these:
+    4918 (4.92%) aligned 0 times
+    84572 (84.57%) aligned exactly 1 time
+    10510 (10.51%) aligned >1 times
+95.08% overall alignment rate
+
+2023-09-21 --  18:01:17 :: INFO :: Alignment saved at /tmp/tmpxggruc6n
+2023-09-21 --  18:01:17 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  18:01:17 :: INFO :: samtools view  -b /tmp/tmpxggruc6n/1.sam -o /tmp/tmpxggruc6n/1.bam --threads 1
+2023-09-21 --  18:01:17 :: INFO :: samtools view  -b /tmp/tmpxggruc6n/2.sam -o /tmp/tmpxggruc6n/2.bam --threads 1
+2023-09-21 --  18:01:17 :: INFO :: Compressed  alignment done at /tmp/tmpxggruc6n
+2023-09-21 --  18:01:17 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  18:01:17 :: INFO :: samtools sort -n -T 6ecdf010-02d5-438b-9451-7bd6dd7f1dd1 /tmp/tmpxggruc6n/1.bam -o /tmp/tmpxggruc6n/1.sorted.bam --threads 1
+2023-09-21 --  18:01:17 :: INFO :: samtools sort -n -T a2432d1f-5582-4563-af79-150736c1863e /tmp/tmpxggruc6n/2.bam -o /tmp/tmpxggruc6n/2.sorted.bam --threads 1
+2023-09-21 --  18:01:19 :: INFO :: Sorted alignment done at /tmp/tmpxggruc6n
+2023-09-21 --  18:01:19 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  18:01:19 :: INFO :: Chromosome sizes have been saved in /tmp/tmpxggruc6n/chromosome_sizes.npy
+2023-09-21 --  18:01:21 :: INFO :: Files for the different groups have been saved in /tmp/tmpxggruc6n
+2023-09-21 --  18:08:48 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:08:48 :: INFO :: name: CC336
+2023-09-21 --  18:08:48 :: INFO :: start_stage: fastq
+2023-09-21 --  18:08:48 :: INFO :: exit_stage: bam
+2023-09-21 --  18:08:48 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  18:08:48 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-21 --  18:08:48 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-21 --  18:08:48 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:08:48 :: INFO :: max_alignment: -1
+2023-09-21 --  18:08:48 :: INFO :: mapq: 35
+2023-09-21 --  18:08:48 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:08:48 :: INFO :: circular: 
+2023-09-21 --  18:08:48 :: INFO :: rate: 0.3
+2023-09-21 --  18:08:48 :: INFO :: bins: 2000
+2023-09-21 --  18:08:48 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:08:48 :: INFO :: mode: full
+2023-09-21 --  18:08:48 :: INFO :: rounds: 10
+2023-09-21 --  18:08:48 :: INFO :: magnitude: 0.8
+2023-09-21 --  18:08:48 :: INFO :: verbose: False
+2023-09-21 --  18:08:48 :: INFO :: cpus: 16
+2023-09-21 --  18:08:48 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:08:48 :: INFO :: force: True
+2023-09-21 --  18:08:48 :: INFO :: Creating folder CC336 in /home/sardine/Bureau/results
+2023-09-21 --  18:08:48 :: INFO :: Folder CC336 in /home/sardine/Bureau/results/CC336 created.
+2023-09-21 --  18:08:48 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  18:08:48 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:08:48 :: INFO :: name: Sc288_2m
+2023-09-21 --  18:08:48 :: INFO :: start_stage: fastq
+2023-09-21 --  18:08:48 :: INFO :: exit_stage: bam
+2023-09-21 --  18:08:48 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  18:08:48 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-21 --  18:08:48 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-21 --  18:08:48 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:08:48 :: INFO :: max_alignment: -1
+2023-09-21 --  18:08:48 :: INFO :: mapq: 35
+2023-09-21 --  18:08:48 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:08:48 :: INFO :: circular: 
+2023-09-21 --  18:08:48 :: INFO :: rate: 0.5
+2023-09-21 --  18:08:48 :: INFO :: bins: 2000
+2023-09-21 --  18:08:48 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:08:48 :: INFO :: mode: full
+2023-09-21 --  18:08:48 :: INFO :: rounds: 11
+2023-09-21 --  18:08:48 :: INFO :: magnitude: 0.7
+2023-09-21 --  18:08:48 :: INFO :: verbose: False
+2023-09-21 --  18:08:48 :: INFO :: cpus: 16
+2023-09-21 --  18:08:48 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:08:48 :: INFO :: force: True
+2023-09-21 --  18:08:48 :: INFO :: Creating folder Sc288_2m in /home/sardine/Bureau/results
+2023-09-21 --  18:08:48 :: INFO :: Folder Sc288_2m in /home/sardine/Bureau/results/Sc288_2m created.
+2023-09-21 --  18:08:48 :: INFO :: Start getting chromosome sizes
+2023-09-21 --  18:08:48 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/CC336/chromosome_sizes.npy
+2023-09-21 --  18:08:48 :: INFO :: Start getting bin table
+2023-09-21 --  18:08:48 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-21 --  18:08:48 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/Sc288_2m/chromosome_sizes.npy
+2023-09-21 --  18:08:48 :: INFO :: Start getting bin table
+2023-09-21 --  18:08:48 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-21 --  18:08:50 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:08:50 :: INFO :: name: CC336
+2023-09-21 --  18:08:50 :: INFO :: start_stage: bam
+2023-09-21 --  18:08:50 :: INFO :: exit_stage: groups
+2023-09-21 --  18:08:50 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  18:08:50 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-21 --  18:08:50 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-21 --  18:08:50 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:08:50 :: INFO :: max_alignment: -1
+2023-09-21 --  18:08:50 :: INFO :: mapq: 35
+2023-09-21 --  18:08:50 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:08:50 :: INFO :: circular: 
+2023-09-21 --  18:08:50 :: INFO :: rate: 0.3
+2023-09-21 --  18:08:50 :: INFO :: bins: 2000
+2023-09-21 --  18:08:50 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:08:50 :: INFO :: mode: full
+2023-09-21 --  18:08:50 :: INFO :: rounds: 10
+2023-09-21 --  18:08:50 :: INFO :: magnitude: 0.8
+2023-09-21 --  18:08:50 :: INFO :: verbose: False
+2023-09-21 --  18:08:50 :: INFO :: cpus: 16
+2023-09-21 --  18:08:50 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:08:50 :: INFO :: force: True
+2023-09-21 --  18:08:50 :: INFO :: Start building index for alignment
+2023-09-21 --  18:08:50 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:08:50 :: INFO :: name: Sc288_2m
+2023-09-21 --  18:08:50 :: INFO :: start_stage: bam
+2023-09-21 --  18:08:50 :: INFO :: exit_stage: groups
+2023-09-21 --  18:08:50 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  18:08:50 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-21 --  18:08:50 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-21 --  18:08:50 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:08:50 :: INFO :: max_alignment: -1
+2023-09-21 --  18:08:50 :: INFO :: mapq: 35
+2023-09-21 --  18:08:50 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:08:50 :: INFO :: circular: 
+2023-09-21 --  18:08:50 :: INFO :: rate: 0.5
+2023-09-21 --  18:08:50 :: INFO :: bins: 2000
+2023-09-21 --  18:08:50 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:08:50 :: INFO :: mode: full
+2023-09-21 --  18:08:50 :: INFO :: rounds: 11
+2023-09-21 --  18:08:50 :: INFO :: magnitude: 0.7
+2023-09-21 --  18:08:50 :: INFO :: verbose: False
+2023-09-21 --  18:08:50 :: INFO :: cpus: 16
+2023-09-21 --  18:08:50 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:08:50 :: INFO :: force: True
+2023-09-21 --  18:08:50 :: INFO :: Start building index for alignment
+2023-09-21 --  18:08:54 :: INFO :: Index built at /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655
+2023-09-21 --  18:08:54 :: INFO :: Start aligning reads
+2023-09-21 --  18:08:54 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/1.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-21 --  18:08:54 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/2.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-21 --  18:08:59 :: INFO :: Index built at /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron
+2023-09-21 --  18:08:59 :: INFO :: Start aligning reads
+2023-09-21 --  18:08:59 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/1.sam /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-21 --  18:08:59 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/2.sam /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-21 --  18:19:21 :: INFO :: 26612866 reads; of these:
+  26612866 (100.00%) were unpaired; of these:
+    2158614 (8.11%) aligned 0 times
+    23611016 (88.72%) aligned exactly 1 time
+    843236 (3.17%) aligned >1 times
+91.89% overall alignment rate
+
+2023-09-21 --  18:19:21 :: INFO :: 26612866 reads; of these:
+  26612866 (100.00%) were unpaired; of these:
+    1306291 (4.91%) aligned 0 times
+    24403216 (91.70%) aligned exactly 1 time
+    903359 (3.39%) aligned >1 times
+95.09% overall alignment rate
+
+2023-09-21 --  18:19:21 :: INFO :: Alignment saved at /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:19:21 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  18:19:21 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/1.sam -o /home/sardine/Bureau/results/CC336/1.bam --threads 16
+2023-09-21 --  18:19:21 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/2.sam -o /home/sardine/Bureau/results/CC336/2.bam --threads 16
+2023-09-21 --  18:20:09 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:20:09 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  18:20:09 :: INFO :: samtools sort -n -T 439dec19-8dab-4d73-a810-85ec1e63c7a4 /home/sardine/Bureau/results/CC336/1.bam -o /home/sardine/Bureau/results/CC336/1.sorted.bam --threads 16
+2023-09-21 --  18:20:09 :: INFO :: samtools sort -n -T be6a814d-1b21-4555-b74e-111edf7e66cd /home/sardine/Bureau/results/CC336/2.bam -o /home/sardine/Bureau/results/CC336/2.sorted.bam --threads 16
+2023-09-21 --  18:21:33 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:21:33 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-21 --  18:21:36 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:21:36 :: INFO :: name: CC336
+2023-09-21 --  18:21:36 :: INFO :: start_stage: groups
+2023-09-21 --  18:21:36 :: INFO :: exit_stage: build
+2023-09-21 --  18:21:36 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  18:21:36 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-21 --  18:21:36 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-21 --  18:21:36 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:21:36 :: INFO :: max_alignment: -1
+2023-09-21 --  18:21:36 :: INFO :: mapq: 35
+2023-09-21 --  18:21:36 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:21:36 :: INFO :: circular: 
+2023-09-21 --  18:21:36 :: INFO :: rate: 0.3
+2023-09-21 --  18:21:36 :: INFO :: bins: 2000
+2023-09-21 --  18:21:36 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:21:36 :: INFO :: mode: full
+2023-09-21 --  18:21:36 :: INFO :: rounds: 10
+2023-09-21 --  18:21:36 :: INFO :: magnitude: 0.8
+2023-09-21 --  18:21:36 :: INFO :: verbose: False
+2023-09-21 --  18:21:36 :: INFO :: cpus: 16
+2023-09-21 --  18:21:36 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:21:36 :: INFO :: force: True
+2023-09-21 --  18:21:36 :: INFO :: Start chunking BAM files
+2023-09-21 --  18:23:53 :: INFO :: 47310032 reads; of these:
+  47310032 (100.00%) were unpaired; of these:
+    2845860 (6.02%) aligned 0 times
+    39601500 (83.71%) aligned exactly 1 time
+    4862672 (10.28%) aligned >1 times
+93.98% overall alignment rate
+
+2023-09-21 --  18:23:53 :: INFO :: 47310032 reads; of these:
+  47310032 (100.00%) were unpaired; of these:
+    2293189 (4.85%) aligned 0 times
+    40099611 (84.76%) aligned exactly 1 time
+    4917232 (10.39%) aligned >1 times
+95.15% overall alignment rate
+
+2023-09-21 --  18:23:53 :: INFO :: Alignment saved at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:23:53 :: INFO :: Start converting .sam to .bam
+2023-09-21 --  18:23:53 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/1.sam -o /home/sardine/Bureau/results/Sc288_2m/1.bam --threads 16
+2023-09-21 --  18:23:53 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/2.sam -o /home/sardine/Bureau/results/Sc288_2m/2.bam --threads 16
+2023-09-21 --  18:24:36 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:24:36 :: INFO :: Start sorting .bam alignment files
+2023-09-21 --  18:24:36 :: INFO :: samtools sort -n -T 83be35fc-5139-462a-9ae1-e5c7a96b42bc /home/sardine/Bureau/results/Sc288_2m/1.bam -o /home/sardine/Bureau/results/Sc288_2m/1.sorted.bam --threads 16
+2023-09-21 --  18:24:36 :: INFO :: samtools sort -n -T d834ee89-c571-46a4-813f-cddc9e3a45fa /home/sardine/Bureau/results/Sc288_2m/2.bam -o /home/sardine/Bureau/results/Sc288_2m/2.sorted.bam --threads 16
+2023-09-21 --  18:26:49 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:26:49 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-21 --  18:26:51 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:26:51 :: INFO :: name: Sc288_2m
+2023-09-21 --  18:26:51 :: INFO :: start_stage: groups
+2023-09-21 --  18:26:51 :: INFO :: exit_stage: build
+2023-09-21 --  18:26:51 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  18:26:51 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-21 --  18:26:51 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-21 --  18:26:51 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:26:51 :: INFO :: max_alignment: -1
+2023-09-21 --  18:26:51 :: INFO :: mapq: 35
+2023-09-21 --  18:26:51 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:26:51 :: INFO :: circular: 
+2023-09-21 --  18:26:51 :: INFO :: rate: 0.5
+2023-09-21 --  18:26:51 :: INFO :: bins: 2000
+2023-09-21 --  18:26:51 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:26:51 :: INFO :: mode: full
+2023-09-21 --  18:26:51 :: INFO :: rounds: 11
+2023-09-21 --  18:26:51 :: INFO :: magnitude: 0.7
+2023-09-21 --  18:26:51 :: INFO :: verbose: False
+2023-09-21 --  18:26:51 :: INFO :: cpus: 16
+2023-09-21 --  18:26:51 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:26:51 :: INFO :: force: True
+2023-09-21 --  18:26:51 :: INFO :: Start chunking BAM files
+2023-09-21 --  18:30:02 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-21 --  18:30:02 :: INFO :: Starting reads classification
+2023-09-21 --  18:30:18 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:23 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:24 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:26 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:27 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:28 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:35 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:42 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:43 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:44 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:44 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:46 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:46 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:47 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:47 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:47 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:48 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:48 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:48 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:49 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:49 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:30:49 :: INFO :: Start merging predictions
+2023-09-21 --  18:31:15 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:31:16 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-21 --  18:31:17 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:31:17 :: INFO :: name: CC336
+2023-09-21 --  18:31:17 :: INFO :: start_stage: build
+2023-09-21 --  18:31:17 :: INFO :: exit_stage: stats
+2023-09-21 --  18:31:17 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  18:31:17 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-21 --  18:31:17 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-21 --  18:31:17 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:31:17 :: INFO :: max_alignment: -1
+2023-09-21 --  18:31:17 :: INFO :: mapq: 35
+2023-09-21 --  18:31:17 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:31:17 :: INFO :: circular: 
+2023-09-21 --  18:31:17 :: INFO :: rate: 0.3
+2023-09-21 --  18:31:17 :: INFO :: bins: 2000
+2023-09-21 --  18:31:17 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:31:17 :: INFO :: mode: full
+2023-09-21 --  18:31:17 :: INFO :: rounds: 10
+2023-09-21 --  18:31:17 :: INFO :: magnitude: 0.8
+2023-09-21 --  18:31:17 :: INFO :: verbose: False
+2023-09-21 --  18:31:17 :: INFO :: cpus: 16
+2023-09-21 --  18:31:17 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:31:17 :: INFO :: force: True
+2023-09-21 --  18:31:17 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-21 --  18:32:13 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:32:44 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:32:44 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-21 --  18:32:46 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:32:46 :: INFO :: name: CC336
+2023-09-21 --  18:32:46 :: INFO :: start_stage: stats
+2023-09-21 --  18:32:46 :: INFO :: exit_stage: rescue
+2023-09-21 --  18:32:46 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  18:32:46 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-21 --  18:32:46 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-21 --  18:32:46 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:32:46 :: INFO :: max_alignment: -1
+2023-09-21 --  18:32:46 :: INFO :: mapq: 35
+2023-09-21 --  18:32:46 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:32:46 :: INFO :: circular: 
+2023-09-21 --  18:32:46 :: INFO :: rate: 0.3
+2023-09-21 --  18:32:46 :: INFO :: bins: 2000
+2023-09-21 --  18:32:46 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:32:46 :: INFO :: mode: full
+2023-09-21 --  18:32:46 :: INFO :: rounds: 10
+2023-09-21 --  18:32:46 :: INFO :: magnitude: 0.8
+2023-09-21 --  18:32:46 :: INFO :: verbose: False
+2023-09-21 --  18:32:46 :: INFO :: cpus: 16
+2023-09-21 --  18:32:46 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:32:46 :: INFO :: force: True
+2023-09-21 --  18:32:46 :: INFO :: Generating restriction map...
+2023-09-21 --  18:32:46 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:32:46 :: INFO :: Start generating distribution of fragments' distance...
+2023-09-21 --  18:34:18 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336/dist.frag.npy
+2023-09-21 --  18:34:18 :: INFO :: Start log binning of genome...
+2023-09-21 --  18:34:18 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa saved in /home/sardine/Bureau/results/CC336/xs.npy.
+2023-09-21 --  18:34:19 :: INFO :: Start generating patterns distribution...
+2023-09-21 --  18:34:19 :: INFO :: Start getting trans-P(s)
+2023-09-21 --  18:34:19 :: INFO :: Start generating coverages...
+2023-09-21 --  18:34:19 :: INFO :: Start generating d1d2 law...
+2023-09-21 --  18:34:19 :: INFO :: Start generating density map...
+2023-09-21 --  18:34:19 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:34:23 :: INFO :: Saved density map at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:36:30 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:38:23 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/CC336/d1d2.npy
+2023-09-21 --  18:39:38 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:39:38 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-21 --  18:39:39 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:39:39 :: INFO :: name: CC336
+2023-09-21 --  18:39:39 :: INFO :: start_stage: rescue
+2023-09-21 --  18:39:39 :: INFO :: exit_stage: final
+2023-09-21 --  18:39:39 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-21 --  18:39:39 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-21 --  18:39:39 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-21 --  18:39:39 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:39:39 :: INFO :: max_alignment: -1
+2023-09-21 --  18:39:39 :: INFO :: mapq: 35
+2023-09-21 --  18:39:39 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:39:39 :: INFO :: circular: 
+2023-09-21 --  18:39:39 :: INFO :: rate: 0.3
+2023-09-21 --  18:39:39 :: INFO :: bins: 2000
+2023-09-21 --  18:39:39 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:39:39 :: INFO :: mode: full
+2023-09-21 --  18:39:39 :: INFO :: rounds: 10
+2023-09-21 --  18:39:39 :: INFO :: magnitude: 0.8
+2023-09-21 --  18:39:39 :: INFO :: verbose: False
+2023-09-21 --  18:39:39 :: INFO :: cpus: 16
+2023-09-21 --  18:39:39 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:39:39 :: INFO :: force: True
+2023-09-21 --  18:39:39 :: INFO :: Start chunking BAM files
+2023-09-21 --  18:40:42 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-21 --  18:41:16 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:18 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:19 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:22 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:24 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:28 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:28 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:29 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:30 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:30 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:31 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:31 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:31 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:31 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:33 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:35 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:37 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:53 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:55 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:41:59 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:02 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:06 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:10 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:11 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:12 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:12 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:15 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:15 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:42:15 :: INFO :: Start merging predictions
+2023-09-21 --  18:42:16 :: INFO :: Start building pairs file for ambiguously aligned reads
+2023-09-21 --  18:43:16 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:49 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:49 :: INFO :: Start plotting results
+2023-09-21 --  18:43:49 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:49 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:49 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:49 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:49 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:52 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:52 :: INFO :: Results plotted in /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:43:52 :: INFO :: Tidying : /home/sardine/Bureau/results/CC336
+2023-09-21 --  18:44:02 :: INFO :: Ending HiCBERG pipeline
+2023-09-21 --  18:45:12 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-21 --  18:45:12 :: INFO :: Starting reads classification
+2023-09-21 --  18:45:50 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:45:53 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:45:58 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:45:59 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:00 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:04 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:05 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:05 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:09 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:11 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:11 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:11 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:12 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:12 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:13 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:13 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:14 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:35 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:41 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:48 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:51 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:52 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:52 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:54 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:56 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:56 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:58 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:59 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:59 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:46:59 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:47:00 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:47:04 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:47:04 :: INFO :: Start merging predictions
+2023-09-21 --  18:48:18 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:48:18 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-21 --  18:48:20 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:48:20 :: INFO :: name: Sc288_2m
+2023-09-21 --  18:48:20 :: INFO :: start_stage: build
+2023-09-21 --  18:48:20 :: INFO :: exit_stage: stats
+2023-09-21 --  18:48:20 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  18:48:20 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-21 --  18:48:20 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-21 --  18:48:20 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:48:20 :: INFO :: max_alignment: -1
+2023-09-21 --  18:48:20 :: INFO :: mapq: 35
+2023-09-21 --  18:48:20 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:48:20 :: INFO :: circular: 
+2023-09-21 --  18:48:20 :: INFO :: rate: 0.5
+2023-09-21 --  18:48:20 :: INFO :: bins: 2000
+2023-09-21 --  18:48:20 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:48:20 :: INFO :: mode: full
+2023-09-21 --  18:48:20 :: INFO :: rounds: 11
+2023-09-21 --  18:48:20 :: INFO :: magnitude: 0.7
+2023-09-21 --  18:48:20 :: INFO :: verbose: False
+2023-09-21 --  18:48:20 :: INFO :: cpus: 16
+2023-09-21 --  18:48:20 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:48:20 :: INFO :: force: True
+2023-09-21 --  18:48:20 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-21 --  18:49:50 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:52:00 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:52:00 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-21 --  18:52:01 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  18:52:01 :: INFO :: name: Sc288_2m
+2023-09-21 --  18:52:01 :: INFO :: start_stage: stats
+2023-09-21 --  18:52:01 :: INFO :: exit_stage: rescue
+2023-09-21 --  18:52:01 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  18:52:01 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-21 --  18:52:01 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-21 --  18:52:01 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  18:52:01 :: INFO :: max_alignment: -1
+2023-09-21 --  18:52:01 :: INFO :: mapq: 35
+2023-09-21 --  18:52:01 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  18:52:01 :: INFO :: circular: 
+2023-09-21 --  18:52:01 :: INFO :: rate: 0.5
+2023-09-21 --  18:52:01 :: INFO :: bins: 2000
+2023-09-21 --  18:52:01 :: INFO :: nb_chunks: 32
+2023-09-21 --  18:52:01 :: INFO :: mode: full
+2023-09-21 --  18:52:01 :: INFO :: rounds: 11
+2023-09-21 --  18:52:01 :: INFO :: magnitude: 0.7
+2023-09-21 --  18:52:01 :: INFO :: verbose: False
+2023-09-21 --  18:52:01 :: INFO :: cpus: 16
+2023-09-21 --  18:52:01 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  18:52:01 :: INFO :: force: True
+2023-09-21 --  18:52:01 :: INFO :: Generating restriction map...
+2023-09-21 --  18:52:02 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:52:02 :: INFO :: Start generating distribution of fragments' distance...
+2023-09-21 --  18:54:16 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m/dist.frag.npy
+2023-09-21 --  18:54:16 :: INFO :: Start log binning of genome...
+2023-09-21 --  18:54:16 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa saved in /home/sardine/Bureau/results/Sc288_2m/xs.npy.
+2023-09-21 --  18:54:16 :: INFO :: Start generating patterns distribution...
+2023-09-21 --  18:54:16 :: INFO :: Start getting trans-P(s)
+2023-09-21 --  18:54:16 :: INFO :: Start generating coverages...
+2023-09-21 --  18:54:16 :: INFO :: Start generating d1d2 law...
+2023-09-21 --  18:54:16 :: INFO :: Start generating density map...
+2023-09-21 --  18:54:24 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:54:42 :: INFO :: Saved density map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  18:57:55 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:00:28 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/Sc288_2m/d1d2.npy
+2023-09-21 --  19:00:33 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:00:33 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-21 --  19:00:35 :: INFO :: Start HiCBERG pipeline
+2023-09-21 --  19:00:35 :: INFO :: name: Sc288_2m
+2023-09-21 --  19:00:35 :: INFO :: start_stage: rescue
+2023-09-21 --  19:00:35 :: INFO :: exit_stage: final
+2023-09-21 --  19:00:35 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-21 --  19:00:35 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-21 --  19:00:35 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-21 --  19:00:35 :: INFO :: sensitivity: very-sensitive
+2023-09-21 --  19:00:35 :: INFO :: max_alignment: -1
+2023-09-21 --  19:00:35 :: INFO :: mapq: 35
+2023-09-21 --  19:00:35 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-21 --  19:00:35 :: INFO :: circular: 
+2023-09-21 --  19:00:35 :: INFO :: rate: 0.5
+2023-09-21 --  19:00:35 :: INFO :: bins: 2000
+2023-09-21 --  19:00:35 :: INFO :: nb_chunks: 32
+2023-09-21 --  19:00:35 :: INFO :: mode: full
+2023-09-21 --  19:00:35 :: INFO :: rounds: 11
+2023-09-21 --  19:00:35 :: INFO :: magnitude: 0.7
+2023-09-21 --  19:00:35 :: INFO :: verbose: False
+2023-09-21 --  19:00:35 :: INFO :: cpus: 16
+2023-09-21 --  19:00:35 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-21 --  19:00:35 :: INFO :: force: True
+2023-09-21 --  19:00:35 :: INFO :: Start chunking BAM files
+2023-09-21 --  19:08:03 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-21 --  19:14:57 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:15:11 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:15:29 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:16:30 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:16:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:16:35 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:16:44 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:16:52 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:17:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:17:09 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:17:09 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:17:16 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:17:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:17:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:17:39 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:18:01 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:18:46 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:22:37 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:23:44 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:18 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:26 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:27 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:42 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:43 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:56 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:24:58 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:25:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:25:07 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:25:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:25:12 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:25:14 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:25:14 :: INFO :: Start merging predictions
+2023-09-21 --  19:25:20 :: INFO :: Start building pairs file for ambiguously aligned reads
+2023-09-21 --  19:27:09 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:29:24 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:29:24 :: INFO :: Start plotting results
+2023-09-21 --  19:29:25 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:29:28 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:29:32 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:29:32 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:29:39 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:30:23 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:30:23 :: INFO :: Results plotted in /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:30:23 :: INFO :: Tidying : /home/sardine/Bureau/results/Sc288_2m
+2023-09-21 --  19:30:33 :: INFO :: Ending HiCBERG pipeline
+2023-09-25 --  08:54:13 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  08:54:13 :: INFO :: name: Sc288_2m
+2023-09-25 --  08:54:13 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  08:54:13 :: INFO :: start_stage: fastq
+2023-09-25 --  08:54:13 :: INFO :: exit_stage: bam
+2023-09-25 --  08:54:13 :: INFO :: name: CC336
+2023-09-25 --  08:54:13 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-25 --  08:54:13 :: INFO :: start_stage: fastq
+2023-09-25 --  08:54:13 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-25 --  08:54:13 :: INFO :: exit_stage: bam
+2023-09-25 --  08:54:13 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-25 --  08:54:13 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-25 --  08:54:13 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  08:54:13 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-25 --  08:54:13 :: INFO :: max_alignment: -1
+2023-09-25 --  08:54:13 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-25 --  08:54:13 :: INFO :: mapq: 35
+2023-09-25 --  08:54:13 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  08:54:13 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  08:54:13 :: INFO :: circular: 
+2023-09-25 --  08:54:13 :: INFO :: max_alignment: -1
+2023-09-25 --  08:54:13 :: INFO :: rate: 0.5
+2023-09-25 --  08:54:13 :: INFO :: mapq: 35
+2023-09-25 --  08:54:13 :: INFO :: bins: 2000
+2023-09-25 --  08:54:13 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  08:54:13 :: INFO :: nb_chunks: 32
+2023-09-25 --  08:54:13 :: INFO :: circular: 
+2023-09-25 --  08:54:13 :: INFO :: mode: full
+2023-09-25 --  08:54:13 :: INFO :: rate: 0.3
+2023-09-25 --  08:54:13 :: INFO :: rounds: 11
+2023-09-25 --  08:54:13 :: INFO :: bins: 2000
+2023-09-25 --  08:54:13 :: INFO :: magnitude: 0.7
+2023-09-25 --  08:54:13 :: INFO :: nb_chunks: 32
+2023-09-25 --  08:54:13 :: INFO :: verbose: False
+2023-09-25 --  08:54:13 :: INFO :: mode: full
+2023-09-25 --  08:54:13 :: INFO :: cpus: 16
+2023-09-25 --  08:54:13 :: INFO :: rounds: 10
+2023-09-25 --  08:54:13 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  08:54:13 :: INFO :: magnitude: 0.8
+2023-09-25 --  08:54:13 :: INFO :: force: True
+2023-09-25 --  08:54:13 :: INFO :: verbose: False
+2023-09-25 --  08:54:13 :: INFO :: cpus: 16
+2023-09-25 --  08:54:13 :: INFO :: Creating folder Sc288_2m in /home/sardine/Bureau/results
+2023-09-25 --  08:54:13 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  08:54:13 :: INFO :: force: True
+2023-09-25 --  08:54:13 :: INFO :: Creating folder CC336 in /home/sardine/Bureau/results
+2023-09-25 --  08:54:13 :: INFO :: Folder Sc288_2m in /home/sardine/Bureau/results/Sc288_2m created.
+2023-09-25 --  08:54:13 :: INFO :: Start getting chromosome sizes
+2023-09-25 --  08:54:13 :: INFO :: Folder CC336 in /home/sardine/Bureau/results/CC336 created.
+2023-09-25 --  08:54:13 :: INFO :: Start getting chromosome sizes
+2023-09-25 --  08:54:13 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/CC336/chromosome_sizes.npy
+2023-09-25 --  08:54:13 :: INFO :: Start getting bin table
+2023-09-25 --  08:54:13 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-25 --  08:54:13 :: INFO :: Chromosome sizes have been saved in /home/sardine/Bureau/results/Sc288_2m/chromosome_sizes.npy
+2023-09-25 --  08:54:13 :: INFO :: Start getting bin table
+2023-09-25 --  08:54:13 :: INFO :: Ending HiCBERG pipeline at 1
+2023-09-25 --  08:54:15 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  08:54:15 :: INFO :: name: CC336
+2023-09-25 --  08:54:15 :: INFO :: start_stage: bam
+2023-09-25 --  08:54:15 :: INFO :: exit_stage: groups
+2023-09-25 --  08:54:15 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-25 --  08:54:15 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-25 --  08:54:15 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-25 --  08:54:15 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  08:54:15 :: INFO :: max_alignment: -1
+2023-09-25 --  08:54:15 :: INFO :: mapq: 35
+2023-09-25 --  08:54:15 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  08:54:15 :: INFO :: circular: 
+2023-09-25 --  08:54:15 :: INFO :: rate: 0.3
+2023-09-25 --  08:54:15 :: INFO :: bins: 2000
+2023-09-25 --  08:54:15 :: INFO :: nb_chunks: 32
+2023-09-25 --  08:54:15 :: INFO :: mode: full
+2023-09-25 --  08:54:15 :: INFO :: rounds: 10
+2023-09-25 --  08:54:15 :: INFO :: magnitude: 0.8
+2023-09-25 --  08:54:15 :: INFO :: verbose: False
+2023-09-25 --  08:54:15 :: INFO :: cpus: 16
+2023-09-25 --  08:54:15 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  08:54:15 :: INFO :: force: True
+2023-09-25 --  08:54:15 :: INFO :: Start building index for alignment
+2023-09-25 --  08:54:15 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  08:54:15 :: INFO :: name: Sc288_2m
+2023-09-25 --  08:54:15 :: INFO :: start_stage: bam
+2023-09-25 --  08:54:15 :: INFO :: exit_stage: groups
+2023-09-25 --  08:54:15 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-25 --  08:54:15 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-25 --  08:54:15 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-25 --  08:54:15 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  08:54:15 :: INFO :: max_alignment: -1
+2023-09-25 --  08:54:15 :: INFO :: mapq: 35
+2023-09-25 --  08:54:15 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  08:54:15 :: INFO :: circular: 
+2023-09-25 --  08:54:15 :: INFO :: rate: 0.5
+2023-09-25 --  08:54:15 :: INFO :: bins: 2000
+2023-09-25 --  08:54:15 :: INFO :: nb_chunks: 32
+2023-09-25 --  08:54:15 :: INFO :: mode: full
+2023-09-25 --  08:54:15 :: INFO :: rounds: 11
+2023-09-25 --  08:54:15 :: INFO :: magnitude: 0.7
+2023-09-25 --  08:54:15 :: INFO :: verbose: False
+2023-09-25 --  08:54:15 :: INFO :: cpus: 16
+2023-09-25 --  08:54:15 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  08:54:15 :: INFO :: force: True
+2023-09-25 --  08:54:15 :: INFO :: Start building index for alignment
+2023-09-25 --  08:54:20 :: INFO :: Index built at /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655
+2023-09-25 --  08:54:20 :: INFO :: Start aligning reads
+2023-09-25 --  08:54:20 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/1.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-25 --  08:54:20 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/CC336/ecoli_k12_mg1655 -S /home/sardine/Bureau/results/CC336/2.sam /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-25 --  08:54:25 :: INFO :: Index built at /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron
+2023-09-25 --  08:54:25 :: INFO :: Start aligning reads
+2023-09-25 --  08:54:25 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/1.sam /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-25 --  08:54:25 :: INFO :: bowtie2 --very-sensitive -p 16 -a -x /home/sardine/Bureau/results/Sc288_2m/SC288_with_micron -S /home/sardine/Bureau/results/Sc288_2m/2.sam /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-25 --  09:05:09 :: INFO :: 26612866 reads; of these:
+  26612866 (100.00%) were unpaired; of these:
+    2158614 (8.11%) aligned 0 times
+    23611016 (88.72%) aligned exactly 1 time
+    843236 (3.17%) aligned >1 times
+91.89% overall alignment rate
+
+2023-09-25 --  09:05:09 :: INFO :: 26612866 reads; of these:
+  26612866 (100.00%) were unpaired; of these:
+    1306291 (4.91%) aligned 0 times
+    24403216 (91.70%) aligned exactly 1 time
+    903359 (3.39%) aligned >1 times
+95.09% overall alignment rate
+
+2023-09-25 --  09:05:09 :: INFO :: Alignment saved at /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:05:09 :: INFO :: Start converting .sam to .bam
+2023-09-25 --  09:05:09 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/1.sam -o /home/sardine/Bureau/results/CC336/1.bam --threads 16
+2023-09-25 --  09:05:09 :: INFO :: samtools view  -b /home/sardine/Bureau/results/CC336/2.sam -o /home/sardine/Bureau/results/CC336/2.bam --threads 16
+2023-09-25 --  09:05:57 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:05:57 :: INFO :: Start sorting .bam alignment files
+2023-09-25 --  09:05:57 :: INFO :: samtools sort -n -T 35e74394-7353-446f-b6eb-29dc7fb9d1db /home/sardine/Bureau/results/CC336/1.bam -o /home/sardine/Bureau/results/CC336/1.sorted.bam --threads 16
+2023-09-25 --  09:05:57 :: INFO :: samtools sort -n -T 8b8073bc-a1fe-49c5-a155-c4c3ae68a124 /home/sardine/Bureau/results/CC336/2.bam -o /home/sardine/Bureau/results/CC336/2.sorted.bam --threads 16
+2023-09-25 --  09:07:24 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:07:24 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-25 --  09:07:27 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:07:27 :: INFO :: name: CC336
+2023-09-25 --  09:07:27 :: INFO :: start_stage: groups
+2023-09-25 --  09:07:27 :: INFO :: exit_stage: build
+2023-09-25 --  09:07:27 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-25 --  09:07:27 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-25 --  09:07:27 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-25 --  09:07:27 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:07:27 :: INFO :: max_alignment: -1
+2023-09-25 --  09:07:27 :: INFO :: mapq: 35
+2023-09-25 --  09:07:27 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:07:27 :: INFO :: circular: 
+2023-09-25 --  09:07:27 :: INFO :: rate: 0.3
+2023-09-25 --  09:07:27 :: INFO :: bins: 2000
+2023-09-25 --  09:07:27 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:07:27 :: INFO :: mode: full
+2023-09-25 --  09:07:27 :: INFO :: rounds: 10
+2023-09-25 --  09:07:27 :: INFO :: magnitude: 0.8
+2023-09-25 --  09:07:27 :: INFO :: verbose: False
+2023-09-25 --  09:07:27 :: INFO :: cpus: 16
+2023-09-25 --  09:07:27 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:07:27 :: INFO :: force: True
+2023-09-25 --  09:07:27 :: INFO :: Start chunking BAM files
+2023-09-25 --  09:09:59 :: INFO :: 47310032 reads; of these:
+  47310032 (100.00%) were unpaired; of these:
+    2845860 (6.02%) aligned 0 times
+    39601500 (83.71%) aligned exactly 1 time
+    4862672 (10.28%) aligned >1 times
+93.98% overall alignment rate
+
+2023-09-25 --  09:09:59 :: INFO :: 47310032 reads; of these:
+  47310032 (100.00%) were unpaired; of these:
+    2293189 (4.85%) aligned 0 times
+    40099611 (84.76%) aligned exactly 1 time
+    4917232 (10.39%) aligned >1 times
+95.15% overall alignment rate
+
+2023-09-25 --  09:09:59 :: INFO :: Alignment saved at /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:09:59 :: INFO :: Start converting .sam to .bam
+2023-09-25 --  09:09:59 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/1.sam -o /home/sardine/Bureau/results/Sc288_2m/1.bam --threads 16
+2023-09-25 --  09:09:59 :: INFO :: samtools view  -b /home/sardine/Bureau/results/Sc288_2m/2.sam -o /home/sardine/Bureau/results/Sc288_2m/2.bam --threads 16
+2023-09-25 --  09:10:43 :: INFO :: Compressed  alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:10:43 :: INFO :: Start sorting .bam alignment files
+2023-09-25 --  09:10:43 :: INFO :: samtools sort -n -T a8ecff3e-e83e-4d62-86f6-2015b835e782 /home/sardine/Bureau/results/Sc288_2m/1.bam -o /home/sardine/Bureau/results/Sc288_2m/1.sorted.bam --threads 16
+2023-09-25 --  09:10:43 :: INFO :: samtools sort -n -T 9e981863-20ed-4a89-afd3-789000e703a7 /home/sardine/Bureau/results/Sc288_2m/2.bam -o /home/sardine/Bureau/results/Sc288_2m/2.sorted.bam --threads 16
+2023-09-25 --  09:13:00 :: INFO :: Sorted alignment done at /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:13:00 :: INFO :: Ending HiCBERG pipeline at 2
+2023-09-25 --  09:13:04 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:13:04 :: INFO :: name: Sc288_2m
+2023-09-25 --  09:13:04 :: INFO :: start_stage: groups
+2023-09-25 --  09:13:04 :: INFO :: exit_stage: build
+2023-09-25 --  09:13:04 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-25 --  09:13:04 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-25 --  09:13:04 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-25 --  09:13:04 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:13:04 :: INFO :: max_alignment: -1
+2023-09-25 --  09:13:04 :: INFO :: mapq: 35
+2023-09-25 --  09:13:04 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:13:04 :: INFO :: circular: 
+2023-09-25 --  09:13:04 :: INFO :: rate: 0.5
+2023-09-25 --  09:13:04 :: INFO :: bins: 2000
+2023-09-25 --  09:13:04 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:13:04 :: INFO :: mode: full
+2023-09-25 --  09:13:04 :: INFO :: rounds: 11
+2023-09-25 --  09:13:04 :: INFO :: magnitude: 0.7
+2023-09-25 --  09:13:04 :: INFO :: verbose: False
+2023-09-25 --  09:13:04 :: INFO :: cpus: 16
+2023-09-25 --  09:13:04 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:13:04 :: INFO :: force: True
+2023-09-25 --  09:13:04 :: INFO :: Start chunking BAM files
+2023-09-25 --  09:16:16 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-25 --  09:16:16 :: INFO :: Starting reads classification
+2023-09-25 --  09:16:33 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:33 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:37 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:39 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:39 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:39 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:39 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:39 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:39 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:40 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:40 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:40 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:40 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:40 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:41 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:41 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:41 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:55 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:55 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:57 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:57 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:57 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:16:58 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:00 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:01 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:01 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:01 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:01 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:02 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:02 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:02 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:03 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:03 :: INFO :: Start merging predictions
+2023-09-25 --  09:17:28 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:17:29 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-25 --  09:17:31 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:17:31 :: INFO :: name: CC336
+2023-09-25 --  09:17:31 :: INFO :: start_stage: build
+2023-09-25 --  09:17:31 :: INFO :: exit_stage: stats
+2023-09-25 --  09:17:31 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-25 --  09:17:31 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-25 --  09:17:31 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-25 --  09:17:31 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:17:31 :: INFO :: max_alignment: -1
+2023-09-25 --  09:17:31 :: INFO :: mapq: 35
+2023-09-25 --  09:17:31 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:17:31 :: INFO :: circular: 
+2023-09-25 --  09:17:31 :: INFO :: rate: 0.3
+2023-09-25 --  09:17:31 :: INFO :: bins: 2000
+2023-09-25 --  09:17:31 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:17:31 :: INFO :: mode: full
+2023-09-25 --  09:17:31 :: INFO :: rounds: 10
+2023-09-25 --  09:17:31 :: INFO :: magnitude: 0.8
+2023-09-25 --  09:17:31 :: INFO :: verbose: False
+2023-09-25 --  09:17:31 :: INFO :: cpus: 16
+2023-09-25 --  09:17:31 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:17:31 :: INFO :: force: True
+2023-09-25 --  09:17:31 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-25 --  09:18:28 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:19:00 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:19:00 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-25 --  09:19:01 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:19:01 :: INFO :: name: CC336
+2023-09-25 --  09:19:01 :: INFO :: start_stage: stats
+2023-09-25 --  09:19:01 :: INFO :: exit_stage: rescue
+2023-09-25 --  09:19:01 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-25 --  09:19:01 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-25 --  09:19:01 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-25 --  09:19:01 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:19:01 :: INFO :: max_alignment: -1
+2023-09-25 --  09:19:01 :: INFO :: mapq: 35
+2023-09-25 --  09:19:01 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:19:01 :: INFO :: circular: 
+2023-09-25 --  09:19:01 :: INFO :: rate: 0.3
+2023-09-25 --  09:19:01 :: INFO :: bins: 2000
+2023-09-25 --  09:19:01 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:19:01 :: INFO :: mode: full
+2023-09-25 --  09:19:01 :: INFO :: rounds: 10
+2023-09-25 --  09:19:01 :: INFO :: magnitude: 0.8
+2023-09-25 --  09:19:01 :: INFO :: verbose: False
+2023-09-25 --  09:19:01 :: INFO :: cpus: 16
+2023-09-25 --  09:19:01 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:19:01 :: INFO :: force: True
+2023-09-25 --  09:19:01 :: INFO :: Generating restriction map...
+2023-09-25 --  09:19:02 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:19:02 :: INFO :: Start generating distribution of fragments' distance...
+2023-09-25 --  09:20:36 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/CC336/dist.frag.npy
+2023-09-25 --  09:20:36 :: INFO :: Start log binning of genome...
+2023-09-25 --  09:20:36 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa saved in /home/sardine/Bureau/results/CC336/xs.npy.
+2023-09-25 --  09:20:36 :: INFO :: Start generating patterns distribution...
+2023-09-25 --  09:20:36 :: INFO :: Start getting trans-P(s)
+2023-09-25 --  09:20:36 :: INFO :: Start generating coverages...
+2023-09-25 --  09:20:36 :: INFO :: Start generating d1d2 law...
+2023-09-25 --  09:20:36 :: INFO :: Start generating density map...
+2023-09-25 --  09:20:37 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:20:41 :: INFO :: Saved density map at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:22:50 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:24:44 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/CC336/d1d2.npy
+2023-09-25 --  09:25:59 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:25:59 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-25 --  09:26:00 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:26:00 :: INFO :: name: CC336
+2023-09-25 --  09:26:00 :: INFO :: start_stage: rescue
+2023-09-25 --  09:26:00 :: INFO :: exit_stage: final
+2023-09-25 --  09:26:00 :: INFO :: genome: /home/sardine/Documents/genomes/e_coli/ecoli_k12_mg1655.fa
+2023-09-25 --  09:26:00 :: INFO :: fq_for: /home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz
+2023-09-25 --  09:26:00 :: INFO :: fq_rev: /home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz
+2023-09-25 --  09:26:00 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:26:00 :: INFO :: max_alignment: -1
+2023-09-25 --  09:26:00 :: INFO :: mapq: 35
+2023-09-25 --  09:26:00 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:26:00 :: INFO :: circular: 
+2023-09-25 --  09:26:00 :: INFO :: rate: 0.3
+2023-09-25 --  09:26:00 :: INFO :: bins: 2000
+2023-09-25 --  09:26:00 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:26:00 :: INFO :: mode: full
+2023-09-25 --  09:26:00 :: INFO :: rounds: 10
+2023-09-25 --  09:26:00 :: INFO :: magnitude: 0.8
+2023-09-25 --  09:26:00 :: INFO :: verbose: False
+2023-09-25 --  09:26:00 :: INFO :: cpus: 16
+2023-09-25 --  09:26:00 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:26:00 :: INFO :: force: True
+2023-09-25 --  09:26:00 :: INFO :: Start chunking BAM files
+2023-09-25 --  09:27:04 :: INFO :: Chunks saved in /home/sardine/Bureau/results/CC336/chunks
+2023-09-25 --  09:27:34 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:34 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:47 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:48 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:49 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:49 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:50 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:51 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:52 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:52 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:52 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:54 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:54 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:54 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:56 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:56 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:27:57 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:12 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:21 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:21 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:21 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:22 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:25 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:29 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:30 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:31 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:31 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:34 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:37 :: INFO :: Predictions written in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:28:37 :: INFO :: Start merging predictions
+2023-09-25 --  09:28:39 :: INFO :: Start building pairs file for ambiguously aligned reads
+2023-09-25 --  09:29:40 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:13 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:13 :: INFO :: Start plotting results
+2023-09-25 --  09:30:14 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:14 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:14 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:14 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:14 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:17 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:17 :: INFO :: Results plotted in /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:17 :: INFO :: Tidying : /home/sardine/Bureau/results/CC336
+2023-09-25 --  09:30:27 :: INFO :: Ending HiCBERG pipeline
+2023-09-25 --  09:31:52 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-25 --  09:31:52 :: INFO :: Starting reads classification
+2023-09-25 --  09:32:30 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:33 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:36 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:41 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:42 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:46 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:47 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:47 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:48 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:49 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:49 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:49 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:52 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:52 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:52 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:53 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:32:53 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:19 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:26 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:29 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:30 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:33 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:34 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:35 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:35 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:36 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:36 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:37 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:38 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:41 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:42 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:42 :: INFO :: Files for the different groups have been saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:33:42 :: INFO :: Start merging predictions
+2023-09-25 --  09:34:56 :: INFO :: Groups successfully merged in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:34:57 :: INFO :: Ending HiCBERG pipeline at 3
+2023-09-25 --  09:34:59 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:34:59 :: INFO :: name: Sc288_2m
+2023-09-25 --  09:34:59 :: INFO :: start_stage: build
+2023-09-25 --  09:34:59 :: INFO :: exit_stage: stats
+2023-09-25 --  09:34:59 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-25 --  09:34:59 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-25 --  09:34:59 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-25 --  09:34:59 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:34:59 :: INFO :: max_alignment: -1
+2023-09-25 --  09:34:59 :: INFO :: mapq: 35
+2023-09-25 --  09:34:59 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:34:59 :: INFO :: circular: 
+2023-09-25 --  09:34:59 :: INFO :: rate: 0.5
+2023-09-25 --  09:34:59 :: INFO :: bins: 2000
+2023-09-25 --  09:34:59 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:34:59 :: INFO :: mode: full
+2023-09-25 --  09:34:59 :: INFO :: rounds: 11
+2023-09-25 --  09:34:59 :: INFO :: magnitude: 0.7
+2023-09-25 --  09:34:59 :: INFO :: verbose: False
+2023-09-25 --  09:34:59 :: INFO :: cpus: 16
+2023-09-25 --  09:34:59 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:34:59 :: INFO :: force: True
+2023-09-25 --  09:34:59 :: INFO :: Start building pairs file for unambiguously aligned reads
+2023-09-25 --  09:36:28 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:38:41 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:38:41 :: INFO :: Ending HiCBERG pipeline at 4
+2023-09-25 --  09:38:43 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:38:43 :: INFO :: name: Sc288_2m
+2023-09-25 --  09:38:43 :: INFO :: start_stage: stats
+2023-09-25 --  09:38:43 :: INFO :: exit_stage: rescue
+2023-09-25 --  09:38:43 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-25 --  09:38:43 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-25 --  09:38:43 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-25 --  09:38:43 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:38:43 :: INFO :: max_alignment: -1
+2023-09-25 --  09:38:43 :: INFO :: mapq: 35
+2023-09-25 --  09:38:43 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:38:43 :: INFO :: circular: 
+2023-09-25 --  09:38:43 :: INFO :: rate: 0.5
+2023-09-25 --  09:38:43 :: INFO :: bins: 2000
+2023-09-25 --  09:38:43 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:38:43 :: INFO :: mode: full
+2023-09-25 --  09:38:43 :: INFO :: rounds: 11
+2023-09-25 --  09:38:43 :: INFO :: magnitude: 0.7
+2023-09-25 --  09:38:43 :: INFO :: verbose: False
+2023-09-25 --  09:38:43 :: INFO :: cpus: 16
+2023-09-25 --  09:38:43 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:38:43 :: INFO :: force: True
+2023-09-25 --  09:38:43 :: INFO :: Generating restriction map...
+2023-09-25 --  09:38:44 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:38:44 :: INFO :: Start generating distribution of fragments' distance...
+2023-09-25 --  09:40:57 :: INFO :: Saved restriction map at : /home/sardine/Bureau/results/Sc288_2m/dist.frag.npy
+2023-09-25 --  09:40:57 :: INFO :: Start log binning of genome...
+2023-09-25 --  09:40:57 :: INFO :: Log binning of genome /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa saved in /home/sardine/Bureau/results/Sc288_2m/xs.npy.
+2023-09-25 --  09:40:57 :: INFO :: Start generating patterns distribution...
+2023-09-25 --  09:40:57 :: INFO :: Start getting trans-P(s)
+2023-09-25 --  09:40:57 :: INFO :: Start generating coverages...
+2023-09-25 --  09:40:57 :: INFO :: Start generating d1d2 law...
+2023-09-25 --  09:40:57 :: INFO :: Start generating density map...
+2023-09-25 --  09:41:05 :: INFO :: Trans P(s) saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:41:25 :: INFO :: Saved density map at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:44:30 :: INFO :: Coverage dictionary saved in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:47:09 :: INFO :: Saved d1d2 law at : /home/sardine/Bureau/results/Sc288_2m/d1d2.npy
+2023-09-25 --  09:47:22 :: INFO :: Saved weirds.npy, uncuts.npy and loops.npy in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  09:47:22 :: INFO :: Ending HiCBERG pipeline at 5
+2023-09-25 --  09:47:24 :: INFO :: Start HiCBERG pipeline
+2023-09-25 --  09:47:24 :: INFO :: name: Sc288_2m
+2023-09-25 --  09:47:24 :: INFO :: start_stage: rescue
+2023-09-25 --  09:47:24 :: INFO :: exit_stage: final
+2023-09-25 --  09:47:24 :: INFO :: genome: /home/sardine/Documents/genomes/Sc288_2m/SC288_with_micron.fa
+2023-09-25 --  09:47:24 :: INFO :: fq_for: /home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz
+2023-09-25 --  09:47:24 :: INFO :: fq_rev: /home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz
+2023-09-25 --  09:47:24 :: INFO :: sensitivity: very-sensitive
+2023-09-25 --  09:47:24 :: INFO :: max_alignment: -1
+2023-09-25 --  09:47:24 :: INFO :: mapq: 35
+2023-09-25 --  09:47:24 :: INFO :: enzyme: ('DpnII,HinfI',)
+2023-09-25 --  09:47:24 :: INFO :: circular: 
+2023-09-25 --  09:47:24 :: INFO :: rate: 0.5
+2023-09-25 --  09:47:24 :: INFO :: bins: 2000
+2023-09-25 --  09:47:24 :: INFO :: nb_chunks: 32
+2023-09-25 --  09:47:24 :: INFO :: mode: full
+2023-09-25 --  09:47:24 :: INFO :: rounds: 11
+2023-09-25 --  09:47:24 :: INFO :: magnitude: 0.7
+2023-09-25 --  09:47:24 :: INFO :: verbose: False
+2023-09-25 --  09:47:24 :: INFO :: cpus: 16
+2023-09-25 --  09:47:24 :: INFO :: output_dir: /home/sardine/Bureau/results
+2023-09-25 --  09:47:24 :: INFO :: force: True
+2023-09-25 --  09:47:24 :: INFO :: Start chunking BAM files
+2023-09-25 --  09:55:19 :: INFO :: Chunks saved in /home/sardine/Bureau/results/Sc288_2m/chunks
+2023-09-25 --  10:02:44 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:02:57 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:03:16 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:03:22 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:03:27 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:03 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:04 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:24 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:28 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:29 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:43 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:52 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:04:57 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:05:09 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:05:33 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:10:32 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:11:08 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:11:15 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:11:16 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:11:37 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:11:54 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:11:58 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:01 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:13 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:22 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:30 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:33 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:39 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:41 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:42 :: INFO :: Predictions written in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:12:42 :: INFO :: Start merging predictions
+2023-09-25 --  10:12:48 :: INFO :: Start building pairs file for ambiguously aligned reads
+2023-09-25 --  10:14:39 :: INFO :: Pairs file successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:16:54 :: INFO :: Cooler matrix successfully created in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:16:54 :: INFO :: Start plotting results
+2023-09-25 --  10:16:55 :: INFO :: Saved plots of d1d2 at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:16:58 :: INFO :: Saved coverages at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:17:02 :: INFO :: Saved pseudo P(s) of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:17:02 :: INFO :: Saved plots of patterns at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:17:09 :: INFO :: Saved couple size distribution at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:17:56 :: INFO :: Saved plots of densities at : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:17:56 :: INFO :: Results plotted in /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:17:56 :: INFO :: Tidying : /home/sardine/Bureau/results/Sc288_2m
+2023-09-25 --  10:18:06 :: INFO :: Ending HiCBERG pipeline

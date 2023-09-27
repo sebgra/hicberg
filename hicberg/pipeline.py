@@ -182,7 +182,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             pool.join()
 
 
-        hio.merge_predictions(output_dir = output_folder, clean = False, cpus = cpus)
+        hio.merge_predictions(output_dir = output_folder, clean = True, cpus = cpus)
 
         # Delete chunks
         folder_to_delete = Path(output_folder) / 'chunks'
@@ -202,6 +202,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     if start_stage <= 6:
 
+        logger.info(f"Start plotting results")
         p1 = Process(target = hpl.plot_laws, kwargs = dict(output_dir = output_folder))
         p2 = Process(target = hpl.plot_trans_ps, kwargs = dict(output_dir = output_folder))
         p3 = Process(target = hpl.plot_coverages, kwargs = dict(bins = bins, output_dir = output_folder))
@@ -215,7 +216,9 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             process.start()
         # Launch processes
         for process in [p1, p2, p3, p4, p5, p6, p7]:
-            process.join()        
+            process.join()
+
+        logger.info(f"Results plotted in {output_folder}")
 
     # if exit_stage == 6:
 

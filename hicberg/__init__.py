@@ -1,3 +1,4 @@
+import time
 import logging
 import logging.config
 import pysam
@@ -7,7 +8,7 @@ logger.setLevel(logging.INFO)
 
 # Create handlers
 console_handler = logging.StreamHandler()
-file_handler = logging.FileHandler('hicberg.log')
+file_handler = logging.FileHandler(f'hicberg_{time.strftime("%Y_%m_%d_%H_%M_%S")}.log')
 console_handler.setLevel(logging.INFO)
 file_handler.setLevel(logging.INFO)
 
@@ -29,7 +30,7 @@ benchmark_logger.setLevel(logging.INFO)
 
 # Create handlers
 benchmark_console_handler = logging.StreamHandler()
-benchmark_file_handler = logging.FileHandler('hicberg_benchmark.log')
+benchmark_file_handler = logging.FileHandler(f'hicberg_benchmark{time.strftime("%Y_%m_%d_%H_%M_%S")}.log')
 benchmark_console_handler.setLevel(logging.INFO)
 benchmark_file_handler.setLevel(logging.INFO)
 
