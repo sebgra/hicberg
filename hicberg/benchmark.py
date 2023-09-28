@@ -358,13 +358,13 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 f_out.write(header)
 
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
 
         else :
             with open(results, "a") as f_out:
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pearson:9.4f}\n")
                 f_out.close()
 
         # tidy plots
@@ -388,12 +388,12 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         benchmark_logger.info(f"Ending benchmark. Results stored in {folder_path}")
 
-        forward_in_path.unlink()
-        reverse_in_path.unlink()
-        forward_out_path.unlink()
-        reverse_out_path.unlink()
+    forward_in_path.unlink()
+    reverse_in_path.unlink()
+    forward_out_path.unlink()
+    reverse_out_path.unlink()
 
-        open(flag_file, 'a').close()
+    open(flag_file, 'a').close()
 
     return
 
