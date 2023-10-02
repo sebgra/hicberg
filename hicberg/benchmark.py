@@ -120,6 +120,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     base_matrix_path = output_path / BASE_MATRIX
     base_matrix = hio.load_cooler(base_matrix_path)
+    bin_size = base_matrix.binsize
 
     restriction_map = hio.load_dictionary(restriction_map_path)
     
@@ -184,7 +185,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             p1 = Process(target = hst.get_patterns, kwargs = dict(forward_bam_file  = forward_out_path, reverse_bam_file = reverse_out_path, circular = circular, output_dir = output_path))
             p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_path))
-            p3 = Process(target = hst.generate_coverages, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, genome = genome, bins = bins, output_dir = output_path))
+            p3 = Process(target = hst.generate_coverages, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, genome = genome, bins = bin_size, output_dir = output_path))
             p4 = Process(target = hst.generate_d1d2, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_path))
             p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = unrescued_map_path, rounds = rounds, magnitude = magnitude, output_dir = output_path))
             

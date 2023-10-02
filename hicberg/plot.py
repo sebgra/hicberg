@@ -55,7 +55,7 @@ def plot_density(output_dir : str = None) -> None:
         matrix = density_map[chromosome_couple]
 
         plt.figure(figsize=(10, 10))
-        plt.imshow(np.log10(matrix), cmap="afmhot_r", vmin = 0.0, vmax = 3.5)
+        plt.imshow(matrix ** 0.15, cmap="afmhot_r", vmin = 0.0, vmax = 3.5)
         plt.title(f"Contatct density for  {chromosome_couple}")
         plt.savefig(output_path / f"density_{chromosome_couple[0]}-{chromosome_couple[1]}.pdf", format = "pdf")
         plt.close()

@@ -470,6 +470,7 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
         raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")   
     
     genome_parser = SeqIO.parse(genome, "fasta")
+
     genome_coverages = {seq_record.id : np.zeros(np.round(np.divide(len(seq_record.seq), bins) + 1).astype(int)) for seq_record in genome_parser}
 
     forward_bam_path = Path(output_dir, forward_bam_file)
@@ -758,7 +759,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
 
 def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, xs : dict, weirds :  dict, uncuts : dict, loops : dict, circular : str = "") -> float:
     """
-    Take two reads and return the P(s) value depending on event type (intrachromosomal case only).
+    Take two reads and return the P(s) value depending on event type (intra-chromosomal case only).
 
     Parameters
     ----------
@@ -1456,5 +1457,34 @@ def pearson_score(original_matrix, rescued_matrix , markers):
 
     pearson_score = pearsonr(ori_vector.flatten(), reco_vector.flatten())
 
-    return pearson_score[0]    
+    return pearson_score[0]
+
+# Benchamrk analysis functions
+def get_top_pattern(file : str = None, top : int = 10, chromosome : str = None) -> pd.DataFrame:
+    """
+    Get top patterns from a dataframe
+
+    Parameters
+    ----------
+    df : pd.DataFrame, optional
+        Dataframe containing patterns given by Chromosight, by default None
+    top : int, optional
+        Percentage of top patterns to get, by default 10
+    chromosome : str, optional
+        Chromosome to consider, by default None
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe containing top percentage patterns.
+    """
+    df = pd.read_csv(file, sep = "\t", header = 0)
+    top_factor = (df.shape[0] * top) // 100
+
+    if chromosome is not None:
+
+        df = df.query(f"chrom1 == '{chromosome}' and chrom2 == '{chromosome}'")
+    df_top = df.sort_values(by='score', ascending=False).head(top_factor).reset_index(drop=True)
+
+    return df_top
 

@@ -15,6 +15,7 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Topic :: Scientific/Engineering
 Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
@@ -26,6 +27,20 @@ Classifier: Operating System :: MacOS
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: bioframe
+Requires-Dist: biopython
+Requires-Dist: click
+Requires-Dist: cooler
+Requires-Dist: cooltools
+Requires-Dist: funcy
+Requires-Dist: hicstuff
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: pysam
+Requires-Dist: scipy
+Requires-Dist: scikit-learn
+Requires-Dist: statsmodels
 
 
 # HiC-BERG
@@ -47,12 +62,12 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 ## Environment and dependencies
 
-### Environement 
+### Environnement  
 
 Create environment by using following command : 
 
-```
-conda create -f hicberg_env.yaml
+```bash
+mamba env create -n [ENV_NAME] -f hicberg.yaml;
 ```
 
 
@@ -72,7 +87,8 @@ mamba install samtools -c bioconda;
 Install my-project with pip
 
 ```bash
-  pip install -e .
+  mamba activate [ENV_NAME];
+  pip install -e . ;
 ```
 
 ## pip
@@ -132,6 +148,60 @@ hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq
 -e DpnII -e HinfI --cpus 8 -o out/
 
 ```
+
+## Snakemake usage
+
+### Configuration
+
+Several parameters and Hi-C banks can be set in the file config.yaml. The parameters are the following:
+
+```yaml
+samples: "config/samples.csv"
+base_dir: Path to the base directory containing data
+out_dir: Path where to save results
+ref_dir: Path to the folder containing genomes 
+fastq_dir:  Path to the folder containing fastq files
+
+name : library_name
+    ref: Path to the reference genome from ref_dir 
+    R1: Path to the foward reads file from fastq_dir
+    R2: Path to the reverse read file from fastq_dir
+    circular: Coma separated list of circular chromosomes
+    enzymes : Coma separated list of enzymes used for the experiment
+    sampling_rate: Sampling rate of the restriction map
+    rounds : Number of rounds for the reconstruction (diffusion mode)
+    magnitude : Magnitude of the sampling rate (diffusion mode)
+    mode: Mode to use for reconstruction
+    res: Resolution of the contact matrix (in bp)
+```
+
+The samples.csv file can be used to set the parameters for each library. The file is a csv file with the following columns:
+
+```csv
+library;species;sampling_rates;enzymes;rounds;magnitudes;modes;resolutions;max_reports
+
+#sample_1
+library_name_1;species_1;sampling_rate_1;enzymes_1;rounds_1;magnitude_1;mode_1;resolutions_1;max_reports_1
+
+#sample_2
+library_name_2;species_2;sampling_rate_2;enzymes_2;rounds_2;magnitude_2;mode_2;resolutions_2;max_reports_2
+```
+
+
+
+### Run
+
+#### Locally
+
+The hicberg pipeline can be run using snakemake. The pipeline is defined in the file Snakefile. The pipeline can be run using the following command:
+
+```bash
+snakemake --cores [cpus]
+```
+
+#### Cluster
+
+To be completed
 
 ## Individual components
 
@@ -361,7 +431,7 @@ After tidying the folders architecture will be the following:
 │   ├── chunk_for_X.bam
 │   └── chunk_rev_X.bam
 ├── contacts
-│   ├── matricies
+│   ├── matrices
 │   │   ├── rescued_map.cool
 │   │   └── unrescued_map.cool
 │   └── pairs
@@ -395,14 +465,41 @@ After tidying the folders architecture will be the following:
     └── xs.npy
 ```
 
+## Chaining pipeline steps
+
+It is possible to chain the different steps of the pipeline by using the following command:
+
+```bash
+# 0. Prepare analysis
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage fastq  --exit-stage bam
+
+# 1. Align reads
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage bam  --exit-stage groups
+
+# 2. Group reads
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage groups  --exit-stage build
+
+# 3. Build pairs & cool
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage build  --exit-stage stats
+
+# 4. Compute statistics
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage stats  --exit-stage rescue
+
+# 5. Reassign ambiguous reads
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
+
+# 6. Build pairs & cool then get results
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
+```
+
 ## Evaluating the model
 
-HiC-BERG provide a method to evaluate the infered reconstructed maps. The evaluation is based on first a split of the original uniquely mapping reads into two sets :
+HiC-BERG provide a method to evaluate the inferred reconstructed maps. The evaluation is based on first a split of the original uniquely mapping reads into two sets :
   
-  - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the orginal alignment files) and used to learn the statistics for read couple inference.
+  - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the original alignment files) and used to learn the statistics for read couple inference.
   - __*group1.X_in.bam*__: alignment files where selected reads are duplicated  between all possible genomic intervals defined by the user. Thus ambiguity is introduced in the alignment of the reads.
 
-Hence, the most plausible couple from fakely duplicated reads in __*group1.X.in.bam*__ is inferred and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.
+Hence, the most plausible couple from fake duplicated reads in __*group1.X.in.bam*__ is inferred and the corresponding Hi-C contact matrix is built and compared to the one built from the original reads in __*group1.X.bam*__ (__*unrescued_map.cool*__). The two matrices are then compared (modified bins through duplication) compared using the Pearson correlation coefficient that relates the quality of the reconstruction. The closest the coefficient is to 1, the better the reconstruction is.
 
 The evaluation pipeline can be illustrated as follow : 
 
@@ -465,8 +562,6 @@ The benchmark can be performed considering several modes. The modes are defined 
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
 
-
-
 The evaluation can be run using the following command :
 
 
@@ -527,7 +622,7 @@ All the steps described here are handled automatically when running the ```hicbe
 
 * bt2l files: Thi format is used to store index of genomes performer using Bowtie2. 
 
-* bam files: This format is used to built analyses on, by several functions of hicberg. It is a compressed standard alignement format file providing multiple informations about read alignments performer by [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml). Such files can be handled through [Samtools](http://www.htslib.org/doc/) and it's Python wrapper [PySam](https://pysam.readthedocs.io/en/latest/api.html). More details about SAM and BAM format can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
+* bam files: This format is used to built analyses on, by several functions of hicberg. It is a compressed standard alignment format file providing multiple information about read alignments performer by [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml). Such files can be handled through [Samtools](http://www.htslib.org/doc/) and it's Python wrapper [PySam](https://pysam.readthedocs.io/en/latest/api.html). More details about SAM and BAM format can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
 
 * fragments_fixed_sizes.txt: 
 

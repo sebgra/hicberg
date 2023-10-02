@@ -55,44 +55,62 @@ def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float
     arr = matrix.astype(np.float64)
 
     if mode == "intra" :
+        store = []
+        store.append(arr)
         for _ in range(rounds):
 
+
             #South East
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
+            shift = np.random.randint(10)
+            store.append(magnitude*np.roll(arr,shift=shift,axis=(1, 0)))
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
 
             # North West
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
+            shift = np.random.randint(10)
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
+            store.append(magnitude*np.roll(arr,shift=-shift,axis=(1, 0)))
+
 
             # North East
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
+            shift = np.random.randint(10)
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
+            store.append(magnitude*np.roll(arr,shift=shift,axis=(0, 1)))
+
 
             # South West
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
+            shift = np.random.randint(10)
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
+            store.append(magnitude*np.roll(arr,shift=-shift,axis=(0, 1)))
+
 
     elif mode == "inter":
+        store = []
+        store.append(arr)
         for _ in range(rounds):
 
             # East
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
+            shift = np.random.randint(10)
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
+            store.append(magnitude*np.roll(arr,shift=shift,axis=1))
 
             # West
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
+            shift = np.random.randint(10)
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
+            store.append(magnitude*np.roll(arr,shift=-shift,axis=1))
             
             #South
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
+            shift = np.random.randint(10)
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
+            store.append(magnitude*np.roll(arr,shift=shift,axis=0))
             
             #North
-            shift = np.random.randint(5)
-            arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
+            shift = np.random.randint(10)
+            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
+            store.append(magnitude*np.roll(arr,shift=-shift,axis=0))
 
-    return arr
+    array_of_matrices = np.array(store)
+    mean_matrix = np.nanmean(array_of_matrices, axis=0)
+    return mean_matrix
 
 def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     """
@@ -1061,4 +1079,6 @@ def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
 
 
     return (forward_chunks, reverse_chunks)
+
+
 
