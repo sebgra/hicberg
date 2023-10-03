@@ -33,6 +33,7 @@ resolutions = samples.resolutions
 rounds = samples.rounds
 magnitudes = samples.magnitudes
 max_reports = samples.max_reports
+circularity = samples.circularity
 
 
 wildcard_constraints:
@@ -44,7 +45,8 @@ wildcard_constraints:
     resolutions = "|".join(resolutions),
     rounds = "|".join(rounds),
     magnitudes = "|".join(magnitudes),
-    max_reports = "|".join(max_reports)
+    max_reports = "|".join(max_reports),
+    circularity = "|".join(circularity)
 
 
 ########################################################################

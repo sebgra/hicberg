@@ -16,6 +16,7 @@ rule hicberg_step_3:
         rounds = lambda w: samples.rounds[w.libraries],
         magnitude = lambda w: samples.magnitudes[w.libraries],
         max_reports = lambda w: samples.max_reports[w.libraries],
+        circularities = lambda w: samples.circularity[w.libraries],
     
     output:
         forward_mapped_bam = temp(join(OUT_DIR, '{libraries}', "unrescued_map.cool")),
@@ -25,5 +26,5 @@ rule hicberg_step_3:
         """
         hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate}  -t {THREADS} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -R {params.rounds} -M {params.magnitude} -k {params.max_reports} \
-        --start-stage build  --exit-stage stats -f
+        -c {params.circularities} --start-stage build  --exit-stage stats -f
         """

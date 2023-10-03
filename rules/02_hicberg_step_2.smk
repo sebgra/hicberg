@@ -16,6 +16,7 @@ rule hicberg_step_2:
         rounds = lambda w: samples.rounds[w.libraries],
         magnitude = lambda w: samples.magnitudes[w.libraries],
         max_reports = lambda w: samples.max_reports[w.libraries],
+        circularities = lambda w: samples.circularity[w.libraries],
     
     output:
         forward_mapped_bam = temp(join(OUT_DIR, '{libraries}', "group1.1.bam"))
