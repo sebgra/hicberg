@@ -60,6 +60,11 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
     mkdir(folder_path / "contacts" / "matrices")
     mkdir(folder_path / "contacts" / "pairs")
     mkdir(folder_path / "plots")
+    mkdir(folder_path / "plots" / "contact_maps")
+    mkdir(folder_path / "plots" / "densities")
+    mkdir(folder_path / "plots" / "ps")
+    mkdir(folder_path / "plots" / "coverages")
+
 
     logger.info(f"Folder {sample_name} in {folder_path} created.")
 
@@ -434,4 +439,25 @@ def tidy_folder(output_dir : str = None) -> None:
         elif Path(file).suffix == ".pdf" or Path(file).suffix == ".svg":
 
             Path(file).rename(output_path / "plots" / Path(file).name)
+
+    # Tidy plots
+    plot_files = [p for  p in (output_path / "plots").glob("*.pdf")]
+
+    for file in plot_files :
+
+        if "density" in Path(file).name:
+
+            Path(file).rename(output_path / "plots" / "densities" / Path(file).name)
+
+        elif "coverage" in Path(file).name:
+
+            Path(file).rename(output_path / "plots" / "coverages" / Path(file).name)
+        
+        elif "patterns" in Path(file).name:
+
+            Path(file).rename(output_path / "plots" / "ps" / Path(file).name)
+
+        elif Path(file).name.startswith("chr"):
+
+            Path(file).rename(output_path / "plots" / "contact_maps" / Path(file).name)
 

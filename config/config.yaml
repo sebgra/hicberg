@@ -18,8 +18,8 @@ Sc288_2m:
 
     name : "Sc288_2m"
     ref: "Sc288_2m/SC288_with_micron.fa"
-    R1: "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz"
-    R2: "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
+    R1: "/home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq"
+    R2: "/home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq"
     circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 0.5
@@ -31,8 +31,8 @@ Sc288_2m:
 CC336:
     name : "CC336"
     ref: "e_coli/ecoli_k12_mg1655.fa"
-    R1 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R1.fq.gz"
-    R2 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R2.fq.gz"
+    R1 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq"
+    R2 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq"
     circular: ["NC-000913.3"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 0.3
