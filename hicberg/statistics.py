@@ -28,7 +28,7 @@ from hicberg import logger
 
 lowess = sm.nonparametric.lowess
 
-RESTRICTION_DICO = "dist.frag.npy"
+DIST_FRAG = "dist.frag.npy"
 XS = "xs.npy"
 COVERAGE_DICO = "coverage.npy"
 D1D2 = "d1d2.npy"
@@ -150,6 +150,7 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     restriction_map_dictionary = dict()
 
     if len(enzyme) == 1 and enzyme[0].isnumeric():
+        print(f"Enabled micro-c with enzyme : {enzyme}")
         enzyme = int(enzyme[0])
 
         for seq_record in SeqIO.parse(genome, "fasta"):
@@ -164,6 +165,8 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
             restriction_map_dictionary[seq_record.id] = restriction_map
 
     elif type(enzyme) == str or type(enzyme) == list or type(enzyme) == tuple:
+
+        print(f"Non micro-C mode with enzyme : {enzyme}")
 
         restriction_batch = Restriction.RestrictionBatch()
 
@@ -322,7 +325,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
         seq_name = seq_record.id
 
         
-        if seq_record.id in restriction_map.keys():
+        if seq_record.id in circular:
 
             map_size = restriction_map[seq_name].shape[0]
 
@@ -364,11 +367,11 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
 
     # Save dictionaries
     np.save(
-        folder_path / RESTRICTION_DICO,
+        folder_path / DIST_FRAG,
         dist_frag,
     )
 
-    logger.info(f"Saved restriction map at : {folder_path / RESTRICTION_DICO}")
+    logger.info(f"Saved restriction map at : {folder_path / DIST_FRAG}")
 
 def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict = None, output_dir : str = None) -> None:
     

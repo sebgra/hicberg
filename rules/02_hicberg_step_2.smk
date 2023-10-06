@@ -26,5 +26,5 @@ rule hicberg_step_2:
         """
         hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate}  -t {THREADS} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -R {params.rounds} -M {params.magnitude} -k {params.max_reports} \
-        --start-stage groups  --exit-stage build -f
+        -c {params.circularities} --start-stage groups  --exit-stage build -f
         """
