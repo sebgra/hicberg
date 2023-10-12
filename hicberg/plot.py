@@ -5,7 +5,9 @@ from pathlib import Path
 from itertools import product, combinations
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.colors as plc
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -541,3 +543,131 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         plt.close()
 
+
+        # Plot the balanced matrix
+        fig = plt.figure(figsize=(20, 20))
+        gs = gridspec.GridSpec(2, 2, height_ratios=[10, 1], width_ratios=[1, 1])
+
+        ax1 = plt.subplot(gs[0])
+        divider1 = make_axes_locatable(ax1)
+        cax1 = divider1.append_axes("right", size="5%", pad=0.1)
+        im_unrescued = ax1.imshow(
+            np.log10(unrescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,
+            cmap = "afmhot_r",
+        )
+        fig.colorbar(im_unrescued, cax=cax1, label="corrected frequencies")
+        ax1.set_title(
+            f"Unrescued map of chromosome {i} \n binned at {int(rescued_matrix.binsize / 1000 )}kb",
+            loc="center",
+        )
+
+        # Synchronize rescued and unrescued parts
+        ax2 = plt.subplot(gs[1], sharex=ax1, sharey=ax1)
+
+        # Rescued map
+        divider2 = make_axes_locatable(ax2)
+        cax2 = divider2.append_axes("right", size="5%", pad=0.1)
+        im_rescued = ax2.imshow(
+            np.log10(rescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,
+            cmap = "afmhot_r",
+        )
+        fig.colorbar(im_rescued, cax=cax2, label="corrected frequencies")
+        ax2.set_title(
+            f"Rescued map of chromosome {i} \n binned at {int(unrescued_matrix.binsize / 1000 ) }kb",
+            loc="center",
+        )
+
+        ax3 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        ax3.plot(tot_coverage_unrescued[lower:upper], label="total")
+        ax3.plot(cis_coverage_unrescued[lower:upper], label="cis")
+        ax3.set_ylabel("Coverage")
+        ax3.legend(loc="lower left", bbox_to_anchor=(1, 0.5))
+        ax3.set_xticks([])
+
+        ax4 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        ax4.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        ax4.set_ylabel("GC Content")
+
+        ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        ax5.plot(tot_coverage_unrescued[lower:upper], label="Before recovery")
+        ax5.plot(tot_coverage[lower:upper], label="After recovery")
+        ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])
+        ax5.set_ylabel("Coverage")
+        ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))
+        ax5.set_xticks([])
+
+        ax6 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        ax6.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        ax6.set_ylabel("GC Content")
+
+        plt.savefig(
+            output_path / f"chr_{i}_normalized.pdf",
+            format="pdf",
+        )
+
+        plt.close()
+
+def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str = None, rescued_cool : str = None, chromosome : str = None, threshold : float = 0.0, mode : str = "",  output_dir : str = None) -> None:
+    """
+    Create a plot of pattern reconstruction quality.
+
+    Parameters
+    ----------
+    table : pd.DataFrame, optional
+        Table containing either true positives, false positives or false negatives patterns, by default None
+    original_cool : str, optional
+        Path to the original matrix in .cool format, by default None
+    rescued_cool : str, optional
+        Path to the rescued matrix in .cool format, by default None
+    chromosome : str, optional
+        Selected chromosome, by default None
+    threshold : float, optional
+        Threshold for pattern score significance, by default 0.0
+    mode : str, optional
+        Mode to consider, either true positives, false positives or false negatives, by default ""
+    output_dir : str, optional
+        Path to save plots, by default None
+    """
+
+    if output_dir is None:
+
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    original_matrix = cooler.Cooler(original_cool).matrix(balance = False)
+    rescued_matrix = cooler.Cooler(rescued_cool).matrix(balance = False)
+
+    bin_size = cooler.Cooler(original_cool).info['bin-size']
+
+    fig, ax = plt.subplots()
+    plt.title(f"Reconstructed pattern {chromosome}\n {mode}")
+    # Use imshow to add the first set of data to the plot
+    img1 = ax.imshow(original_matrix.fetch(chromosome) ** 0.15, cmap ='afmhot_r', vmin = 0, vmax=np.max(rescued_matrix.fetch(chromosome) ** 0.15))
+
+    if table is not None:
+        colormap = plt.colormaps['Blues'] # 'plasma' or 'viridis'
+        colors = colormap(table['score'])
+        norm = plc.Normalize(vmin = 0.0, vmax = 1.0)
+        # Create a divider for the existing axes instance
+        divider = make_axes_locatable(ax)
+
+        # Append axes to the right of the main axes.
+        cax1 = divider.append_axes("right", size = "5%", pad = 0.1)
+
+        # Add the colorbar to the figure
+        cbar1 = fig.colorbar(img1, cax = cax1)
+
+        sc = ax.scatter(x = table['start1'] // bin_size, y = table['start2'] // bin_size, s = 40, linewidth = 2, color = 'none', edgecolors = colors)
+        sm = plt.cm.ScalarMappable(cmap = colormap)
+
+        # Append axes to the bottom of the main axes.
+        cax2 = divider.append_axes("bottom", size = "5%", pad = 0.4)
+
+        # Add the second colorbar to the figure
+        cbar2 = fig.colorbar(sm, cax = cax2, orientation = 'horizontal', )
+        cbar2.set_label(f'Pattern score - threshold : {threshold}')
+    
+    plt.savefig(output_path / f"pattern_{mode.replace(' ', '')}_{chromosome}.pdf", format = "pdf")

@@ -112,7 +112,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         raise ValueError(f"Restriction map file {restriction_map_path} does not exist. PLease provide an existing restriction map file.")
     
     
-    
     # Define file to store results
     header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tscore\n"
 

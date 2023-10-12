@@ -1,7 +1,7 @@
 library;species;sampling_rates;enzymes;rounds;magnitudes;modes;resolutions;max_reports;circularity
 
 #SC288_2m
-Sc288_2m;s_cerevisiae;1.0;DpnII,HinfI;10;0.8;no_density;2000;-1;chrM,plasmid_p2-micron
+Sc288_2m;s_cerevisiae;1.0;DpnII,HinfI;10;0.8;random;2000;-1;chrM,plasmid_p2-micron
 
 #CC336
 #CC336;e_coli;0.3;DpnII,HinfI;10;0.8;no_d1d2;2000;-1;NC-000913.3

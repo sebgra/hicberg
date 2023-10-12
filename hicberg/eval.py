@@ -1,4 +1,5 @@
 # import os
+from os import getcwd
 import subprocess as sp
 # import glob
 from pathlib import Path
@@ -7,15 +8,14 @@ from itertools import combinations
 
 import numpy as np
 from numpy.random import choice
-
+import pandas as pd
 # from scipy import spatial
 from scipy.stats import median_abs_deviation, pearsonr
 import bioframe as bf
-# import pysam
 import pysam as ps
 
 import matplotlib.pyplot as plt
-# import matplotlib.colors
+import matplotlib.colors as plc
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -125,7 +125,7 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
     if not output_path.exists():
         
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
     
     chrom_sizes_path = output_path / Path(chrom_sizes_dict)
 
@@ -679,6 +679,598 @@ def get_bin_indexes(matrix : str = None, dictionary : dict = None):
             bin_list.append(int(matrix.bins().fetch(chrm + ':' + str(start) + '-' + str(end)).index[0]))
 
     return bin_list
+
+def arange_multi(starts, stops=None, lengths=None):
+    """
+    Create concatenated ranges of integers for multiple start/length.
+    Parameters
+    ----------
+    starts : numpy.ndarray
+        Starts for each range
+    stops : numpy.ndarray
+        Stops for each range
+    lengths : numpy.ndarray
+        Lengths for each range. Either stops or lengths must be provided.
+    Returns
+    -------
+    concat_ranges : numpy.ndarray
+        Concatenated ranges.
+    Notes
+    -----
+    See the following illustrative example:
+    starts = np.array([1, 3, 4, 6])
+    stops = np.array([1, 5, 7, 6])
+    print arange_multi(starts, lengths)
+    >>> [3 4 4 5 6]
+    From: https://codereview.stackexchange.com/questions/83018/vectorized-numpy-version-of-arange-with-multiple-start-stop
+    """
+
+    if (stops is None) == (lengths is None):
+        raise ValueError("Either stops or lengths must be provided!")
+
+    if lengths is None:
+        lengths = stops - starts
+
+    if np.isscalar(starts):
+        starts = np.full(len(stops), starts)
+
+    # Repeat start position index length times and concatenate
+    cat_start = np.repeat(starts, lengths)
+
+    # Create group counter that resets for each start/length
+    cat_counter = np.arange(lengths.sum()) - np.repeat(
+        lengths.cumsum() - lengths, lengths
+    )
+
+    # Add group counter to group specific starts
+    cat_range = cat_start + cat_counter
+
+    return cat_range
+
+def _overlap_intervals_legacy(starts1, ends1, starts2, ends2, closed=False, sort=False):
+    """
+    Take two sets of intervals and return the indices of pairs of overlapping intervals.
+    Parameters
+    ----------
+    starts1, ends1, starts2, ends2 : numpy.ndarray
+        Interval coordinates. Warning: if provided as pandas.Series, indices
+        will be ignored.
+    closed : bool
+        If True, then treat intervals as closed and report single-point overlaps.
+    Returns
+    -------
+    overlap_ids : numpy.ndarray
+        An Nx2 array containing the indices of pairs of overlapping intervals.
+        The 1st column contains ids from the 1st set, the 2nd column has ids
+        from the 2nd set.
+    """
+
+    # for vec in [starts1, ends1, starts2, ends2]:
+    #     if issubclass(type(vec), pd.core.series.Series):
+    #         warnings.warn(
+    #             "One of the inputs is provided as pandas.Series and its index "
+    #             "will be ignored.",
+    #             SyntaxWarning,
+    #         )
+
+    starts1 = np.asarray(starts1)
+    ends1 = np.asarray(ends1)
+    starts2 = np.asarray(starts2)
+    ends2 = np.asarray(ends2)
+
+    # Concatenate intervals lists
+    n1 = len(starts1)
+    n2 = len(starts2)
+    starts = np.concatenate([starts1, starts2])
+    ends = np.concatenate([ends1, ends2])
+
+    # Encode interval ids as 1-based,
+    # negative ids for the 1st set, positive ids for 2nd set
+    ids = np.concatenate([-np.arange(1, n1 + 1), np.arange(1, n2 + 1)])
+
+    # Sort all intervals together
+    order = np.lexsort([ends, starts])
+    starts, ends, ids = starts[order], ends[order], ids[order]
+
+    # Find interval overlaps
+    match_starts = np.arange(0, n1 + n2)
+    match_ends = np.searchsorted(starts, ends, "right" if closed else "left")
+
+    # Ignore self-overlaps
+    match_mask = match_ends > match_starts + 1
+    match_starts, match_ends = match_starts[match_mask], match_ends[match_mask]
+
+    # Restore
+    overlap_ids = np.vstack(
+        [
+            np.repeat(ids[match_starts], match_ends - match_starts - 1),
+            ids[arange_multi(match_starts + 1, match_ends)],
+        ]
+    ).T
+
+    # Drop same-set overlaps
+    overlap_ids = overlap_ids[overlap_ids[:, 0] * overlap_ids[:, 1] <= 0]
+
+    # Flip overlaps, such that the 1st column contains ids from the 1st set,
+    # the 2nd column contains ids from the 2nd set.
+    overlap_ids.sort(axis=-1)
+
+    # Restore original indexes,
+    overlap_ids[:, 0] = overlap_ids[:, 0] * (-1) - 1
+    overlap_ids[:, 1] = overlap_ids[:, 1] - 1
+
+    # Sort overlaps according to the 1st
+    if sort:
+        overlap_ids = overlap_ids[np.lexsort([overlap_ids[:, 1], overlap_ids[:, 0]])]
+
+    return overlap_ids
+
+def overlap_intervals(starts1, ends1, starts2, ends2, closed=False, sort=False):
+    """
+    Take two sets of intervals and return the indices of pairs of overlapping intervals.
+
+    Parameters
+    ----------
+    starts1, ends1, starts2, ends2 : numpy.ndarray
+        Interval coordinates. Warning: if provided as pandas.Series, indices
+        will be ignored.
+
+    closed : bool
+        If True, then treat intervals as closed and report single-point overlaps.
+    Returns
+    -------
+    overlap_ids : numpy.ndarray
+        An Nx2 array containing the indices of pairs of overlapping intervals.
+        The 1st column contains ids from the 1st set, the 2nd column has ids
+        from the 2nd set.
+
+    """
+
+    # for vec in [starts1, ends1, starts2, ends2]:
+    #     if issubclass(type(vec), pd.core.series.Series):
+    #         warnings.warn(
+    #             "One of the inputs is provided as pandas.Series and its index "
+    #             "will be ignored.",
+    #             SyntaxWarning,
+    #         )
+
+    starts1 = np.asarray(starts1)
+    ends1 = np.asarray(ends1)
+    starts2 = np.asarray(starts2)
+    ends2 = np.asarray(ends2)
+
+    # Concatenate intervals lists
+    n1 = len(starts1)
+    n2 = len(starts2)
+    ids1 = np.arange(0, n1)
+    ids2 = np.arange(0, n2)
+
+    # Sort all intervals together
+    order1 = np.lexsort([ends1, starts1])
+    order2 = np.lexsort([ends2, starts2])
+    starts1, ends1, ids1 = starts1[order1], ends1[order1], ids1[order1]
+    starts2, ends2, ids2 = starts2[order2], ends2[order2], ids2[order2]
+
+    # Find interval overlaps
+    match_2in1_starts = np.searchsorted(starts2, starts1, "left")
+    match_2in1_ends = np.searchsorted(starts2, ends1, "right" if closed else "left")
+    # "right" is intentional here to avoid duplication
+    match_1in2_starts = np.searchsorted(starts1, starts2, "right")
+    match_1in2_ends = np.searchsorted(starts1, ends2, "right" if closed else "left")
+
+    # Ignore self-overlaps
+    match_2in1_mask = match_2in1_ends > match_2in1_starts
+    match_1in2_mask = match_1in2_ends > match_1in2_starts
+    match_2in1_starts, match_2in1_ends = (
+        match_2in1_starts[match_2in1_mask],
+        match_2in1_ends[match_2in1_mask],
+    )
+    match_1in2_starts, match_1in2_ends = (
+        match_1in2_starts[match_1in2_mask],
+        match_1in2_ends[match_1in2_mask],
+    )
+
+    # Generate IDs of pairs of overlapping intervals
+    overlap_ids = np.block(
+        [
+            [
+                np.repeat(ids1[match_2in1_mask], match_2in1_ends - match_2in1_starts)[
+                    :, None
+                ],
+                ids2[arange_multi(match_2in1_starts, match_2in1_ends)][:, None],
+            ],
+            [
+                ids1[arange_multi(match_1in2_starts, match_1in2_ends)][:, None],
+                np.repeat(ids2[match_1in2_mask], match_1in2_ends - match_1in2_starts)[
+                    :, None
+                ],
+            ],
+        ]
+    )
+
+    if sort:
+        # Sort overlaps according to the 1st
+        overlap_ids = overlap_ids[np.lexsort([overlap_ids[:, 1], overlap_ids[:, 0]])]
+
+    return overlap_ids
+
+
+def overlap_intervals_outer(starts1, ends1, starts2, ends2, closed=False):
+    """
+    Take two sets of intervals and return the indices of pairs of overlapping intervals,
+    as well as the indices of the intervals that do not overlap any other interval.
+
+    Parameters
+    ----------
+    starts1, ends1, starts2, ends2 : numpy.ndarray
+        Interval coordinates. Warning: if provided as pandas.Series, indices
+        will be ignored.
+
+    closed : bool
+        If True, then treat intervals as closed and report single-point overlaps.
+
+    Returns
+    -------
+    overlap_ids : numpy.ndarray
+        An Nx2 array containing the indices of pairs of overlapping intervals.
+        The 1st column contains ids from the 1st set, the 2nd column has ids
+        from the 2nd set.
+
+    no_overlap_ids1, no_overlap_ids2 : numpy.ndarray
+        Two 1D arrays containing the indices of intervals in sets 1 and 2
+        respectively that do not overlap with any interval in the other set.
+
+    """
+
+    ovids = overlap_intervals(starts1, ends1, starts2, ends2, closed=closed)
+    no_overlap_ids1 = np.where(
+        np.bincount(ovids[:, 0], minlength=starts1.shape[0]) == 0
+    )[0]
+    no_overlap_ids2 = np.where(
+        np.bincount(ovids[:, 1], minlength=starts2.shape[0]) == 0
+    )[0]
+    return ovids, no_overlap_ids1, no_overlap_ids2
+
+def intersect2D(a, b):
+    """
+    Find row intersection between 2D numpy arrays, a and b.
+    Returns another numpy array with shared rows
+    """
+    
+    return np.array([x for x in set(tuple(x) for x in a) & set(tuple(x) for x in b)])
+
+def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+    """
+    Take dataframe of pattern call (Chromosight) before and after reconstruction
+    and return table of retieved patterns 
+
+    Parameters
+    ----------
+    df_pattern : [dataframe]
+        Pandas DataFrame given by chromosight before HiC map reconstruction.
+    df_pattern_recall : [dataframe]
+        Pandas DataFrame given by chromosight after HiC map reconstruction.
+    chromosome : [str]
+        chromosome to select position within.
+
+    Return
+    ----------
+
+    dataframe : [pandas DataFrame]
+        Table containing components before and after pattern recall (True positives)
+    """
+
+    if threshold is None:
+        # Selection of chromosomes of interest
+        df_1 = df_pattern[df_pattern["chrom1"] == chromosome]
+        df_2 = df_pattern_recall[df_pattern_recall["chrom1"] == chromosome]
+
+    else :
+
+        df_1 = df_pattern.query("chrom1 == @chromosome and score > @threshold")
+        df_2 = df_pattern_recall.query("chrom1 == @chromosome and score > @threshold")
+
+
+    
+    if jitter != 0:
+
+        df_2["start1"] = df_2["start1"].sub(jitter * bin_size) 
+        df_2["end1"] = df_2["end1"].add(jitter * bin_size)
+
+
+    # Getting overlaps indexes for left side (start1; end1) for both before and afetr pattern recall
+    before_after_left = _overlap_intervals_legacy(starts1 = df_1["start1"], ends1 = df_1["end1"], starts2 = df_2["start1"], ends2 = df_2["end1"], closed=False, sort=False)
+    # Getting overlaps indexes for left side (start2; end2) for both before and afetr pattern recall
+    before_after_right = _overlap_intervals_legacy(starts1 = df_1["start2"], ends1 = df_1["end2"], starts2 = df_2["start2"], ends2 = df_2["end2"], closed=False, sort=False)
+
+    # Getting intersection of indeces (left/right) common to  before and after tables
+    selection = intersect2D(a = before_after_left , b = before_after_right)
+
+    # Pick lines through indexes to construct final table
+    lines_before = list()
+    lines_after = list()
+    
+
+    for i in range(selection.shape[0]):
+        lines_before.append(df_pattern[df_pattern['chrom1'] == chromosome].iloc[selection[i][0]])
+        lines_after.append(df_pattern_recall[df_pattern_recall['chrom1'] == chromosome].iloc[selection[i][1]])
+
+    final_before = pd.DataFrame(lines_before)
+    final_before.rename(columns = {"chrom1" : "chrom1_before", "start1" : "start1_before", "end1": "end1_before" , "chrom2": "chrom2_before" , "start2": "start2_before" , "end2" : "end2_before" , "score" : "score_before"}, inplace = True)
+    final_before.reset_index(drop=True, inplace=True)
+
+    final_after = pd.DataFrame(lines_after)
+    final_after.rename(columns = {"chrom1" : "chrom1_after", "start1" : "start1_after", "end1": "end1_after" , "chrom2": "chrom2_after" , "start2": "start2_after" , "end2" : "end2_after" , "score" : "score_after"}, inplace = True)
+    final_after.reset_index(drop=True, inplace=True)
+
+    true_positives_table = pd.concat([final_before,final_after], axis=1, ignore_index=False)
+    true_positives_table["score"] = true_positives_table["score_after"]
+    true_positives_table["start1"] = true_positives_table["start1_after"]
+    true_positives_table["start2"] = true_positives_table["start2_after"]
+
+    return true_positives_table
+
+def get_FN_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+    """
+    Take dataframe of pattern call (Chromosight) before and after reconstruction
+    and return table of retieved patterns 
+
+    Parameters
+    ----------
+    df_pattern : [dataframe]
+        Pandas DataFrame given by chromosight before HiC map reconstruction.
+    df_pattern_recall : [dataframe]
+        Pandas DataFrame given by chromosight after HiC map reconstruction.
+    chromosome : [str]
+        chromosome to select position within.
+
+    Return
+    ----------
+
+    dataframe : [pandas DataFrame]
+        Table containing components before and after pattern recall (True positives)
+    """
+
+    if threshold is None:
+        # Selection of chromosomes of interest
+        df_1 = df_pattern[df_pattern["chrom1"] == chromosome]
+        df_2 = df_pattern_recall[df_pattern_recall["chrom1"] == chromosome]
+
+    else :
+
+        df_1 = df_pattern.query("chrom1 == @chromosome and score > @threshold")
+        df_2 = df_pattern_recall.query("chrom1 == @chromosome and score > @threshold")
+    
+    if jitter != 0:
+
+        df_2["start1"] = df_2["start1"].sub(jitter * bin_size) 
+        df_2["end1"] = df_2["end1"].add(jitter * bin_size)
+
+    _left, FN_left, FP_left = overlap_intervals_outer(starts1 = df_1["start1"], ends1 = df_1["end1"], starts2 = df_2["start1"], ends2 = df_2["end1"], closed=False)
+    _right, FN_right, FP_right = overlap_intervals_outer(starts1 = df_1["start2"], ends1 = df_1["end2"], starts2 = df_2["start2"], ends2 = df_2["end2"], closed=False)
+
+    FN_intersection = np.intersect1d(FN_left, FN_right)
+
+    # Pick lines through indexes to construct final table
+    lines_FN = list()
+
+    for i in FN_intersection:
+        # print(i)
+        lines_FN.append(df_1[df_1['chrom1'] == chromosome].iloc[i])
+
+    final_FN = pd.DataFrame(lines_FN)
+
+    return final_FN
+
+def get_FP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+    """
+    Take dataframe of pattern call (Chromosight) before and after reconstruction
+    and return table of retieved patterns 
+
+    Parameters
+    ----------
+    df_pattern : [dataframe]
+        Pandas DataFrame given by chromosight before HiC map reconstruction.
+    df_pattern_recall : [dataframe]
+        Pandas DataFrame given by chromosight after HiC map reconstruction.
+    chromosome : [str]
+        chromosome to select position within.
+
+    Return
+    ----------
+
+    dataframe : [pandas DataFrame]
+        Table containing components before and after pattern recall (True positives)
+    """
+
+    if threshold is None:
+        # Selection of chromosomes of interest
+        df_1 = df_pattern[df_pattern["chrom1"] == chromosome]
+        df_2 = df_pattern_recall[df_pattern_recall["chrom1"] == chromosome]
+
+    else :
+
+        df_1 = df_pattern.query("chrom1 == @chromosome and score > @threshold")
+        df_2 = df_pattern_recall.query("chrom1 == @chromosome and score > @threshold")
+    
+    if jitter != 0:
+
+        df_2["start1"] = df_2["start1"].sub(jitter * bin_size) 
+        df_2["end1"] = df_2["end1"].add(jitter * bin_size)
+
+    _left, FN_left, FP_left = overlap_intervals_outer(starts1 = df_1["start1"], ends1 = df_1["end1"], starts2 = df_2["start1"], ends2 = df_2["end1"], closed=False)
+    _right, FN_right, FP_right = overlap_intervals_outer(starts1 = df_1["start2"], ends1 = df_1["end2"], starts2 = df_2["start2"], ends2 = df_2["end2"], closed=False)
+
+    FP_intersection = np.intersect1d(FP_left, FP_right)
+
+    # Pick lines through indexes to construct final table
+    lines_FP = list()
+
+    if len(lines_FP) == 0 :
+
+        return None
+
+    else :
+
+        for i in FP_intersection:
+            # print(i)
+            lines_FP.append(df_1[df_1['chrom1'] == chromosome].iloc[i])
+
+        final_FP = pd.DataFrame(lines_FP)
+
+        print(final_FP.shape[0])
+
+        return final_FP
+
+def get_recall(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+
+
+    TP = get_TP_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
+    FN = get_FN_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
+
+    return  TP / (TP + FN)
+
+def get_precision(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+
+
+    TP = get_TP_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
+
+    if get_FP_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold) is None:
+        FP = 0
+        return  TP / (TP + FP)
+        
+    FP = get_FP_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
+
+    print(TP)
+    print(FP)
+
+    return  TP / (TP + FP)
+
+
+def get_f1_score(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+
+    recall = get_recall(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+    precision = get_precision(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+
+    return 2 * ((precision * recall) / (precision + recall))
+
+def get_top_pattern(file : str = None, top : int = 10, threshold :float = 0.0, chromosome : str = None) -> pd.DataFrame:
+    """
+    Get top patterns from a dataframe
+
+    Parameters
+    ----------
+    df : pd.DataFrame, optional
+        Dataframe containing patterns given by Chromosight, by default None
+    top : int, optional
+        Percentage of top patterns to get, by default 10
+    threshold : float, optional
+        Pattern Pearson score to consider to select pattern, by default 0.0
+    chromosome : str, optional
+        Chromosome to consider, by default None
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe containing top percentage patterns.
+    """
+    df = pd.read_csv(file, sep = "\t", header = 0)
+    df = df.query(f"score > {threshold}")
+
+
+    if chromosome is not None:
+
+        df = df.query(f"chrom1 == '{chromosome}' and chrom2 == '{chromosome}'")
+    top_factor = (df.shape[0] * top) // 100
+    print(f"top factor = {top_factor}")
+    df_top = df.sort_values(by='score', ascending=False).head(top_factor).reset_index(drop=True)
+
+    return df_top
+
+def hicberg_benchmark_cmd_generator(file : str = None, top : int = 10, threshold :float = 0.0, chromosome : str = None, mode : str = "full",  genome : str = None, bins : int = 0, output : str = None) -> str:
+    """
+    Get top patterns from a dataframe
+
+    Parameters
+    ----------
+    df : pd.DataFrame, optional
+        Dataframe containing patterns given by Chromosight, by default None
+    top : int, optional
+        Percentage of top patterns to get, by default 10
+    threshold : float, optional
+        Pattern Pearson score to consider to select pattern, by default 0.0
+    chromosome : str, optional
+        Chromosome to consider, by default None
+    mode : str, optional
+        Mode to consider for hicberg benchmark, by default "full"
+    genome : str, optional
+        Path to the genome to consider for hicberg benchmark, by default None
+    bins : int, optional
+        Number of bins to consider for hicberg benchmark, by default 0
+    output : str, optional
+        Path to the output folder to consider for hicberg benchmark, by default None
+
+    Returns
+    -------
+    str
+        HiC-BERG command line to run to evaluate reconstruction after pattern discarding
+    """
+    
+
+    df = get_top_pattern(file = file, top = top, threshold = threshold, chromosome = chromosome).sort_values(by='start1', ascending=True)
+
+    stride = [str(df.iloc[i].start1 - df['start1'].min()) for i in range(0, df.shape[0])]
+
+    cmd = f"hicberg benchmark -c {chromosome} -p {df['start1'].min()} -s {','.join(list(stride))} -m {mode} -g {genome} -b {bins} -o {output}"
+
+    return cmd
+
+
+def chromosight_cmd_generator(file : str = None, pattern : str = "loops", untrend : bool = True, mode : bool = False,  output_dir : str = None) -> str:
+    """
+    Generate chromosight command line to run pattern detection.
+
+    Parameters
+    ----------
+    file : str, optional
+        Path to Hi-C balanced contact matrix in .cool format , by default None
+    pattern : str, optional
+        Pattern to detect, by default "loops"
+    untrend : bool, optional
+        Set if map has to be detrended, by default True
+    mode : bool, optional
+        Set either the detection has to be performed before or after map reconstruction, by default False
+    output_dir : str, optional
+        Path to the folder where to save alignments, by default None
+
+    Returns
+    -------
+    str
+        [description]
+    """    
+
+    output_path = Path(output_dir)
+
+    if not output_path.exists():
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
+    
+    matrix_path = Path(file)
+
+    if matrix_path.suffix != ".cool":
+        raise ValueError(f"Matrix path {matrix_path} is not a .cool file. Please provide a .cool file.")
+    
+    if not matrix_path.is_file():
+        raise ValueError(f"Matrix path {matrix_path} does not exist. Please provide existing matrix path.")
+    
+    prefix = "original" if not mode else "rescued"
+    
+    if untrend :
+        cmd = f"chromosight detect -P {pattern} -T {file} {output_path / prefix}"
+    
+    else :
+        cmd = f"chromosight detect -P {pattern} {file} {output_path / prefix}"
+
+    return cmd
 
 
 
