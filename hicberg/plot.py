@@ -87,6 +87,8 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
 
         output_path = Path(output_dir)    
 
+    chromosomes = chromosomes if type(chromosomes) == list else chromosomes.split()
+
     # define paths
     original_matrix_path = output_dir / original_matrix
     depleted_matrix_path = output_dir / depleted_matrix
@@ -106,7 +108,7 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
     rescued_matrix = load_cooler(rescued_matrix_path)
 
 
-    for chrm in chromosomes : 
+    for chrm in chromosomes:
 
         ori_matrix = original_matrix.matrix(balance=False).fetch(chrm)
         dep_matrix = depleted_matrix.matrix(balance=False).fetch(chrm)

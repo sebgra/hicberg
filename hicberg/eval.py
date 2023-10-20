@@ -76,7 +76,7 @@ def get_interval_index(chromosome : str = "", value : int = None, intervals_dict
     return out_dict
 
 
-def select_reads(bam_for :str = "group1.1.bam", bam_rev : str = "group1.2.bam", matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str | list[str] = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
+def select_reads(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str | list[str] = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
 trans_chromosome :  str = None, output_dir : str = None, trans_position : list[int] = None, nb_bins : int = 1, random : bool = False, auto : int = None) -> dict[str, list[(int, int)]]:
     """
     Select reads from a given matrix and alignment files. Two groups of alignment files are produced (.bam):
@@ -213,10 +213,9 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
         # Define list of chromosome to target/duplicate read on.
 
-        if type(chromosome) == list:
+        if type(chromosome) == list and len(chromosome) == 1:
 
             chromosome = chromosome[0]
-
 
         if trans_chromosome is not None:
 
@@ -224,8 +223,7 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
         else:
 
-
-            list_selected_chromosomes = list(chromosome.split())
+            list_selected_chromosomes = chromosome #.split()
 
         # adjust intervals width
         if nb_bins > 1:
@@ -613,7 +611,7 @@ def get_boundaries(position : int = None, bins : int = 2000, chromosome : str | 
     chrom_sizes_path = Path(chrom_sizes_dict)
     chrom_sizes = hio.load_dictionary(chrom_sizes_path)
 
-    if type(chromosome) == list:
+    if type(chromosome) == list and len(chromosome) == 1:  
 
         chromosome = chromosome[0]
 
@@ -1055,7 +1053,6 @@ def get_FN_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
     lines_FN = list()
 
     for i in FN_intersection:
-        # print(i)
         lines_FN.append(df_1[df_1['chrom1'] == chromosome].iloc[i])
 
     final_FN = pd.DataFrame(lines_FN)
@@ -1113,12 +1110,9 @@ def get_FP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
     else :
 
         for i in FP_intersection:
-            # print(i)
             lines_FP.append(df_1[df_1['chrom1'] == chromosome].iloc[i])
 
         final_FP = pd.DataFrame(lines_FP)
-
-        print(final_FP.shape[0])
 
         return final_FP
 
@@ -1140,9 +1134,6 @@ def get_precision(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 
         return  TP / (TP + FP)
         
     FP = get_FP_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
-
-    print(TP)
-    print(FP)
 
     return  TP / (TP + FP)
 
@@ -1182,7 +1173,6 @@ def get_top_pattern(file : str = None, top : int = 10, threshold :float = 0.0, c
 
         df = df.query(f"chrom1 == '{chromosome}' and chrom2 == '{chromosome}'")
     top_factor = (df.shape[0] * top) // 100
-    print(f"top factor = {top_factor}")
     df_top = df.sort_values(by='score', ascending=False).head(top_factor).reset_index(drop=True)
 
     return df_top
@@ -1263,7 +1253,7 @@ def chromosight_cmd_generator(file : str = None, pattern : str = "loops", untren
         raise ValueError(f"Matrix path {matrix_path} does not exist. Please provide existing matrix path.")
     
     prefix = "original" if not mode else "rescued"
-    
+
     if untrend :
         cmd = f"chromosight detect -P {pattern} -T {file} {output_path / prefix}"
     

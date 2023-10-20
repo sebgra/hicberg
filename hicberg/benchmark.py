@@ -30,7 +30,8 @@ import hicberg.plot as hpl
 
 from hicberg import benchmark_logger
 
-
+BAM_FOR = "group1.1_subsampled.bam" 
+BAM_REV = 'group1.2_subsampled.bam'
 BASE_MATRIX = "original_map.cool"
 UNRESCUED_MATRIX = "unrescued_map.cool"
 RESCUED_MATRIX = "rescued_map.cool"
@@ -41,7 +42,7 @@ FORWARD_OUT_FILE = "group1.1.out.bam"
 REVERSE_OUT_FILE = "group1.2.out.bam"
 
 # TODO : Complete docstring
-def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0, trans_chromosome : str = None, trans_position : int = None, strides : list[int] = [], mode : str = "full", auto : int = None, rounds : int = 1, magnitude : float = 1.0, bins : int = None, circular :str = "", genome : str = None, force : bool = False):
+def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0, trans_chromosome : str = None, trans_position : int = None, strides : list[int] = [], mode : str = "full", auto : int = None, rounds : int = 1, magnitude : float = 1.0, bins : int = None, circular :str = "", genome : str = None, pattern : str = None, threshold : float = 0.0, jitter : int = 0, trend : bool = True, top : int = 100,  force : bool = False):
     """AI is creating summary for benchmark
 
     Parameters
@@ -122,32 +123,62 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     bin_size = base_matrix.binsize
 
     restriction_map = hio.load_dictionary(restriction_map_path)
-    
-    # reformat inputs
-
-    chromosome = [str(c) for c in chromosome.split(",")]
-
-    if trans_chromosome is not None and trans_chromosome != "-1":
-        trans_chromosome = [str(t) for t in trans_chromosome.split(",")]
-
-    else : 
-        trans_chromosome = None
-
-    if trans_position is not None and trans_position != "-1": # -1 usefull when not using trans cases with benchmark calling through Snakemake
-        trans_position = [int(p) for p in trans_position.split(",")]
-
-    else :
-        trans_position = None
 
     flag_file = output_path / "flag.txt"
+    # TODO : insert pattern based benchmarking mode
+
+    ## Chromosomsight pre-call
+    if pattern is not None:
+
+        pre_recall_cmd = hev.chromosight_cmd_generator(file = base_matrix_path, pattern = pattern, untrend = trend, output_dir = output_path)
+
+        print(f"Pre-call command : {pre_recall_cmd}")
+        benchmark_logger.info("Starting Chromosight pre-call")
+        sp.run(pre_recall_cmd, shell = True)
+
+    # reformat inputs
+    if pattern is None:
+    
+
+        chromosome = [str(c) for c in chromosome.split(",")]
+
+        if trans_chromosome is not None and trans_chromosome != "-1":
+            trans_chromosome = [str(t) for t in trans_chromosome.split(",")]
+
+        else : 
+            trans_chromosome = None
+
+        if trans_position is not None and trans_position != "-1": # -1 usefull when not using trans cases with benchmark calling through Snakemake
+            trans_position = [int(p) for p in trans_position.split(",")]
+
+        else :
+            trans_position = None
 
 
-    nb_bins = bins
-    # POSITION = [int(p) for p in str(position).split(",")]
-    # POSITION = position
+
+        nb_bins = bins
+        # POSITION = [int(p) for p in str(position).split(",")]
+        # POSITION = position
 
 
-    strides = [int(s) for s in strides.split(",")]
+        strides = [int(s) for s in strides.split(",")]
+
+    elif pattern is not None : # Pattern based benchmarking
+
+        # TODO : add pattern based benchmarking args reformating
+        chromosome = chromosome
+        df = hev.get_top_pattern(file = output_path / "original.tsv", top = top, threshold = threshold, chromosome = chromosome).sort_values(by='start1', ascending=True)
+
+
+        strides = [int(df.iloc[i].start1 - df['start1'].min()) for i in range(0, df.shape[0])]
+        nb_bins = bins
+
+        if trans_chromosome is not None and trans_chromosome != "-1":
+            trans_chromosome = [str(t) for t in trans_chromosome.split(",")]
+
+        if trans_position is not None and trans_position != "-1": # -1 usefull when not using trans cases with benchmark calling through Snakemake
+            trans_position = [int(p) for p in trans_position.split(",")]
+        
 
     for sub_mode in mode.split(","):
 
@@ -156,7 +187,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         if not picking_status:
             
             benchmark_logger.info("Picking reads")
-            intervals_dictionary = hev.select_reads(matrix_file = output_path / BASE_MATRIX, position = position, chromosome = chromosome, strides = strides, trans_chromosome = trans_chromosome, trans_position = trans_position, auto = auto, nb_bins = nb_bins, output_dir = output_dir)
+            intervals_dictionary = hev.select_reads(bam_for = BAM_FOR, bam_rev = BAM_REV, matrix_file = output_path / BASE_MATRIX, position = position, chromosome = chromosome, strides = strides, trans_chromosome = trans_chromosome, trans_position = trans_position, auto = auto, nb_bins = nb_bins, output_dir = output_dir)
             
             benchmark_logger.info(f"intervals_dictionary : {intervals_dictionary}")
             indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
@@ -341,8 +372,11 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
 
-        chromosome_set = list(chromosome) + trans_chromosome if trans_chromosome is not None else chromosome
-
+        if pattern is None:
+            chromosome_set = [*chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
+        
+        else : 
+            chromosome_set = [chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
 
         hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_path)
 

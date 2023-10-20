@@ -197,10 +197,15 @@ def tidy_cmd(output):
 @click.option("--rounds", "-R", required = False, default = 1, type = int, help = "Number of rounds to perform for matrix diffusion.")
 @click.option("--magnitude", "-M", required = False, default = 1.0, type = float, help = "Magnitude of matrix diffusion.")
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
-@click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, rounds, magnitude, mode, force, output):
+@click.option("--pattern", "-S", required = False, type = click.Choice(["loops", "borders", "hairpins"]), default = None, help = "Set pattern if benchmarking considering patterns")
+@click.option("--threshold", "-t", required = False, type = float, default = 0.0, help = "Set pattern score threshold under which pattern are discarded")
+@click.option("--jitter", "-j", required = False, type = int, default = 0, help = "Set jitter for pattern detection interval overlapping")
+@click.option("--trend", "-T", is_flag = True, help = "Set if detrending of the contact map has to be performed")
+@click.option("--top", "-k", required = False, type = int, default = 100, help = "Set the top k % of patterns to retain")
+@click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files have to be deleted")
+def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, rounds, magnitude, mode, pattern, threshold, jitter, trend, top, force, output):
 
-    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, rounds = rounds, magnitude = magnitude)
+    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, rounds = rounds, magnitude = magnitude, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top)
 
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
