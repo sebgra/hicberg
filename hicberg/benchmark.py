@@ -127,8 +127,10 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     flag_file = output_path / "flag.txt"
     # TODO : insert pattern based benchmarking mode
 
+    print(f"-- Pattern : {pattern} --")
+
     ## Chromosomsight pre-call
-    if pattern is not None:
+    if pattern is not None and pattern != "-1":
 
         pre_recall_cmd = hev.chromosight_cmd_generator(file = base_matrix_path, pattern = pattern, untrend = trend, output_dir = output_path)
 
@@ -137,7 +139,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         sp.run(pre_recall_cmd, shell = True)
 
     # reformat inputs
-    if pattern is None:
+    if pattern is None or pattern == "-1":
     
 
         chromosome = [str(c) for c in chromosome.split(",")]
@@ -166,7 +168,20 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     elif pattern is not None : # Pattern based benchmarking
 
         # TODO : add pattern based benchmarking args reformating
+
         chromosome = chromosome
+
+        if trans_chromosome is not None and trans_chromosome != "-1":
+            trans_chromosome = [str(t) for t in trans_chromosome.split(",")]
+
+        else : 
+            trans_chromosome = None
+
+        if trans_position is not None and trans_position != "-1": # -1 usefull when not using trans cases with benchmark calling through Snakemake
+            trans_position = [int(p) for p in trans_position.split(",")]
+
+        else :
+            trans_position = None
         df = hev.get_top_pattern(file = output_path / "original.tsv", top = top, threshold = threshold, chromosome = chromosome).sort_values(by='start1', ascending=True)
 
 

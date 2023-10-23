@@ -197,7 +197,7 @@ def tidy_cmd(output):
 @click.option("--rounds", "-R", required = False, default = 1, type = int, help = "Number of rounds to perform for matrix diffusion.")
 @click.option("--magnitude", "-M", required = False, default = 1.0, type = float, help = "Magnitude of matrix diffusion.")
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
-@click.option("--pattern", "-S", required = False, type = click.Choice(["loops", "borders", "hairpins"]), default = None, help = "Set pattern if benchmarking considering patterns")
+@click.option("--pattern", "-S", required = False, type = click.Choice(["loops", "borders", "hairpins", "-1"]), default = None, help = "Set pattern if benchmarking considering patterns")
 @click.option("--threshold", "-t", required = False, type = float, default = 0.0, help = "Set pattern score threshold under which pattern are discarded")
 @click.option("--jitter", "-j", required = False, type = int, default = 0, help = "Set jitter for pattern detection interval overlapping")
 @click.option("--trend", "-T", is_flag = True, help = "Set if detrending of the contact map has to be performed")
