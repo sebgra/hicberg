@@ -186,6 +186,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
 
         strides = [int(df.iloc[i].start1 - df['start1'].min()) for i in range(0, df.shape[0])]
+        
         nb_bins = bins
 
         if trans_chromosome is not None and trans_chromosome != "-1":
