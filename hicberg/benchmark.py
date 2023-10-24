@@ -114,7 +114,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     
     
     # Define file to store results
-    header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tscore\n"
+    header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tpattern\tscore\n"
 
     results = output_path / "benchmark.csv"
 
@@ -127,21 +127,12 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     flag_file = output_path / "flag.txt"
     # TODO : insert pattern based benchmarking mode
 
-    print(f"-- Pattern : {pattern} --")
 
-    ## Chromosomsight pre-call
-    if pattern is not None and pattern != "-1":
-
-        pre_recall_cmd = hev.chromosight_cmd_generator(file = base_matrix_path, pattern = pattern, untrend = trend, output_dir = output_path)
-
-        print(f"Pre-call command : {pre_recall_cmd}")
-        benchmark_logger.info("Starting Chromosight pre-call")
-        sp.run(pre_recall_cmd, shell = True)
+    ## Chromosomsight pre-call       
 
     # reformat inputs
     if pattern is None or pattern == "-1":
     
-
         chromosome = [str(c) for c in chromosome.split(",")]
 
         if trans_chromosome is not None and trans_chromosome != "-1":
@@ -156,18 +147,19 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         else :
             trans_position = None
 
-
-
         nb_bins = bins
-        # POSITION = [int(p) for p in str(position).split(",")]
-        # POSITION = position
-
 
         strides = [int(s) for s in strides.split(",")]
 
-    elif pattern is not None : # Pattern based benchmarking
+    elif pattern is not None and pattern != "-1": # Pattern based benchmarking
 
         # TODO : add pattern based benchmarking args reformating
+
+        pre_recall_cmd = hev.chromosight_cmd_generator(file = base_matrix_path, pattern = pattern, untrend = trend, output_dir = output_path)
+
+        print(f"Pre-call command : {pre_recall_cmd}")
+        benchmark_logger.info("Starting Chromosight pre-call")
+        sp.run(pre_recall_cmd, shell = True)
 
         chromosome = chromosome
 
@@ -182,19 +174,21 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         else :
             trans_position = None
+
         df = hev.get_top_pattern(file = output_path / "original.tsv", top = top, threshold = threshold, chromosome = chromosome).sort_values(by='start1', ascending=True)
 
+        position = df.iloc[0].start1 # select top score pattern
+        print(f"-- position : {position} --")
 
-        strides = [int(df.iloc[i].start1 - df['start1'].min()) for i in range(0, df.shape[0])]
+        if strides is None or strides == "-1":
+
+            strides = [int(df.iloc[i].start1 - df['start1'].min()) for i in range(1, df.shape[0])]
+        
+        else : 
+
+            strides = [int(s) for s in strides.split(",")]
         
         nb_bins = bins
-
-        if trans_chromosome is not None and trans_chromosome != "-1":
-            trans_chromosome = [str(t) for t in trans_chromosome.split(",")]
-
-        if trans_position is not None and trans_position != "-1": # -1 usefull when not using trans cases with benchmark calling through Snakemake
-            trans_position = [int(p) for p in trans_position.split(",")]
-        
 
     for sub_mode in mode.split(","):
 
@@ -248,128 +242,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             benchmark_logger.info("Learning step completed")
 
-            # elif "ps_only" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("PS only mode selected. Learning step will be performed.")
-
-            #     # Launch processes
-            #     for process in [p1, p2]:
-            #         process.start()
-
-            #     for process in [p1, p2]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-
-            # elif "cover_only" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     # Launch processes
-            #     for process in [p3]:
-            #         process.start()
-
-            #     for process in [p3]:
-            #         process.join()
-
-            # elif "d1d2_only" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("D1D2 only mode selected. Learning step will be performed.")
-
-            #     # Launch processes
-            #     for process in [p4]:
-            #         process.start()
-
-            #     for process in [p4]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-
-            # elif "density_only" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("Density only mode selected. Learning step will be performed.")
-
-            #     # Launch processes
-            #     for process in [p5]:
-            #         process.start()
-
-            #     for process in [p5]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-
-            # elif "no_ps" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("No PS mode selected. Learning step will be performed.")
-
-            #     # Launch processes
-            #     for process in [p3, p4, p5]:
-            #         process.start()
-
-            #     for process in [p3, p4, p5]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-
-            # elif "no_cover" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("No cover mode selected. Learning step will be performed.")
-
-            #     # Launch processes
-            #     for process in [p1, p2, p4, p5]:
-            #         process.start()
-
-            #     for process in [p1, p2, p4, p5]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-
-            # elif "no_d1d2" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("No D1D2 mode selected. Learning step will be performed.")
-                
-
-            #     # Launch processes
-            #     for process in [p1, p2, p3, p5]:
-            #         process.start()
-
-            #     for process in [p1, p2, p3, p5]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-            # elif "no_density" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("No density mode selected. Learning step will be performed.")
-
-            #     # Launch processes
-            #     for process in [p1, p2, p3, p4]:
-            #         process.start()
-
-            #     for process in [p1, p2, p3, p4]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-            # elif "d1d2_only" not in mode.split(",") and len(mode.split(",")) > 1:
-
-            #     benchmark_logger.info("D1D2 only mode selected. Learning step will be performed.")
-
-            #     # Launch processes
-            #     for process in [p1, p2, p3]:
-            #         process.start()
-
-            #     for process in [p1, p2, p3]:
-            #         process.join()
-
-            #     benchmark_logger.info("Learning step completed")
-
-            # elif  "random" in mode.split(",") and len(mode.split(",")) == 1:
-
-            #     benchmark_logger.info("Random mode selected. No learning step will be performed.")
 
         learning_status = True
 
@@ -408,13 +280,13 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 f_out.write(header)
 
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{pearson:9.4f}\n")
                 f_out.close()
 
         else :
             with open(results, "a") as f_out:
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{pearson:9.4f}\n")
                 f_out.close()
 
         # tidy plots
