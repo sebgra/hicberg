@@ -958,6 +958,12 @@ def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
         Table containing components before and after pattern recall (True positives)
     """
 
+    df_pattern = pd.read_csv(df_pattern, sep = "\t", header = 0)
+    df_pattern_recall = pd.read_csv(df_pattern_recall, sep = "\t", header = 0)
+
+    print(f"df_pattern : {df_pattern.shape}")
+    print(f"df_pattern_recall : {df_pattern_recall.shape}")
+
     if threshold is None:
         # Selection of chromosomes of interest
         df_1 = df_pattern[df_pattern["chrom1"] == chromosome]
@@ -1029,6 +1035,9 @@ def get_FN_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
         Table containing components before and after pattern recall (True positives)
     """
 
+    df_pattern = pd.read_csv(df_pattern, sep = "\t", header = 0)
+    df_pattern_recall = pd.read_csv(df_pattern_recall, sep = "\t", header = 0)
+
     if threshold is None:
         # Selection of chromosomes of interest
         df_1 = df_pattern[df_pattern["chrom1"] == chromosome]
@@ -1079,6 +1088,9 @@ def get_FP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
     dataframe : [pandas DataFrame]
         Table containing components before and after pattern recall (True positives)
     """
+
+    df_pattern = pd.read_csv(df_pattern, sep = "\t", header = 0)
+    df_pattern_recall = pd.read_csv(df_pattern_recall, sep = "\t", header = 0)
 
     if threshold is None:
         # Selection of chromosomes of interest

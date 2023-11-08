@@ -30,6 +30,8 @@ import hicberg.io as hio
 import hicberg.statistics as hst
 from hicberg import logger
 
+
+
 # TODO : replace 10 by a variable indicating the strengh of the diffusion
 def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:
     """
@@ -71,16 +73,17 @@ def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float
             store.append(magnitude*np.roll(arr,shift=-shift,axis=(1, 0)))
 
 
-            # North East
-            shift = np.random.randint(10)
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
-            store.append(magnitude*np.roll(arr,shift=shift,axis=(0, 1)))
+            # # North East
+            # shift = np.random.randint(10)
+            # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
+            # store.append(magnitude*np.roll(arr,shift=shift,axis=(0, 1)))
 
 
-            # South West
-            shift = np.random.randint(10)
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
-            store.append(magnitude*np.roll(arr,shift=-shift,axis=(0, 1)))
+            # # South West
+            # shift = np.random.randint(10)
+            # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
+            # store.append(magnitude*np.roll(arr,shift=-shift,axis=(0, 1)))
+            
 
 
     elif mode == "inter":

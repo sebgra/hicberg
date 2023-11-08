@@ -38,8 +38,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             circular : str = "", rate : float = 1.0, bins : int = 2000, nb_chunks : int = 1,
             mode : str = "full", rounds : int = 1, magnitude : float = 1.0,  verbose : bool = False, cpus : int = 1, output_dir : str = None, force : bool = False) -> None :
 
-
-
     args = locals()
 
     if not check_tool("bowtie2"):
@@ -180,7 +178,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
             zip(forward_chunks, reverse_chunks))
             pool.close()
             pool.join()
-
 
         hio.merge_predictions(output_dir = output_folder, clean = True, cpus = cpus)
 

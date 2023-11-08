@@ -30,8 +30,10 @@ import hicberg.plot as hpl
 
 from hicberg import benchmark_logger
 
-BAM_FOR = "group1.1_subsampled.bam" 
-BAM_REV = 'group1.2_subsampled.bam'
+# BAM_FOR = "group1.1_subsampled.bam" 
+# BAM_REV = 'group1.2_subsampled.bam'
+BAM_FOR = "group1.1.bam" 
+BAM_REV = 'group1.2.bam'
 BASE_MATRIX = "original_map.cool"
 UNRESCUED_MATRIX = "unrescued_map.cool"
 RESCUED_MATRIX = "rescued_map.cool"
@@ -114,7 +116,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     
     
     # Define file to store results
-    header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tpattern\tscore\n"
+    header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tpattern\tprecision\trecall\tf1_score\tscore\n"
 
     results = output_path / "benchmark.csv"
 
@@ -178,7 +180,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         df = hev.get_top_pattern(file = output_path / "original.tsv", top = top, threshold = threshold, chromosome = chromosome).sort_values(by='start1', ascending=True)
 
         position = df.iloc[0].start1 # select top score pattern
-        print(f"-- position : {position} --")
 
         if strides is None or strides == "-1":
 
@@ -191,6 +192,10 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         nb_bins = bins
 
     for sub_mode in mode.split(","):
+
+        precision = None
+        recall = None
+        f1_score = None
 
         # Pick reads
 
@@ -266,6 +271,43 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         else : 
             chromosome_set = [chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
 
+            rescued_matrix_path = output_path / RESCUED_MATRIX
+            post_recall_cmd = hev.chromosight_cmd_generator(file = rescued_matrix_path, pattern = pattern, untrend = trend, mode = True, output_dir = output_path)
+
+            print(f"Post-call command : {post_recall_cmd}")
+
+            benchmark_logger.info("Starting Chromosight post-call")
+            sp.run(post_recall_cmd, shell = True)
+
+            # Get scores and related plots
+            ## output_path / "original.tsv"
+            
+            # TODO : move to top
+
+            df_original = (output_path / "original.tsv").as_posix()
+            df_rescued = (output_path / "rescued.tsv").as_posix()
+
+            true_positives = hev.get_TP_table(df_pattern = output_path / "original.tsv", df_pattern_recall = output_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+            false_positives = hev.get_FP_table(df_pattern = output_path / "original.tsv", df_pattern_recall = output_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+            false_negatives = hev.get_FN_table(df_pattern = output_path / "original.tsv", df_pattern_recall = output_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+
+            print(f"True positives : {true_positives.shape}")
+            print(f"False positives : {false_positives.shape}")
+            print(f"False negatives : {false_negatives.shape}")
+
+
+            # Get scores
+
+            precision = hev.get_precision(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+            recall = hev.get_recall(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+            f1_score = hev.get_f1_score(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+
+            # Get plots
+
+            hpl.plot_pattern_reconstruction(table = true_positives, original_cool = base_matrix_path, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "true_positives",  output_dir = output_path)
+            hpl.plot_pattern_reconstruction(table = false_positives, original_cool = base_matrix_path, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "false_positives",  output_dir = output_path)
+            hpl.plot_pattern_reconstruction(table = false_negatives, original_cool = base_matrix_path, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "false_negatives",  output_dir = output_path)
+
         hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_path)
 
         # Define unique id to keep track of the experiments
@@ -280,13 +322,13 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 f_out.write(header)
 
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{precision}\t{recall}\t{f1_score}\t{pearson:9.4f}\n")
                 f_out.close()
 
         else :
             with open(results, "a") as f_out:
                 date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{pearson:9.4f}\n")
+                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{precision}\t{recall}\t{f1_score}\t{pearson:9.4f}\n")
                 f_out.close()
 
         # tidy plots

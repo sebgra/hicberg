@@ -1092,6 +1092,16 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         return ps
     
+    elif mode == "cover_only":
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
+        if cover <= 0:
+            cover = 1
+
+        return cover
+    
     elif mode == "d1d2_only":  # not functional so far
 
         try:
@@ -1108,17 +1118,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             d1d2 = 1
 
         return d1d2
-    
-    elif mode == "cover_only":
-
-        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
-
-        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
-        if cover <= 0:
-            cover = 1
-
-        return cover
-    
 
     elif mode == "density_only":
 
@@ -1126,37 +1125,32 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         return density
 
-    elif mode == "no_d1d2":
 
-        if hut.is_intra_chromosome(read_forward, read_reverse):
-        
-            ps = get_pair_ps(
-                read_forward,
-                read_reverse,
-                xs,
-                weirds,
-                uncuts,
-                loops,
-                circular,
-            )
+    elif mode == "no_ps":
 
-        else:
-            
-            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
-
-            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
-            if ps == 0:
-
-                ps = 1
-
-        cover = get_pair_cover(read_forward, read_reverse, coverage, bins = bins)
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
         # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
 
-        return ps * cover
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
 
+        )
+
+        except:
+
+            d1d2 = 1
+
+        density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        return cover * d1d2 * density
+    
     elif mode == "no_cover":
 
         if hut.is_intra_chromosome(read_forward, read_reverse):
@@ -1192,30 +1186,42 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
             d1d2 = 1
 
-        return ps * d1d2
+        density = get_density(read_forward, read_reverse, density_map = density_map)
 
-    elif mode == "no_ps":
+        return ps * d1d2 * density
 
-        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+    elif mode == "no_d1d2":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins = bins)
 
         # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
 
-        try:
-            d1d2 = get_d1d2(
-            read_forward,
-            read_reverse,
-            restriction_map,
-            d1d2,
+        density = get_density(read_forward, read_reverse, density_map = density_map)
 
-        )
-
-        except:
-
-            d1d2 = 1
-
-        return cover * d1d2
+        return ps * cover * density
     
     elif mode == "no_density":
 
@@ -1259,20 +1265,146 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
         if cover <= 0:
             cover = 1
 
+        return ps * cover * d1d2
+    
+    elif mode == "no_cover_no_density":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
         try:
             d1d2 = get_d1d2(
             read_forward,
             read_reverse,
             restriction_map,
             d1d2,
-
         )
 
         except:
 
             d1d2 = 1
 
-        return ps * cover * d1d2
+
+        return ps * d1d2
+
+        
+    
+    elif mode == "no_ps_no_d1d2":
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
+        if cover <= 0:
+            cover = 1
+
+        density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        return cover * density
+
+    elif mode == "no_ps_no_cover":
+
+        try:
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+        )
+
+        except:
+
+            d1d2 = 1
+
+        density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        return d1d2 * density
+    
+    elif mode == "no_d1d2_no_cover":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
+            if ps == 0:
+
+                ps = 1
+
+        density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        return ps * density
+    
+    elif mode == "no_ps_no_density":
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        try : 
+
+            d1d2 = get_d1d2(
+            read_forward,
+            read_reverse,
+            restriction_map,
+            d1d2,
+        )
+            
+        
+        except :
+
+            d1d2 = 1
+
+        return cover * d1d2
+    
+    elif mode == "no_density_no_d1d2":
+
+        if hut.is_intra_chromosome(read_forward, read_reverse):
+        
+            ps = get_pair_ps(
+                read_forward,
+                read_reverse,
+                xs,
+                weirds,
+                uncuts,
+                loops,
+                circular,
+            )
+
+        else:
+            
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
+
+        cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
+
+        return ps * cover
 
     elif mode == "random":
 
@@ -1355,7 +1487,7 @@ def draw_read_couple(propensities : np.array) -> int:
 
     return index
 
-def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", bins : int = 2000, d1d2 : dict = "d1d2.npy", density_map = "density_map.npy",  mode : str = "full", output_dir : str = None) -> None:
+def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", bins : int = 2000, d1d2 : dict = "d1d2.npy", density_map : dict = "density_map.npy",  mode : str = "full", output_dir : str = None) -> None:
     """
     Re-attribute multi-mapping (ambiguous) reads considering sets of statistical laws.
 

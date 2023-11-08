@@ -58,7 +58,7 @@ def plot_density(output_dir : str = None) -> None:
 
         plt.figure(figsize=(10, 10))
         plt.imshow(matrix ** 0.15, cmap="afmhot_r", vmin = 0.0, vmax = 3.5)
-        plt.title(f"Contatct density for  {chromosome_couple}")
+        plt.title(f"Contact density for  {chromosome_couple}")
         plt.savefig(output_path / f"density_{chromosome_couple[0]}-{chromosome_couple[1]}.pdf", format = "pdf")
         plt.close()
 
@@ -609,7 +609,7 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         plt.close()
 
-def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str = None, rescued_cool : str = None, chromosome : str = None, threshold : float = 0.0, mode : str = "",  output_dir : str = None) -> None:
+def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str = None, rescued_cool : str = None, chromosome : str = None, threshold : float = 0.0, case : str = "",  output_dir : str = None) -> None:
     """
     Create a plot of pattern reconstruction quality.
 
@@ -625,7 +625,7 @@ def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str
         Selected chromosome, by default None
     threshold : float, optional
         Threshold for pattern score significance, by default 0.0
-    mode : str, optional
+    case : str, optional
         Mode to consider, either true positives, false positives or false negatives, by default ""
     output_dir : str, optional
         Path to save plots, by default None
@@ -639,13 +639,13 @@ def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str
 
         output_path = Path(output_dir)
 
-    original_matrix = cooler.Cooler(original_cool).matrix(balance = False)
-    rescued_matrix = cooler.Cooler(rescued_cool).matrix(balance = False)
+    original_matrix = load_cooler(original_cool).matrix(balance = False)
+    rescued_matrix = load_cooler(rescued_cool).matrix(balance = False)
 
-    bin_size = cooler.Cooler(original_cool).info['bin-size']
+    bin_size = load_cooler(original_cool).info['bin-size']
 
     fig, ax = plt.subplots()
-    plt.title(f"Reconstructed pattern {chromosome}\n {mode}")
+    plt.title(f"Reconstructed pattern {chromosome}\n {case}")
     # Use imshow to add the first set of data to the plot
     img1 = ax.imshow(original_matrix.fetch(chromosome) ** 0.15, cmap ='afmhot_r', vmin = 0, vmax=np.max(rescued_matrix.fetch(chromosome) ** 0.15))
 
@@ -672,4 +672,4 @@ def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str
         cbar2 = fig.colorbar(sm, cax = cax2, orientation = 'horizontal', )
         cbar2.set_label(f'Pattern score - threshold : {threshold}')
     
-    plt.savefig(output_path / f"pattern_{mode.replace(' ', '')}_{chromosome}.pdf", format = "pdf")
+    fig.savefig(str(output_path / f"pattern_{case.replace(' ', '')}_{chromosome}.pdf"), format = "pdf")

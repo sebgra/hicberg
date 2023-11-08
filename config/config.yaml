@@ -14,7 +14,35 @@ bowtie2_args: "--very-sensitive"
 
 # Species arguments
 
-Sc288_2m:
+Sc288_2m_full:
+
+    name : "Sc288_2m"
+    ref: "Sc288_2m/SC288_with_micron.fa"
+    R1: "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz"
+    R2: "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    rounds : 10
+    magnitude : 0.8
+    # mode: "full"
+    res: 2000
+
+Sc288_2m_no_d1d2:
+
+    name : "Sc288_2m"
+    ref: "Sc288_2m/SC288_with_micron.fa"
+    R1: "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz"
+    R2: "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    rounds : 10
+    magnitude : 0.8
+    # mode: "full"
+    res: 2000
+
+Sc288_2m_density_only:
 
     name : "Sc288_2m"
     ref: "Sc288_2m/SC288_with_micron.fa"
