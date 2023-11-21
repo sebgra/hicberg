@@ -19,15 +19,18 @@ rule hicberg_step_1:
         max_reports = lambda w: samples.max_reports[w.libraries],
         circularities = lambda w: samples.circularity[w.libraries],
 
+
     output: 
         # forward_sorted_bam = temp("/home/sardine/Bureau/hic_test/1.sorted.bam"),
         # reverse_sorted_bam = temp("/home/sardine/Bureau/hic_test/2.sorted.bam"),
         forward_sorted_bam = temp(join(OUT_DIR, '{libraries}', "1.sorted.bam")),
         reverse_sorted_bam = temp(join(OUT_DIR, '{libraries}', "2.sorted.bam"))
 
+    threads: 16
+
     shell: 
         """
-        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate} -t {THREADS} \
+        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate} -t {threads} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -R {params.rounds} -M {params.magnitude} -k {params.max_reports} \
         -c {params.circularities} --start-stage bam  --exit-stage groups -f
         """

@@ -21,10 +21,11 @@ rule hicberg_step_3:
     output:
         forward_mapped_bam = temp(join(OUT_DIR, '{libraries}', "unrescued_map.cool")),
 
+    threads: 4
     
     shell:
         """
-        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate}  -t {THREADS} \
+        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate}  -t {threads} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -R {params.rounds} -M {params.magnitude} -k {params.max_reports} \
         -c {params.circularities} --start-stage build  --exit-stage stats -f
         """

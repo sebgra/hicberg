@@ -126,9 +126,9 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     restriction_map = hio.load_dictionary(restriction_map_path)
 
+
     flag_file = output_path / "flag.txt"
     # TODO : insert pattern based benchmarking mode
-
 
     ## Chromosomsight pre-call       
 
@@ -265,7 +265,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
 
-        if pattern is None:
+        if pattern is None or pattern == "-1":
             chromosome_set = [*chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
         
         else : 
@@ -290,10 +290,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             true_positives = hev.get_TP_table(df_pattern = output_path / "original.tsv", df_pattern_recall = output_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
             false_positives = hev.get_FP_table(df_pattern = output_path / "original.tsv", df_pattern_recall = output_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
             false_negatives = hev.get_FN_table(df_pattern = output_path / "original.tsv", df_pattern_recall = output_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
-
-            print(f"True positives : {true_positives.shape}")
-            print(f"False positives : {false_positives.shape}")
-            print(f"False negatives : {false_negatives.shape}")
 
 
             # Get scores

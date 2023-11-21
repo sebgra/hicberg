@@ -1,8 +1,11 @@
 import time
+import sys
 from os import getcwd
 from os.path import join
 from pathlib import Path
 import uuid
+import multiprocessing as mp
+from functools import partial
 
 import itertools
 
@@ -10,6 +13,7 @@ import numpy as np
 from numpy.random import choice
 from scipy.spatial.distance import pdist
 from scipy.stats import pearsonr
+from scipy.ndimage import gaussian_filter
 import statsmodels.api as sm
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -39,8 +43,8 @@ TRANS_PS = "trans_ps.npy"
 RESTRICTION_MAP = "restriction_map.npy"
 DENSITY_MAP = "density_map.npy"
 
-
-def generate_density_map(matrix : str = "unrescued_map.cool", rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
+# TODO : check if keeping is necessary
+def generate_density_map_backup(matrix : str = "unrescued_map.cool", rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 
@@ -104,11 +108,162 @@ def generate_density_map(matrix : str = "unrescued_map.cool", rounds : int = 1, 
 
             density_map[combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "inter")
 
+        blured_density  = dict()
+
+    for key in density_map.keys():
+
+        if key[0] == key[1]:
+
+            blured_density[key] = gaussian_filter(density_map[key], sigma = 5)
+
+        else :
+
+            blured_density[key] = gaussian_filter(density_map[key], sigma = 10)
+
+    np.save(output_path / DENSITY_MAP, blured_density)
+
+    logger.info(f"Saved density map at : {output_path}")
+
+    return blured_density
+
+
+def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, sigma : int = 2, n_mads : int = 2, nan_threshold : bool = False, output_dir : str = None) -> dict[str, np.ndarray[float]]:
+    """
+    Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
+
+    Parameters
+    ----------
+    matrix : str, optional
+        Path to a cooler matrix, by default None
+    rounds : int, optional
+        Number of times the matrix has to be shaken, by default 1
+    magnitude : float, optional
+        Blending ratio between the native matrix and the shaken one, by default 1.0
+    output_dir : str, optional
+        Path to the folder where to save the density map, by default None
+    Returns
+    -------
+    dict[str, np.ndarray[float]]
+        Density maps as a dictionary where keys are chromosomes names couples as tuples and values are density maps.
+    """
+
+    logger.info("Start generating density map...")
+
+    if output_dir is None:
+
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    matrix_path = output_path / matrix
+
+    if not matrix_path.is_file():
+
+        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
+    
+    density_map = {}
+
+    # Load cooler matrix
+
+    matrix = hio.load_cooler(matrix_path)
+
+    # Get chromosomes names
+
+    chromosomes = matrix.chromnames
+
+    chromosomes_combination = list(itertools.product(chromosomes, chromosomes))
+
+    for combination in chromosomes_combination:
+
+        # Get matrix for each chromosome pair
+
+        matrix_chromosome = matrix.matrix(balance = True).fetch(combination[0], combination[1])
+
+        # Get density map for each chromosome pair
+
+        density_map[combination] = hut.get_local_density(matrix = matrix_chromosome, size  = size, sigma  = sigma, n_mads  = n_mads, nan_threshold  = nan_threshold)
+
+
     np.save(output_path / DENSITY_MAP, density_map)
 
     logger.info(f"Saved density map at : {output_path}")
 
     return density_map
+
+def compute_density(cooler_file : str = None, threads : int = 2, output_dir : str = None) ->  None: 
+    """
+    Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
+
+    Parameters
+    ----------
+    cooler_file : str, optional
+        [description], by default None
+    threads : int, optional
+        [description], by default 2
+    output_dir : str, optional
+        [description], by default None
+
+    """
+    logger.info("Start generating density map...")
+
+    if output_dir is None:
+
+        output_path = Path(getcwd())
+
+    else : 
+
+        output_path = Path(output_dir)
+
+    matrix_path = output_path / cooler_file
+
+    # print(f"output_dir : {output_dir}")
+    # print(f"cooler_file : {cooler_file}")
+    # print(f"Matrix path : {matrix_path}")
+
+    if not matrix_path.is_file():
+
+        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
+
+    #Load cooler file
+    matrix = hio.load_cooler(matrix = matrix_path)
+
+    #Get chromosomes names
+    chromosomes = matrix.chromnames
+
+    #Get chromosomes couples
+    chromosomes_couples = list(itertools.product(chromosomes, repeat = 2))
+
+    # print(f"Chromosomes couples : {chromosomes_couples}")
+
+    # Get chromsomes maps
+    chromosomes_maps = [matrix.matrix(balance = True).fetch(chrom1, chrom2) for chrom1, chrom2 in chromosomes_couples]
+
+    pool = mp.Pool(processes=threads)
+
+    results = pool.map(partial(hut.get_local_density, matrix_path, size  = 5, sigma  = 2, n_mads  = 2, nan_threshold  = False),
+            chromosomes_couples)
+
+    # Close the pool and wait for the work to finish
+    pool.close()
+    pool.join()
+
+    results_dict =  {key : value for key, value in results}
+
+    # TODO : to adjust to itertools meodification : so far itertools.product(chromosomes, repeat = 2) is used
+    for chrom_pair in results_dict.copy().keys():
+        if chrom_pair[0] == chrom_pair[1]:
+            pass
+
+        else :
+            results_dict[(chrom_pair[1], chrom_pair[0])]  = results_dict[chrom_pair].T
+
+    np.save(output_path / DENSITY_MAP, results_dict)
+
+    logger.info(f"Saved density map at : {output_path}")
+
+
 
 def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], output_dir : str = None) -> dict[str, np.ndarray[int]]:
     """
@@ -1018,7 +1173,16 @@ def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.Aligne
 
         position_rev = int(read_reverse.reference_start // bin_size)
 
+    # print(f"read_forward : {read_forward.reference_name}")
+    # print(f"position_for : {position_for}")
+    # print(f"read_reverse : {read_reverse.reference_name}")
+    # print(f"position_rev : {position_rev}")
+    # print(f"map : {density_map.get((read_forward.reference_name, read_reverse.reference_name))}")
+    
+    
     couple_density = density_map.get((read_forward.reference_name, read_reverse.reference_name))[position_for, position_rev]
+
+    # print(f"couple_density : {couple_density}")
 
     return couple_density
 
@@ -1453,6 +1617,15 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             d1d2 = 1
 
         density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        # print(f"read_forward : {read_forward}")
+        # print(f"read forward name : {read_forward.reference_name}")
+        # print(f"read_reverse : {read_reverse}")
+        # print(f"read reverse name : {read_reverse.reference_name}")
+        # print(f"ps : {ps}")
+        # print(f"cover : {cover}")
+        # print(f"d1d2 : {d1d2}")
+        # print(f"density : {density}")
     
 
         return ps * d1d2 * cover * density
@@ -1483,7 +1656,21 @@ def draw_read_couple(propensities : np.array) -> int:
 
         pk = np.full(xk.shape, np.divide(1, len(propensities)))
 
-    index = choice(xk, p=pk)
+    try:
+        index = choice(xk, p=pk)
+
+    # TODO : enventually remove
+    except:
+        a
+        
+        # print("-- draw_read_couple --")
+        # print(f"propensities : {propensities}")
+        # print(f"pk : {pk}")
+        # print(f"xk : {xk}")
+        # print(f"min pk : {np.min(pk)}")
+        # print(f"min propensity: {np.min(propensities)}")
+        # a
+        
 
     return index
 
@@ -1563,6 +1750,10 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
 
         for combination in combinations:
+
+            # # TODO : enventually remove
+            # if compute_propensity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode) < 0:
+            #     pass
 
             propensities.append(compute_propensity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode))
 

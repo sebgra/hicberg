@@ -14,12 +14,14 @@ from typing import Iterator, Tuple, List
 import numpy as np
 from numpy.random import choice
 import pandas as pd
+import scipy.stats as st
 from scipy.stats import median_abs_deviation
 
 # import hicstuff.digest as hd
 
 import pysam
 from Bio import SeqIO
+import cooler
 # from Bio.Seq import Seq
 # from Bio.Restriction import RestrictionBatch, Analysis
 
@@ -30,7 +32,294 @@ import hicberg.io as hio
 import hicberg.statistics as hst
 from hicberg import logger
 
+def sum_mat_bins(matrix : np.array) -> np.array:
+    """
+    Adapted from : https://github.com/koszullab/hicstuff/tree/master/hicstuff
+    Compute the sum of matrices bins (i.e. rows or columns) using
+    only the upper triangle, assuming symmetrical matrices.
 
+    Parameters
+    ----------
+    mat : scipy.sparse.coo_matrix
+        Contact map in sparse format, either in upper triangle or
+        full matrix.
+
+    Returns
+    -------
+    numpy.ndarray :
+        1D array of bin sums.
+    """
+    # Equivalaent to row or col sum on a full matrix
+    # Note: mat.sum returns a 'matrix' object. A1 extracts the 1D flat array
+    # from the matrix
+
+    if matrix.shape[0] == matrix.shape[1]:
+
+        return matrix.sum(axis=0) + matrix.sum(axis=1) - matrix.diagonal(0)
+    
+    else :
+
+        return matrix.sum(axis=0), matrix.sum(axis=1)
+
+def generate_gaussian_kernel(size : int = 1, sigma : int = 2) -> np.array:
+    """
+    Generate a 2D Gaussian kernel of a given size and standard deviation.
+
+    Parameters
+    ----------
+    size : int, optional
+        Size of the kernel, by default 1
+    sigma : int, optional
+        Standard deviation to use for the kernel build, by default 2
+
+    Returns
+    -------
+    np.array
+        2D Gaussian kernel.
+    """    
+
+    x = np.linspace(-sigma, sigma, size + 1)
+    kern1d = np.diff(st.norm.cdf(x))
+    kern2d = np.outer(kern1d, kern1d)
+
+    return kern2d / kern2d.sum()
+
+def detrend_matrix(matrix : np.array) -> np.array:
+    """
+    Detrend a matrix by P(s).
+
+    Parameters
+    ----------
+    matrix : np.array
+        Hi-C matrix to detrend.
+
+    Returns
+    -------
+    np.array
+        Detrended Hi-C matrix.
+    """    
+
+    if matrix.shape[0] == matrix.shape[1]:
+
+        expected_matrix = np.zeros(matrix.shape)
+        detrended_matrix = np.zeros(matrix.shape)
+
+        np.fill_diagonal(detrended_matrix, np.diag(matrix) / np.nanmean(np.diag(matrix)))
+
+        for i in range(1, matrix.shape[0]):
+            diagonal_mean = np.nanmean(np.diagonal(matrix, i))
+            np.fill_diagonal(detrended_matrix[i:, 0:-i], np.diag(matrix[i:, 0:-i]) / diagonal_mean)
+            np.fill_diagonal(detrended_matrix[0:-i, i:], np.diag(matrix[0:-i, i:]) / diagonal_mean)
+
+    else:   
+        expected_value = np.nanmedian(matrix)
+        detrended_matrix = matrix - expected_value
+
+    return detrended_matrix
+
+
+def get_bad_bins(matrix : np.array = None, n_mads : int = 2) -> np.array:
+    """
+    Detect bad bins (poor interacting bins) in a Hi-C matrix and return their indexes.
+    Bins where the sum of interactions is below the median of the bin sums distribution - n_mads * MAD are considered as bad bins.
+
+    Parameters
+    ----------
+    matrix : Hi-C matrix to detect bad bins from, by default None.
+        
+    n_mads : int, optional
+        Number of median absolute deviations to set poor interacting bins threshold, by default 2
+
+    Returns
+    -------
+    np.array
+        Indexes of bad bins.
+    """    
+    if matrix.shape[0] == matrix.shape[1]:
+        sum_bins = sum_mat_bins(matrix)
+        mad_sum_bins = st.median_abs_deviation(sum_bins)
+        med_sum_bins = np.median(sum_bins)
+        threshold = med_sum_bins - n_mads * mad_sum_bins
+
+        bad_indexes = np.where(sum_bins < threshold)[0]
+
+        return (bad_indexes)
+    
+    else :
+
+        x_sum_bins = np.sum(matrix, axis = 0)
+        y_sum_bins = np.sum(matrix, axis = 1)
+
+        x_mad_sum_bins = st.median_abs_deviation(x_sum_bins)
+        y_mad_sum_bins = st.median_abs_deviation(y_sum_bins)
+        x_med_sum_bins = np.median(x_sum_bins)
+        y_med_sum_bins = np.median(y_sum_bins)
+        x_threshold = x_med_sum_bins - n_mads * x_mad_sum_bins
+        y_threshold = y_med_sum_bins - n_mads * y_mad_sum_bins
+
+        x_bad_indexes = np.where(x_sum_bins < x_threshold)[0]
+        y_bad_indexes = np.where(y_sum_bins < y_threshold)[0]
+
+        return (x_bad_indexes, y_bad_indexes)
+    
+def nan_conv(matrix : np.array = None, kernel : np.array = None, nan_threshold : bool = False) -> np.array:
+    """
+    Custom convolution function that takes into account nan values when convolving.
+    Used to compute the local density of a Hi-C matrix.
+
+    Parameters
+    ----------
+    matrix : np.array, optional
+        Hi-C matrix to detect bad bins from, by default None
+    kernel : np.array, optional
+        Kernel to use for convolution (dimension must be odd), by default None
+    nan_threshold : bool, optional
+        Set wether or not convolution return nan if not enough value are caught, by default False
+
+    Returns
+    -------
+    np.array
+        Convolution product of the matrix and the kernel.
+    """    
+    mat_cp = matrix.copy().astype(float)
+    half_kernel = (kernel.shape[0] // 2)
+    density_threshold = (kernel.shape[0] - half_kernel + 1) ** 2
+
+    # Cis case
+    if matrix.shape[0] == matrix.shape[1]:
+
+        for i in range(half_kernel , (mat_cp.shape[0] - half_kernel * 2 + 1), 1): 
+            for j in range(half_kernel , (mat_cp.shape[1] - half_kernel * 2 + 1), 1): 
+
+                patch = mat_cp[i - (half_kernel) : (i +  half_kernel + 1) , j - (half_kernel) : j + half_kernel + 1]
+                nb_nan = np.count_nonzero(np.isnan(patch))
+
+                # Disrupt the kernel if too many nan values
+                if nan_threshold:
+                    if nb_nan > density_threshold:
+
+                        mat_cp[i, j] = np.nan
+                        continue
+
+                masked_patch = np.ma.MaskedArray(patch, mask = np.isnan(patch))
+                conv = np.ma.average(masked_patch, weights = kernel)
+
+                if np.isnan(conv):
+                    
+                    mat_cp[i, j] = np.nanmean(np.diag(patch, k = i - j))
+
+                else:
+                    mat_cp[i, j] = conv
+    # Trans case
+    else : 
+
+        median_value = np.nanmedian(matrix)
+        mad_value = st.median_abs_deviation(matrix)
+        mean_value = np.nanmean(matrix)
+
+        for i in range(half_kernel , (mat_cp.shape[0] - half_kernel * 2 + 1), 1): 
+            for j in range(half_kernel , (mat_cp.shape[1] - half_kernel * 2 + 1), 1): 
+
+                patch = mat_cp[i - (half_kernel) : (i +  half_kernel + 1) , j - (half_kernel) : j + half_kernel + 1]
+                nb_nan = np.count_nonzero(np.isnan(patch))
+
+                # Disrupt the kernel if too many nan values
+                if nan_threshold:
+                    if nb_nan > density_threshold:
+
+                        mat_cp[i, j] = np.nan
+                        continue
+
+                masked_patch = np.ma.MaskedArray(patch, mask = np.isnan(patch))
+                conv = np.ma.average(masked_patch, weights = kernel)
+
+                if np.isnan(conv):
+
+                    mat_cp[i, j] = mean_value
+                else:
+                    mat_cp[i, j] = conv
+
+    return mat_cp
+
+
+def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None), size : int = 5, sigma : int = 2, n_mads : int = 2, nan_threshold : bool = False) -> np.array:
+    """
+    Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
+    Density is obtained by getting the local density of each pairwise bin using a gaussian kernel convolution.
+
+    Parameters
+    ----------
+    cooler_file : str, optional
+        Path to Hi-C matrix (or sub-matrix) to dget density from, by default None, by default None
+    chrom_name : tuple, optional
+        Tuple containing the sub-matrix to fetch, by default (None, None)
+    size : int, optional
+        Size of the gaussian kernel to use, by default 5
+    sigma : int, optional
+        Standard deviation to use for the kernel, by default 2
+    n_mads : int, optional
+        Number of median absolute deviations to set poor interacting bins threshold, by default 2
+    nan_threshold : bool, optional
+        Set wether or not convolution return nan if not enough value are caught, by default None
+
+    Returns
+    -------
+    np.array
+        Map of local contact density.
+    """
+
+    if size % 2 == 0:
+        raise ValueError("Kernel size must be odd")   
+
+
+    #Load cooler file
+    matrix_file = hio.load_cooler(cooler_file)
+    matrix = matrix_file.matrix(balance = True).fetch(chrom_name[0], chrom_name[1])
+
+    mat_cp = matrix.copy().astype(float)
+
+    detrended_matrix = detrend_matrix(mat_cp)
+
+    if detrended_matrix.shape[0] == detrended_matrix.shape[1]:
+
+        bad_bins = get_bad_bins(detrended_matrix, n_mads = n_mads)
+
+        detrended_matrix[bad_bins, :] = np.nan
+        detrended_matrix[:, bad_bins] = np.nan
+
+    else :
+
+        bad_bins = get_bad_bins(detrended_matrix, n_mads = n_mads)
+
+        detrended_matrix[bad_bins[1], :] = np.nan
+        detrended_matrix[:, bad_bins[0]] = np.nan
+
+    kernel = generate_gaussian_kernel(size = size, sigma = sigma)
+
+    density = nan_conv(matrix = detrended_matrix, kernel = kernel, nan_threshold = nan_threshold)
+
+    # Negative values correction
+    density[density < 0] = np.nanmean(density)
+
+    # Edge cases correction
+
+    if density.shape[0] == density.shape[1]:
+
+        edges = np.where(np.isnan(density))
+
+        for i, j in zip(edges[0], edges[1]):
+
+            density[i, j] =  np.nanmean(np.diag(density, k = i - j)) if ~np.isnan(np.nanmean(np.diag(density, k = i - j ))) else np.nanmean(density)
+
+    else : 
+        edges = np.where(np.isnan(density))
+
+        for i, j in zip(edges[0], edges[1]):
+
+            density[i, j] =  np.nanmedian(density) # Check for a value > 0 if nan median is 0
+
+    
+    return (chrom_name, density)
 
 # TODO : replace 10 by a variable indicating the strengh of the diffusion
 def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:

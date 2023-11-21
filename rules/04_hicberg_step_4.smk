@@ -21,10 +21,12 @@ rule hicberg_step_4:
     output:
         restriction_map = temp(join(OUT_DIR, '{libraries}', "restriction_map.npy"))
 
+    threads: 8
+
     
     shell:
         """
-        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate}  -t {THREADS} \
+        hicberg pipeline -g {input.genome} --fq-for {input.r1} --fq-rev {input.r2} -o {OUT_DIR} -r {params.sampling_rate}  -t {threads} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -R {params.rounds} -M {params.magnitude} -k {params.max_reports} \
         -c {params.circularities} --start-stage stats  --exit-stage rescue -f
         """

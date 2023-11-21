@@ -146,14 +146,18 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_folder))
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
-        p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = UNRESCUED_MATRIX, rounds = rounds, magnitude = magnitude, output_dir = output_folder))
+        # p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = UNRESCUED_MATRIX, size  = 5, sigma  = 2, n_mads  = 2, nan_threshold  = False, output_dir = output_folder))
 
         # Launch processes
-        for process in [p1, p2, p3, p4, p5]:
+        # for process in [p1, p2, p3, p4, p5]:
+        for process in [p1, p2, p3, p4]:
             process.start()
 
-        for process in [p1, p2, p3, p4, p5]:
+        # for process in [p1, p2, p3, p4, p5]:
+        for process in [p1, p2, p3, p4]:
             process.join()
+
+        hst.compute_density(cooler_file = UNRESCUED_MATRIX, threads  = cpus, output_dir  = output_folder)
         
 
     if exit_stage == 5:
@@ -166,7 +170,8 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         restriction_map = hio.load_dictionary(Path(output_folder) / RESTRICTION_MAP)
 
-        hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
+        # TODO : to restore
+        # hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
 
         # Get chunks as lists
         forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_folder)
