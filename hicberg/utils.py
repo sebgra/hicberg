@@ -97,8 +97,12 @@ def detrend_matrix(matrix : np.array) -> np.array:
     -------
     np.array
         Detrended Hi-C matrix.
-    """    
+    """
 
+    zeros_indexes = np.where(matrix == 0)
+    matrix[zeros_indexes] = np.nan
+
+    # Cis case
     if matrix.shape[0] == matrix.shape[1]:
 
         expected_matrix = np.zeros(matrix.shape)
@@ -111,21 +115,25 @@ def detrend_matrix(matrix : np.array) -> np.array:
             np.fill_diagonal(detrended_matrix[i:, 0:-i], np.diag(matrix[i:, 0:-i]) / diagonal_mean)
             np.fill_diagonal(detrended_matrix[0:-i, i:], np.diag(matrix[0:-i, i:]) / diagonal_mean)
 
+    # Trans case
     else:   
         expected_value = np.nanmedian(matrix)
-        detrended_matrix = matrix - expected_value
+        detrended_matrix = matrix / expected_value
+
+    # Replace true zero values
+    # detrended_matrix[zeros_indexes] = 0
 
     return detrended_matrix
 
 
 def get_bad_bins(matrix : np.array = None, n_mads : int = 2) -> np.array:
     """
-    Detect bad bins (poor interacting bins) in a Hi-C matrix and return their indexes.
-    Bins where the sum of interactions is below the median of the bin sums distribution - n_mads * MAD are considered as bad bins.
+    Detect bad bins (poor interacting bins) in a normalized Hi-C matrix and return their indexes.
+    Bins where the nan sum of interactions is zero  are considered as bad bins.
 
     Parameters
     ----------
-    matrix : Hi-C matrix to detect bad bins from, by default None.
+    matrix : Normalized Hi-C matrix to detect bad bins from, by default None.
         
     n_mads : int, optional
         Number of median absolute deviations to set poor interacting bins threshold, by default 2
@@ -134,31 +142,25 @@ def get_bad_bins(matrix : np.array = None, n_mads : int = 2) -> np.array:
     -------
     np.array
         Indexes of bad bins.
-    """    
-    if matrix.shape[0] == matrix.shape[1]:
-        sum_bins = sum_mat_bins(matrix)
-        mad_sum_bins = st.median_abs_deviation(sum_bins)
-        med_sum_bins = np.median(sum_bins)
-        threshold = med_sum_bins - n_mads * mad_sum_bins
+    """   
 
-        bad_indexes = np.where(sum_bins < threshold)[0]
+
+    # Cis case
+    if matrix.shape[0] == matrix.shape[1]:
+
+        nan_sum_bins = np.nansum(matrix, axis = 0)
+        bad_indexes = np.where(nan_sum_bins == 0)
 
         return (bad_indexes)
     
+    # Trans case
     else :
 
-        x_sum_bins = np.sum(matrix, axis = 0)
-        y_sum_bins = np.sum(matrix, axis = 1)
+        x_sum_bins = np.nansum(matrix, axis = 0)
+        y_sum_bins = np.nansum(matrix, axis = 1)
 
-        x_mad_sum_bins = st.median_abs_deviation(x_sum_bins)
-        y_mad_sum_bins = st.median_abs_deviation(y_sum_bins)
-        x_med_sum_bins = np.median(x_sum_bins)
-        y_med_sum_bins = np.median(y_sum_bins)
-        x_threshold = x_med_sum_bins - n_mads * x_mad_sum_bins
-        y_threshold = y_med_sum_bins - n_mads * y_mad_sum_bins
-
-        x_bad_indexes = np.where(x_sum_bins < x_threshold)[0]
-        y_bad_indexes = np.where(y_sum_bins < y_threshold)[0]
+        x_bad_indexes = np.where(x_sum_bins == 0)
+        y_bad_indexes = np.where(y_sum_bins == 0) 
 
         return (x_bad_indexes, y_bad_indexes)
     
@@ -180,7 +182,10 @@ def nan_conv(matrix : np.array = None, kernel : np.array = None, nan_threshold :
     -------
     np.array
         Convolution product of the matrix and the kernel.
-    """    
+    """
+
+    # Corrected with Amaury
+
     mat_cp = matrix.copy().astype(float)
     half_kernel = (kernel.shape[0] // 2)
     density_threshold = (kernel.shape[0] - half_kernel + 1) ** 2
@@ -188,39 +193,31 @@ def nan_conv(matrix : np.array = None, kernel : np.array = None, nan_threshold :
     # Cis case
     if matrix.shape[0] == matrix.shape[1]:
 
-        for i in range(half_kernel , (mat_cp.shape[0] - half_kernel * 2 + 1), 1): 
-            for j in range(half_kernel , (mat_cp.shape[1] - half_kernel * 2 + 1), 1): 
+        for i in range(half_kernel , (mat_cp.shape[0] - half_kernel), 1): 
+            for j in range(half_kernel , (mat_cp.shape[1] - half_kernel), 1): 
 
-                patch = mat_cp[i - (half_kernel) : (i +  half_kernel + 1) , j - (half_kernel) : j + half_kernel + 1]
-                nb_nan = np.count_nonzero(np.isnan(patch))
+                patch = matrix[i - (half_kernel) : (i +  half_kernel + 1) , j - (half_kernel) : j + half_kernel + 1]
 
                 # Disrupt the kernel if too many nan values
                 if nan_threshold:
+                    nb_nan = np.count_nonzero(np.isnan(patch))
                     if nb_nan > density_threshold:
 
                         mat_cp[i, j] = np.nan
                         continue
 
                 masked_patch = np.ma.MaskedArray(patch, mask = np.isnan(patch))
-                conv = np.ma.average(masked_patch, weights = kernel)
+                mat_cp[i, j] = np.ma.average(masked_patch, weights = kernel)
 
-                if np.isnan(conv):
-                    
-                    mat_cp[i, j] = np.nanmean(np.diag(patch, k = i - j))
-
-                else:
-                    mat_cp[i, j] = conv
     # Trans case
     else : 
 
-        median_value = np.nanmedian(matrix)
-        mad_value = st.median_abs_deviation(matrix)
         mean_value = np.nanmean(matrix)
 
-        for i in range(half_kernel , (mat_cp.shape[0] - half_kernel * 2 + 1), 1): 
-            for j in range(half_kernel , (mat_cp.shape[1] - half_kernel * 2 + 1), 1): 
+        for i in range(half_kernel , (mat_cp.shape[0] - half_kernel), 1): 
+            for j in range(half_kernel , (mat_cp.shape[1] - half_kernel), 1): 
 
-                patch = mat_cp[i - (half_kernel) : (i +  half_kernel + 1) , j - (half_kernel) : j + half_kernel + 1]
+                patch = matrix[i - (half_kernel) : (i +  half_kernel + 1) , j - (half_kernel) : j + half_kernel + 1]
                 nb_nan = np.count_nonzero(np.isnan(patch))
 
                 # Disrupt the kernel if too many nan values
@@ -242,7 +239,7 @@ def nan_conv(matrix : np.array = None, kernel : np.array = None, nan_threshold :
     return mat_cp
 
 
-def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None), size : int = 5, sigma : int = 2, n_mads : int = 2, nan_threshold : bool = False) -> np.array:
+def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None), size : int = 11, sigma : int = 0.2, n_mads : int = 2, nan_threshold : bool = False) -> np.array:
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
     Density is obtained by getting the local density of each pairwise bin using a gaussian kernel convolution.
@@ -269,46 +266,72 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
     """
 
     if size % 2 == 0:
-        raise ValueError("Kernel size must be odd")   
+        raise ValueError("Kernel size must be odd")
+    
+    # print(f"Start getting local density for {cooler_file}")
+    # print(f"Used kernel size : {size}")
+    # print(f"Used kernel sigma : {sigma}")
 
 
     #Load cooler file
-    matrix_file = hio.load_cooler(cooler_file)
-    matrix = matrix_file.matrix(balance = True).fetch(chrom_name[0], chrom_name[1])
+    matrix = cooler.Cooler(cooler_file).matrix(balance = True).fetch(chrom_name[0], chrom_name[1])
+
+    plt.figure(figsize=(10,10))
+    plt.imshow(matrix ** 0.15, cmap = "afmhot_r")
 
     mat_cp = matrix.copy().astype(float)
 
+    if mat_cp.shape[0] < size:
+        # raise ValueError("Matrix size must be greater than kernel size")
+        size = size - 2 * (size // 2)
+
+    # print(f"Matrix size : {mat_cp.shape[0]}")
+    # print(f"Used kernel size : {size}")
+
+    bad_bins = get_bad_bins(mat_cp, n_mads = n_mads)
+    
     detrended_matrix = detrend_matrix(mat_cp)
+
+    # cmap = plt.cm.get_cmap("seismic")
+    # cmap.set_bad(color = "black")
+    # plt.figure(figsize=(10,10))
+    # plt.imshow(detrended_matrix, cmap = cmap, vmin = 0, vmax = 2)
+    # plt.show()
+
+
+    # TODO : to be adjusted : conserved or not
+
+    # nan_indexes = np.where(np.isnan(detrended_matrix))
+
+    # Seen with Amaury
+    # detrended_matrix[nan_indexes] = 1
+
+    log_detrended_matrix = np.log(detrended_matrix)
 
     if detrended_matrix.shape[0] == detrended_matrix.shape[1]:
 
-        bad_bins = get_bad_bins(detrended_matrix, n_mads = n_mads)
-
-        detrended_matrix[bad_bins, :] = np.nan
-        detrended_matrix[:, bad_bins] = np.nan
+        log_detrended_matrix[bad_bins, :] = np.nan
+        log_detrended_matrix[:, bad_bins] = np.nan
 
     else :
 
-        bad_bins = get_bad_bins(detrended_matrix, n_mads = n_mads)
+        log_detrended_matrix[bad_bins[1], :] = np.nan
+        log_detrended_matrix[:, bad_bins[0]] = np.nan
 
-        detrended_matrix[bad_bins[1], :] = np.nan
-        detrended_matrix[:, bad_bins[0]] = np.nan
-
+        
     kernel = generate_gaussian_kernel(size = size, sigma = sigma)
+    log_density = nan_conv(matrix = log_detrended_matrix, kernel = kernel, nan_threshold = nan_threshold)
 
-    density = nan_conv(matrix = detrended_matrix, kernel = kernel, nan_threshold = nan_threshold)
-
-    # Negative values correction
-    density[density < 0] = np.nanmean(density)
+    density = np.exp(log_density)
 
     # Edge cases correction
-
     if density.shape[0] == density.shape[1]:
 
         edges = np.where(np.isnan(density))
 
         for i, j in zip(edges[0], edges[1]):
 
+            # TODO : replace by 1 ?
             density[i, j] =  np.nanmean(np.diag(density, k = i - j)) if ~np.isnan(np.nanmean(np.diag(density, k = i - j ))) else np.nanmean(density)
 
     else : 
@@ -316,93 +339,101 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
 
         for i, j in zip(edges[0], edges[1]):
 
-            density[i, j] =  np.nanmedian(density) # Check for a value > 0 if nan median is 0
+            # TODO : replace by 1 ? 
+            density[i, j] =  np.nanmedian(density)
+            
+    # Check for a value > 0 if nan median is 0
 
-    
+    # plt.figure(figsize=(10,10))
+    # plt.imshow(np.log10(density), cmap = cmap, vmin = -1, vmax = 1)
+    # plt.show()
+
     return (chrom_name, density)
 
-# TODO : replace 10 by a variable indicating the strengh of the diffusion
-def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:
-    """
-    Function for matrix diffusion to get local contact density
-
-    Parameters
-    ----------
-    matrix : np.array, optional
-        Matrix or subpart of the matrix as a np.array, by default None
-    rounds : int, optional
-        Number of times the matrix has to be shaken, by default 1
-    magnitude : float, optional
-        Blending ratio between the native matrix and the shaken one, by default 1.0
-    mode : str, optional
-        Set wether the sub-matrix is intra or inter-chromosome, and so the direction of diffusion, by default "intra"
-
-    Returns
-    -------
-    np.array
-        Contact density map.
-    """
-
-    arr = matrix.astype(np.float64)
-
-    if mode == "intra" :
-        store = []
-        store.append(arr)
-        for _ in range(rounds):
 
 
-            #South East
-            shift = np.random.randint(10)
-            store.append(magnitude*np.roll(arr,shift=shift,axis=(1, 0)))
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
+# # TODO : replace 10 by a variable indicating the strengh of the diffusion
+# def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:
+#     """
+#     Function for matrix diffusion to get local contact density
 
-            # North West
-            shift = np.random.randint(10)
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
-            store.append(magnitude*np.roll(arr,shift=-shift,axis=(1, 0)))
+#     Parameters
+#     ----------
+#     matrix : np.array, optional
+#         Matrix or subpart of the matrix as a np.array, by default None
+#     rounds : int, optional
+#         Number of times the matrix has to be shaken, by default 1
+#     magnitude : float, optional
+#         Blending ratio between the native matrix and the shaken one, by default 1.0
+#     mode : str, optional
+#         Set wether the sub-matrix is intra or inter-chromosome, and so the direction of diffusion, by default "intra"
+
+#     Returns
+#     -------
+#     np.array
+#         Contact density map.
+#     """
+
+#     arr = matrix.astype(np.float64)
+
+#     if mode == "intra" :
+#         store = []
+#         store.append(arr)
+#         for _ in range(rounds):
 
 
-            # # North East
-            # shift = np.random.randint(10)
-            # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
-            # store.append(magnitude*np.roll(arr,shift=shift,axis=(0, 1)))
+#             #South East
+#             shift = np.random.randint(10)
+#             store.append(magnitude*np.roll(arr,shift=shift,axis=(1, 0)))
+#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
+
+#             # North West
+#             shift = np.random.randint(10)
+#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
+#             store.append(magnitude*np.roll(arr,shift=-shift,axis=(1, 0)))
 
 
-            # # South West
-            # shift = np.random.randint(10)
-            # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
-            # store.append(magnitude*np.roll(arr,shift=-shift,axis=(0, 1)))
+#             # # North East
+#             # shift = np.random.randint(10)
+#             # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
+#             # store.append(magnitude*np.roll(arr,shift=shift,axis=(0, 1)))
+
+
+#             # # South West
+#             # shift = np.random.randint(10)
+#             # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
+#             # store.append(magnitude*np.roll(arr,shift=-shift,axis=(0, 1)))
             
 
 
-    elif mode == "inter":
-        store = []
-        store.append(arr)
-        for _ in range(rounds):
+#     elif mode == "inter":
+#         store = []
+#         store.append(arr)
+#         for _ in range(rounds):
 
-            # East
-            shift = np.random.randint(10)
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
-            store.append(magnitude*np.roll(arr,shift=shift,axis=1))
+#             # East
+#             shift = np.random.randint(10)
+#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
+#             store.append(magnitude*np.roll(arr,shift=shift,axis=1))
 
-            # West
-            shift = np.random.randint(10)
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
-            store.append(magnitude*np.roll(arr,shift=-shift,axis=1))
+#             # West
+#             shift = np.random.randint(10)
+#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
+#             store.append(magnitude*np.roll(arr,shift=-shift,axis=1))
             
-            #South
-            shift = np.random.randint(10)
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
-            store.append(magnitude*np.roll(arr,shift=shift,axis=0))
+#             #South
+#             shift = np.random.randint(10)
+#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
+#             store.append(magnitude*np.roll(arr,shift=shift,axis=0))
             
-            #North
-            shift = np.random.randint(10)
-            # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
-            store.append(magnitude*np.roll(arr,shift=-shift,axis=0))
+#             #North
+#             shift = np.random.randint(10)
+#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
+#             store.append(magnitude*np.roll(arr,shift=-shift,axis=0))
 
-    array_of_matrices = np.array(store)
-    mean_matrix = np.nanmean(array_of_matrices, axis=0)
-    return mean_matrix
+#     array_of_matrices = np.array(store)
+#     mean_matrix = np.nanmean(array_of_matrices, axis=0)
+#     return mean_matrix
 
 def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     """

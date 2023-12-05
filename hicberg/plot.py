@@ -56,9 +56,12 @@ def plot_density(output_dir : str = None) -> None:
 
         matrix = density_map[chromosome_couple]
 
+        cmap = plt.get_cmap("seismic")
+        cmap.set_bad(color="black")
         plt.figure(figsize=(10, 10))
-        plt.imshow(matrix ** 0.15, cmap="afmhot_r", vmin = 0.0, vmax = 3.5)
+        plt.imshow(np.log10(matrix), cmap=cmap, vmin = -1, vmax = 1)
         plt.title(f"Contact density for  {chromosome_couple}")
+        plt.colorbar(fraction=0.046)
         plt.savefig(output_path / f"density_{chromosome_couple[0]}-{chromosome_couple[1]}.pdf", format = "pdf")
         plt.close()
 

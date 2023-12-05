@@ -171,7 +171,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         restriction_map = hio.load_dictionary(Path(output_folder) / RESTRICTION_MAP)
 
         # TODO : to restore
-        # hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
+        hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
 
         # Get chunks as lists
         forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_folder)

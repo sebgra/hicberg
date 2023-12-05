@@ -218,9 +218,7 @@ def compute_density(cooler_file : str = None, threads : int = 2, output_dir : st
 
     matrix_path = output_path / cooler_file
 
-    # print(f"output_dir : {output_dir}")
-    # print(f"cooler_file : {cooler_file}")
-    # print(f"Matrix path : {matrix_path}")
+    print(f"Matrix path : {matrix_path}")
 
     if not matrix_path.is_file():
 
@@ -235,6 +233,8 @@ def compute_density(cooler_file : str = None, threads : int = 2, output_dir : st
     #Get chromosomes couples
     chromosomes_couples = list(itertools.product(chromosomes, repeat = 2))
 
+    # chromosomes_couples = [("chr4", "chr4")]
+
     # print(f"Chromosomes couples : {chromosomes_couples}")
 
     # Get chromsomes maps
@@ -242,7 +242,7 @@ def compute_density(cooler_file : str = None, threads : int = 2, output_dir : st
 
     pool = mp.Pool(processes=threads)
 
-    results = pool.map(partial(hut.get_local_density, matrix_path, size  = 5, sigma  = 2, n_mads  = 2, nan_threshold  = False),
+    results = pool.map(partial(hut.get_local_density, str(matrix_path), size  = 11, sigma  = 0.2, n_mads  = 2, nan_threshold  = False),
             chromosomes_couples)
 
     # Close the pool and wait for the work to finish
