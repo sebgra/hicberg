@@ -143,7 +143,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         hst.log_bin_genome(genome = genome, output_dir = output_folder)
 
         p1 = Process(target = hst.get_patterns, kwargs = dict(circular = circular, output_dir = output_folder))
-        p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_folder))
+        p2 = Process(target = hst.generate_trans_ps, kwargs = dict(output_dir = output_folder))
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
         # p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = UNRESCUED_MATRIX, size  = 5, sigma  = 2, n_mads  = 2, nan_threshold  = False, output_dir = output_folder))

@@ -229,24 +229,30 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             ## Compute statistics
 
             p1 = Process(target = hst.get_patterns, kwargs = dict(forward_bam_file  = forward_out_path, reverse_bam_file = reverse_out_path, circular = circular, output_dir = output_path))
-            p2 = Process(target = hst.generate_trans_ps, kwargs = dict(restriction_map = restriction_map, output_dir = output_path))
+            p2 = Process(target = hst.generate_trans_ps, kwargs = dict(output_dir = output_path))
             p3 = Process(target = hst.generate_coverages, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, genome = genome, bins = bin_size, output_dir = output_path))
             p4 = Process(target = hst.generate_d1d2, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_path))
-            p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = unrescued_map_path, rounds = rounds, magnitude = magnitude, output_dir = output_path))
+            # p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = unrescued_map_path, rounds = rounds, magnitude = magnitude, output_dir = output_path))
             
             # if  "full" in mode.split(","):
 
             benchmark_logger.info("Full mode selected. Learning step will be performed.")
 
             # Launch processes
-            for process in [p1, p2, p3, p4, p5]:
+            # for process in [p1, p2, p3, p4, p5]:
+            for process in [p1, p2, p3, p4]:
+
                 process.start()
 
-            for process in [p1, p2, p3, p4, p5]:
+            # for process in [p1, p2, p3, p4, p5]:
+            for process in [p1, p2, p3, p4]:
+
                 process.join()
 
             benchmark_logger.info("Learning step completed")
 
+
+        hst.compute_density(cooler_file = UNRESCUED_MATRIX, threads  = 16, output_dir  = output_path)
 
         learning_status = True
 

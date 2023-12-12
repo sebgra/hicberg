@@ -377,8 +377,9 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
     
     n_bins = np.divide(np.log1p(chromosome_size), np.log(base)).astype(int)
     xs = np.unique(
-        np.logspace(0, n_bins + 1, base=base, num=n_bins + 2, endpoint=True, dtype=int)
-    )
+            np.logspace(0, n_bins, num=n_bins + 1, base=base, dtype=int)
+        )
+    # xs[-1] = chromosome_size
 
     return xs
 
@@ -528,7 +529,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
 
     logger.info(f"Saved restriction map at : {folder_path / DIST_FRAG}")
 
-def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict = None, output_dir : str = None) -> None:
+def generate_trans_ps(matrix : str = "unrescued_map.cool", chrom_sizes : str = "chromosome_sizes.npy", output_dir : str = None) -> None:
     
 
     logger.info("Start getting trans-P(s)")
@@ -541,6 +542,8 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
 
         output_path = Path(output_dir)
 
+    chrom_size_dict = hio.load_dictionary(output_path / chrom_sizes)
+
     matrix_path = Path(output_path, matrix)
 
     if not matrix_path.is_file():
@@ -551,42 +554,43 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", restriction_map: dict
     
     matrix = cooler.Cooler(matrix_path.as_posix())
 
-    chromosome_sets = itertools.product((restriction_map.keys()), repeat=2)
+    chromosome_sets = itertools.product((chrom_size_dict.keys()), repeat=2)
 
     trans_ps = {}
 
-    t_ps = np.zeros((len(restriction_map.keys()) ** 2, 1))
-    all_interaction_matrix = np.zeros((len(restriction_map.keys()) ** 2, 1))
-    n_frags_matrix = np.zeros((len(restriction_map.keys()) ** 2, 1))
+    t_ps = np.zeros((len(chrom_size_dict.keys()) ** 2, 1))
+    all_interaction_matrix = np.zeros((len(chrom_size_dict.keys()) ** 2, 1))
+    n_frags_matrix = np.zeros((len(chrom_size_dict.keys()) ** 2, 1))
 
 
     for idx, s in enumerate(chromosome_sets):
 
         all_interactions = matrix.matrix(balance=False).fetch(s[0], s[1]).sum()
-        n_frags = len(restriction_map.get(str(s[0]))) * len(
-            restriction_map.get(str(s[1]))
-        )
-        trans_ps[s] = np.divide(all_interactions, np.multiply(n_frags, 4))
+        n_frags = chrom_size_dict.get(s[0]) * chrom_size_dict.get(s[1])
+        
+        # trans_ps[s] = np.divide(all_interactions, np.multiply(n_frags, 4))
+        trans_ps[s] = np.divide(all_interactions, np.multiply(n_frags, 4)) # Multiplied by 4 to balance 4 configurations of reads orientation (++/+-/-+/--)
 
 
-        t_ps[idx] = np.divide(all_interactions, np.multiply(n_frags, 4))
+        # t_ps[idx] = np.divide(all_interactions, np.multiply(n_frags, 4))
+        
         all_interaction_matrix[idx] = all_interactions
         n_frags_matrix[idx] = n_frags
 
-    t_ps = t_ps.reshape(
-        (len(restriction_map.keys()), (len(restriction_map.keys())))
-    )
-    np.fill_diagonal(t_ps, np.nan)
+    # t_ps = t_ps.reshape(
+    #     (len(restriction_map.keys()), (len(restriction_map.keys())))
+    # )
+    # np.fill_diagonal(t_ps, np.nan)
 
-    all_interaction_matrix = all_interaction_matrix.reshape(
-        (len(restriction_map.keys()), (len(restriction_map.keys())))
-    )
-    np.fill_diagonal(all_interaction_matrix, np.nan)
+    # all_interaction_matrix = all_interaction_matrix.reshape(
+    #     (len(restriction_map.keys()), (len(restriction_map.keys())))
+    # )
+    # np.fill_diagonal(all_interaction_matrix, np.nan)
 
-    n_frags_matrix = n_frags_matrix.reshape(
-        (len(restriction_map.keys()), (len(restriction_map.keys())))
-    )
-    np.fill_diagonal(n_frags_matrix, np.nan)
+    # n_frags_matrix = n_frags_matrix.reshape(
+    #     (len(restriction_map.keys()), (len(restriction_map.keys())))
+    # )
+    # np.fill_diagonal(n_frags_matrix, np.nan)
 
     np.save(output_path / TRANS_PS, trans_ps)
 
@@ -796,7 +800,7 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
     logger.info(f"Saved d1d2 law at : {output_path / D1D2}")
 
-def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", dist_frag : str = "dist.frag.npy", circular : str = "", output_dir : str = None) -> None:
+def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", chrom_sizes : str = "chromosome_sizes.npy", circular : str = "", output_dir : str = None) -> None:
     """
     Get the patterns distribution from read pairs alignment. .
 
@@ -840,13 +844,27 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     #Load xs
 
     xs = hio.load_dictionary(output_path / XS)
-    dist_frag = hio.load_dictionary(output_path / dist_frag)
+    # dist_frag = hio.load_dictionary(output_path / dist_frag)
+    chrom_size_dict = hio.load_dictionary(output_path / chrom_sizes)
 
     # Create placeholders for the dictionaries
 
     weirds = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
     uncuts = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
     loops = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+
+    # Create placeholder for area to divide logbins counts
+    trapezoids_area = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+
+    # Compute areas of trapezoids
+
+    # print("Computinf trapezoids areas...")
+    for chrom in xs.keys():
+        xs_ = xs[chrom]
+        chrom_size_ = chrom_size_dict[chrom]
+
+        trapezoids_area[chrom] = [(2 * chrom_size_ - xs_[j+1] - xs_[j]) * (xs_[j+1] - xs_[j]) * 0.5 for j in range(len(xs_) - 1)]
+        trapezoids_area[chrom].append( (((chrom_size_ - xs_[-1]) ** 2) / 2))
 
     forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
 
@@ -890,23 +908,23 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
 
         weirds[chromosome] = np.divide(
             weirds[chromosome],
-            2 * dist_frag.get(chromosome),
+            np.multiply(trapezoids_area.get(chromosome), 2),
             out=np.zeros_like(weirds[chromosome]),
-            where=2 * dist_frag.get(chromosome) != 0,
+            where=trapezoids_area.get(chromosome) != 0,
         )
 
         uncuts[chromosome] = np.divide(
             uncuts[chromosome],
-            dist_frag.get(chromosome),
+            trapezoids_area.get(chromosome),
             out=np.zeros_like(uncuts[chromosome]),
-            where=dist_frag.get(chromosome) != 0,
+            where=trapezoids_area.get(chromosome) != 0,
         )
 
         loops[chromosome] = np.divide(
             loops[chromosome],
-            dist_frag.get(chromosome),
+            trapezoids_area.get(chromosome),
             out=np.zeros_like(loops[chromosome]),
-            where=dist_frag.get(chromosome) != 0,
+            where=trapezoids_area.get(chromosome) != 0,
         )
 
     np.save(output_path / WEIRDS, weirds)
@@ -1626,6 +1644,17 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
         # print(f"cover : {cover}")
         # print(f"d1d2 : {d1d2}")
         # print(f"density : {density}")
+
+        # if ps * cover * d1d2 * density < 0:
+
+        #     print(f"read_forward : {read_forward}")
+        #     print(f"read forward name : {read_forward.reference_name}")
+        #     print(f"read_reverse : {read_reverse}")
+        #     print(f"read reverse name : {read_reverse.reference_name}")
+        #     print(f"ps : {ps}")
+        #     print(f"cover : {cover}")
+        #     print(f"d1d2 : {d1d2}")
+        #     print(f"density : {density}")
     
 
         return ps * d1d2 * cover * density
@@ -1661,15 +1690,15 @@ def draw_read_couple(propensities : np.array) -> int:
 
     # TODO : enventually remove
     except:
-        a
         
-        # print("-- draw_read_couple --")
-        # print(f"propensities : {propensities}")
-        # print(f"pk : {pk}")
-        # print(f"xk : {xk}")
-        # print(f"min pk : {np.min(pk)}")
-        # print(f"min propensity: {np.min(propensities)}")
-        # a
+        
+        print("-- draw_read_couple --")
+        print(f"propensities : {propensities}")
+        print(f"pk : {pk}")
+        print(f"xk : {xk}")
+        print(f"min pk : {np.min(pk)}")
+        print(f"min propensity: {np.min(propensities)}")
+        a
         
 
     return index

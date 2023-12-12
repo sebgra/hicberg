@@ -121,8 +121,8 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
     
     if max_alignment is None or max_alignment == -1:
         
-        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
         cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
+        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
 
     elif max_alignment is not None:
             

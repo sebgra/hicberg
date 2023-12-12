@@ -319,6 +319,10 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
         log_detrended_matrix[:, bad_bins[0]] = np.nan
 
         
+    #pad matrix
+
+    # padded_log_detrended_matrix = np.pad(log_detrended_matrix, size // 2, mode = "constant", constant_values = np.nan)
+
     kernel = generate_gaussian_kernel(size = size, sigma = sigma)
     log_density = nan_conv(matrix = log_detrended_matrix, kernel = kernel, nan_threshold = nan_threshold)
 
@@ -347,6 +351,9 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
     # plt.figure(figsize=(10,10))
     # plt.imshow(np.log10(density), cmap = cmap, vmin = -1, vmax = 1)
     # plt.show()
+
+    #unpad matrix
+    # density = density[size // 2 : -size // 2, size // 2 : -size // 2]
 
     return (chrom_name, density)
 
