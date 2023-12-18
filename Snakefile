@@ -30,8 +30,8 @@ sampling_rates = samples.sampling_rates
 enzymes = samples.enzymes
 modes = samples.modes
 resolutions = samples.resolutions
-rounds = samples.rounds
-magnitudes = samples.magnitudes
+kernel_sizes = samples.kernel_sizes
+deviations = samples.deviations
 max_reports = samples.max_reports
 circularity = samples.circularity
 
@@ -43,8 +43,8 @@ wildcard_constraints:
     enzymes = "|".join(enzymes),
     modes = "|".join(modes),
     resolutions = "|".join(resolutions),
-    rounds = "|".join(rounds),
-    magnitudes = "|".join(magnitudes),
+    kernel_sizes = "|".join(kernel_sizes),
+    deviations = "|".join(deviations),
     max_reports = "|".join(max_reports),
     circularity = "|".join(circularity)
 

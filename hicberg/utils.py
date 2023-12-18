@@ -348,10 +348,6 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
             
     # Check for a value > 0 if nan median is 0
 
-    # plt.figure(figsize=(10,10))
-    # plt.imshow(np.log10(density), cmap = cmap, vmin = -1, vmax = 1)
-    # plt.show()
-
     #unpad matrix
     # density = density[size // 2 : -size // 2, size // 2 : -size // 2]
 

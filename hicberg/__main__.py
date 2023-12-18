@@ -44,8 +44,8 @@ def cli(chain=True):
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
 @click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for sub-sampling restriction map.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
-@click.option("--rounds", "-R", required = False, default = 1, type = int, help = "Number of rounds to perform for matrix diffusion.")
-@click.option("--magnitude", "-M", required = False, default = 1.0, type = float, help = "Magnitude of matrix diffusion.")
+@click.option("--kernel-size", "-K", required = False, default = 11, type = int, help = "Size of the gaussian kernel for contact density estimation.")
+@click.option("--deviation", "-d", required = False, default = 0.5, type = float, help = "Standard deviation for contact density estimation.")
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("--max-alignment", '-k', required = False, type = int, default = None, help = "Set the number of alignments to report in ambiguous reads case.")
 @click.option("--sensitivity", "-s", required = False, type = click.Choice(["very-sensitive", "sensitive", "fast", "very-fast"]), default = "very-sensitive", help = "Set sensitivity level for Bowtie2")
@@ -57,8 +57,8 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "groups", "build", "stats", "rescue", "final"]), default = "fastq", help = "Stage to start the pipeline")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "groups", "build", "stats", "rescue", "final"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, rounds, magnitude, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
-    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, rounds = rounds, magnitude = magnitude, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
@@ -93,7 +93,7 @@ def alignment_cmd(genome, fq_for, fq_rev, max_alignment, sensitivity, output, cp
 
 
 @click.command()
-@click.option("--mapq", "-q", required = False, type = int, default = 35, help = "Minimum MAPQ to consider a read as valid")
+@click.option("--mapq", "-q", required = False, type = int, default = 35, help = "Minimum mapping quality to consider a read as valid")
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
 def classify_cmd(mapq, output):
     hut.classify_reads(mapq = mapq, output_dir = output)
@@ -107,7 +107,7 @@ def build_pairs_cmd(output, recover):
 
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if .cool matrix are bulit after reads reassignment.")
+@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if .cool matrix are built after reads reassignment.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for matrix building.")
 def build_matrix_cmd(output, recover, cpus):
     hio.build_matrix(cpus = cpus, output_dir = output, mode = recover)
@@ -172,9 +172,10 @@ def plot_cmd(genome, bins, output):
     p4 = Process(target = hpl.plot_couple_repartition(output_dir = output))
     p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output))
     p6 = Process(target = hpl.plot_d1d2(output_dir = output))
+    p7 = Process(target = hpl.plot_density, kwargs = dict(output_dir = output))
 
     # Launch processes
-    for process in [p1, p2, p3, p4, p5, p6]:
+    for process in [p1, p2, p3, p4, p5, p6, p7]:
         process.start()
         process.join()
 
@@ -194,8 +195,8 @@ def tidy_cmd(output):
 @click.option("--bins", "-b", required = False, default = 1, type = int, help = "Number of bins to select from a genomic coordinates.")
 @click.option("--strides", "-s", required = False, default = None, type = str, help = "Strides to apply from source genomic coordinates to define targets intervals.")
 @click.option("--auto", "-a", required = False, default = None, type = int, help = "Automatically select auto intervals for duplication.")
-@click.option("--rounds", "-R", required = False, default = 1, type = int, help = "Number of rounds to perform for matrix diffusion.")
-@click.option("--magnitude", "-M", required = False, default = 1.0, type = float, help = "Magnitude of matrix diffusion.")
+@click.option("--kernel-size", "-K", required = False, default = 11, type = int, help = "Size of the gaussian kernel for contact density estimation.")
+@click.option("--deviation", "-d", required = False, default = 0.5, type = float, help = "Standard deviation for contact density estimation.")
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("--pattern", "-S", required = False, type = click.Choice(["loops", "borders", "hairpins", "-1"]), default = None, help = "Set pattern if benchmarking considering patterns")
 @click.option("--threshold", "-t", required = False, type = float, default = 0.0, help = "Set pattern score threshold under which pattern are discarded")
@@ -203,9 +204,9 @@ def tidy_cmd(output):
 @click.option("--trend", "-T", is_flag = True, help = "Set if detrending of the contact map has to be performed")
 @click.option("--top", "-k", required = False, type = int, default = 100, help = "Set the top k % of patterns to retain")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files have to be deleted")
-def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, rounds, magnitude, mode, pattern, threshold, jitter, trend, top, force, output):
+def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, kernel_size, deviation, mode, pattern, threshold, jitter, trend, top, force, output):
 
-    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, rounds = rounds, magnitude = magnitude, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top)
+    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, kernel_size = kernel_size, deviation = deviation, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top)
 
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
