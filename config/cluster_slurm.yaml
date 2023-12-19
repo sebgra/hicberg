@@ -18,15 +18,57 @@ hicberg_step_0:
     output: logs/cluster/{rule}.{wildcards}.out
     error: logs/cluster/{rule}.{wildcards}.err
 
-# split_fastq_se:
-#     queue: normal
-#     partition: common
-#     ncpus: 8
-#     mem: 16G
-#     ntasks: 1
-#     name: T7.{rule}.{wildcards}
-#     output: logs/cluster/{rule}.{wildcards}.out
-#     error: logs/cluster/{rule}.{wildcards}.err
+hicberg_step_1:
+    queue: normal
+    partition: common
+    ncpus: 16
+    mem: 32G
+    ntasks: 1
+    name: hicberg.{rule}.{wildcards}
+    output: logs/cluster/{rule}.{wildcards}.out
+    error: logs/cluster/{rule}.{wildcards}.err
+
+hicberg_step_2:
+    queue: normal
+    partition: common
+    ncpus: 16
+    mem: 32G
+    ntasks: 1
+    name: hicberg.{rule}.{wildcards}
+    output: logs/cluster/{rule}.{wildcards}.out
+    error: logs/cluster/{rule}.{wildcards}.err
+
+hicberg_step_3:
+    queue: normal
+    partition: common
+    ncpus: 8
+    mem: 16G
+    ntasks: 1
+    name: hicberg.{rule}.{wildcards}
+    output: logs/cluster/{rule}.{wildcards}.out
+    error: logs/cluster/{rule}.{wildcards}.err
+
+
+hicberg_step_4:
+    queue: normal
+    partition: common
+    ncpus: 16
+    mem: 32G
+    ntasks: 1
+    name: hicberg.{rule}.{wildcards}
+    output: logs/cluster/{rule}.{wildcards}.out
+    error: logs/cluster/{rule}.{wildcards}.err
+
+hicberg_step_5:
+    queue: normal
+    partition: common
+    ncpus: 8
+    mem: 12G
+    ntasks: 1
+    name: hicberg.{rule}.{wildcards}
+    output: logs/cluster/{rule}.{wildcards}.out
+    error: logs/cluster/{rule}.{wildcards}.err
+
 
 
 # Command to run everything

@@ -192,7 +192,7 @@ def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, si
 
     return density_map
 
-def compute_density(cooler_file : str = None, threads : int = 2, output_dir : str = None) ->  None: 
+def compute_density(cooler_file : str = None, threads : int = 2, kernel_size: int = 11, deviation : float = 0.5, output_dir : str = None) ->  None: 
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 
@@ -233,16 +233,12 @@ def compute_density(cooler_file : str = None, threads : int = 2, output_dir : st
     #Get chromosomes couples
     chromosomes_couples = list(itertools.product(chromosomes, repeat = 2))
 
-    # chromosomes_couples = [("chr4", "chr4")]
-
-    # print(f"Chromosomes couples : {chromosomes_couples}")
-
     # Get chromsomes maps
     chromosomes_maps = [matrix.matrix(balance = True).fetch(chrom1, chrom2) for chrom1, chrom2 in chromosomes_couples]
 
     pool = mp.Pool(processes=threads)
 
-    results = pool.map(partial(hut.get_local_density, str(matrix_path), size  = 11, sigma  = 0.2, n_mads  = 2, nan_threshold  = False),
+    results = pool.map(partial(hut.get_local_density, str(matrix_path), size  = kernel_size, sigma  = deviation, n_mads  = 2, nan_threshold  = False),
             chromosomes_couples)
 
     # Close the pool and wait for the work to finish

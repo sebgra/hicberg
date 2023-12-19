@@ -203,10 +203,12 @@ def tidy_cmd(output):
 @click.option("--jitter", "-j", required = False, type = int, default = 0, help = "Set jitter for pattern detection interval overlapping")
 @click.option("--trend", "-T", is_flag = True, help = "Set if detrending of the contact map has to be performed")
 @click.option("--top", "-k", required = False, type = int, default = 100, help = "Set the top k % of patterns to retain")
+@click.option("--iterations", "-i", required = False, type = int, default = 3, help = "Set the number of iterations for benchmarking")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files have to be deleted")
-def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, kernel_size, deviation, mode, pattern, threshold, jitter, trend, top, force, output):
+@click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
+def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position, bins, strides, auto, kernel_size, deviation, mode, pattern, threshold, jitter, trend, top, iterations, force, output, cpus):
 
-    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, kernel_size = kernel_size, deviation = deviation, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top)
+    hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, kernel_size = kernel_size, deviation = deviation, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top, iterations = iterations, cpus = cpus)
 
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
