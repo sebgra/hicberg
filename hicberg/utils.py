@@ -276,8 +276,8 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
     #Load cooler file
     matrix = cooler.Cooler(cooler_file).matrix(balance = True).fetch(chrom_name[0], chrom_name[1])
 
-    plt.figure(figsize=(10,10))
-    plt.imshow(matrix ** 0.15, cmap = "afmhot_r")
+    # plt.figure(figsize=(10,10))
+    # plt.imshow(matrix ** 0.15, cmap = "afmhot_r")
 
     mat_cp = matrix.copy().astype(float)
 
