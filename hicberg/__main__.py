@@ -201,7 +201,7 @@ def tidy_cmd(output):
 @click.option("--pattern", "-S", required = False, type = click.Choice(["loops", "borders", "hairpins", "-1"]), default = None, help = "Set pattern if benchmarking considering patterns")
 @click.option("--threshold", "-t", required = False, type = float, default = 0.0, help = "Set pattern score threshold under which pattern are discarded")
 @click.option("--jitter", "-j", required = False, type = int, default = 0, help = "Set jitter for pattern detection interval overlapping")
-@click.option("--trend", "-T", is_flag = True, help = "Set if detrending of the contact map has to be performed")
+@click.option("--trend", "-T", is_flag = False, help = "Set if detrending of the contact map has to be performed")
 @click.option("--top", "-k", required = False, type = int, default = 100, help = "Set the top k % of patterns to retain")
 @click.option("--iterations", "-i", required = False, type = int, default = 3, help = "Set the number of iterations for benchmarking")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files have to be deleted")
