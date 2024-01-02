@@ -652,6 +652,8 @@ def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str
     # Use imshow to add the first set of data to the plot
     img1 = ax.imshow(original_matrix.fetch(chromosome) ** 0.15, cmap ='afmhot_r', vmin = 0, vmax=np.max(rescued_matrix.fetch(chromosome) ** 0.15))
 
+    # print(f"Table : {table}")
+
     if table is not None:
         colormap = plt.colormaps['Blues'] # 'plasma' or 'viridis'
         colors = colormap(table['score'])

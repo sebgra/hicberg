@@ -45,8 +45,7 @@ Requires-Dist: statsmodels
 
 # HiC-BERG
 
-A brief description of what this project does and who it's for
-
+# TO BE COMPLETED
 
 ## Badges
 
@@ -193,7 +192,7 @@ library_name_2;species_2;sampling_rate_2;enzymes_2;rounds_2;magnitude_2;mode_2;r
 
 #### Locally
 
-The hicberg pipeline can be run using snakemake. The pipeline is defined in the file Snakefile. The pipeline can be run using the following command:
+The hicberg pipeline can be run using Snakemake. The pipeline is defined in the file Snakefile. The pipeline can be run using the following command:
 
 ```bash
 snakemake --cores [cpus]
@@ -290,7 +289,7 @@ After having aligned the reads, the pairs file __*group1.pairs*__ can be built u
 hicberg build-pairs --output=DIR [--recover]
 ```
 
-If the flag argument *recover* is used, the pairs file will be built from the last step of the analysis e.g. after having computed the statistics and reattributed reads from **group2** bam files.
+If the flag argument *recover* is used, the pairs file will be built from the last step of the analysis e.g. after having computed the statistics and re-attributed reads from **group2** bam files.
 
 Considering the previous example, to build the matrix in a folder named "test" previously created on the desktop:
 
@@ -343,7 +342,7 @@ After having aligned the reads and built the pairs file __*group1.pairs*__, the 
 ```bash
 hicberg statistics --genome=FILE --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] 
 ```
-Considering the previous example, to get the statistical laws (with respect of ARIMA kit enzymes), without sub-sampling th restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
+Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes), without sub-sampling th restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
 
 ```bash
 hicberg statistics -g genome.fa -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ 
@@ -494,6 +493,8 @@ hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--c
 
 ## Evaluating the model
 
+### General principle
+
 HiC-BERG provide a method to evaluate the inferred reconstructed maps. The evaluation is based on first a split of the original uniquely mapping reads into two sets :
   
   - __*group1.X.out.bam*__ : alignment files where selected reads are complementary with the __*group1.X.in.bam*__ from the alignment files. Thus the reads are uniquely mapped (as the original alignment files) and used to learn the statistics for read couple inference.
@@ -562,18 +563,19 @@ The benchmark can be performed considering several modes. The modes are defined 
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
 
+
 The evaluation can be run using the following command :
 
 
 ```bash
-hicberg benchmark  --output=DIR [--chromosome] [--position] [--trans-chromosome] [--trans-position] [--stride] [--bins] [--auto] [--modes] 
+hicberg benchmark  --output=DIR [--chromosome=STR] [--position=INT] [--trans-chromosome=STR][--trans-position=INT] [--stride=INT] [--bins=INT] [--auto=INT] [--rounds=INT] [--magnitude=FLOAT] [--modes=STR] [--pattern=STR] [--threshold=FLOAT] [--jitter=INT] [--trend] [--top=INT] [--genome=STR][--force]
 ```
 
 Considering a benchmark with 4 artificially duplicated sequences set at __chr1:100000-102000 (source)__, __chr1:200000-202000 (target 1)__ __chr4:50000-52000 (target 2)__ and __chr7:300000-302000 (target 3)__, with 2000bp as bin size and considering __full and ps_only modes__ to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
 
 
 ```bash
-hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7 -P 50000,30000 -m full,ps_only
+hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7 -P 50000,30000 -m full,ps_only -g <genome.fa>
 ```
 
 It is also possible to let the source and target intervals being picked at random. However in such cases, the empty bins are not considered in the evaluation. The random mode is activated by setting the parameter __*--auto*__ to the number of desired artificially duplicated sequences. 
@@ -581,13 +583,29 @@ It is also possible to let the source and target intervals being picked at rando
 Thus, considering a benchmark with __100 artificially duplicated sequences__ , with 2000bp as bin size and considering full and ps_only modes to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
 
 ```bash
-hicberg benchmark  -o ~/Desktop/test/ -a 100 -m full,ps_only
+hicberg benchmark  -o ~/Desktop/test/ -a 100 -m full,ps_only  -g <genome.fa>
+```
+
+### Pattern based evaluation 
+
+A pattern based strategy can be set. Such strategy is similar to the strategy where genomic intervals have to be defined as mentioned above where user has to provide th genomic coordinates of the intervals for read selections whereas in pattern base strategy, only pattern type has to be specified to set the genomic intervals. The pattern is defined by the parameter __*--pattern*__. 
+
+Such patterns are going to be detected from the original Hi-C map using [Chromosight](https://github.com/koszullab/chromosight). Then genomic coordinates of the detected patterns are going to be used to select the reads for the evaluation. The number of duplication are going to be adjusted by specifying the chromosome name with `--chromosome` parameter, the `--threshold` parameter to set the minimum Pearson score to consider a pattern as detected and the `--top` parameter to eventually keep the top k% to the remaining detected patterns. Thus, the genomic intervals are going to be defined as the genomic coordinates of the detected patterns.
+
+Thus, the same read strategy will be applied. After reconstruction, the evaluation will be performed using the Pearson correlation coefficient between the original and reconstructed bins selected from the original map. Furthermore, a second patter detection with Chromosight will be performed on the reconstructed map. Then, the precision, recall and F1 score will be computed to evaluate the reconstruction, by comparing the number of retrieved patterns while identifying false positives and false negatives.
+
+_N.B. : Because of the stochasticity of Chromosight while splitting the Hi-C map for pattern detection, some patterns can be considered as false positives and negatives because their coordinates after reconstruction are aside of the original one. We recommend using the  `--jitter` parameter to allow pattern to be considered as retrieved post-reconstruction if they are detected at **j** bins from the original coordinates._
+
+Considering a benchmark based on loops patterns on chromosome 7 with a threshold of 0.5 with all the detected patterns after thresholding (i.e. 100% rate) and a jitter of 0 with detrend, in full mode, the command line is the following : 
+
+```bash
+hicberg benchmark  -o ~/Desktop/test/ -c chr7 -p 100000 -S loops -t 0.5 -k 100 -j 0 -T -m random -g <genome.fa>
 ```
 
 
 ## Library
 
-All components of the hicberg program can be used as python modules. See the documentation on reathedocs. The expected contact map format for the library is a simple COOL file, and the objects handled by the library are simple numpy arrays through Cooler. The various submodules of hicberg contain various utilities.
+All components of the hicberg program can be used as python modules. See the documentation on readthedocs. The expected contact map format for the library is a simple COOL file, and the objects handled by the library are simple Numpy arrays through Cooler. The various submodules of hicberg contain various utilities.
 
 ```python
 import hicberg.io #Functions for I/O and folder management.
@@ -615,7 +633,7 @@ All the steps described here are handled automatically when running the ```hicbe
   * *uncuts.npy* : This file is used to store the distribution of uncuts. Structure is the following : ```{chromosome: [distribution]}``` with distribution a list of integers.
   * *loops.npy* : This file is used to store the distribution of loops. Structure is the following : ```{chromosome: [distribution]}``` with distribution a list of integers.
   * *weirds.npy* : This file is used to store the distribution of weirds. Structure is the following : ```{chromosome: [distribution]}``` with distribution a list of integers.
-  * *pseudo_ps.npy* : This file is used to store the distribution of pseudo ps. Structure is the following : ```{(chrom1, chrom2): [map]}``` with (chrom1, chrom2) a tuple of chromosomes where chom1 is different than chrom2 and map a float value.
+  * *pseudo_ps.npy* : This file is used to store the distribution of pseudo ps. Structure is the following : ```{(chrom1, chrom2): [map]}``` with (chrom1, chrom2) a tuple of chromosomes where chrom1 is different than chrom2 and map a float value.
   * *coverage.npy* : This file is used to store the coverage of the genome. Structure is the following : ```{chromosome: [coverage]}``` with coverage a list of integers.
   * *d1d2.npy* : This file is used to store the d1d2 law. Structure is the following : ```[distribution]``` with distribution a list of integers.
   * *density_map.npy* : This file is used to store the density map. Structure is the following : ```{(chrom1, chrom2): [density map]}``` with (chrom1, chrom2) a tuple of chromosomes density map a 2D numpy array.
@@ -648,7 +666,7 @@ chr2  2000  4000
 
 ## Contributing
 
-All contributions are welcome, in the form of bug reports, suggestions, documentation or pull requests. We use the numpy standard for docstrings when documenting functions.
+All contributions are welcome, in the form of bug reports, suggestions, documentation or pull requests. We use the Numpy standard for docstrings when documenting functions.
 
 The code formatting standard we use is black, with --line-length=79 to follow PEP8 recommendations. We use pytest with the pytest-doctest and pytest-pylint plugins as our testing framework. Ideally, new functions should have associated unit tests, placed in the tests folder. To test the code, you can run:
 

@@ -6,5 +6,8 @@
     "python.testing.pytestEnabled": true,
     "cSpell.ignoreWords": [
         "imshow"
+    ],
+    "cSpell.words": [
+        "Reattribute"
     ]
 }

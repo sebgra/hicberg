@@ -712,12 +712,17 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
     except : 
 
+        print(f"restriction map not found")
         pass
+
+    print(f"keys : {restriction_map.keys()}")
 
     # d1d2 = {seq_name : np.zeros((len(restriction_map[seq_name]), len(restriction_map[seq_name]))) for seq_name in restriction_map.keys()}
     list_d1d2 = []  # list containing the (d1+d2) i.e size of the fragment to sequence
 
     for forward_read, reverse_read in zip(forward_bam_handler, reverse_bam_handler):
+
+        # print(f"forward_read.reference_name : {forward_read.reference_name}")
 
         r_sites_forward_read = restriction_map[forward_read.reference_name]
         r_sites_reverse_read = restriction_map[reverse_read.reference_name]
