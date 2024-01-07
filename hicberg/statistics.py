@@ -795,6 +795,10 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
             list_d1d2.append(np.add(distance_1, distance_2))
 
+    # print(f"max(list_d1d2) : {int(max(list_d1d2))}")
+    # print(f"list_d1d2 : {list_d1d2}")
+
+
     histo, bins = np.histogram(list_d1d2, int(max(list_d1d2)))
 
     np.save(output_path / D1D2, histo)
@@ -1636,26 +1640,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             d1d2 = 1
 
         density = get_density(read_forward, read_reverse, density_map = density_map)
-
-        # print(f"read_forward : {read_forward}")
-        # print(f"read forward name : {read_forward.reference_name}")
-        # print(f"read_reverse : {read_reverse}")
-        # print(f"read reverse name : {read_reverse.reference_name}")
-        # print(f"ps : {ps}")
-        # print(f"cover : {cover}")
-        # print(f"d1d2 : {d1d2}")
-        # print(f"density : {density}")
-
-        # if ps * cover * d1d2 * density < 0:
-
-        #     print(f"read_forward : {read_forward}")
-        #     print(f"read forward name : {read_forward.reference_name}")
-        #     print(f"read_reverse : {read_reverse}")
-        #     print(f"read reverse name : {read_reverse.reference_name}")
-        #     print(f"ps : {ps}")
-        #     print(f"cover : {cover}")
-        #     print(f"d1d2 : {d1d2}")
-        #     print(f"density : {density}")
     
 
         return ps * d1d2 * cover * density

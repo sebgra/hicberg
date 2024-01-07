@@ -150,7 +150,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         raise ValueError(f"Restriction map file {restriction_map_path} does not exist. PLease provide an existing restriction map file.")
     
     # Define file to store results
-    header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tmode\tnb_reads\tpattern\tprecision\trecall\tf1_score\tscore\n"
+    header = f"id\tdate\tchrom\tpos\tstride\ttrans_chrom\ttrans_pos\tauto\tbins\tmode\tnb_reads\tpattern\tprecision\trecall\tf1_score\tscore\n"
     results = output_path / "benchmark.csv"
 
     # Copy files to data_path
@@ -210,6 +210,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             trans_position = None
 
         df = hev.get_top_pattern(file = output_data_path / "original.tsv", top = top, threshold = threshold, chromosome = chromosome).sort_values(by='start1', ascending=True)
+        print(df)
 
         position = df.iloc[0].start1 # select top score pattern
 
@@ -274,72 +275,72 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         learning_status = True
 
-    for _ in range(iterations):
-        # Reattribute reads
-        benchmark_logger.info("Re-attributing reads")
-        hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = sub_mode, output_dir = output_data_path)
-        hio.merge_predictions(output_dir = output_data_path, clean = True)
-        hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_data_path)
-        hio.build_matrix(mode = True, output_dir = output_data_path)
+        for _ in range(iterations):
+            # Reattribute reads
+            benchmark_logger.info("Re-attributing reads")
+            hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = sub_mode, output_dir = output_data_path)
+            hio.merge_predictions(output_dir = output_data_path, clean = True)
+            hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_data_path)
+            hio.build_matrix(mode = True, output_dir = output_data_path)
 
-        rescued_matrix = hio.load_cooler(output_data_path / RESCUED_MATRIX)
-
-        rescued_matrix_path = output_data_path / RESCUED_MATRIX
-
-        pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
-
-        if pattern is None or pattern == "-1":
-            chromosome_set = [*chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
-        
-        else : 
-            chromosome_set = [chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
+            rescued_matrix = hio.load_cooler(output_data_path / RESCUED_MATRIX)
 
             rescued_matrix_path = output_data_path / RESCUED_MATRIX
-            post_recall_cmd = hev.chromosight_cmd_generator(file = rescued_matrix_path, pattern = pattern, untrend = trend, mode = True, output_dir = output_data_path)
 
-            benchmark_logger.info("Starting Chromosight post-call")
-            sp.run(post_recall_cmd, shell = True)
+            pearson = hst.pearson_score(original_matrix = base_matrix, rescued_matrix = rescued_matrix , markers = indexes)
+
+            if pattern is None or pattern == "-1":
+                chromosome_set = [*chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
             
-            # TODO : move to top
+            else : 
+                chromosome_set = [chromosome, *trans_chromosome] if trans_chromosome is not None else chromosome
 
-            df_original = (output_path / "original.tsv").as_posix()
-            df_rescued = (output_path / "rescued.tsv").as_posix()
+                rescued_matrix_path = output_data_path / RESCUED_MATRIX
+                post_recall_cmd = hev.chromosight_cmd_generator(file = rescued_matrix_path, pattern = pattern, untrend = trend, mode = True, output_dir = output_data_path)
 
-            true_positives = hev.get_TP_table(df_pattern = output_data_path / "original.tsv", df_pattern_recall = output_data_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
-            false_positives = hev.get_FP_table(df_pattern = output_data_path / "original.tsv", df_pattern_recall = output_data_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
-            false_negatives = hev.get_FN_table(df_pattern = output_data_path / "original.tsv", df_pattern_recall = output_data_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+                benchmark_logger.info("Starting Chromosight post-call")
+                sp.run(post_recall_cmd, shell = True)
+                
+                # TODO : move to top
 
-            # Get scores
-            precision = hev.get_precision(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
-            recall = hev.get_recall(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
-            f1_score = hev.get_f1_score(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+                df_original = (output_path / "original.tsv").as_posix()
+                df_rescued = (output_path / "rescued.tsv").as_posix()
 
-            # Get plots
-            hpl.plot_pattern_reconstruction(table = true_positives, original_cool = output_data_path / BASE_MATRIX, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "true_positives",  output_dir = output_data_path)
-            hpl.plot_pattern_reconstruction(table = false_positives, original_cool = output_data_path / BASE_MATRIX, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "false_positives",  output_dir = output_data_path)
-            hpl.plot_pattern_reconstruction(table = false_negatives, original_cool = output_data_path / BASE_MATRIX, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "false_negatives",  output_dir = output_data_path)
+                true_positives = hev.get_TP_table(df_pattern = output_data_path / "original.tsv", df_pattern_recall = output_data_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+                false_positives = hev.get_FP_table(df_pattern = output_data_path / "original.tsv", df_pattern_recall = output_data_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+                false_negatives = hev.get_FN_table(df_pattern = output_data_path / "original.tsv", df_pattern_recall = output_data_path / "rescued.tsv", chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
 
-        hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_data_path)
+                # Get scores
+                precision = hev.get_precision(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+                recall = hev.get_recall(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
+                f1_score = hev.get_f1_score(df_pattern = df_original, df_pattern_recall = df_rescued, chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
 
-        number_reads = 10
+                # Get plots
+                hpl.plot_pattern_reconstruction(table = true_positives, original_cool = output_data_path / BASE_MATRIX, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "true_positives",  output_dir = output_data_path)
+                hpl.plot_pattern_reconstruction(table = false_positives, original_cool = output_data_path / BASE_MATRIX, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "false_positives",  output_dir = output_data_path)
+                hpl.plot_pattern_reconstruction(table = false_negatives, original_cool = output_data_path / BASE_MATRIX, rescued_cool = rescued_matrix_path, chromosome = chromosome, threshold = threshold, case  = "false_negatives",  output_dir = output_data_path)
 
-        benchmark_logger.info(f"Pearson score : {pearson:9.4f} in mode {sub_mode}")
+            hpl.plot_benchmark(original_matrix = BASE_MATRIX, depleted_matrix = UNRESCUED_MATRIX, rescued_matrix = RESCUED_MATRIX, chromosomes = chromosome_set, output_dir = output_data_path)
 
-        if not results.exists():
-            with open(results, "w") as f_out:
-                f_out.write(header)
+            number_reads = 10
 
-                date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{precision}\t{recall}\t{f1_score}\t{pearson:9.4f}\n")
-                f_out.close()
+            benchmark_logger.info(f"Pearson score : {pearson:9.4f} in mode {sub_mode}")
 
-        else :
-            with open(results, "a") as f_out:
-                date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-                f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{sub_mode}\t{number_reads}\t{pattern}\t{precision}\t{recall}\t{f1_score}\t{pearson:9.4f}\n")
-                f_out.close()
+            if not results.exists():
+                with open(results, "w") as f_out:
+                    f_out.write(header)
 
-        benchmark_logger.info(f"Ending benchmark")
+                    date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                    f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{auto}\t{bins}\t{sub_mode}\t{number_reads}\t{pattern}\t{precision}\t{recall}\t{f1_score}\t{pearson:9.4f}\n")
+                    f_out.close()
+
+            else :
+                with open(results, "a") as f_out:
+                    date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                    f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{auto}\t{bins}\t{sub_mode}\t{number_reads}\t{pattern}\t{precision}\t{recall}\t{f1_score}\t{pearson:9.4f}\n")
+                    f_out.close()
+
+            benchmark_logger.info(f"Ending benchmark")
 
     # Clean up
     forward_in_path.unlink()

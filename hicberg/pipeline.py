@@ -157,7 +157,9 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         for process in [p1, p2, p3, p4]:
             process.join()
 
-        hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads  = cpus, output_dir  = output_folder)
+        if mode in ["full", "no_d1d2_no_cover", "no_ps_no_d1d2", "no_d1d2", "no_ps", "density_only"]:
+
+            hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads  = cpus, output_dir  = output_folder)
         
 
     if exit_stage == 5:
