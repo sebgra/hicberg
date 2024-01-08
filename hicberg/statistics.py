@@ -1749,11 +1749,11 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         d1d2 = hio.load_dictionary(output_path / d1d2)
         density = hio.load_dictionary(output_path / density_map)
     
-    elif mode in [ "no_density",]: # TODO : to be completed
+    elif mode in ["d1d2_only", "no_ps", "no_cover", "no_density", "no_cover_no_density", "no_ps_no_cover", "no_ps_no_density"]: # TODO : to be completed
 
         d1d2 = hio.load_dictionary(output_path / d1d2)
 
-    elif mode in ["no_d1d2"]:
+    elif mode in ["no_d1d2_no_cover", "no_ps_no_cover",  "no_ps_no_d1d2", "no_d1d2", "no_cover", "no_ps", "density_only"]:
             
         density = hio.load_dictionary(output_path / density_map)
 
