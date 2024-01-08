@@ -2,7 +2,9 @@ import uuid
 from os import mkdir #path
 from shutil import rmtree, copy
 from pathlib import Path
-from multiprocessing import Process
+from functools import partial
+
+from multiprocessing import Process, Pool
 
 
 from glob import glob
@@ -244,6 +246,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         forward_out_path = output_data_path / FORWARD_OUT_FILE
         reverse_out_path = output_data_path / REVERSE_OUT_FILE
 
+        # TODO : get out of the 
         # Get corresponding indexes to the duplicated reads coordinates.
         # Re-build pairs and cooler matrix 
         hio.build_pairs(bam_for = forward_out_path, bam_rev = reverse_out_path, output_dir = output_data_path)
@@ -275,11 +278,31 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         learning_status = True
 
+        chunking_status = True
+
         for _ in range(iterations):
             # Reattribute reads
             benchmark_logger.info("Re-attributing reads")
-            hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = sub_mode, output_dir = output_data_path)
-            hio.merge_predictions(output_dir = output_data_path, clean = True)
+            # TODO :  New 
+            
+            if chunking_status:
+                hut.chunk_bam(forward_bam_file = forward_in_path, reverse_bam_file = reverse_in_path, nb_chunks = cpus, output_dir = output_data_path)
+                chunking_status = False
+
+            forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_data_path.as_posix())
+
+            # Reattribute reads
+            with Pool(processes = cpus) as pool: # cpus
+
+                res = pool.map(partial(hst.reattribute_reads, mode = sub_mode, restriction_map = output_data_path / RESTRICTION_MAP, output_dir = output_data_path),
+                zip(forward_chunks, reverse_chunks))
+                pool.close()
+                pool.join()
+
+
+            # hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = sub_mode, output_dir = output_data_path)
+            hio.merge_predictions(output_dir = output_data_path, clean = False, cpus = cpus)
+
             hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_data_path)
             hio.build_matrix(mode = True, output_dir = output_data_path)
 

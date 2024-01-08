@@ -1732,6 +1732,10 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
             
         output_path = Path(output_dir)
 
+    #TODO : Add selective loading of dictionaries depending on reconstruction mode
+        
+    
+
     #Reload dictionaries
     xs = hio.load_dictionary(output_path / xs)
     weirds  = hio.load_dictionary(output_path / weirds)
@@ -1739,8 +1743,19 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     loops = hio.load_dictionary(output_path / loops)
     trans_ps = hio.load_dictionary(output_path / trans_ps)
     coverage = hio.load_dictionary(output_path / coverage)
-    d1d2 = hio.load_dictionary(output_path / d1d2)
-    density = hio.load_dictionary(output_path / density_map)
+
+    if mode == "full" :
+
+        d1d2 = hio.load_dictionary(output_path / d1d2)
+        density = hio.load_dictionary(output_path / density_map)
+    
+    elif mode in [ "no_density",]: # TODO : to be completed
+
+        d1d2 = hio.load_dictionary(output_path / d1d2)
+
+    elif mode in ["no_d1d2"]:
+            
+        density = hio.load_dictionary(output_path / density_map)
 
     forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
     file_id = time.time()
