@@ -1743,6 +1743,8 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     loops = hio.load_dictionary(output_path / loops)
     trans_ps = hio.load_dictionary(output_path / trans_ps)
     coverage = hio.load_dictionary(output_path / coverage)
+    d1d2 = None
+    density = None
 
     if mode == "full" :
 

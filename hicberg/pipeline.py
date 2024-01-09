@@ -215,11 +215,17 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         p6 = Process(target = hpl.plot_d1d2, kwargs = dict(output_dir = output_folder))
         p7 = Process(target = hpl.plot_density, kwargs = dict(output_dir = output_folder))
 
+        # TODO : Set up different lists of processses depending on modes
+
         # Instanciate processees
-        for process in [p1, p2, p3, p4, p5, p6, p7]:
+        # for process in [p1, p2, p3, p4, p5, p6, p7]:
+        for process in [p1, p2, p3, p4, p5]:
+
             process.start()
         # Launch processes
-        for process in [p1, p2, p3, p4, p5, p6, p7]:
+        # for process in [p1, p2, p3, p4, p5, p6, p7]:
+        for process in [p1, p2, p3, p4, p5]:
+
             process.join()
 
         logger.info(f"Results plotted in {output_folder}")
