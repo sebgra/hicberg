@@ -136,8 +136,10 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
         logger.info(f"Start building pairs file for ambiguously aligned reads")
             
         bam_for_path = Path(output_path / bam_for)
+        # print(f" bam_for_path : {bam_for_path}")
         bam_rev_path = Path(output_path / bam_rev)
         bam_for_path_rescued = Path(output_path / bam_for_rescued)
+        # print(f" bam_for_path_rescued : {bam_for_path_rescued}")
         bam_rev_path_rescued = Path(output_path / bam_rev_rescued)
 
         if not bam_for_path.exists():

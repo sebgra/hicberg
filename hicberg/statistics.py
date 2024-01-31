@@ -1748,16 +1748,16 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
     if mode == "full" :
 
-        d1d2 = hio.load_dictionary(output_path / d1d2)
-        density = hio.load_dictionary(output_path / density_map)
+        d1d2 = hio.load_dictionary(output_path / "d1d2.npy")
+        density = hio.load_dictionary(output_path / "density_map.npy")
     
     elif mode in ["d1d2_only", "no_ps", "no_cover", "no_density", "no_cover_no_density", "no_ps_no_cover", "no_ps_no_density"]: # TODO : to be completed
 
-        d1d2 = hio.load_dictionary(output_path / d1d2)
-
+        d1d2 = hio.load_dictionary(output_path / "d1d2.npy")
+        
     elif mode in ["no_d1d2_no_cover", "no_ps_no_cover",  "no_ps_no_d1d2", "no_d1d2", "no_cover", "no_ps", "density_only"]:
             
-        density = hio.load_dictionary(output_path / density_map)
+        density = hio.load_dictionary(output_path / "density_map.npy")
 
     forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
     file_id = time.time()
