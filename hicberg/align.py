@@ -194,8 +194,8 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
         raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
     
 
-    cmd_view_for = f"samtools view  -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
-    cmd_view_rev = f"samtools view  -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
+    cmd_view_for = f"samtools view -h  -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
+    cmd_view_rev = f"samtools view -h  -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
 
     if verbose:
 

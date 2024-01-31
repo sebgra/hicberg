@@ -704,6 +704,10 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     forward_bam_file = pysam.AlignmentFile(forward_bam_file_path, "rb")
     reverse_bam_file = pysam.AlignmentFile(reverse_bam_file_path, "rb")
 
+    #retrieve headers
+    forward_header = forward_bam_file.header
+    reverse_header = reverse_bam_file.header
+
     # create iterators
     forward_bam_file_iter = bam_iterator(forward_bam_file_path)
     reverse_bam_file_iter = bam_iterator(reverse_bam_file_path)
@@ -712,14 +716,14 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     id_for = uuid.uuid4()
     id_rev = uuid.uuid4()
 
-    unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_0.1.bam", "wb", template = forward_bam_file)
-    unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_0.2.bam", "wb", template = reverse_bam_file)
+    unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_0.1.bam", "wb", template = forward_bam_file, header = forward_header)
+    unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_0.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
 
-    uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_1.1.bam", "wb", template = forward_bam_file)
-    uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_1.2.bam", "wb", template = reverse_bam_file)
+    uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_1.1.bam", "wb", template = forward_bam_file, header = forward_header)
+    uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_1.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
 
-    multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_2.1.bam", "wb", template = forward_bam_file)
-    multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_2.2.bam", "wb", template = reverse_bam_file)
+    multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_2.1.bam", "wb", template = forward_bam_file, header = forward_header)
+    multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_2.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
 
     unmapped_forward_counter, unmapped_reverse_counter = 0, 0
     uniquely_mapped_forward_counter, uniquely_mapped_reverse_counter = 0, 0
@@ -1172,6 +1176,10 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
     forward_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb")
     reverse_bam_handler = pysam.AlignmentFile(reverse_bam_path, "rb")
 
+    #retrieve headers
+    forward_header = forward_bam_handler.header
+    reverse_header = reverse_bam_handler.header
+
     # Create placeholder for chunks
 
     output_chunk_for = chunks_path / "chunk_for_%d.bam"
@@ -1198,10 +1206,10 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
 
     # Set first output file
     outfile_for = pysam.AlignmentFile(
-        str(output_chunk_for) % chunk_size_index, "wb", template = forward_bam_handler
+        str(output_chunk_for) % chunk_size_index, "wb", template = forward_bam_handler, header = forward_header
     )
     outfile_rev = pysam.AlignmentFile(
-        str(output_chunk_rev) % chunk_size_index, "wb", template = reverse_bam_handler
+        str(output_chunk_rev) % chunk_size_index, "wb", template = reverse_bam_handler, header = reverse_header
     )
 
     # Parse alignment file to yield reads blocks
@@ -1243,10 +1251,10 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
 
             # Update output chunk file
             outfile_for = pysam.AlignmentFile(
-                str(output_chunk_for) % chunk_size_index, "wb", template = forward_bam_handler
+                str(output_chunk_for) % chunk_size_index, "wb", template = forward_bam_handler, header = forward_header
             )
             outfile_rev = pysam.AlignmentFile(
-                str(output_chunk_rev) % chunk_size_index, "wb", template = reverse_bam_handler
+                str(output_chunk_rev) % chunk_size_index, "wb", template = reverse_bam_handler, header = reverse_header
             )
 
     # Fill last chunk

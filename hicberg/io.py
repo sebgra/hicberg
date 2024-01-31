@@ -93,6 +93,9 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
     """
 
     output_path = Path(output_dir)
+    chromosome_sizes_path = Path(output_path / "chromosome_sizes.npy")
+    chromosome_sizes = load_dictionary(chromosome_sizes_path)
+
 
     if not output_path.exists():
 
@@ -118,13 +121,21 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
         with open(output_path / "group1.pairs", "w") as f_out:
 
+            f_out.write("## pairs format v1.0\n")
+            f_out.write("#columns: readID chr1 pos1 strand1 chr2 pos2 strand2\n")
+            
+            for chromosome, size in chromosome_sizes.items():
+
+                f_out.write(f"#chromsize: {chromosome} {size}\n")
+
             for forward_read, reverse_read in zip(bam_for_handler, bam_rev_handler):
 
                 if forward_read.query_name != reverse_read.query_name:
 
                     raise ValueError(f"Forward and reverse reads do not match. Please check the bam files.")
+                
+                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n")
 
-                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{forward_read.flag}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{reverse_read.flag}\n")
 
         f_out.close()
         bam_for_handler.close()
@@ -166,13 +177,20 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
         with open(output_path / "all_group.pairs", "w") as f_out:
 
+            f_out.write("## pairs format v1.0\n")
+            f_out.write("#columns: readID chr1 pos1 strand1 chr2 pos2 strand2\n")
+            
+            for chromosome, size in chromosome_sizes.items():
+
+                f_out.write(f"#chromsize: {chromosome} {size}\n")
+
             for forward_read, reverse_read in zip(bam_for_handler, bam_rev_handler):
 
                 if forward_read.query_name != reverse_read.query_name:
 
                     raise ValueError(f"Forward and reverse reads do not match. Please check the bam files.")
 
-                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{forward_read.flag}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{reverse_read.flag}\n")
+                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n")
 
             for forward_read, reverse_read in zip(bam_for_handler_rescued, bam_rev_handler_rescued):
 
@@ -180,7 +198,7 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
                     raise ValueError(f"Forward and reverse reads do not match. Please check the bam files.")
 
-                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{forward_read.flag}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{reverse_read.flag}\n")
+                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n")
 
         f_out.close()
         bam_for_handler.close()
@@ -231,7 +249,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
 
         cool_path = output_path / "unrescued_map.cool"
 
-        cooler_cmd = f"cooler cload pairs --zero-based -c1 2 -p1 3 -p2 5 -c2 6 {bins_path} {pairs_path} {cool_path}"
+        cooler_cmd = f"cooler cload pairs --zero-based -c1 2 -p1 3 -p2 4 -c2 5 {bins_path} {pairs_path} {cool_path}"
 
     elif mode:
 
@@ -239,7 +257,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
 
         cool_path = output_path / "rescued_map.cool"
 
-        cooler_cmd = f"cooler cload pairs --zero-based -c1 2 -p1 3 -p2 5 -c2 6 {bins_path} {pairs_path} {cool_path}"
+        cooler_cmd = f"cooler cload pairs --zero-based -c1 2 -p1 3 -p2 4 -c2 5 {bins_path} {pairs_path} {cool_path}"
 
     balance_cmd = f"cooler balance --nproc {cpus} {cool_path}"
 

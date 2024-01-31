@@ -1732,9 +1732,6 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
             
         output_path = Path(output_dir)
 
-    #TODO : Add selective loading of dictionaries depending on reconstruction mode
-        
-    
 
     #Reload dictionaries
     xs = hio.load_dictionary(output_path / xs)
@@ -1782,9 +1779,6 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
         for combination in combinations:
 
-            # # TODO : enventually remove
-            # if compute_propensity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode) < 0:
-            #     pass
 
             propensities.append(compute_propensity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode))
 
