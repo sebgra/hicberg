@@ -17,13 +17,9 @@ import pandas as pd
 import scipy.stats as st
 from scipy.stats import median_abs_deviation
 
-# import hicstuff.digest as hd
-
 import pysam
 from Bio import SeqIO
 import cooler
-# from Bio.Seq import Seq
-# from Bio.Restriction import RestrictionBatch, Analysis
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -98,14 +94,12 @@ def detrend_matrix(matrix : np.array) -> np.array:
     np.array
         Detrended Hi-C matrix.
     """
-
     zeros_indexes = np.where(matrix == 0)
     matrix[zeros_indexes] = np.nan
 
     # Cis case
     if matrix.shape[0] == matrix.shape[1]:
 
-        expected_matrix = np.zeros(matrix.shape)
         detrended_matrix = np.zeros(matrix.shape)
 
         np.fill_diagonal(detrended_matrix, np.diag(matrix) / np.nanmean(np.diag(matrix)))
@@ -120,11 +114,7 @@ def detrend_matrix(matrix : np.array) -> np.array:
         expected_value = np.nanmedian(matrix)
         detrended_matrix = matrix / expected_value
 
-    # Replace true zero values
-    # detrended_matrix[zeros_indexes] = 0
-
     return detrended_matrix
-
 
 def get_bad_bins(matrix : np.array = None, n_mads : int = 2) -> np.array:
     """
@@ -143,7 +133,6 @@ def get_bad_bins(matrix : np.array = None, n_mads : int = 2) -> np.array:
     np.array
         Indexes of bad bins.
     """   
-
 
     # Cis case
     if matrix.shape[0] == matrix.shape[1]:
@@ -183,8 +172,6 @@ def nan_conv(matrix : np.array = None, kernel : np.array = None, nan_threshold :
     np.array
         Convolution product of the matrix and the kernel.
     """
-
-    # Corrected with Amaury
 
     mat_cp = matrix.copy().astype(float)
     half_kernel = (kernel.shape[0] // 2)
@@ -267,44 +254,20 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
 
     if size % 2 == 0:
         raise ValueError("Kernel size must be odd")
-    
-    # print(f"Start getting local density for {cooler_file}")
-    # print(f"Used kernel size : {size}")
-    # print(f"Used kernel sigma : {sigma}")
-
 
     #Load cooler file
     matrix = cooler.Cooler(cooler_file).matrix(balance = True).fetch(chrom_name[0], chrom_name[1])
 
-    # plt.figure(figsize=(10,10))
-    # plt.imshow(matrix ** 0.15, cmap = "afmhot_r")
 
     mat_cp = matrix.copy().astype(float)
 
     if mat_cp.shape[0] < size:
-        # raise ValueError("Matrix size must be greater than kernel size")
         size = size - 2 * (size // 2)
-
-    # print(f"Matrix size : {mat_cp.shape[0]}")
-    # print(f"Used kernel size : {size}")
 
     bad_bins = get_bad_bins(mat_cp, n_mads = n_mads)
     
     detrended_matrix = detrend_matrix(mat_cp)
 
-    # cmap = plt.cm.get_cmap("seismic")
-    # cmap.set_bad(color = "black")
-    # plt.figure(figsize=(10,10))
-    # plt.imshow(detrended_matrix, cmap = cmap, vmin = 0, vmax = 2)
-    # plt.show()
-
-
-    # TODO : to be adjusted : conserved or not
-
-    # nan_indexes = np.where(np.isnan(detrended_matrix))
-
-    # Seen with Amaury
-    # detrended_matrix[nan_indexes] = 1
 
     log_detrended_matrix = np.log(detrended_matrix)
 
@@ -318,10 +281,6 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
         log_detrended_matrix[bad_bins[1], :] = np.nan
         log_detrended_matrix[:, bad_bins[0]] = np.nan
 
-        
-    #pad matrix
-
-    # padded_log_detrended_matrix = np.pad(log_detrended_matrix, size // 2, mode = "constant", constant_values = np.nan)
 
     kernel = generate_gaussian_kernel(size = size, sigma = sigma)
     log_density = nan_conv(matrix = log_detrended_matrix, kernel = kernel, nan_threshold = nan_threshold)
@@ -343,100 +302,10 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
 
         for i, j in zip(edges[0], edges[1]):
 
-            # TODO : replace by 1 ? 
             density[i, j] =  np.nanmedian(density)
             
-    # Check for a value > 0 if nan median is 0
-
-    #unpad matrix
-    # density = density[size // 2 : -size // 2, size // 2 : -size // 2]
-
     return (chrom_name, density)
 
-
-
-# # TODO : replace 10 by a variable indicating the strengh of the diffusion
-# def diffuse_matrix(matrix : np.array = None, rounds : int = 1, magnitude : float  = 1.0, mode : str = "intra") -> np.array:
-#     """
-#     Function for matrix diffusion to get local contact density
-
-#     Parameters
-#     ----------
-#     matrix : np.array, optional
-#         Matrix or subpart of the matrix as a np.array, by default None
-#     rounds : int, optional
-#         Number of times the matrix has to be shaken, by default 1
-#     magnitude : float, optional
-#         Blending ratio between the native matrix and the shaken one, by default 1.0
-#     mode : str, optional
-#         Set wether the sub-matrix is intra or inter-chromosome, and so the direction of diffusion, by default "intra"
-
-#     Returns
-#     -------
-#     np.array
-#         Contact density map.
-#     """
-
-#     arr = matrix.astype(np.float64)
-
-#     if mode == "intra" :
-#         store = []
-#         store.append(arr)
-#         for _ in range(rounds):
-
-
-#             #South East
-#             shift = np.random.randint(10)
-#             store.append(magnitude*np.roll(arr,shift=shift,axis=(1, 0)))
-#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(1, 0))], axis = 0)
-
-#             # North West
-#             shift = np.random.randint(10)
-#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(1, 0))], axis = 0)
-#             store.append(magnitude*np.roll(arr,shift=-shift,axis=(1, 0)))
-
-
-#             # # North East
-#             # shift = np.random.randint(10)
-#             # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=(0, 1))], axis = 0)
-#             # store.append(magnitude*np.roll(arr,shift=shift,axis=(0, 1)))
-
-
-#             # # South West
-#             # shift = np.random.randint(10)
-#             # # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=(0, 1))], axis = 0)
-#             # store.append(magnitude*np.roll(arr,shift=-shift,axis=(0, 1)))
-            
-
-
-#     elif mode == "inter":
-#         store = []
-#         store.append(arr)
-#         for _ in range(rounds):
-
-#             # East
-#             shift = np.random.randint(10)
-#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=1)], axis = 0)
-#             store.append(magnitude*np.roll(arr,shift=shift,axis=1))
-
-#             # West
-#             shift = np.random.randint(10)
-#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=1)], axis = 0)
-#             store.append(magnitude*np.roll(arr,shift=-shift,axis=1))
-            
-#             #South
-#             shift = np.random.randint(10)
-#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=shift,axis=0)], axis = 0)
-#             store.append(magnitude*np.roll(arr,shift=shift,axis=0))
-            
-#             #North
-#             shift = np.random.randint(10)
-#             # arr =  np.nanmean([arr, magnitude*np.roll(arr,shift=-shift,axis=0)], axis = 0)
-#             store.append(magnitude*np.roll(arr,shift=-shift,axis=0))
-
-#     array_of_matrices = np.array(store)
-#     mean_matrix = np.nanmean(array_of_matrices, axis=0)
-#     return mean_matrix
 
 def get_chromosomes_sizes(genome : str = None, output_dir : str = None) -> None:
     """
@@ -725,10 +594,6 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_2.1.bam", "wb", template = forward_bam_file, header = forward_header)
     multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_2.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
 
-    unmapped_forward_counter, unmapped_reverse_counter = 0, 0
-    uniquely_mapped_forward_counter, uniquely_mapped_reverse_counter = 0, 0
-    multi_mapped_forward_counter, multi_mapped_reverse_counter = 0, 0
-
     for forward_block, reverse_block in zip(forward_bam_file_iter, reverse_bam_file_iter):
         
 
@@ -755,40 +620,32 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
             if unmapped_couple :
 
                 unmapped_bam_file_foward.write(forward_read)
-                unmapped_forward_counter += 1
 
             elif multi_mapped_couple:
 
                 forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
                 multi_mapped_bam_file_foward.write(forward_read)
 
-                multi_mapped_forward_counter += 1
-
             else: 
 
                 forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
                 uniquely_mapped_bam_file_foward.write(forward_read)
-                uniquely_mapped_forward_counter += 1
 
         for reverse_read in reverse_block:
 
             if unmapped_couple:
 
                 unmapped_bam_file_reverse.write(reverse_read)
-                unmapped_reverse_counter += 1
-
 
             elif multi_mapped_couple:
 
                 reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
                 multi_mapped_bam_file_reverse.write(reverse_read)
-                multi_mapped_reverse_counter += 1
 
             else : 
 
                 reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
                 uniquely_mapped_bam_file_reverse.write(reverse_read)
-                uniquely_mapped_reverse_counter += 1
 
     #closing files
     forward_bam_file.close()
@@ -801,13 +658,6 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     multi_mapped_bam_file_reverse.close()
 
     logger.info(f"Files for the different groups have been saved in {output_dir}")
-
-    # logger.info(f"Number of unmapped reads in forward file : {unmapped_forward_counter}")
-    # logger.info(f"Number of unmapped reads in reverse file : {unmapped_reverse_counter}")
-    # logger.info(f"Number of uniquely mapped reads in forward file : {uniquely_mapped_forward_counter}")
-    # logger.info(f"Number of uniquely mapped reads in reverse file : {uniquely_mapped_reverse_counter}")
-    # logger.info(f"Number of multi mapped reads in forward file : {multi_mapped_forward_counter}")
-    # logger.info(f"Number of multi mapped reads in reverse file : {multi_mapped_reverse_counter}")
 
     # Cleaning files after classification
     forward_bam_file_path.unlink()
@@ -905,7 +755,6 @@ def is_weird(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
 
         raise ValueError("The two reads must be mapped on the same chromosome.")
 
-    
     read_forward, read_reverse = get_ordered_reads(read_forward, read_reverse)
 
     if (
@@ -1114,13 +963,8 @@ def block_counter(forward_bam_file : str, reverse_bam_file : str) -> Tuple[int, 
     if not reverse_bam_path.is_file():
                 
         raise IOError(f"BAM file {reverse_bam_path.name} not found. Please provide a valid path.")
-    
-    # forward_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb")
-    # reverse_bam_handler = pysam.AlignmentFile(reverse_bam_path, "rb")
 
     iterator_for, iterator_rev = bam_iterator(forward_bam_path), bam_iterator(reverse_bam_path)
-
-
     nb_blocks_for, nb_blocks_rev = 0, 0
 
     for forward_block, reverse_block in zip(iterator_for, iterator_rev):
@@ -1154,7 +998,6 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
         output_dir = Path(output_dir)
 
     # Create folder for chunks
-
     chunks_path = output_dir / "chunks"
 
     if chunks_path.is_dir():
@@ -1162,7 +1005,6 @@ def chunk_bam(forward_bam_file : str = "group2.1.bam", reverse_bam_file : str = 
 
     mkdir(output_dir / "chunks")
 
-    
     forward_bam_path, reverse_bam_path = Path(output_dir, forward_bam_file), Path(output_dir, reverse_bam_file)
 
     if not forward_bam_path.is_file():
@@ -1352,7 +1194,7 @@ def max_consecutive_nans(vector : np.ndarray) -> int:
         idx = np.nonzero(mask[1:] != mask[:-1])[0]
         return (idx[1::2] - idx[::2]).max()
 
-def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "auto", nmads :int = 1) -> np.ndarray[int]:
+def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "auto", nmads : int = 1) -> np.ndarray[int]:
     """
     Apply MAD smoothing to an vector .
 
@@ -1405,8 +1247,6 @@ def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
     tuple([List[str], List[str]]
         Tuple containing the paths to the forward and reverse chunks.
     """
-
-
 
     forward_chunks = sorted(glob(output_dir + '/chunks/chunk_for_*.bam'))
     reverse_chunks = sorted(glob(output_dir + '/chunks/chunk_rev_*.bam'))

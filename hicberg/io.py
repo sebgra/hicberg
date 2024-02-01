@@ -65,7 +65,6 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
     mkdir(folder_path / "plots" / "ps")
     mkdir(folder_path / "plots" / "coverages")
 
-
     logger.info(f"Folder {sample_name} in {folder_path} created.")
 
     return folder_path.as_posix()
@@ -136,21 +135,16 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
                 
                 f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n")
 
-
         f_out.close()
         bam_for_handler.close()
         bam_rev_handler.close()
 
-
     elif mode: 
 
         logger.info(f"Start building pairs file for ambiguously aligned reads")
-            
         bam_for_path = Path(output_path / bam_for)
-        # print(f" bam_for_path : {bam_for_path}")
         bam_rev_path = Path(output_path / bam_rev)
         bam_for_path_rescued = Path(output_path / bam_for_rescued)
-        # print(f" bam_for_path_rescued : {bam_for_path_rescued}")
         bam_rev_path_rescued = Path(output_path / bam_rev_rescued)
 
         if not bam_for_path.exists():
@@ -208,8 +202,6 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
     logger.info(f"Pairs file successfully created in {output_path}")
 
-
-    
 
 def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1.pairs", mode : bool = False, cpus : int = 8, output_dir : str = None) -> None:
     """
@@ -326,7 +318,6 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     if stage == "prediction":
@@ -337,15 +328,11 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
         forward_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
         reverse_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
 
-        # logger.info(f"Launching forward merge with command : {forward_merge_cmd}")
         # Launch merge
         sp.run(forward_merge_cmd, shell=True)
 
-        # logger.info(f"Launching reverse merge with command : {reverse_merge_cmd}")
         # Launch merge
         sp.run(reverse_merge_cmd, shell=True)
-
-        # logger.info(f"Predictions successfully merged in {output_path}")
 
         if clean:
 
@@ -366,33 +353,21 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
 
         forward_group0_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group0.1.bam'} {' '.join(forward_unaligned_chunk_files)}"
         reverse_group0_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group0.2.bam'} {' '.join(reverse_unaligned_chunk_files)}"
-
-
         forward_group1_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group1.1.bam'} {' '.join(forward_aligned_chunk_files)}"
         reverse_group1_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group1.2.bam'} {' '.join(reverse_aligned_chunk_files)}"
-
         forward_group2_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.bam'} {' '.join(forward_multi_aligned_chunk_files)}"
         reverse_group2_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.bam'} {' '.join(reverse_multi_aligned_chunk_files)}"
 
         # Unaligned reads
-        # Launch merge
         sp.run(forward_group0_merge_cmd, shell=True)
-
-        # Launch merge
         sp.run(reverse_group0_merge_cmd, shell=True)
 
         # Aligned once reads
-        # Launch merge
         sp.run(forward_group1_merge_cmd, shell=True)
-
-        # Launch merge
         sp.run(reverse_group1_merge_cmd, shell=True)
 
         # Multi-aligned reads
-        # Launch merge
         sp.run(forward_group2_merge_cmd, shell=True)
-
-        # Launch merge
         sp.run(reverse_group2_merge_cmd, shell=True)
 
         logger.info(f"Groups successfully merged in {output_path}")

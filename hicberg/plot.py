@@ -87,7 +87,6 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)    
 
     chromosomes = chromosomes if type(chromosomes) == list else chromosomes.split()
@@ -109,7 +108,6 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
     original_matrix = load_cooler(original_matrix_path)
     depleted_matrix = load_cooler(depleted_matrix_path)
     rescued_matrix = load_cooler(rescued_matrix_path)
-
 
     for chrm in chromosomes:
 
@@ -175,7 +173,6 @@ def plot_d1d2(output_dir : str = None) -> None:
 
     logger.info(f"Saved plots of d1d2 at : {output_path}")
 
-
 def plot_laws(output_dir : str = None) -> None:
     """
     Plot P(s) patterns laws
@@ -190,22 +187,18 @@ def plot_laws(output_dir : str = None) -> None:
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     # reload dictionaries
 
     xs = load_dictionary(output_path / XS)
-    dist_frag = load_dictionary(output_path / DIST_FRAG)
     weirds = load_dictionary(output_path / WEIRDS)
     uncuts = load_dictionary(output_path / UNCUTS)
     loops = load_dictionary(output_path / LOOPS)
 
     for chromosome in xs.keys():
         
-        
         plt.figure(figsize=(10, 10))
-
         plt.loglog(xs[chromosome], weirds[chromosome], "o", label="++/--")
         plt.loglog(xs[chromosome], uncuts[chromosome], "o", label="+-")
         plt.loglog(xs[chromosome], loops[chromosome], "o", label="-+")
@@ -218,7 +211,6 @@ def plot_laws(output_dir : str = None) -> None:
         plt.close()
 
     logger.info(f"Saved plots of patterns at : {output_path}")
-
 
 def plot_trans_ps(output_dir : str = None) -> None:
     """
@@ -234,17 +226,11 @@ def plot_trans_ps(output_dir : str = None) -> None:
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     # reload dictionaries
-
     dist_frag = load_dictionary(output_path / DIST_FRAG)
-
-
     clr_unambiguous = load_cooler(output_path / CLR)
-    # map_table = clr_unambiguous.matrix(balance=False, as_pixels=True, join=True)[:]
-    # chrm_sets = itertools.combinations_with_replacement(sorted(restriction_maps.keys()), 2)
     chrm_sets = product((dist_frag.keys()), repeat=2)
 
     t_ps = np.zeros((len(dist_frag.keys()) ** 2, 1))
@@ -316,18 +302,14 @@ def plot_coverages(bins : int = 2000, output_dir : str = None ) -> None:
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     # reload dictionaries
-
     xs = load_dictionary(output_path / XS)
     coverage = load_dictionary(output_path / COVERAGE)
 
-
     for chromosome in xs.keys():
 
-        
         plt.figure()
         plt.plot(coverage[chromosome], label="Covering smoothed")        
         plt.title(f"Covering across {chromosome} - bins of {bins} bp")
@@ -359,7 +341,6 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     merged_forward_alignment_path = output_path / forward_bam_file
@@ -374,7 +355,6 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
     for forward_read, reverse_read in zip(merged_forward_alignment_file_handler, merged_reverse_alignment_file_handler):
 
         couple_lenght.append(forward_read.get_tag("XL") * reverse_read.get_tag("XL"))
-
 
     _, bins_edges = np.histogram(couple_lenght, bins=max(couple_lenght))
 
@@ -420,7 +400,6 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
 
     logger.info(f"Saved couple size distribution at : {output_path}")
 
-
 def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : str = "rescued_map.cool", restriction_map : str = "restriction_map.npy", genome : str = "", vmin : float = 0.0, vmax : float = 3.5, bins : int = 2000, output_dir : str = None) -> None:
     """
     Plot matrix with additional trackss
@@ -450,7 +429,6 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     # Get the matrix
@@ -458,12 +436,9 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
     rescued_matrix = load_cooler(output_path /rescued_matrix)
 
     genome_file = bf.load_fasta(genome, engine="pysam")
-
     restriction_map = load_dictionary(output_path / restriction_map)
-
     bins = unrescued_matrix.bins()[:]
     gc_cov = bf.frac_gc(bins[["chrom", "start", "end"]], genome_file)
-
 
     ### to make a list of chromosome start/ends in bins:
     chromstarts = []
@@ -547,7 +522,6 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         )
 
         plt.close()
-
 
         # Plot the balanced matrix
         fig = plt.figure(figsize=(20, 20))
@@ -639,7 +613,6 @@ def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str
         output_path = Path(getcwd())
 
     else : 
-
         output_path = Path(output_dir)
 
     original_matrix = load_cooler(original_cool).matrix(balance = False)
@@ -651,8 +624,6 @@ def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str
     plt.title(f"Reconstructed pattern {chromosome}\n {case}")
     # Use imshow to add the first set of data to the plot
     img1 = ax.imshow(original_matrix.fetch(chromosome) ** 0.15, cmap ='afmhot_r', vmin = 0, vmax=np.max(rescued_matrix.fetch(chromosome) ** 0.15))
-
-    # print(f"Table : {table}")
 
     if table is not None:
         colormap = plt.colormaps['Blues'] # 'plasma' or 'viridis'

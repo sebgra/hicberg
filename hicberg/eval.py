@@ -133,7 +133,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
         raise ValueError(f"Chromosome sizes file {chrom_sizes_path} does not exist. Please provide existing chromosome sizes file.")
     
-
     if type(chromosome) == "list":
 
         chromosome = chromosome[0]
@@ -162,7 +161,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
     
     matrix = hio.load_cooler(matrix_file_path)
     
-
     # alignment file handlers
     # Create handler for files to parse
     forward_file_handler = ps.AlignmentFile(forward_file_path, "rb")
@@ -188,7 +186,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
     # get acces to dictionary containing chromosomes sizes to pick random position for trans-chromosomal duplication
     cs_disctionary = hio.load_dictionary(chrom_sizes_path)
 
-
     if auto is None:
 
         ## set areas and boundaries for intra-chromosomal duplications
@@ -212,7 +209,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
         ]
 
         # Define list of chromosome to target/duplicate read on.
-
         if type(chromosome) == list and len(chromosome) == 1:
 
             chromosome = chromosome[0]
@@ -253,7 +249,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
 
                 if random:
 
-
                     trans_target_interval = [
                         get_boundaries(
                             position = np.random.randint(
@@ -264,7 +259,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
                             chrom_sizes_dict=chrom_sizes_path,
                         )
                     ]
-
 
                 # set areas and boundaries for inter-chromosomal duplications
                 else:
@@ -281,7 +275,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
                 if chrom not in dictionary_of_intervals.keys():
 
                     dictionary_of_intervals[chrom] = trans_target_interval
-
 
     if auto is not None:
 
@@ -312,7 +305,6 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
         ):  # or backp
             depleted_reads_forward.write(forward_read)
             depleted_reads_reverse.write(reverse_read)
-
             continue
 
         # Search for intervals where reads potentially belong
@@ -551,7 +543,6 @@ def get_chromosomes_intervals(bins : int = 2000, chrom_sizes_dict : str = "chrom
 
     return intervals
     
-    
 def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict : str = "chromosome_sizes.npy") -> dict[str, list[tuple[int, int]]]:
     """
     Draw intervals from a given chromosome sizes dictionary.
@@ -572,7 +563,6 @@ def draw_intervals(nb_intervals : int = 1, bins : int = 2000, chrom_sizes_dict :
     """
 
     # get porportions by chromosome
-
     intervals_proportion = get_intervals_proportions(chrom_sizes_dict = chrom_sizes_dict, nb_intervals = nb_intervals)
 
     # Define placeholder for intervals
@@ -892,7 +882,6 @@ def overlap_intervals(starts1, ends1, starts2, ends2, closed=False, sort=False):
 
     return overlap_ids
 
-
 def overlap_intervals_outer(starts1, ends1, starts2, ends2, closed=False):
     """
     Take two sets of intervals and return the indices of pairs of overlapping intervals,
@@ -937,7 +926,7 @@ def intersect2D(a, b):
     
     return np.array([x for x in set(tuple(x) for x in a) & set(tuple(x) for x in b)])
 
-def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+def get_TP_table(df_pattern : pd.DataFrame, df_pattern_recall : pd.DataFrame, chromosome : str, bin_size : int, jitter : int  = 0, threshold : float = None) -> pd.DataFrame:
     """
     Take dataframe of pattern call (Chromosight) before and after reconstruction
     and return table of retieved patterns 
@@ -950,6 +939,12 @@ def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
         Pandas DataFrame given by chromosight after HiC map reconstruction.
     chromosome : [str]
         chromosome to select position within.
+    bin_size : [int]
+        bin size used to construct the HiC map.
+    jitter : [int]
+        jitter to apply to the pattern recall table to allow overlapping with the pattern table. By default 0.
+    threshold : [float]
+        threshold to apply to the pattern table to select patterns to consider. By default None.
 
     Return
     ----------
@@ -961,9 +956,6 @@ def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
     df_pattern = pd.read_csv(df_pattern, sep = "\t", header = 0)
     df_pattern_recall = pd.read_csv(df_pattern_recall, sep = "\t", header = 0)
 
-    print(f"df_pattern : {df_pattern.shape}")
-    print(f"df_pattern_recall : {df_pattern_recall.shape}")
-
     if threshold is None:
         # Selection of chromosomes of interest
         df_1 = df_pattern[df_pattern["chrom1"] == chromosome]
@@ -974,13 +966,10 @@ def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
         df_1 = df_pattern.query("chrom1 == @chromosome and score > @threshold")
         df_2 = df_pattern_recall.query("chrom1 == @chromosome and score > @threshold")
 
-
-    
     if jitter != 0:
 
         df_2["start1"] = df_2["start1"].sub(jitter * bin_size) 
         df_2["end1"] = df_2["end1"].add(jitter * bin_size)
-
 
     # Getting overlaps indexes for left side (start1; end1) for both before and afetr pattern recall
     before_after_left = _overlap_intervals_legacy(starts1 = df_1["start1"], ends1 = df_1["end1"], starts2 = df_2["start1"], ends2 = df_2["end1"], closed=False, sort=False)
@@ -994,7 +983,6 @@ def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
     lines_before = list()
     lines_after = list()
     
-
     for i in range(selection.shape[0]):
         lines_before.append(df_pattern[df_pattern['chrom1'] == chromosome].iloc[selection[i][0]])
         lines_after.append(df_pattern_recall[df_pattern_recall['chrom1'] == chromosome].iloc[selection[i][1]])
@@ -1014,7 +1002,7 @@ def get_TP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
 
     return true_positives_table
 
-def get_FN_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+def get_FN_table(df_pattern : pd.DataFrame, df_pattern_recall : pd.DataFrame, chromosome : str, bin_size : int, jitter : int = 0, threshold : float = None) -> pd.DataFrame:
     """
     Take dataframe of pattern call (Chromosight) before and after reconstruction
     and return table of retieved patterns 
@@ -1027,6 +1015,12 @@ def get_FN_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
         Pandas DataFrame given by chromosight after HiC map reconstruction.
     chromosome : [str]
         chromosome to select position within.
+    bin_size : [int]
+        bin size used to construct the HiC map.
+    jitter : [int]
+        jitter to apply to the pattern recall table to allow overlapping with the pattern table. By default 0.
+    threshold : [float]
+        threshold to apply to the pattern table to select patterns to consider. By default None.
 
     Return
     ----------
@@ -1068,7 +1062,7 @@ def get_FN_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
 
     return final_FN
 
-def get_FP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+def get_FP_table(df_pattern: pd.DataFrame, df_pattern_recall : pd.DataFrame, chromosome : str, bin_size : int, jitter : int = 0, threshold : float = None):
     """
     Take dataframe of pattern call (Chromosight) before and after reconstruction
     and return table of retieved patterns 
@@ -1081,6 +1075,12 @@ def get_FP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
         Pandas DataFrame given by chromosight after HiC map reconstruction.
     chromosome : [str]
         chromosome to select position within.
+    bin_size : [int]
+        bin size used to construct the HiC map.
+    jitter : [int]
+        jitter to apply to the pattern recall table to allow overlapping with the pattern table. By default 0.
+    threshold : [float]
+        threshold to apply to the pattern table to select patterns to consider. By default None.
 
     Return
     ----------
@@ -1128,16 +1128,64 @@ def get_FP_table(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0
 
         return final_FP
 
-def get_recall(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+def get_recall(df_pattern : pd.DataFrame, df_pattern_recall : pd.DataFrame, chromosome : str, bin_size : int, jitter : int = 0, threshold : float = None) -> float:
+    """
+    Take dataframe of pattern call (Chromosight) before and after reconstruction
+    and return recall score corresponding to the number of true positives over the number of true positives and false negatives.
 
+    Parameters
+    ----------
+    df_pattern : [dataframe]
+        Pandas DataFrame given by chromosight before HiC map reconstruction.
+    df_pattern_recall : [dataframe]
+        Pandas DataFrame given by chromosight after HiC map reconstruction.
+    chromosome : [str]
+        chromosome to select position within.
+    bin_size : [int]
+        bin size used to construct the HiC map.
+    jitter : [int]
+        jitter to apply to the pattern recall table to allow overlapping with the pattern table. By default 0.
+    threshold : [float]
+        threshold to apply to the pattern table to select patterns to consider. By default None.
+
+
+    Returns
+    -------
+    recall : float
+        number of true positives over the number of true positives and false negatives
+    """
 
     TP = get_TP_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
     FN = get_FN_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
 
     return  TP / (TP + FN)
 
-def get_precision(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+def get_precision(df_pattern : pd.DataFrame, df_pattern_recall : pd.DataFrame, chromosome : str, bin_size : int, jitter : int = 0, threshold : float = None) -> float:
+    """
+    Take dataframe of pattern call (Chromosight) before and after reconstruction
+    and return precision score corresponding to the number of true positives over the number of true positives and false positives.
 
+    Parameters
+    ----------
+    df_pattern : [dataframe]
+        Pandas DataFrame given by chromosight before HiC map reconstruction.
+    df_pattern_recall : [dataframe]
+        Pandas DataFrame given by chromosight after HiC map reconstruction.
+    chromosome : [str]
+        chromosome to select position within.
+    bin_size : [int]
+        bin size used to construct the HiC map.
+    jitter : [int]
+        jitter to apply to the pattern recall table to allow overlapping with the pattern table. By default 0.
+    threshold : [float]
+        threshold to apply to the pattern table to select patterns to consider. By default None.
+
+
+    Returns
+    -------
+    precision : float
+        number of true positives over the number of true positives and false positives
+    """
 
     TP = get_TP_table(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold).shape[0]
 
@@ -1150,8 +1198,32 @@ def get_precision(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 
     return  TP / (TP + FP)
 
 
-def get_f1_score(df_pattern, df_pattern_recall, chromosome, bin_size, jitter = 0, threshold = None):
+def get_f1_score(df_pattern : pd.DataFrame, df_pattern_recall : pd.DataFrame, chromosome : str, bin_size : int, jitter : int = 0, threshold : float = None) -> float:
+    """
+    Take dataframe of pattern call (Chromosight) before and after reconstruction
+    and return f1 score i.e. 2 * ((precision * recall) / (precision + recall)).
 
+    Parameters
+    ----------
+    df_pattern : [dataframe]
+        Pandas DataFrame given by chromosight before HiC map reconstruction.
+    df_pattern_recall : [dataframe]
+        Pandas DataFrame given by chromosight after HiC map reconstruction.
+    chromosome : [str]
+        chromosome to select position within.
+    bin_size : [int]
+        bin size used to construct the HiC map.
+    jitter : [int]
+        jitter to apply to the pattern recall table to allow overlapping with the pattern table. By default 0.
+    threshold : [float]
+        threshold to apply to the pattern table to select patterns to consider. By default None.
+
+
+    Returns
+    -------
+    f1_score : float
+        2 * ((precision * recall) / (precision + recall))
+    """
     recall = get_recall(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
     precision = get_precision(df_pattern = df_pattern , df_pattern_recall = df_pattern_recall , chromosome = chromosome, bin_size = bin_size, jitter = jitter, threshold = threshold)
 
@@ -1248,7 +1320,7 @@ def chromosight_cmd_generator(file : str = None, pattern : str = "loops", untren
     Returns
     -------
     str
-        [description]
+        Chromosight command line to run to run pattern detection
     """    
 
     output_path = Path(output_dir)

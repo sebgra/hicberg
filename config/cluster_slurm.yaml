@@ -49,6 +49,7 @@ hicberg_step_3:
     error: logs/cluster/{rule}.{wildcards}.err
 
 
+
 hicberg_step_4:
     queue: normal
     partition: common

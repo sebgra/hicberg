@@ -6,8 +6,6 @@ import uuid
 import click
 from hicberg import logger
 
-
-
 def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , verbose : bool = False) -> None:
     """
     Building of bowtie2 index (.bt2l files) for read alignment.
@@ -45,7 +43,6 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
     if output_dir is None:    
         output_path = Path(getcwd())
 
-    # output_path  = Path(output)
     else : 
         output_path = Path(output_dir)
 
@@ -66,7 +63,6 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
     sp.run([cmd_index], shell=True)
 
     logger.info(f"Index built at {index_path}")
-
 
     return index_path
 
@@ -118,7 +114,6 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
 
     index_path = Path(output_path / index)
 
-    
     if max_alignment is None or max_alignment == -1:
         
         cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
@@ -151,7 +146,6 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
 
     logger.info(f"Alignment saved at {output_path}")
 
-
 def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
     Conversion of .sam alignment files to .bam alignment format (using samtools).
@@ -182,7 +176,6 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
             "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
         )
 
-
     if output_dir is None:    
         output_path = Path(getcwd())
     
@@ -193,7 +186,6 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
 
         raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
     
-
     cmd_view_for = f"samtools view -h  -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
     cmd_view_rev = f"samtools view -h  -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
 
@@ -211,9 +203,6 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
     (output_path / sam_rev).unlink()
 
     logger.info(f"Compressed  alignment done at {output_path}")
-
-
-
 
 def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
@@ -245,7 +234,6 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
             "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
         )
 
-
     if output_dir is None:    
         output_path = Path(getcwd())
     
@@ -259,7 +247,6 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
     id_for = uuid.uuid4()
     id_rev = uuid.uuid4()
     
-
     cmd_sort_for = f"samtools sort -n -T {id_for} {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
     cmd_sort_rev = f"samtools sort -n -T {id_rev} {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"
 
@@ -276,7 +263,6 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
     (output_path / '2.bam').unlink()
 
     logger.info(f"Sorted alignment done at {output_path}")
-
 
 
 def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
@@ -316,9 +302,8 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
     
-
     cmd_index_for = f"samtools index -b {bam_for} -@ {cpus}"
     cmd_index_rev = f"samtools index -b {bam_rev} -@ {cpus}"
 

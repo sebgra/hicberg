@@ -23,9 +23,6 @@ Sc288_2m_full:
     circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 1.0
-    rounds : 10
-    magnitude : 0.8
-    # mode: "full"
     res: 2000
 
 Sc288_2m_no_d1d2:
@@ -37,9 +34,7 @@ Sc288_2m_no_d1d2:
     circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 1.0
-    rounds : 10
-    magnitude : 0.8
-    # mode: "full"
+
     res: 2000
 
 Sc288_2m_density_only:
@@ -51,9 +46,6 @@ Sc288_2m_density_only:
     circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 1.0
-    rounds : 10
-    magnitude : 0.8
-    # mode: "full"
     res: 2000
 
 Sc288_2m_no_density_no_d1d2:
@@ -65,9 +57,6 @@ Sc288_2m_no_density_no_d1d2:
     circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 1.0
-    rounds : 10
-    magnitude : 0.8
-    # mode: "full"
     res: 2000
 
 Sc288_2m_no_density:
@@ -79,9 +68,6 @@ Sc288_2m_no_density:
     circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 1.0
-    rounds : 10
-    magnitude : 0.8
-    # mode: "full"
     res: 2000
 
 CC336:
@@ -92,7 +78,4 @@ CC336:
     circular: ["NC-000913.3"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 0.3
-    rounds : 10
-    magnitude : 0.8
-    # mode: "full"
     res: 2000
