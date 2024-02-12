@@ -4,7 +4,7 @@ LABEL Name=hicberg Version=0.0.1
 
 COPY * ./ /app/
 WORKDIR /app
-
+RUN chmod 777 /app/*
 # RUN apt-get update && apt-get install -y wget bzip2 
 # RUN wget -qO-  https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba 
 # RUN touch /root/.bashrc 
@@ -25,4 +25,5 @@ RUN mamba install bioconda::samtools
 # RUN pip install -Ur requirements.txt
 RUN pip install -e .
 
-ENTRYPOINT [ "hicberg" ]
+
+# ENTRYPOINT [ "hicberg" ]
