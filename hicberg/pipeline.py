@@ -63,6 +63,9 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
     exit_stage = out_stage[exit_stage]
 
+
+    logger.info(f"HiC-BERG command used : {' '.join(sys.argv)}")
+
     logger.info("Start HiCBERG pipeline")
 
     # Keep track of the arguments used
