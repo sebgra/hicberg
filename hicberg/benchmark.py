@@ -30,7 +30,7 @@ import hicberg.statistics as hst
 import hicberg.eval as hev
 import hicberg.plot as hpl
 
-from hicberg import benchmark_logger
+from hicberg import logger
 
 # BAM_FOR = "group1.1_subsampled.bam" 
 # BAM_REV = 'group1.2_subsampled.bam'
@@ -112,7 +112,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     args = locals()
     # Keep track of the arguments used
     for arg in args:
-        benchmark_logger.info("%s: %s", arg, args[arg])
+        logger.info("%s: %s", arg, args[arg])
 
     learning_status = False #False bckp
     picking_status = False # False bckp
@@ -194,7 +194,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
     elif pattern is not None and pattern != "-1": # Pattern based benchmarking
         pre_recall_cmd = hev.chromosight_cmd_generator(file = output_data_path / BASE_MATRIX, pattern = pattern, untrend = trend, output_dir = output_data_path)
 
-        benchmark_logger.info("Starting Chromosight pre-call")
+        logger.info("Starting Chromosight pre-call")
         sp.run(pre_recall_cmd, shell = True)
 
         chromosome = chromosome
@@ -235,9 +235,9 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         # Pick reads
         if not picking_status:
             
-            benchmark_logger.info("Picking reads")
+            logger.info("Picking reads")
             intervals_dictionary = hev.select_reads(bam_for = BAM_FOR, bam_rev = BAM_REV, matrix_file = output_path / BASE_MATRIX, position = position, chromosome = chromosome, strides = strides, trans_chromosome = trans_chromosome, trans_position = trans_position, auto = auto, nb_bins = nb_bins, output_dir = output_data_path)
-            benchmark_logger.info(f"intervals_dictionary : {intervals_dictionary}")
+            logger.info(f"intervals_dictionary : {intervals_dictionary}")
             indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
             picking_status = True
 
@@ -262,7 +262,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             p3 = Process(target = hst.generate_coverages, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, genome = genome, bins = bin_size, output_dir = output_data_path))
             p4 = Process(target = hst.generate_d1d2, kwargs = dict(forward_bam_file = forward_out_path, reverse_bam_file  = reverse_out_path, output_dir = output_data_path))
             
-            benchmark_logger.info("Full mode selected. Learning step will be performed.")
+            logger.info("Full mode selected. Learning step will be performed.")
 
             # Launch processes
             for process in [p1, p2, p3, p4]:
@@ -272,7 +272,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             for process in [p1, p2, p3, p4]:
                 process.join()
 
-            benchmark_logger.info("Learning step completed")
+            logger.info("Learning step completed")
 
             hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads = cpus, output_dir  = output_data_path)
 
@@ -282,7 +282,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         for _ in range(iterations):
             # Reattribute reads
-            benchmark_logger.info("Re-attributing reads")
+            logger.info("Re-attributing reads")
             # TODO :  New 
             
             if chunking_status:
@@ -321,7 +321,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 rescued_matrix_path = output_data_path / RESCUED_MATRIX
                 post_recall_cmd = hev.chromosight_cmd_generator(file = rescued_matrix_path, pattern = pattern, untrend = trend, mode = True, output_dir = output_data_path)
 
-                benchmark_logger.info("Starting Chromosight post-call")
+                logger.info("Starting Chromosight post-call")
                 sp.run(post_recall_cmd, shell = True)
                 
                 # TODO : move to top
@@ -347,7 +347,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             number_reads = 10
 
-            benchmark_logger.info(f"Pearson score : {pearson:9.4f} in mode {sub_mode}")
+            logger.info(f"Pearson score : {pearson:9.4f} in mode {sub_mode}")
 
             if not results.exists():
                 with open(results, "w") as f_out:
@@ -363,7 +363,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                     f_out.write(f"{id_tag}\t{date}\t{chromosome}\t{position}\t{strides}\t{trans_chromosome}\t{trans_position}\t{auto}\t{bins}\t{sub_mode}\t{number_reads}\t{pattern}\t{precision}\t{recall}\t{f1_score}\t{pearson:9.4f}\n")
                     f_out.close()
 
-            benchmark_logger.info(f"Ending benchmark")
+            logger.info(f"Ending benchmark")
 
     # Clean up
     forward_in_path.unlink()

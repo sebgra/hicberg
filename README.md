@@ -1,8 +1,6 @@
 
 # HiC-BERG
 
-# TO BE COMPLETED
-
 ## Badges
 
 Add badges from somewhere like: [shields.io](https://shields.io/)
@@ -19,7 +17,7 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 ### Environnement  
 
-Create environment by using following command : 
+Create environment by using following command :
 
 ```bash
 mamba env create -n [ENV_NAME] -f hicberg.yaml;
@@ -74,7 +72,40 @@ TO BE COMPLETED
 
 ### Docker
 
-TO BE COMPLETED
+HiC-BERG can be used via Docker to limit dependency compatibility problems. More information about container such as Docker can be found [there](https://www.docker.com/get-started/).
+
+To be used through Docker, the HiC-BERG container as to be build using :
+
+```bash
+# Pick user and group variables
+export HOST_UID=$(id -u);                                                                
+export HOST_GID=$(id -g);
+
+# Build container
+sudo docker build --build-arg UID=$HOST_UID --build-arg GID=$HOST_GID -t hicberg:0.0.1 .
+```
+
+HiC-BERG can therefore be used with usual command detailed further using : 
+
+```bash
+sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 <hicberg_command>
+```
+
+N.B : _working_directory_ and _output (-o argument)_ of HiC-BERG command have to be the same.
+
+For instance if you need to access the help of HiC-BERG thorugh Docker :
+
+```bash
+sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 hicberg --help
+```
+
+HiC-BERG can also be used through Docker in interactive mode using :
+
+```bash
+sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g) -it  hicberg:0.0.1
+```
+
+Then, the user will be directly placed in an interactive shell where HiC-BERG can be use directly, by typing any of HiC-BERG command such as further examples.
     
 ## Usage/Examples
 
