@@ -31,7 +31,6 @@ Requires-Dist: bioframe
 Requires-Dist: biopython
 Requires-Dist: click
 Requires-Dist: cooler
-Requires-Dist: cooltools
 Requires-Dist: funcy
 Requires-Dist: hicstuff
 Requires-Dist: matplotlib
@@ -136,7 +135,7 @@ WEBSITE TO BE ADDED
 
 hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
 [--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] 
-[--bins=2000] [--circular=""] [--mapq=35] [--rounds=1] [--magnitude=1.0] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
+[--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
 
 ```
 
@@ -168,31 +167,26 @@ name : library_name
     circular: Coma separated list of circular chromosomes
     enzymes : Coma separated list of enzymes used for the experiment
     sampling_rate: Sampling rate of the restriction map
-    rounds : Number of rounds for the reconstruction (diffusion mode)
-    magnitude : Magnitude of the sampling rate (diffusion mode)
-    mode: Mode to use for reconstruction
     res: Resolution of the contact matrix (in bp)
 ```
 
 The samples.csv file can be used to set the parameters for each library. The file is a csv file with the following columns:
 
 ```csv
-library;species;sampling_rates;enzymes;rounds;magnitudes;modes;resolutions;max_reports
+library;species;sampling_rates;enzymes;kernel_sizes;deviations;modes;resolutions;max_reports;circularity
 
-#sample_1
-library_name_1;species_1;sampling_rate_1;enzymes_1;rounds_1;magnitude_1;mode_1;resolutions_1;max_reports_1
+#name_1
+library_name_1;species_1;sampling_rate_1;enzymes_1;kernel_sizes_1;deviations_1;mode_1;resolutions_1;max_reports_1
 
-#sample_2
-library_name_2;species_2;sampling_rate_2;enzymes_2;rounds_2;magnitude_2;mode_2;resolutions_2;max_reports_2
+#name_2
+library_name_2;species_2;sampling_rate_2;enzymes_2;kernel_sizes_2;deviations_2;mode_2;resolutions_2;max_reports_2
 ```
-
-
 
 ### Run
 
 #### Locally
 
-The hicberg pipeline can be run using Snakemake. The pipeline is defined in the file Snakefile. The pipeline can be run using the following command:
+The HiC-BERG pipeline can be run using Snakemake. The pipeline is defined in the file Snakefile. The pipeline can be run using the following command:
 
 ```bash
 snakemake --cores [cpus]
@@ -200,7 +194,43 @@ snakemake --cores [cpus]
 
 #### Cluster
 
-To be completed
+HiC-BERG can also be run on a cluster using Snakemake. The cluster configuration is defined in the file cluster_slurm.yaml. The pipeline can be run using the following command:
+
+```bash
+snakemake --cluster "sbatch --mem {cluster.mem} -p {cluster.partition} --qos {cluster.queue} -c {cluster.ncpus} 
+-n {cluster.ntasks} -J {cluster.name} -o {cluster.output} -e {cluster.error}" --cluster-config config/cluster_slurm.yaml -j 16 --rerun-incomplete
+```
+
+As for the local run, the libraries to process are defined in the file samples.csv. 
+Computational resources can be set in the file cluster_slurm.yaml. In this file, the different parameters have to be specified by rules. For instance:
+
+```yaml
+hicberg_step_0:
+    queue: normal
+    partition: common
+    ncpus: 16
+    mem: 32G
+    ntasks: 1
+    name: hicberg.{rule}.{wildcards}
+    output: logs/cluster/{rule}.{wildcards}.out
+    error: logs/cluster/{rule}.{wildcards}.err
+```
+
+Jobs will be sent to the cluster as usual _sbatch_ commands. The fields _queue_, _partition_, _ncpus_, _mem_, _ntasks_, _name_, _output_ and _error_ are mandatory.
+
+Considering the previous example, the following command will be sent to the cluster:
+
+```bash
+sbatch --mem 32G -p common -c 16 -n 1 -J hicberg.hicberg_step_0.{wildcards} -o logs/cluster/hicberg_step_0.{wildcards}.out -e logs/cluster/hicberg_step_0.{wildcards}.err
+```
+
+And such for each rule defined in the file cluster_slurm.yaml, through all the libraries specified in *sample.csv*.
+
+Log files will be saved in the folder logs/cluster. The output and error files will be named as the following: `{rule}.{wildcards}.out` and `{rule}.{wildcards}.err`. The wildcards are the parameters specified in the file _samples.csv_.
+
+_N.B: The parameter `--rerun-incomplete` is used to restart the pipeline from the last step if it has been interrupted.
+N.B 2: The parameter `-j` is used to specify the number of jobs to run in parallel. It is recommended to set this parameter to the number of libraries to process.
+N.B 3: The ressources allocated to each job can be modified in the file cluster_slurm.yaml. The parameters `mem` and `ncpus` are used to specify the memory and the number of CPUs to allocate to each job. The parameter `ntasks` is used to specify the number of tasks to run in parallel. The parameter `queue` is used to specify the queue to use. The parameter `partition` is used to specify the partition to use. The parameters `name`, `output` and `error` are used to specify the name of the job and the output and error files._
 
 ## Individual components
 
@@ -351,7 +381,7 @@ hicberg statistics -g genome.fa -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/
 The statistical laws are going to be saved as:
 
 - __*xs.npy*__ : dictionary containing the log binned genome as dictionary such as ```{chromosome: [log bins]}```
-- __*uncuts.npy*__, __*loops*__, __*weirds*__ : dictionary containing the distribution of uncuts, loops and weirds as dictionary such as ```{chromosome: [distribution]}```
+- __*uncuts.npy*__, __*loops.npy*__, __*weirds.npy*__ : dictionary containing the distribution of uncuts, loops and weirds as dictionary such as ```{chromosome: [distribution]}```
 - __*pseudo_ps.pdf*__ : plot of the distribution of the pseudo ps, i.e. ps equivalent for trans-chromosomal cases, extracted from the reads of **group1**.
 - __*coverage*__: dictionary containing the coverage of the genome as dictionary such as ```{chromosome: [coverage]}```
 - __*d1d2.npy*__: np.array containing the d1d2 law as dictionary such as ```[distribution]```
@@ -455,6 +485,7 @@ After tidying the folders architecture will be the following:
     ├── chromosome_sizes.npy
     ├── coverage.npy
     ├── d1d2.npy
+    ├── density_map.npy
     ├── dist.frag.npy
     ├── loops.npy
     ├── restriction_map.npy
@@ -571,7 +602,7 @@ The evaluation can be run using the following command :
 hicberg benchmark  --output=DIR [--chromosome=STR] [--position=INT] [--trans-chromosome=STR][--trans-position=INT] [--stride=INT] [--bins=INT] [--auto=INT] [--rounds=INT] [--magnitude=FLOAT] [--modes=STR] [--pattern=STR] [--threshold=FLOAT] [--jitter=INT] [--trend] [--top=INT] [--genome=STR][--force]
 ```
 
-Considering a benchmark with 4 artificially duplicated sequences set at __chr1:100000-102000 (source)__, __chr1:200000-202000 (target 1)__ __chr4:50000-52000 (target 2)__ and __chr7:300000-302000 (target 3)__, with 2000bp as bin size and considering __full and ps_only modes__ to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
+Considering a benchmark with 4 artificially duplicated sequences set at _chr1:100000-102000 (source)_, _chr1:200000-202000 (target 1)_, _chr4:50000-52000 (target 2)_ and _chr7:300000-302000 (target 3)_, with 2000bp as bin size and considering __full and ps_only modes__ to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
 
 
 ```bash
@@ -622,7 +653,30 @@ All the steps described here are handled automatically when running the ```hicbe
 ## File formats
 
 * pair files: This format is used for all intermediate files in the pipeline and is also used by hicberg build_matrix. It is a tab-separated format holding information about Hi-C pairs. It has an official specification defined by the 4D Nucleome data coordination and integration center.
+  * *readID*: Read (pair) identifier.
 
+  * *chr1*: Chromosome identifier of the forward read of the pair.
+
+  * *pos1*: 0-based position of the forward mate, in base pairs.
+
+  * *chr2*: Chromosome identifier of the reverse read of the pair.
+
+  * *pos2*: 0-based position of the reverse mate, in base pairs.
+
+  * *strand1*: Orientation of the aligned forward mate.
+
+  * *strand2*: Orientation of the aligned reverse mate.
+
+```
+## pairs format v1.0
+#columns: readID chr1 pos1 strand1 chr2 pos2 strand2
+#chromsize: chr1 230218
+#chromsize: chr2 813184
+NS500150:487:HNLLNBGXC:1:11101:3066:7109        chr2    683994  chr2    684725  -       -
+NS500150:487:HNLLNBGXC:1:11101:6114:4800        chr2    795379  chr2    796279  +       +
+NS500150:487:HNLLNBGXC:1:11101:6488:14927       chr2    379433  chr2    379138  -       +
+...
+```
 
 * cool files: This format is used to store genomic interaction data such as Hi-C contact matrices. These file can be handled using `cooler` Python library.
 

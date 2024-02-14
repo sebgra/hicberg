@@ -5,11 +5,8 @@ LICENSE
 README.md
 Snakefile
 dag.png
-hicberg.yaml
-hicberg_env.yaml
 pytest
 requirements.txt
-restriction_map.npy
 rg.png
 setup.py
 .github/workflows/build.yml

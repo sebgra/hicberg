@@ -6,7 +6,6 @@ import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import cooler
-import cooltools
 import bioframe as bf
 
 

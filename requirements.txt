@@ -3,7 +3,6 @@ biopython
 # bowtie2
 click
 cooler
-cooltools
 funcy
 hicstuff
 matplotlib

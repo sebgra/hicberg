@@ -308,7 +308,6 @@ dependencies:
       - click==8.1.6
       - contourpy==1.1.0
       - cooler==0.9.2
-      - cooltools==0.5.4
       - cycler==0.11.0
       - cython==3.0.0
       - Cython==0.29.27
@@ -316,7 +315,6 @@ dependencies:
       - dill==0.3.6
       - docopt==0.6.2
       - fonttools==4.41.1
-      - funcy==2.0
       - h5py==3.9.0
       - hicstuff==3.1.6
       - imageio==2.31.1

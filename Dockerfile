@@ -1,5 +1,8 @@
 FROM  condaforge/mambaforge
 
+ARG UID
+ARG GID
+
 LABEL Name=hicberg Version=0.0.1
 
 RUN apt-get update && apt-get install -y gcc
@@ -9,8 +12,8 @@ RUN mamba install -c conda-forge -y pip \
 
 RUN apt update && \
     apt install -y sudo && \
-    addgroup --gid 1000 nonroot && \
-    adduser --uid 1000 --gid 1000 --disabled-password --gecos "" nonroot && \
+    addgroup --gid $GID nonroot && \
+    adduser --uid $UID --gid $GID --disabled-password --gecos "" nonroot && \
     echo 'nonroot ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 RUN mamba install bioconda::bowtie2

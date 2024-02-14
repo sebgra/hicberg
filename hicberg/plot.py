@@ -12,7 +12,6 @@ import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import cooler
-import cooltools
 import bioframe as bf
 import pysam as ps
 
@@ -441,24 +440,17 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
     gc_cov = bf.frac_gc(bins[["chrom", "start", "end"]], genome_file)
 
     ### to make a list of chromosome start/ends in bins:
-    chromstarts = []
-    for i in rescued_matrix.chromnames:
-        chromstarts.append(rescued_matrix.extent(i)[0])
-
+    
     for i in rescued_matrix.chromnames:
 
         lower = rescued_matrix.extent(str(i))[0]
         upper = rescued_matrix.extent(str(i))[1]
 
         # Unrescued
-        cis_coverage_unrescued, tot_coverage_unrescued = cooltools.coverage(
-            unrescued_matrix, ignore_diags=False
-        )
-
+        coverage_unrescued = np.sum(np.tril(unrescued_matrix.matrix(balance = False).fetch(i)), axis = 1)
+        median_coverage = np.repeat(np.median(coverage_unrescued), coverage_unrescued.shape[0])
         # Rescued
-        cis_coverage, tot_coverage = cooltools.coverage(
-            rescued_matrix, ignore_diags=False
-        )
+        coverage_rescued = np.sum(np.tril(rescued_matrix.matrix(balance = False).fetch(i)), axis = 1)
 
         # Plot the matrix
         fig = plt.figure(figsize=(20, 20))
@@ -494,19 +486,21 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         )
 
         ax3 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
-        ax3.plot(tot_coverage_unrescued[lower:upper], label="total")
-        ax3.plot(cis_coverage_unrescued[lower:upper], label="cis")
+        ax3.plot(coverage_unrescued)
+        ax3.plot(median_coverage, linestyle = '--', color = 'black')
         ax3.set_ylabel("Coverage")
-        ax3.legend(loc="lower left", bbox_to_anchor=(1, 0.5))
         ax3.set_xticks([])
+        ax3.set_title('Natural coverage')
 
         ax4 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
         ax4.plot(list(gc_cov["GC"][lower:upper]), color="purple")
         ax4.set_ylabel("GC Content")
 
         ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
-        ax5.plot(tot_coverage_unrescued[lower:upper], label="Before recovery")
-        ax5.plot(tot_coverage[lower:upper], label="After recovery")
+        ax5.plot(coverage_unrescued, label="Before HiC-BERG")
+        ax5.plot(coverage_rescued, label="After HiC-BERG")
+        ax5.plot(median_coverage, linestyle = '--', color = 'black')
+        ax5.set_title('Enhanced coverage')
         ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])
         ax5.set_ylabel("Coverage")
         ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))
@@ -523,68 +517,68 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         plt.close()
 
-        # Plot the balanced matrix
-        fig = plt.figure(figsize=(20, 20))
-        gs = gridspec.GridSpec(2, 2, height_ratios=[10, 1], width_ratios=[1, 1])
+        # # Plot the balanced matrix
+        # fig = plt.figure(figsize=(20, 20))
+        # gs = gridspec.GridSpec(2, 2, height_ratios=[10, 1], width_ratios=[1, 1])
 
-        ax1 = plt.subplot(gs[0])
-        divider1 = make_axes_locatable(ax1)
-        cax1 = divider1.append_axes("right", size="5%", pad=0.1)
-        im_unrescued = ax1.imshow(
-            np.log10(unrescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,
-            cmap = "afmhot_r",
-        )
-        fig.colorbar(im_unrescued, cax=cax1, label="corrected frequencies")
-        ax1.set_title(
-            f"Unrescued map of chromosome {i} \n binned at {int(rescued_matrix.binsize / 1000 )}kb",
-            loc="center",
-        )
+        # ax1 = plt.subplot(gs[0])
+        # divider1 = make_axes_locatable(ax1)
+        # cax1 = divider1.append_axes("right", size="5%", pad=0.1)
+        # im_unrescued = ax1.imshow(
+        #     np.log10(unrescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,
+        #     cmap = "afmhot_r",
+        # )
+        # fig.colorbar(im_unrescued, cax=cax1, label="corrected frequencies")
+        # ax1.set_title(
+        #     f"Unrescued map of chromosome {i} \n binned at {int(rescued_matrix.binsize / 1000 )}kb",
+        #     loc="center",
+        # )
 
-        # Synchronize rescued and unrescued parts
-        ax2 = plt.subplot(gs[1], sharex=ax1, sharey=ax1)
+        # # Synchronize rescued and unrescued parts
+        # ax2 = plt.subplot(gs[1], sharex=ax1, sharey=ax1)
 
-        # Rescued map
-        divider2 = make_axes_locatable(ax2)
-        cax2 = divider2.append_axes("right", size="5%", pad=0.1)
-        im_rescued = ax2.imshow(
-            np.log10(rescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,
-            cmap = "afmhot_r",
-        )
-        fig.colorbar(im_rescued, cax=cax2, label="corrected frequencies")
-        ax2.set_title(
-            f"Rescued map of chromosome {i} \n binned at {int(unrescued_matrix.binsize / 1000 ) }kb",
-            loc="center",
-        )
+        # # Rescued map
+        # divider2 = make_axes_locatable(ax2)
+        # cax2 = divider2.append_axes("right", size="5%", pad=0.1)
+        # im_rescued = ax2.imshow(
+        #     np.log10(rescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,
+        #     cmap = "afmhot_r",
+        # )
+        # fig.colorbar(im_rescued, cax=cax2, label="corrected frequencies")
+        # ax2.set_title(
+        #     f"Rescued map of chromosome {i} \n binned at {int(unrescued_matrix.binsize / 1000 ) }kb",
+        #     loc="center",
+        # )
 
-        ax3 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
-        ax3.plot(tot_coverage_unrescued[lower:upper], label="total")
-        ax3.plot(cis_coverage_unrescued[lower:upper], label="cis")
-        ax3.set_ylabel("Coverage")
-        ax3.legend(loc="lower left", bbox_to_anchor=(1, 0.5))
-        ax3.set_xticks([])
+        # ax3 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        # ax3.plot(tot_coverage_unrescued[lower:upper], label="total")
+        # ax3.plot(cis_coverage_unrescued[lower:upper], label="cis")
+        # ax3.set_ylabel("Coverage")
+        # ax3.legend(loc="lower left", bbox_to_anchor=(1, 0.5))
+        # ax3.set_xticks([])
 
-        ax4 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
-        ax4.plot(list(gc_cov["GC"][lower:upper]), color="purple")
-        ax4.set_ylabel("GC Content")
+        # ax4 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
+        # ax4.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        # ax4.set_ylabel("GC Content")
 
-        ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
-        ax5.plot(tot_coverage_unrescued[lower:upper], label="Before recovery")
-        ax5.plot(tot_coverage[lower:upper], label="After recovery")
-        ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])
-        ax5.set_ylabel("Coverage")
-        ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))
-        ax5.set_xticks([])
+        # ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        # ax5.plot(tot_coverage_unrescued[lower:upper], label="Before recovery")
+        # ax5.plot(tot_coverage[lower:upper], label="After recovery")
+        # ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])
+        # ax5.set_ylabel("Coverage")
+        # ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))
+        # ax5.set_xticks([])
 
-        ax6 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
-        ax6.plot(list(gc_cov["GC"][lower:upper]), color="purple")
-        ax6.set_ylabel("GC Content")
+        # ax6 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
+        # ax6.plot(list(gc_cov["GC"][lower:upper]), color="purple")
+        # ax6.set_ylabel("GC Content")
 
-        plt.savefig(
-            output_path / f"chr_{i}_normalized.pdf",
-            format="pdf",
-        )
+        # plt.savefig(
+        #     output_path / f"chr_{i}_normalized.pdf",
+        #     format="pdf",
+        # )
 
-        plt.close()
+        # plt.close()
 
 def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str = None, rescued_cool : str = None, chromosome : str = None, threshold : float = 0.0, case : str = "",  output_dir : str = None) -> None:
     """

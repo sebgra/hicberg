@@ -2,7 +2,6 @@ bioframe
 biopython
 click
 cooler
-cooltools
 funcy
 hicstuff
 matplotlib
