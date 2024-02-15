@@ -603,7 +603,7 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
 
         for combination in forward_reverse_combinations:
 
-            if is_unqualitative(combination[0]) or is_unmapped(combination[0]) or is_unqualitative(combination[1]) or is_unmapped(combination[1]):
+            if  is_unmapped(combination[0])  or is_unmapped(combination[1]):
 
                 unmapped_couple = True
 
