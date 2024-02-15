@@ -571,14 +571,14 @@ The stride is the number of bins between the first bin of the source interval an
 The benchmark can be performed considering several modes. The modes are defined by the parameter __*--modes*__. The modes are defined as a list of strings separated by comas. The modes are the same as the one used for the reconstruction : 
 
 - full
-- ps_only
-- cover_only
-- d1d2_only
-- density_only
-- no_ps
-- no_cover
-- no_d1d2
-- no_density
+- random
+- ps
+- cov
+- d1d2
+- density
+- standard (ps and cov)
+- one_enzyme (ps, cov and d1d2)
+
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
 
