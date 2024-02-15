@@ -32,7 +32,7 @@ def check_tool(name):
 
     return which(name) is not None
 
-def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str = "None", genome : str = None,
+def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str = "None", genome : str = None,
             fq_for : str = None, fq_rev : str = None, sensitivity : str = "very-sensitive",
             max_alignment : int = None, mapq : int = 35, enzyme  : list[str] = ["DpnII", "HinfI"],
             circular : str = "", rate : float = 1.0, bins : int = 2000, nb_chunks : int = 1,
@@ -47,10 +47,7 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
     if not check_tool("samtools"):
         logger.error("samtools is not available on your system.")
         raise ValueError("samtools is not available on your system.")
-    
-    # stages = {"fastq": 0, "bam": 1, "stats": 2, "pairs": 3, "rescue": 4, "cool": 5}
 
-    # out_stage = {"None": None, "bam": 1, "stats": 2, "pairs": 3, "rescue": 4, "cool": 5}
 
 
     stages = {"fastq": 0, "bam": 1, "groups": 2, "build": 3, "stats": 4, "rescue": 5, "final": 6}
@@ -83,7 +80,6 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
 
         hut.get_chromosomes_sizes(genome = genome, output_dir = output_folder)
         hut.get_bin_table(bins = bins, output_dir = output_folder)
-
 
 
     if exit_stage == 1:
@@ -218,9 +214,9 @@ def pipeline(name :str = "sample",start_stage : str = "fastq", exit_stage : str 
         p6 = Process(target = hpl.plot_d1d2, kwargs = dict(output_dir = output_folder))
         p7 = Process(target = hpl.plot_density, kwargs = dict(output_dir = output_folder))
 
-        # TODO : Set up different lists of processses depending on modes
+        # TODO : Set up different lists of processes depending on modes
 
-        # Instanciate processees
+        # Instantiate processes
         # for process in [p1, p2, p3, p4, p5, p6, p7]:
         for process in [p1, p2, p3, p4, p5]:
 
