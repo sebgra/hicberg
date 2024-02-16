@@ -32,7 +32,7 @@ def check_tool(name):
 
     return which(name) is not None
 
-def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str = "None", genome : str = None,
+def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str = "None", genome : str = None, index = None,
             fq_for : str = None, fq_rev : str = None, sensitivity : str = "very-sensitive",
             max_alignment : int = None, mapq : int = 35, enzyme  : list[str] = ["DpnII", "HinfI"],
             circular : str = "", rate : float = 1.0, bins : int = 2000, nb_chunks : int = 1,
@@ -90,8 +90,12 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     if start_stage < 2: 
 
-        index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
-        hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output_folder, cpus = cpus, verbose = True)
+        if index is None:
+            index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
+
+        print(f' ===> Index : {index}')
+
+        hal.hic_align(index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output_folder, cpus = cpus, verbose = True)
         hal.hic_view(cpus = cpus, output_dir = output_folder, verbose = True)
         hal.hic_sort(cpus = cpus, output_dir = output_folder, verbose = True)
 

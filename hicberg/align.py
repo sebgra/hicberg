@@ -67,14 +67,12 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
     return index_path
 
 
-def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
+def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
     """
     Alignment of reads from HiC experiments along an indexed genome.
 
     Parameters
     ----------
-    genome : str
-        Path to the genome file along which reads are going to be aligned.
     index : str
         Path to the index of the genome along which reads are going to be aligned (path to .bt2l files). Default to None, index files are searched to sample_name/data/index/sample_name.
     fq_for : str
@@ -110,14 +108,14 @@ def hic_align(genome : str, index : str, fq_for : str, fq_rev : str, sensitivity
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
 
     index_path = Path(output_path / index)
 
     if max_alignment is None or max_alignment == -1:
         
-        cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
         cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
+        cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
 
     elif max_alignment is not None:
             

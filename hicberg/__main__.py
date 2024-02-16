@@ -39,6 +39,7 @@ def cli(chain=True):
 
 @click.command()
 @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--index", "-i", required = False, default = None, type = str, help = "Index of the genome.")
 @click.option("--name", "-n", required = False, default = "sample", type = str, help = "Name of the analysis.")
 @click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to analyze.")
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
@@ -57,13 +58,13 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "groups", "build", "stats", "rescue", "final"]), default = "fastq", help = "Stage to start the pipeline")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "groups", "build", "stats", "rescue", "final"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def pipeline_cmd(genome, name, fq_for, fq_rev, rate, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+def pipeline_cmd(genome, index, name, fq_for, fq_rev, rate, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
     """
     Add documentation here
 
 
     """
-    hpp.pipeline(genome = genome, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+    hpp.pipeline(genome = genome, index = index, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
@@ -82,17 +83,19 @@ def get_tables_cmd(genome, bins, output):
 
 
 @click.command()
+@click.option("--index", "-i", required = False, default = None, type = str, help = "Index of the genome.")
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
 @click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to map.")
 @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to map.")
 @click.option("--sensitivity", "-s", required = False, type = click.Choice(["very-sensitive", "sensitive", "fast", "very-fast"]), default = "very-sensitive", help = "Set sensitivity level for Bowtie2")
 @click.option("--max-alignment", '-k', required = False, type = int, default = None, help = "Set the number of alignments to report in ambiguous reads case.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
 @click.option("--verbose", "-v", is_flag = True, help = "Set verbosity level.")
-def alignment_cmd(genome, fq_for, fq_rev, max_alignment, sensitivity, output, cpus, verbose):
-    index = hal.hic_build_index(genome = genome, output_dir = output, cpus = cpus, verbose = verbose)
-    hal.hic_align(genome = genome, index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output, cpus = cpus, verbose = True)
+def alignment_cmd(index, fq_for, fq_rev, max_alignment, sensitivity, output, cpus, verbose):
+
+    if index is None:
+        index = hal.hic_build_index(output_dir = output, cpus = cpus, verbose = verbose)
+    hal.hic_align(index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output, cpus = cpus, verbose = True)
     hal.hic_view(output_dir = output, cpus = cpus, verbose = verbose)
     hal.hic_sort(output_dir = output, cpus = cpus, verbose = verbose)
 
