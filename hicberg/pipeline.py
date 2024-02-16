@@ -93,8 +93,6 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         if index is None:
             index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
 
-        print(f' ===> Index : {index}')
-
         hal.hic_align(index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output_folder, cpus = cpus, verbose = True)
         hal.hic_view(cpus = cpus, output_dir = output_folder, verbose = True)
         hal.hic_sort(cpus = cpus, output_dir = output_folder, verbose = True)
