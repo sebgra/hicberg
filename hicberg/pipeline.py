@@ -242,7 +242,5 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     hio.tidy_folder(output_dir = output_folder)
 
-    time.sleep(10)
-
     logger.info("Ending HiCBERG pipeline")
 

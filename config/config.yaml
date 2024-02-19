@@ -79,3 +79,14 @@ CC336:
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 0.3
     res: 2000
+
+
+tests_fix3:
+    name : "tests_fix3"
+    ref: "Sc288_2m/sub_genome.fa"
+    R1 : "/home/sardine/Bureau/tests/AC1.end1_sub.fastq"
+    R2 : "/home/sardine/Bureau/tests/AC1.end2_sub.fastq"
+    circular: ["NC-000913.3"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 0.3
+    res: 2000

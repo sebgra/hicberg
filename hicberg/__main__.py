@@ -38,11 +38,12 @@ def cli(chain=True):
 
 
 @click.command()
-@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.argument('data', nargs = -1)
+# @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
 @click.option("--index", "-i", required = False, default = None, type = str, help = "Index of the genome.")
 @click.option("--name", "-n", required = False, default = "sample", type = str, help = "Name of the analysis.")
-@click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to analyze.")
-@click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
+# @click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to analyze.")
+# @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to analyze.")
 @click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for sub-sampling restriction map.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
 @click.option("--kernel-size", "-K", required = False, default = 11, type = int, help = "Size of the gaussian kernel for contact density estimation.")
@@ -50,7 +51,7 @@ def cli(chain=True):
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("--max-alignment", '-k', required = False, type = int, default = None, help = "Set the number of alignments to report in ambiguous reads case.")
 @click.option("--sensitivity", "-s", required = False, type = click.Choice(["very-sensitive", "sensitive", "fast", "very-fast"]), default = "very-sensitive", help = "Set sensitivity level for Bowtie2")
-@click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
+@click.option("--bins", "-b", required = False, type = int, default = 2000, show_default = True, help = "Size of bins")
 @click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
 @click.option("--circular", "-c", required = False, type = str, default = "", help = "Name of the chromosome to consider as circular")
 @click.option("--mapq", "-q", required = False, type = int, default = 35, help = "Minimum MAPQ to consider a read as valid")
@@ -58,13 +59,13 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "groups", "build", "stats", "rescue", "final"]), default = "fastq", help = "Stage to start the pipeline")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "groups", "build", "stats", "rescue", "final"]), default = "None", help = "Stage to exit the pipeline")
 @click.option("--force", "-f", is_flag = True, help = "Set if previous analysis files are deleted")
-def pipeline_cmd(genome, index, name, fq_for, fq_rev, rate, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+def pipeline_cmd(data, index, name, rate, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
     """
     Add documentation here
 
 
     """
-    hpp.pipeline(genome = genome, index = index, name = name, fq_for = fq_for, fq_rev = fq_rev, output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+    hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     
 @click.command()
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
@@ -218,6 +219,17 @@ def benchmark_cmd(genome, chromosome, position, trans_chromosome, trans_position
 
     hbk.benchmark(output_dir = output, genome = genome, chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, kernel_size = kernel_size, deviation = deviation, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top, iterations = iterations, cpus = cpus)
 
+@click.command()
+@click.argument('name', nargs = -1)
+@click.option("--bins", "-b", required = False, type = int, default = 2000, show_default = True, help = "Size of bins")
+def greet(bins, name):
+    """Simple program that greets NAME."""
+    click.echo(f'Hello, {name[0]} and {name[1]}!')
+    print(f"bins : {bins}")
+
+
+
+
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
 cli.add_command(create_folder_cmd, name="create-folder")
@@ -231,3 +243,4 @@ cli.add_command(rescue_cmd, name="rescue")
 cli.add_command(plot_cmd, name="plot")
 cli.add_command(tidy_cmd, name="tidy")
 cli.add_command(benchmark_cmd, name="benchmark")
+cli.add_command(greet, name="greet")
