@@ -255,7 +255,7 @@ hicberg get-tables --output=DIR --genome=FILE [--bins=2000]
 For example to these files in a folder named "test" previously created on the desktop with a binning size of 2000 bp :
 
 ```bash
-hicberg get-tables -o ~/Desktop/test/ -g genome.fa --bins 2000
+hicberg get-tables -o ~/Desktop/test/  --bins 2000 <genome>
 ```
 
 The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be generated in the folder **output/**.
@@ -265,14 +265,20 @@ The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be 
 After having created a folder with the previous command mentioned in **create folder** and performed the creation of fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__ , the reads can be aligned using the following command:
 
 ```bash
-hicberg alignment --genome=FILE --fq-for=FILE --fq-rev=FILE --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivity="very-sensitive"] 
-  [--verbosity]
+hicberg alignment  --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivity="very-sensitive"] [--index=index]
+  [--verbosity] <genome> <forward> <reverse>
 ```
 
 For example to align reads in a folder named "test" previously created on the desktop with 8 threads:
 
 ```bash
-hicberg alignment -g genome.fa --fq-for reads_for.fq --fq-rev rev_reads.fq -o ~/Desktop/test/ --cpus 8
+hicberg alignment -o ~/Desktop/test/ --cpus 8  <genome.fa>  <reads_for.fq>  <rev_reads.fq>
+```
+
+If the user have already created the index, the following command can be used:
+
+```bash
+hicberg alignment -o ~/Desktop/test/ --cpus 8 --index index_prefix  <genome.fa>  <reads_for.fq>  <rev_reads.fq>
 ```
 
 The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created.
@@ -350,18 +356,17 @@ hicberg build-matrix -o ~/Desktop/test/ --recover
 Thus, the built matrix file will be  __*rescued_map.cool*__.
 
 
-
 ### Statistics
 
 After having aligned the reads and built the pairs file __*group1.pairs*__, the cooler matrix  __*unrescued_map.cool*__,  the statistical laws for the reassignment of the reads from **group2** can be learnt by using the following command:
 
 ```bash
-hicberg statistics --genome=FILE --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] 
+hicberg statistics --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] [--mode="full"] [--kernel-size=11] [--deviation=0.5] <genome>
 ```
-Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes), without sub-sampling th restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
+Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes) and default parameters for density estimation, without sub-sampling the restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
 
 ```bash
-hicberg statistics -g genome.fa -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ 
+hicberg statistics  -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ <genome.fa>
 ```
 
 The statistical laws are going to be saved as:
@@ -379,14 +384,14 @@ The statistical laws are going to be saved as:
 After having learnt the statistical laws (based on reads of **group1**), the reads from **group2** can be reassigned using the following command:
 
 ```bash
-hicberg rescue --genome=FILE  --output=DIR  [--enzyme=["DpnII", "HinfI"]] [--mode="full"] [--cpus=1]
+hicberg rescue --output=DIR  [--enzyme=["DpnII", "HinfI"]] [--mode="full"] [--cpus=1] <genome>
 ```
 
 Considering the previous example, to reassign the reads from **group2** in a folder named "test" previously created on the desktop:
 
 ```bash
 
-hicberg rescue -g genome.fa -e DpnII -e HinfI -o ~/Desktop/test/ 
+hicberg rescue -e DpnII -e HinfI -o ~/Desktop/test/ <genome>
 ```
 
 The files __*group2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be created.
@@ -396,13 +401,13 @@ The files __*group2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be crea
 To plot all the information about the analysis, the following command can be used:
 
 ```bash
-hicberg plot --genome=FILE --output=DIR  [--bins=2000]
+hicberg plot --output=DIR  [--bins=2000] <genome>
 ```
 
 Considering all the previous analysis, with 2000bp as bin size to plot all the information in a folder named "test" previously created on the desktop:
 
 ```bash
-hicberg plot -g genome.fa -o ~/Desktop/test/ -b 2000
+hicberg plot -o ~/Desktop/test/ -b 2000 <genome>
 ```
 
 The plots created are:

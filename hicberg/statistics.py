@@ -187,7 +187,7 @@ def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, si
 
     return density_map
 
-def compute_density(cooler_file : str = None, threads : int = 2, kernel_size: int = 11, deviation : float = 0.5, output_dir : str = None) -> None: 
+def compute_density(cooler_file : str = "unrescued_map.cool", threads : int = 2, kernel_size: int = 11, deviation : float = 0.5, output_dir : str = None) -> None: 
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 
@@ -360,9 +360,7 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
             np.logspace(0, n_bins, num=n_bins + 1, base=base, dtype=int)
         )
 
-    # # TODO : recent correction to fuse bins n-1 and n
-    # xs[-1] = chromosome_size
-    
+    # # TODO : recent correction to fuse bins n-1 and n    
     # return xs
     return np.delete(xs, -2)
 
@@ -689,7 +687,6 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
         print(f"restriction map not found")
         pass
 
-    print(f"keys : {restriction_map.keys()}")
 
     list_d1d2 = []  # list containing the (d1+d2) i.e size of the fragment to sequence
 

@@ -75,28 +75,31 @@ def create_folder_cmd(output, force, name):
     hio.create_folder(sample_name=name, output_dir=output, force=force)
 
 @click.command()
+@click.argument('data', nargs = -1)
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+# @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
 @click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
-def get_tables_cmd(genome, bins, output):
-    hut.get_chromosomes_sizes(genome = genome, output_dir = output)
+def get_tables_cmd(data, bins, output):
+    hut.get_chromosomes_sizes(genome = data[0], output_dir = output)
     hut.get_bin_table(bins = bins, output_dir = output)
 
 
 @click.command()
+@click.argument('data', nargs = -1)
 @click.option("--index", "-i", required = False, default = None, type = str, help = "Index of the genome.")
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to map.")
-@click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to map.")
+# @click.option("--fq-for", required = True, default = None, type = str, help = "Forward fastq file to map.")
+# @click.option("--fq-rev", required = True, default = None, type = str, help = "Reverse fastq file to map.")
 @click.option("--sensitivity", "-s", required = False, type = click.Choice(["very-sensitive", "sensitive", "fast", "very-fast"]), default = "very-sensitive", help = "Set sensitivity level for Bowtie2")
 @click.option("--max-alignment", '-k', required = False, type = int, default = None, help = "Set the number of alignments to report in ambiguous reads case.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
 @click.option("--verbose", "-v", is_flag = True, help = "Set verbosity level.")
-def alignment_cmd(index, fq_for, fq_rev, max_alignment, sensitivity, output, cpus, verbose):
+def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose):
 
     if index is None:
-        index = hal.hic_build_index(output_dir = output, cpus = cpus, verbose = verbose)
-    hal.hic_align(index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output, cpus = cpus, verbose = True)
+        index = hal.hic_build_index(genome = data[0], output_dir = output, cpus = cpus, verbose = verbose)
+
+    hal.hic_align(index = index, fq_for = data[1], fq_rev = data[2], sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output, cpus = cpus, verbose = True)
     hal.hic_view(output_dir = output, cpus = cpus, verbose = verbose)
     hal.hic_sort(output_dir = output, cpus = cpus, verbose = verbose)
 
@@ -122,21 +125,25 @@ def build_matrix_cmd(output, recover, cpus):
     hio.build_matrix(cpus = cpus, output_dir = output, mode = recover)
 
 @click.command()
+@click.argument('data', nargs = -1)
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+@click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
+@click.option("--kernel-size", "-K", required = False, default = 11, type = int, help = "Size of the gaussian kernel for contact density estimation.")
+@click.option("--deviation", "-d", required = False, default = 0.5, type = float, help = "Standard deviation for contact density estimation.")
+# @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
 @click.option("--rate", "-r", required = False, default = 1.0, type = float, help = "Rate to use for sub-sampling restriction map.")
 @click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
 @click.option("--circular", "-c", required = False, type = str, default = "", help = "Name of the chromosome to consider as circular")
 @click.option("--bins", "-b", required = False, type = int, default = 2000, help = "Size of bins")
-def statistics_cmd(genome, rate, enzyme, circular, bins, output):
-    restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output)
-    hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output)
-    hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output)
-    hst.log_bin_genome(genome = genome, output_dir = output)
+@click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
+def statistics_cmd(data, mode, kernel_size, deviation,  rate, enzyme, circular, bins, output, cpus):
+    restriction_map = hst.get_restriction_map(genome = data[0], enzyme = enzyme, output_dir = output)
+    hst.get_dist_frags(genome = data[0], restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output)
+    hst.log_bin_genome(genome = data[0], output_dir = output)
 
     p1 = Process(target = hst.get_patterns(circular = circular, output_dir = output))
-    p2 = Process(target = hst.generate_trans_ps(restriction_map = restriction_map, output_dir = output))
-    p3 = Process(target = hst.generate_coverages(genome = genome, bins = bins, output_dir = output))
+    p2 = Process(target = hst.generate_trans_ps(output_dir = output))
+    p3 = Process(target = hst.generate_coverages(genome = data[0], bins = bins, output_dir = output))
     p4 = Process(target = hst.generate_d1d2(output_dir = output))
 
     # Launch processes
@@ -144,25 +151,33 @@ def statistics_cmd(genome, rate, enzyme, circular, bins, output):
         process.start()
         process.join()
 
+    if mode in ["full", "density"]:
+
+            hst.compute_density(kernel_size = kernel_size, deviation = deviation, threads  = cpus, output_dir  = output)
+        
+
+    
+
 @click.command()
+@click.argument('data', nargs = -1)
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+# @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
 @click.option("--enzyme", "-e", required = False, type = str, multiple = True, help = "Enzymes to use for genome digestion.")
-@click.option("--nb-chunks", "-n", required = False, default = 1, type = int, help = "Number of chunks to split the alignment files into.")
+# @click.option("--nb-chunks", "-n", required = False, default = 1, type = int, help = "Number of chunks to split the alignment files into.")
 @click.option("--mode", "-m", required = False, default = "full", type = str, help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, help = "Threads to use for analysis.")
-def rescue_cmd(genome, enzyme, nb_chunks, mode, output, cpus):
+def rescue_cmd(data, enzyme, mode, output, cpus):
     
-    restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output)
-    hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output)
+    restriction_map = hst.get_restriction_map(genome = data[0], enzyme = enzyme, output_dir = output)
+    hut.chunk_bam(nb_chunks = cpus, output_dir = output)
         
     # Get chunks as lists
     forward_chunks, reverse_chunks = hut.get_chunks(output)
 
-    # Re-attribute reads
-    with multiprocessing.Pool(processes = cpus) as pool:
+    # Reattribute reads
+    with multiprocessing.Pool(processes = cpus) as pool: # cpus
 
-        results = pool.map_async(partial(hst.reattribute_reads, mode = mode,  restriction_map = restriction_map, output_dir = output),
+        results = pool.map(partial(hst.reattribute_reads, mode = mode, restriction_map = restriction_map, output_dir = output),
         zip(forward_chunks, reverse_chunks))
         pool.close()
         pool.join()
@@ -171,15 +186,16 @@ def rescue_cmd(genome, enzyme, nb_chunks, mode, output, cpus):
 
 
 @click.command()
+@click.argument('data', nargs = -1)
 @click.option("--output", "-o", required = False, default = None, type = str, help = "Output folder to save results.")
-@click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
+# @click.option("--genome", "-g", required = True, default = None, type = str, help = "Genome to perform analysis on.")
 @click.option("--bins", "-b", required = False, default = 2000, type = int, help = "Size of bins")
-def plot_cmd(genome, bins, output):
+def plot_cmd(data, bins, output):
     p1 = Process(target = hpl.plot_laws(output_dir = output))
     p2 = Process(target = hpl.plot_trans_ps(output_dir = output))
     p3 = Process(target = hpl.plot_coverages(bins = bins, output_dir = output))
     p4 = Process(target = hpl.plot_couple_repartition(output_dir = output))
-    p5 = Process(target = hpl.plot_matrix(genome = genome, output_dir = output))
+    p5 = Process(target = hpl.plot_matrix(genome = data[0], output_dir = output))
     p6 = Process(target = hpl.plot_d1d2(output_dir = output))
     p7 = Process(target = hpl.plot_density, kwargs = dict(output_dir = output))
 

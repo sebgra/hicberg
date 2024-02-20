@@ -605,7 +605,6 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     # multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_2.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
 
     for forward_block, reverse_block in zip(forward_bam_file_iter, reverse_bam_file_iter):
-        
 
         unmapped_couple, multi_mapped_couple = False, False
 
