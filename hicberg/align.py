@@ -76,9 +76,9 @@ def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very
     index : str
         Path to the index of the genome along which reads are going to be aligned (path to .bt2l files). Default to None, index files are searched to sample_name/data/index/sample_name.
     fq_for : str
-        Path to .fatsa containing set of reads to align (forward mate).
+        Path to .fasta containing set of reads to align (forward mate).
     fq_rev : str
-        Path to .fatsa containing set of reads to align (forward mate).
+        Path to .fasta containing set of reads to align (forward mate).
     sensitivity : str, optional
         Sensitivity of the alignment., by default 'very_sensitive'
     max_alignment : int, optional
@@ -86,9 +86,9 @@ def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very
     cpus : int, optional
         Number of threads allocated for the alignment, by default 1
     output_dir : str, optional
-        Path where the alignement files (.sam) should be stored, by default None
-    verbonse : bool, optional
-        Set weither or not the shell command should be printed, by default False
+        Path where the alignment files (.sam) should be stored, by default None
+    verbose : bool, optional
+        Set wether or not the shell command should be printed, by default False
     """    
 
     logger.info("Start aligning reads")
@@ -114,8 +114,8 @@ def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very
 
     if max_alignment is None or max_alignment == -1:
         
-        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
         cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
+        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
 
     elif max_alignment is not None:
             

@@ -121,17 +121,15 @@ WEBSITE TO BE ADDED
 
 ```bash
 
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] 
-[--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
+hicberg pipeline  [--enzyme=["DpnII", "HinfI"]]
+[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--index=None] [--force]  <genome> <input1> <input2>
 
 ```
 
 For example, to run the pipeline using 8 threads using ARIMA Hi-C kit enzymes (DpnII & HinfI) and generate a matrix and its reconstruction in the directory out: 
 
 ```bash
-hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq 
--e DpnII -e HinfI --cpus 8 -o out/
+hicberg pipeline -e DpnII -e HinfI --cpus 8 -o out/  genome.fa  reads_for.fq  rev_reads.fq 
 
 ```
 

@@ -289,7 +289,7 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     restriction_map_dictionary = dict()
 
     if len(enzyme) == 1 and enzyme[0].isnumeric():
-        print(f"Enabled micro-c with enzyme : {enzyme}")
+        # print(f"Enabled micro-c with enzyme : {enzyme}")
         enzyme = int(enzyme[0])
 
         for seq_record in SeqIO.parse(genome, "fasta"):
@@ -360,7 +360,11 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
             np.logspace(0, n_bins, num=n_bins + 1, base=base, dtype=int)
         )
 
-    return xs
+    # # TODO : recent correction to fuse bins n-1 and n
+    # xs[-1] = chromosome_size
+    
+    # return xs
+    return np.delete(xs, -2)
 
 def log_bin_genome(genome :str, base : float = 1.1, output_dir : str = None) -> dict[str, np.ndarray[int]]:
     
@@ -1381,6 +1385,7 @@ def draw_read_couple(propensities : np.array) -> int:
     int
         Index of the couple of reads drawn.
     """
+    # print(f"propensities : {propensities}")
 
     xk = np.arange(len(propensities))
 
@@ -1391,8 +1396,12 @@ def draw_read_couple(propensities : np.array) -> int:
     elif np.sum(propensities) <= 0:
 
         pk = np.full(xk.shape, np.divide(1, len(propensities)))
+    # print(f"pk : {pk}")
+    # print(f"xk : {xk}")
 
     index = choice(xk, p=pk)
+
+    # print(f"index drawn : {index}")
 
     return index
 
@@ -1483,6 +1492,8 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         propensities = []
 
         combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
+
+        # print(f"combinations : {combinations}")
 
         for combination in combinations:
 

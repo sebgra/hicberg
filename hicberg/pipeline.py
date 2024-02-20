@@ -104,24 +104,24 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     
     if start_stage < 3:
 
-        hut.chunk_bam(forward_bam_file = "1.sorted.bam", reverse_bam_file = "2.sorted.bam", nb_chunks = nb_chunks, output_dir = output_folder)
-        # hut.classify_reads(mapq = mapq, output_dir = output_folder)
+        # hut.chunk_bam(forward_bam_file = "1.sorted.bam", reverse_bam_file = "2.sorted.bam", nb_chunks = nb_chunks, output_dir = output_folder)
+        logger.info(f"Starting reads classification")
+        hut.classify_reads(mapq = mapq, output_dir = output_folder)
 
         # Get chunks as lists
-        forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_folder)
-
-        logger.info(f"Starting reads classification")
-
-        # Classify reads
-        with multiprocessing.Pool(processes = cpus) as pool: # cpus
-
-            results = pool.map(partial(hut.classify_reads, mapq  = mapq, output_dir = output_folder),
-            zip(forward_chunks, reverse_chunks))
-            pool.close()
-            pool.join()
+        # forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_folder)
 
 
-        hio.merge_predictions(output_dir = output_folder, clean = True, stage = "classification", cpus = cpus)
+        # # Classify reads
+        # with multiprocessing.Pool(processes = cpus) as pool: # cpus
+
+        #     results = pool.map(partial(hut.classify_reads, mapq  = mapq, output_dir = output_folder),
+        #     zip(forward_chunks, reverse_chunks))
+        #     pool.close()
+        #     pool.join()
+
+
+        # hio.merge_predictions(output_dir = output_folder, clean = True, stage = "classification", cpus = cpus)
 
     if exit_stage == 3:
 
