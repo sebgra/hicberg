@@ -272,7 +272,7 @@ hicberg alignment  --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivit
 For example to align reads in a folder named "test" previously created on the desktop with 8 threads:
 
 ```bash
-hicberg alignment -o ~/Desktop/test/ --cpus 8  <genome>  <reads_for>  <rev_reads>
+hicberg alignment -o ~/Desktop/test/ --cpus 8  <genome.fa>  <reads_for.fq>  <rev_reads.fq>
 ```
 
 If the user have already created the index, the following command can be used:
@@ -492,25 +492,25 @@ It is possible to chain the different steps of the pipeline by using the followi
 
 ```bash
 # 0. Prepare analysis
-hicberg pipeline  -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME --start-stage fastq --exit-stage bam <genome>  <reads_for> <rev_reads>
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage fastq  --exit-stage bam
 
 # 1. Align reads
-hicberg pipeline -o --output=DIR [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME --start-stage bam --exit-stage groups <genome>  <reads_for> <rev_reads>
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage bam  --exit-stage groups
 
 # 2. Group reads
-hicberg pipeline -o --output=DIR [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME --start-stage groups --exit-stage build  <genome> <reads_for> <rev_reads>
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage groups  --exit-stage build
 
 # 3. Build pairs & cool
-hicberg pipeline -o --output=DIR [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME --start-stage build --exit-stage stats <genome> <reads_for> <rev_reads>
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage build  --exit-stage stats
 
 # 4. Compute statistics
-hicberg pipeline -o --output=DIR [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME --start-stage stats --exit-stage rescue <genome> <reads_for> <rev_reads>
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage stats  --exit-stage rescue
 
 # 5. Reassign ambiguous reads
-hicberg pipeline -o --output=DIR [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME --start-stage rescue --exit-stage final <genome> <reads_for> <rev_reads>
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
 
 # 6. Build pairs & cool then get results
-hicberg pipeline -o --output=DIR [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME --start-stage rescue --exit-stage final <genome> <reads_for> <rev_reads>
+hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
 ```
 
 ## Evaluating the model
@@ -590,14 +590,14 @@ The evaluation can be run using the following command :
 
 
 ```bash
-hicberg benchmark  --output=DIR [--chromosome=STR] [--position=INT] [--trans-chromosome=STR][--trans-position=INT] [--stride=INT] [--bins=INT] [--auto=INT] [--rounds=INT] [--magnitude=FLOAT] [--modes=STR] [--pattern=STR] [--threshold=FLOAT] [--jitter=INT] [--trend] [--top=INT] [--genome=STR][--force] <genome>
+hicberg benchmark  --output=DIR [--chromosome=STR] [--position=INT] [--trans-chromosome=STR][--trans-position=INT] [--stride=INT] [--bins=INT] [--auto=INT] [--rounds=INT] [--magnitude=FLOAT] [--modes=STR] [--pattern=STR] [--threshold=FLOAT] [--jitter=INT] [--trend] [--top=INT] [--genome=STR][--force]
 ```
 
 Considering a benchmark with 4 artificially duplicated sequences set at _chr1:100000-102000 (source)_, _chr1:200000-202000 (target 1)_, _chr4:50000-52000 (target 2)_ and _chr7:300000-302000 (target 3)_, with 2000bp as bin size and considering __full and ps_only modes__ to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
 
 
 ```bash
-hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7 -P 50000,30000 -m full,ps <genome>
+hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7 -P 50000,30000 -m full,ps_only -g <genome.fa>
 ```
 
 It is also possible to let the source and target intervals being picked at random. However in such cases, the empty bins are not considered in the evaluation. The random mode is activated by setting the parameter __*--auto*__ to the number of desired artificially duplicated sequences. 
@@ -605,7 +605,7 @@ It is also possible to let the source and target intervals being picked at rando
 Thus, considering a benchmark with __100 artificially duplicated sequences__ , with 2000bp as bin size and considering full and ps_only modes to get the performance of the reconstructions considering a folder named "test" previously created on the desktop containing the original alignment files and the unreconstructed maps, the command line is the following : 
 
 ```bash
-hicberg benchmark -o ~/Desktop/test/ -a 100 -m full,ps_only  -g <genome>
+hicberg benchmark  -o ~/Desktop/test/ -a 100 -m full,ps_only  -g <genome.fa>
 ```
 
 ### Pattern based evaluation 
@@ -621,7 +621,7 @@ _N.B. : Because of the stochasticity of Chromosight while splitting the Hi-C map
 Considering a benchmark based on loops patterns on chromosome 7 with a threshold of 0.5 with all the detected patterns after thresholding (i.e. 100% rate) and a jitter of 0 with detrend, in full mode, the command line is the following : 
 
 ```bash
-hicberg benchmark  -o ~/Desktop/test/ -c chr7 -p 100000 -S loops -t 0.5 -k 100 -j 0 -T -m random <genome>
+hicberg benchmark  -o ~/Desktop/test/ -c chr7 -p 100000 -S loops -t 0.5 -k 100 -j 0 -T -m random -g <genome.fa>
 ```
 
 
