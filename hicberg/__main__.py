@@ -237,7 +237,7 @@ def benchmark_cmd(data, chromosome, position, trans_chromosome, trans_position, 
     hbk.benchmark(output_dir = output, genome = data[0], chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, kernel_size = kernel_size, deviation = deviation, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top, iterations = iterations, cpus = cpus)
 
 @click.command()
-@click.argument('name', nargs = -1)
+@click.argument('name', nargs = -1, metavar = "<name> <name>")
 @click.option("--bins", "-b", required = False, type = int, default = 2000, show_default = True, help = "Size of bins")
 def greet(bins, name):
     """Simple program that greets NAME."""
