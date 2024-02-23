@@ -235,7 +235,6 @@ rules/02_hicberg_step_2.smk
 rules/03_hicberg_step_3.smk
 rules/04_hicberg_step_4.smk
 rules/05_hicberg_step_5.smk
-rules/06_hicberg_step_6.smk
 rules/.snakemake/metadata/L2hvbWUvc2FyZGluZS9CdXJlYXUvaGljX3Rlc3Q=
 rules/.snakemake/metadata/L2hvbWUvc2FyZGluZS9CdXJlYXUvaGljX3Rlc3QvMS5zYW0=
 rules/.snakemake/metadata/L2hvbWUvc2FyZGluZS9CdXJlYXUvaGljX3Rlc3QvMi5zYW0=

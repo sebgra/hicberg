@@ -37,14 +37,13 @@ Requires-Dist: matplotlib
 Requires-Dist: numpy
 Requires-Dist: pandas
 Requires-Dist: pysam
+Requires-Dist: pybedtools
 Requires-Dist: scipy
 Requires-Dist: scikit-learn
 Requires-Dist: statsmodels
 
 
 # HiC-BERG
-
-# TO BE COMPLETED
 
 ## Badges
 
@@ -62,7 +61,7 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 ### Environnement  
 
-Create environment by using following command : 
+Create environment by using following command :
 
 ```bash
 mamba env create -n [ENV_NAME] -f hicberg.yaml;
@@ -117,7 +116,40 @@ TO BE COMPLETED
 
 ### Docker
 
-TO BE COMPLETED
+HiC-BERG can be used via Docker to limit dependency compatibility problems. More information about container such as Docker can be found [there](https://www.docker.com/get-started/).
+
+To be used through Docker, the HiC-BERG container as to be build using :
+
+```bash
+# Pick user and group variables
+export HOST_UID=$(id -u);                                                                
+export HOST_GID=$(id -g);
+
+# Build container
+sudo docker build --build-arg UID=$HOST_UID --build-arg GID=$HOST_GID -t hicberg:0.0.1 .
+```
+
+HiC-BERG can therefore be used with usual command detailed further using : 
+
+```bash
+sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 <hicberg_command>
+```
+
+N.B : _working_directory_ and _output (-o argument)_ of HiC-BERG command have to be the same.
+
+For instance if you need to access the help of HiC-BERG thorugh Docker :
+
+```bash
+sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 hicberg --help
+```
+
+HiC-BERG can also be used through Docker in interactive mode using :
+
+```bash
+sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g) -it  hicberg:0.0.1
+```
+
+Then, the user will be directly placed in an interactive shell where HiC-BERG can be use directly, by typing any of HiC-BERG command such as further examples.
     
 ## Usage/Examples
 
@@ -133,17 +165,15 @@ WEBSITE TO BE ADDED
 
 ```bash
 
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE [--enzyme=["DpnII", "HinfI"]]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] 
-[--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--force]
+hicberg pipeline  [--enzyme=["DpnII", "HinfI"]]
+[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--index=None] [--force]  <genome> <input1> <input2>
 
 ```
 
 For example, to run the pipeline using 8 threads using ARIMA Hi-C kit enzymes (DpnII & HinfI) and generate a matrix and its reconstruction in the directory out: 
 
 ```bash
-hicberg pipeline -g genome.fa --fq-for reads_for.fq --fq_rev rev_reads.fq 
--e DpnII -e HinfI --cpus 8 -o out/
+hicberg pipeline -e DpnII -e HinfI --cpus 8 -o out/  genome.fa  reads_for.fq  rev_reads.fq 
 
 ```
 
@@ -269,7 +299,7 @@ hicberg get-tables --output=DIR --genome=FILE [--bins=2000]
 For example to these files in a folder named "test" previously created on the desktop with a binning size of 2000 bp :
 
 ```bash
-hicberg get-tables -o ~/Desktop/test/ -g genome.fa --bins 2000
+hicberg get-tables -o ~/Desktop/test/  --bins 2000 <genome>
 ```
 
 The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be generated in the folder **output/**.
@@ -279,14 +309,20 @@ The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be 
 After having created a folder with the previous command mentioned in **create folder** and performed the creation of fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__ , the reads can be aligned using the following command:
 
 ```bash
-hicberg alignment --genome=FILE --fq-for=FILE --fq-rev=FILE --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivity="very-sensitive"] 
-  [--verbosity]
+hicberg alignment  --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivity="very-sensitive"] [--index=index]
+  [--verbosity] <genome> <forward> <reverse>
 ```
 
 For example to align reads in a folder named "test" previously created on the desktop with 8 threads:
 
 ```bash
-hicberg alignment -g genome.fa --fq-for reads_for.fq --fq-rev rev_reads.fq -o ~/Desktop/test/ --cpus 8
+hicberg alignment -o ~/Desktop/test/ --cpus 8  <genome.fa>  <reads_for.fq>  <rev_reads.fq>
+```
+
+If the user have already created the index, the following command can be used:
+
+```bash
+hicberg alignment -o ~/Desktop/test/ --cpus 8 --index index_prefix  <genome.fa>  <reads_for.fq>  <rev_reads.fq>
 ```
 
 The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created.
@@ -364,18 +400,17 @@ hicberg build-matrix -o ~/Desktop/test/ --recover
 Thus, the built matrix file will be  __*rescued_map.cool*__.
 
 
-
 ### Statistics
 
 After having aligned the reads and built the pairs file __*group1.pairs*__, the cooler matrix  __*unrescued_map.cool*__,  the statistical laws for the reassignment of the reads from **group2** can be learnt by using the following command:
 
 ```bash
-hicberg statistics --genome=FILE --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] 
+hicberg statistics --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] [--mode="full"] [--kernel-size=11] [--deviation=0.5] <genome>
 ```
-Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes), without sub-sampling th restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
+Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes) and default parameters for density estimation, without sub-sampling the restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
 
 ```bash
-hicberg statistics -g genome.fa -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ 
+hicberg statistics  -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ <genome.fa>
 ```
 
 The statistical laws are going to be saved as:
@@ -393,14 +428,14 @@ The statistical laws are going to be saved as:
 After having learnt the statistical laws (based on reads of **group1**), the reads from **group2** can be reassigned using the following command:
 
 ```bash
-hicberg rescue --genome=FILE  --output=DIR  [--enzyme=["DpnII", "HinfI"]] [--mode="full"] [--cpus=1]
+hicberg rescue --output=DIR  [--enzyme=["DpnII", "HinfI"]] [--mode="full"] [--cpus=1] <genome>
 ```
 
 Considering the previous example, to reassign the reads from **group2** in a folder named "test" previously created on the desktop:
 
 ```bash
 
-hicberg rescue -g genome.fa -e DpnII -e HinfI -o ~/Desktop/test/ 
+hicberg rescue -e DpnII -e HinfI -o ~/Desktop/test/ <genome>
 ```
 
 The files __*group2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be created.
@@ -410,13 +445,13 @@ The files __*group2.1.rescued.bam*__ and __*group2.2.rescued.bam*__ will be crea
 To plot all the information about the analysis, the following command can be used:
 
 ```bash
-hicberg plot --genome=FILE --output=DIR  [--bins=2000]
+hicberg plot --output=DIR  [--bins=2000] <genome>
 ```
 
 Considering all the previous analysis, with 2000bp as bin size to plot all the information in a folder named "test" previously created on the desktop:
 
 ```bash
-hicberg plot -g genome.fa -o ~/Desktop/test/ -b 2000
+hicberg plot -o ~/Desktop/test/ -b 2000 <genome>
 ```
 
 The plots created are:
@@ -583,14 +618,14 @@ The stride is the number of bins between the first bin of the source interval an
 The benchmark can be performed considering several modes. The modes are defined by the parameter __*--modes*__. The modes are defined as a list of strings separated by comas. The modes are the same as the one used for the reconstruction : 
 
 - full
-- ps_only
-- cover_only
-- d1d2_only
-- density_only
-- no_ps
-- no_cover
-- no_d1d2
-- no_density
+- random
+- ps
+- cov
+- d1d2
+- density
+- standard (ps and cov)
+- one_enzyme (ps, cov and d1d2)
+
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
 

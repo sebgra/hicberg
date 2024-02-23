@@ -1,4 +1,5 @@
 # Ignore logfiles
 *.log
+sandbox.py
 
 # Ignore 

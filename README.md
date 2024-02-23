@@ -26,12 +26,13 @@ mamba env create -n [ENV_NAME] -f hicberg.yaml;
 
 ### Dependencies
 
-To ensure that HiC-BERG is correctly working, Bowtie2 and Samtools have to be installed. These can be install through : 
+To ensure that HiC-BERG is correctly working, Bowtie2, Samtools and BedTools have to be installed. These can be install through : 
 
 ```bash
 
 mamba install bowtie2 -c bioconda;
 mamba install samtools -c bioconda;
+mamba install bedtools -c bioconda;
 ```
 
 

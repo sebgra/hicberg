@@ -1,4 +1,3 @@
-import os
 from email.policy import default
 import multiprocessing
 from multiprocessing import Process
@@ -12,7 +11,6 @@ import hicberg.pipeline as hpp
 import hicberg.plot as hpl
 import hicberg.benchmark as hbk
 import ast
-import numpy as np
 
 from hicberg.version import __version__
 
@@ -34,9 +32,6 @@ class PythonLiteralOption(click.Option):
         except:
             raise click.BadParameter(value)
         
-
-        
-
 
 @click.group(context_settings = CONTEXT_SETTINGS, epilog = epilogs["complete"], options_metavar = "<options>")
 @click.version_option(version=__version__)
@@ -71,7 +66,9 @@ def pipeline_cmd(data, index, name, rate, mode, kernel_size, deviation, cpus, ou
     Hi-C pipeline to generate enhanced contact matrix from fastq files.
     """
     hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
-    
+    return
+
+
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
 @click.option("--output", "-o", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Output folder to save results. If not set, the current directory is used.")
 @click.option("--name", "-n", required = False, default = None, type = str, show_default = True, metavar = "<str>",  help = "Name of the output folder to create. If not set, 'sample' is used.")
@@ -81,6 +78,7 @@ def create_folder_cmd(output, force, name):
     Create a folder to save results. Folder will be set as <output>/<name>.
     """
     hio.create_folder(sample_name=name, output_dir=output, force=force)
+    return
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
 @click.argument('data', nargs = -1, metavar = "<genome>")
@@ -92,6 +90,7 @@ def get_tables_cmd(data, bins, output):
     """
     hut.get_chromosomes_sizes(genome = data[0], output_dir = output)
     hut.get_bin_table(bins = bins, output_dir = output)
+    return
 
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["bowtie2"] + "\n"  + epilogs["samtools"], options_metavar = "<options>")
@@ -112,6 +111,7 @@ def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose
     hal.hic_align(index = index, fq_for = data[1], fq_rev = data[2], sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output, cpus = cpus, verbose = True)
     hal.hic_view(output_dir = output, cpus = cpus, verbose = verbose)
     hal.hic_sort(output_dir = output, cpus = cpus, verbose = verbose)
+    return
 
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
@@ -126,6 +126,7 @@ def classify_cmd(mapq, output):
     - Read pairs with at least one read mapping at multiple positions (group 2)
     """
     hut.classify_reads(mapq = mapq, output_dir = output)
+    return
 
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
@@ -136,6 +137,7 @@ def build_pairs_cmd(output, recover):
     Create pair files from a pair of alignment files.
     """
     hio.build_pairs(output_dir = output, mode = recover)
+    return
 
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["cooler"], options_metavar = "<options>")
@@ -147,6 +149,8 @@ def build_matrix_cmd(output, recover, cpus):
     Create matrix (.cool) from pairs files.
     """
     hio.build_matrix(cpus = cpus, output_dir = output, mode = recover)
+
+    return
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
 @click.argument('data', nargs = -1, metavar = "<genome>")
@@ -180,6 +184,7 @@ def statistics_cmd(data, mode, kernel_size, deviation,  rate, enzyme, circular, 
     if mode in ["full", "density"]:
 
             hst.compute_density(kernel_size = kernel_size, deviation = deviation, threads  = cpus, output_dir  = output)
+    return
         
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
@@ -207,6 +212,7 @@ def rescue_cmd(data, enzyme, mode, output, cpus):
         pool.join()
 
     hio.merge_predictions(output_dir = output, clean = True)
+    return 
 
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
@@ -230,6 +236,8 @@ def plot_cmd(data, bins, output):
         process.start()
         process.join()
 
+    return
+
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
 @click.option("--output", "-o", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Output folder to save results.")
 def tidy_cmd(output):
@@ -237,6 +245,7 @@ def tidy_cmd(output):
     Tidy output folder.
     """
     hio.tidy_folder(output_dir = output)
+    return
 
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
@@ -265,7 +274,7 @@ def benchmark_cmd(data, chromosome, position, trans_chromosome, trans_position, 
     Perform benchmarking of the statistical model (this can be time consuming).
     """
     hbk.benchmark(output_dir = output, genome = data[0], chromosome = chromosome, position = position, trans_chromosome = trans_chromosome, trans_position = trans_position, strides = strides, mode = mode, force = force, bins = bins, auto = auto, kernel_size = kernel_size, deviation = deviation, pattern = pattern, threshold = threshold, jitter = jitter, trend = trend, top = top, iterations = iterations, cpus = cpus)
-
+    return
 
 # Command group
 cli.add_command(pipeline_cmd, name="pipeline")
