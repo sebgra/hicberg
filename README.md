@@ -493,25 +493,25 @@ It is possible to chain the different steps of the pipeline by using the followi
 
 ```bash
 # 0. Prepare analysis
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage fastq  --exit-stage bam
+hicberg pipeline  -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage fastq  --exit-stage bam <genome> <input1> <input2>
 
 # 1. Align reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage bam  --exit-stage groups
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage bam  --exit-stage groups <genome> <input1> <input2>
 
 # 2. Group reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage groups  --exit-stage build
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage groups  --exit-stage build <genome> <input1> <input2>
 
 # 3. Build pairs & cool
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage build  --exit-stage stats
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage build  --exit-stage stats <genome> <input1> <input2>
 
 # 4. Compute statistics
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage stats  --exit-stage rescue
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage stats  --exit-stage rescue <genome> <input1> <input2>
 
 # 5. Reassign ambiguous reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage rescue  --exit-stage final <genome> <input1> <input2>
 
 # 6. Build pairs & cool then get results
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage rescue  --exit-stage final <genome> <input1> <input2>
 ```
 
 ## Evaluating the model
