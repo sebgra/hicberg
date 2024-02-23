@@ -225,6 +225,8 @@ N.B 3: The ressources allocated to each job can be modified in the file cluster_
 
 #### Create folder
 
+Be careful to create a folder before running the pipeline. The folder can be created using the following command:
+
 ```bash
 hicberg create-folder --output=DIR [--name="folder_name"] [--force]
 ```
