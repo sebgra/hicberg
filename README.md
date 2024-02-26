@@ -26,12 +26,13 @@ mamba env create -n [ENV_NAME] -f hicberg.yaml;
 
 ### Dependencies
 
-To ensure that HiC-BERG is correctly working, Bowtie2, Samtools and BedTools have to be installed. These can be install through : 
+To ensure that HiC-BERG is correctly working, Bowtie2, Samtools, bedGraphToBigWig and BedTools have to be installed. These can be install through : 
 
 ```bash
 
 mamba install bowtie2 -c bioconda;
 mamba install samtools -c bioconda;
+conda install -c bioconda ucsc-bedgraphtobigwig;
 mamba install bedtools -c bioconda;
 ```
 
@@ -258,7 +259,7 @@ hicberg get-tables --output=DIR --genome=FILE [--bins=2000]
 For example to these files in a folder named "test" previously created on the desktop with a binning size of 2000 bp :
 
 ```bash
-hicberg get-tables -o ~/Desktop/test/  --bins 2000 <genome>
+hicberg get-tables -o ~/Desktop/  --bins 2000 <genome>
 ```
 
 The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be generated in the folder **output/**.

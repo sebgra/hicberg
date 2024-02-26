@@ -131,7 +131,7 @@ def classify_cmd(mapq, output):
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
 @click.option("--output", "-o", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Output folder to save results.")
-@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if pairs are built after reads reassignment. Therefor alignment files of group2 will be used.")
+@click.option("--recover", "-r", required = False, default = False, is_flag = True, help = "Set if pairs are built after reads reassignment. Therefore alignment files of group2 will be used.")
 def build_pairs_cmd(output, recover):
     """
     Create pair files from a pair of alignment files.
