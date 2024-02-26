@@ -1,5 +1,6 @@
 import time
 import uuid
+import subprocess as sp
 from glob import glob
 import subprocess as sp
 import shutil as sh
@@ -1265,6 +1266,117 @@ def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
 
 
     return (forward_chunks, reverse_chunks)
+
+############################################################################################################
+###################################################### OMICS UTILS MODE ####################################
+############################################################################################################
+
+def preprocess_pairs(pairs_file : str, threshold : int = 1000, output_dir : str = None) -> None:
+
+    output_dir_path = Path(output_dir)
+    if not output_dir_path.is_dir():
+        raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
+
+    pairs_path = Path(output_dir, pairs_file)
+
+    if not pairs_path.is_file():
+            
+        raise IOError(f"Pairs file {pairs_path.name} not found. Please provide a valid path.")
+    
+
+    pairs_handler = open(pairs_path, "r")
+
+    with open(output_dir_path / "preprocessed_pairs.txt", "w") as f_out:
+
+        for line in pairs_handler:
+
+            if line.startswith("#"):
+                continue
+        
+
+            read_id, chromosome_for, position_for, chromosome_rev, position_rev, strand_for, strand_rev = line.split("\t")
+
+            if chromosome_for != chromosome_rev:
+                continue
+
+
+            if np.abs(int(position_rev) - int(position_for)) < threshold:
+
+                continue
+
+            else: 
+
+                if int(position_for) < int(position_rev):
+
+                    f_out.write(f"{chromosome_for}\t{position_for}\t{position_rev}\t1\n")
+                else :
+
+                    f_out.write(f"{chromosome_for}\t{position_rev}\t{position_for}\t1\n")
+
+    pairs_handler.close()
+
+
+def format_chrom_sizes(chrom_sizes : str = "chromosome_sizes.npy", output_dir : str = None) -> None:
+    
+    output_dir_path = Path(output_dir)
+    if not output_dir_path.is_dir():
+        raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
+
+
+    chrom_size_path = Path(output_dir, chrom_sizes)
+
+    if not chrom_size_path.is_file():
+            
+        raise IOError(f"Pairs file {chrom_size_path.name} not found. Please provide a valid path.")
+    
+    chrom_size = hio.load_dictionary(chrom_size_path)
+
+    
+    with open(output_dir_path / "chromosome_sizes.txt", 'w') as f:
+
+        for k, v in chrom_size.items():
+            f.write(f'{k}\t0\t{v}\n')
+
+    f.close()
+
+def get_bed_coverage(chromosome_sizes : str = "chromosome_sizes.txt", pairs_file : str = "", output_dir : str = None) -> None:
+    
+    
+
+    output_dir_path = Path(output_dir)
+    if not output_dir_path.is_dir():
+        raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
+
+    chrom_size_path = Path(output_dir, chromosome_sizes)
+
+    pairs_path = Path(output_dir, pairs_file)
+
+    if not chrom_size_path.is_file():
+            
+        raise IOError(f"Pairs file {chrom_size_path.name} not found. Please provide a valid path.")
+    
+    if not pairs_path.is_file():
+                
+        raise IOError(f"Pairs file {pairs_path.name} not found. Please provide a valid path.")
+    
+    bed_coverage_path = output_dir_path / "coverage.bed"
+    
+    bedtools_cmd = f"bedtools coverage -a {str(chrom_size_path)} -b {str(pairs_path)} -d"
+
+    with open(bed_coverage_path, "w") as f_out:
+
+        sp.run(bedtools_cmd, shell=True, stdout=f_out)
+
+    f_out.close()
+
+
+
+def get_bedgraph(bed_file : str = "coverage.bed", output_dir : str = None) -> None:
+    pass
+
+def bedgraph_to_bigwig(bedgraph_file : str = "coverage.bedgraph", chromosome_sizes : str = "chromosome_sizes.txt", output_dir : str = None) -> None:
+    pass
+
 
 
 

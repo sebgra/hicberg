@@ -11,6 +11,7 @@ import hicberg.pipeline as hpp
 import hicberg.plot as hpl
 import hicberg.benchmark as hbk
 import ast
+import sys
 
 from hicberg.version import __version__
 
@@ -289,3 +290,6 @@ cli.add_command(rescue_cmd, name="rescue")
 cli.add_command(plot_cmd, name="plot")
 cli.add_command(tidy_cmd, name="tidy")
 cli.add_command(benchmark_cmd, name="benchmark")
+
+
+
