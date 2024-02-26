@@ -866,6 +866,17 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
             where=trapezoids_area.get(chromosome) != 0,
         )
 
+    # Correction to avoid empty last point on the curve
+        
+    for chromosome in weirds.keys():
+
+        if weirds[chromosome][-1] == 0:
+            weirds[chromosome][-1] = weirds[chromosome][-2]
+        if uncuts[chromosome][-1] == 0:
+            uncuts[chromosome][-1] = uncuts[chromosome][-2]
+        if loops[chromosome][-1] == 0:
+            loops[chromosome][-1] = loops[chromosome][-2]
+
     np.save(output_path / WEIRDS, weirds)
     np.save(output_path / UNCUTS, uncuts)
     np.save(output_path / LOOPS, loops)
