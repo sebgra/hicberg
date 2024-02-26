@@ -581,10 +581,6 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     forward_bam_file_iter = bam_iterator(forward_bam_file_path)
     reverse_bam_file_iter = bam_iterator(reverse_bam_file_path)
 
-    file_id = time.time()
-    id_for = uuid.uuid4()
-    id_rev = uuid.uuid4()
-
     unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group0.1.bam", "wb", template = forward_bam_file, header = forward_header)
     unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group0.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
 
@@ -594,15 +590,9 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group2.1.bam", "wb", template = forward_bam_file, header = forward_header)
     multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group2.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
 
-    # # Old-multithreading version
-    # unmapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_0.1.bam", "wb", template = forward_bam_file, header = forward_header)
-    # unmapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_0.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
-
-    # uniquely_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_1.1.bam", "wb", template = forward_bam_file, header = forward_header)
-    # uniquely_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_1.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
-
-    # multi_mapped_bam_file_foward = pysam.AlignmentFile(output_dir / f"group_{id_for}_{file_id}_2.1.bam", "wb", template = forward_bam_file, header = forward_header)
-    # multi_mapped_bam_file_reverse = pysam.AlignmentFile(output_dir / f"group_{id_rev}_{file_id}_2.2.bam", "wb", template = reverse_bam_file, header = reverse_header)
+    nb_unmapped_reads_forward, nb_unmapped_reads_reverse = 0, 0
+    nb_uniquely_mapped_reads_forward, nb_uniquely_mapped_reads_reverse = 0, 0
+    nb_multi_mapped_reads_forward, nb_multi_mapped_reads_reverse = 0, 0
 
     for forward_block, reverse_block in zip(forward_bam_file_iter, reverse_bam_file_iter):
 
@@ -629,32 +619,38 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
             if unmapped_couple :
 
                 unmapped_bam_file_foward.write(forward_read)
+                nb_unmapped_reads_forward += 1
 
             elif multi_mapped_couple:
 
                 forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
                 multi_mapped_bam_file_foward.write(forward_read)
+                nb_multi_mapped_reads_forward += 1
 
             else: 
 
                 forward_read.set_tag("XG", chromosome_sizes_dic[forward_read.reference_name])
                 uniquely_mapped_bam_file_foward.write(forward_read)
+                nb_uniquely_mapped_reads_forward += 1
 
         for reverse_read in reverse_block:
 
             if unmapped_couple:
 
                 unmapped_bam_file_reverse.write(reverse_read)
+                nb_unmapped_reads_reverse += 1
 
             elif multi_mapped_couple:
 
                 reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
                 multi_mapped_bam_file_reverse.write(reverse_read)
+                nb_multi_mapped_reads_reverse += 1
 
             else : 
 
                 reverse_read.set_tag("XG", chromosome_sizes_dic[reverse_read.reference_name])
                 uniquely_mapped_bam_file_reverse.write(reverse_read)
+                nb_uniquely_mapped_reads_reverse += 1
 
     #closing files
     forward_bam_file.close()
@@ -667,6 +663,13 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
     multi_mapped_bam_file_reverse.close()
 
     logger.info(f"Files for the different groups have been saved in {output_dir}")
+    logger.info(f"Number of unmapped reads in forward file : {nb_unmapped_reads_forward}")
+    logger.info(f"Number of unmapped reads in reverse file : {nb_unmapped_reads_reverse}")
+    logger.info(f"Number of uniquely mapped reads in forward file : {nb_uniquely_mapped_reads_forward}")
+    logger.info(f"Number of uniquely mapped reads in reverse file : {nb_uniquely_mapped_reads_reverse}")
+    logger.info(f"Number of multi mapped reads in forward file : {nb_multi_mapped_reads_forward}")
+    logger.info(f"Number of multi mapped reads in reverse file : {nb_multi_mapped_reads_reverse}")
+
 
     # Cleaning files after classification
     forward_bam_file_path.unlink()
