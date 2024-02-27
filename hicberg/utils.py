@@ -1316,14 +1316,14 @@ def preprocess_pairs(pairs_file : str, threshold : int = 1000, output_dir : str 
     pairs_handler.close()
 
 
-def format_chrom_sizes(chromosome_sizes : str = "chromosome_sizes.npy", output_dir : str = None) -> None:
+def format_chrom_sizes(chrom_sizes : str = "chromosome_sizes.npy", output_dir : str = None) -> None:
     
     output_dir_path = Path(output_dir)
     if not output_dir_path.is_dir():
         raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
 
 
-    chrom_size_path = Path(output_dir, chromosome_sizes)
+    chrom_size_path = Path(output_dir, chrom_sizes)
 
     if not chrom_size_path.is_file():
             
@@ -1332,14 +1332,21 @@ def format_chrom_sizes(chromosome_sizes : str = "chromosome_sizes.npy", output_d
     chrom_size = hio.load_dictionary(chrom_size_path)
 
     
-    with open(output_dir_path / "chromosome_sizes.txt", 'w') as f:
+    with open(output_dir_path / "chromosome_sizes.bed", 'w') as f_out:
 
         for k, v in chrom_size.items():
-            f.write(f'{k}\t0\t{v}\n')
+            f_out.write(f'{k}\t0\t{v}\n')
 
-    f.close()
+    f_out.close()
 
-def get_bed_coverage(chromosome_sizes : str = "chromosome_sizes.txt", pairs_file : str = "", output_dir : str = None) -> None:
+    with open(output_dir_path / "chromosome_sizes.txt", 'w') as f_out:
+
+        for k, v in chrom_size.items():
+            f_out.write(f'{k}\t{v}\n')
+
+    f_out.close()
+
+def get_bed_coverage(chromosome_sizes : str = "chromosome_sizes.bed", pairs_file : str = "", output_dir : str = None) -> None:
     
     
 
@@ -1402,16 +1409,25 @@ def get_bedgraph(bed_coverage : str = "coverage.bed", output_dir : str = None) -
     bed_handler.close()
     
 
-    
-    
-
-
-
-
-
-
 def bedgraph_to_bigwig(bedgraph_file : str = "coverage.bedgraph", chromosome_sizes : str = "chromosome_sizes.txt", output_dir : str = None) -> None:
-    pass
+    
+    output_dir_path = Path(output_dir)
+    if not output_dir_path.is_dir():
+        raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
+
+    bedgraph_coverage_path = Path(output_dir, bedgraph_file)
+    if not bedgraph_coverage_path.is_file():
+        raise IOError(f"Pairs file {bedgraph_coverage_path.name} not found. Please provide a valid path.")
+    
+    chromosome_sizes_path = Path(output_dir, chromosome_sizes)
+    if not bedgraph_coverage_path.is_file():
+        raise IOError(f"Pairs file {chromosome_sizes_path.name} not found. Please provide a valid path.")
+    
+    output_bigwig_path = Path(output_dir, "signal.bw")
+    
+    bedgraphtobigwig_cmd = f"bedGraphToBigWig {bedgraph_coverage_path} {chromosome_sizes_path} {output_bigwig_path}"
+
+    sp.run([bedgraphtobigwig_cmd], shell = True)
 
 
 
