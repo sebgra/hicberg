@@ -1371,8 +1371,33 @@ def get_bed_coverage(chromosome_sizes : str = "chromosome_sizes.txt", pairs_file
 
 
 
-def get_bedgraph(bed_file : str = "coverage.bed", output_dir : str = None) -> None:
-    pass
+def get_bedgraph(bed_coverage_path : str = "coverage.bed", output_dir : str = None) -> None:
+    
+    output_dir_path = Path(output_dir)
+    if not output_dir_path.is_dir():
+        raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
+
+    bed_coverage_path = Path(output_dir, bed_file)
+
+    pairs_path = Path(output_dir, bed_coverage_path)
+
+    if not bed_coverage_path.is_file():
+            
+        raise IOError(f"Pairs file {bed_coverage_path.name} not found. Please provide a valid path.")
+    
+    if not pairs_path.is_file():
+                
+        raise IOError(f"Pairs file {pairs_path.name} not found. Please provide a valid path.")
+    
+    bedgraph_coverage_path = output_dir_path / "coverage.bedgraph"
+
+    
+    
+
+
+
+
+
 
 def bedgraph_to_bigwig(bedgraph_file : str = "coverage.bedgraph", chromosome_sizes : str = "chromosome_sizes.txt", output_dir : str = None) -> None:
     pass

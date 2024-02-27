@@ -63,6 +63,11 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     logger.info(f"HiC-BERG command used : {' '.join(sys.argv)}")
 
+    if fq_for == fq_rev :
+
+        raise IOError(f"The two provided inputs {fq_for} and {fq_rev} files must be different.")
+        
+
     logger.info("Start HiCBERG pipeline")
 
     # Keep track of the arguments used
@@ -147,7 +152,6 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         p2 = Process(target = hst.generate_trans_ps, kwargs = dict(output_dir = output_folder))
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
-        # p5 = Process(target = hst.generate_density_map, kwargs = dict(matrix = UNRESCUED_MATRIX, size  = 5, sigma  = 2, n_mads  = 2, nan_threshold  = False, output_dir = output_folder))
 
         # Launch processes
         # for process in [p1, p2, p3, p4, p5]:
