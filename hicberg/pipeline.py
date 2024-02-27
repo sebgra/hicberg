@@ -65,9 +65,9 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     if fq_for == fq_rev :
 
+        logger.error(f"The two provided inputs {fq_for} and {fq_rev} files must be different.")
         raise IOError(f"The two provided inputs {fq_for} and {fq_rev} files must be different.")
         
-
     logger.info("Start HiCBERG pipeline")
 
     # Keep track of the arguments used
@@ -78,7 +78,6 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     # Check if the output directory exists
     output_folder = Path(output_dir, name).as_posix()
 
-
     if start_stage < 1 : 
 
         output_folder = hio.create_folder(sample_name = name, output_dir = output_dir, force = force)
@@ -86,13 +85,11 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         hut.get_chromosomes_sizes(genome = genome, output_dir = output_folder)
         hut.get_bin_table(bins = bins, output_dir = output_folder)
 
-
     if exit_stage == 1:
 
         logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
         return
     
-
     if start_stage < 2: 
 
         if index is None:
@@ -109,24 +106,8 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     
     if start_stage < 3:
 
-        # hut.chunk_bam(forward_bam_file = "1.sorted.bam", reverse_bam_file = "2.sorted.bam", nb_chunks = nb_chunks, output_dir = output_folder)
         logger.info(f"Starting reads classification")
         hut.classify_reads(mapq = mapq, output_dir = output_folder)
-
-        # Get chunks as lists
-        # forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_folder)
-
-
-        # # Classify reads
-        # with multiprocessing.Pool(processes = cpus) as pool: # cpus
-
-        #     results = pool.map(partial(hut.classify_reads, mapq  = mapq, output_dir = output_folder),
-        #     zip(forward_chunks, reverse_chunks))
-        #     pool.close()
-        #     pool.join()
-
-
-        # hio.merge_predictions(output_dir = output_folder, clean = True, stage = "classification", cpus = cpus)
 
     if exit_stage == 3:
 
@@ -153,12 +134,9 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
 
-        # Launch processes
-        # for process in [p1, p2, p3, p4, p5]:
         for process in [p1, p2, p3, p4]:
             process.start()
 
-        # for process in [p1, p2, p3, p4, p5]:
         for process in [p1, p2, p3, p4]:
             process.join()
 
@@ -166,18 +144,15 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
             hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads  = cpus, output_dir  = output_folder)
         
-
     if exit_stage == 5:
 
         logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
         return
 
-    
     if start_stage < 6:
 
         restriction_map = hio.load_dictionary(Path(output_folder) / RESTRICTION_MAP)
 
-        # TODO : to restore
         hut.chunk_bam(nb_chunks = nb_chunks, output_dir = output_folder)
 
         # Get chunks as lists
@@ -197,7 +172,6 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         folder_to_delete = Path(output_folder) / 'chunks'
         rmtree(folder_to_delete)
 
-
     if exit_stage == 5:
 
         logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
@@ -207,7 +181,6 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
         hio.build_pairs(mode = True, output_dir = output_folder)
         hio.build_matrix(cpus = cpus, mode = True, output_dir = output_folder)
-
 
     if start_stage <= 6:
 
@@ -221,26 +194,15 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         p7 = Process(target = hpl.plot_density, kwargs = dict(output_dir = output_folder))
 
         # TODO : Set up different lists of processes depending on modes
-
-        # Instantiate processes
-        # for process in [p1, p2, p3, p4, p5, p6, p7]:
         for process in [p1, p2, p3, p4, p5]:
 
             process.start()
         # Launch processes
-        # for process in [p1, p2, p3, p4, p5, p6, p7]:
         for process in [p1, p2, p3, p4, p5]:
 
             process.join()
 
         logger.info(f"Results plotted in {output_folder}")
-
-    # if exit_stage == 6:
-
-    #     logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
-    #     return
-
-    # Tidy outputs
 
     logger.info(f"Tidying : {output_folder}")
 

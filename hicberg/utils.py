@@ -1316,14 +1316,14 @@ def preprocess_pairs(pairs_file : str, threshold : int = 1000, output_dir : str 
     pairs_handler.close()
 
 
-def format_chrom_sizes(chrom_sizes : str = "chromosome_sizes.npy", output_dir : str = None) -> None:
+def format_chrom_sizes(chromosome_sizes : str = "chromosome_sizes.npy", output_dir : str = None) -> None:
     
     output_dir_path = Path(output_dir)
     if not output_dir_path.is_dir():
         raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
 
 
-    chrom_size_path = Path(output_dir, chrom_sizes)
+    chrom_size_path = Path(output_dir, chromosome_sizes)
 
     if not chrom_size_path.is_file():
             
@@ -1371,25 +1371,36 @@ def get_bed_coverage(chromosome_sizes : str = "chromosome_sizes.txt", pairs_file
 
 
 
-def get_bedgraph(bed_coverage_path : str = "coverage.bed", output_dir : str = None) -> None:
+def get_bedgraph(bed_coverage : str = "coverage.bed", output_dir : str = None) -> None:
     
     output_dir_path = Path(output_dir)
     if not output_dir_path.is_dir():
         raise IOError(f"Output directory {output_dir} not found. Please provide a valid path.")
 
-    bed_coverage_path = Path(output_dir, bed_file)
-
-    pairs_path = Path(output_dir, bed_coverage_path)
+    bed_coverage_path = Path(output_dir, bed_coverage)
 
     if not bed_coverage_path.is_file():
             
         raise IOError(f"Pairs file {bed_coverage_path.name} not found. Please provide a valid path.")
     
-    if not pairs_path.is_file():
-                
-        raise IOError(f"Pairs file {pairs_path.name} not found. Please provide a valid path.")
-    
+    bed_handler = open(bed_coverage_path, "r")
+
     bedgraph_coverage_path = output_dir_path / "coverage.bedgraph"
+
+    with open(bedgraph_coverage_path, "w") as f_out:
+
+        for line in bed_handler:
+
+            chromosome, start, end, index, count = line.split("\t")
+
+            if end == index:
+                continue
+
+            f_out.write(f"{chromosome}\t{int(index)}\t{int(index) + 1}\t{count}")
+
+    f_out.close()
+    bed_handler.close()
+    
 
     
     
