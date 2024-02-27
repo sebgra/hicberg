@@ -1240,7 +1240,7 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
     
         return ps * d1d2 * cover * density
     
-    elif mode == "standard":
+    elif mode in ["standard", "omics"] :
     
         if hut.is_intra_chromosome(read_forward, read_reverse):
         

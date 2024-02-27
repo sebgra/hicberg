@@ -419,7 +419,7 @@ def tidy_folder(output_dir : str = None) -> None:
 
             Path(file).rename(output_path / "alignments" / Path(file).name)
 
-        elif Path(file).suffix == ".npy":
+        elif Path(file).suffix in [".npy", ".bed", ".bedgraph", ".bw"]:
 
             Path(file).rename(output_path / "statistics" / Path(file).name)
 

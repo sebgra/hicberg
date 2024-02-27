@@ -18,6 +18,7 @@ import hicberg.io as hio
 import hicberg.utils as hut
 import hicberg.plot as hpl
 import hicberg.statistics as hst
+import hicberg.omics as hom
 
 
 from hicberg import logger
@@ -47,8 +48,15 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     if not check_tool("samtools"):
         logger.error("samtools is not available on your system.")
         raise ValueError("samtools is not available on your system.")
-
-
+    
+    if not check_tool('bedtools'):
+        logger.error("bedtools is not available on your system.")
+        raise ValueError("bedtools is not available on your system.")
+    
+    if not check_tool('bedGraphToBigWig'):
+        logger.error("bedGraphToBigWig is not available on your system.")
+        raise ValueError("bedGraphToBigWig is not available on your system.")
+    
 
     stages = {"fastq": 0, "bam": 1, "groups": 2, "build": 3, "stats": 4, "rescue": 5, "final": 6}
 
@@ -59,7 +67,6 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     ]  # start_stage as variable of command line - default to "fastq" --> 0
 
     exit_stage = out_stage[exit_stage]
-
 
     logger.info(f"HiC-BERG command used : {' '.join(sys.argv)}")
 
@@ -180,7 +187,16 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     if start_stage < 6:
 
         hio.build_pairs(mode = True, output_dir = output_folder)
+
         hio.build_matrix(cpus = cpus, mode = True, output_dir = output_folder)
+        
+        if mode == "omics":
+
+            hom.preprocess_pairs(pairs_file = "all_group.pairs", threshold  = 1000, output_dir = output_folder)
+            hom.format_chrom_sizes(chrom_sizes = "chromosome_sizes.npy", output_dir = output_folder)
+            hom.get_bed_coverage(chromosome_sizes = "chromosome_sizes.bed", pairs_file = "preprocessed_pairs.pairs", output_dir = output_folder)
+            hom.get_bedgraph(bed_coverage  = "coverage.bed", output_dir  = output_folder)
+            hom.bedgraph_to_bigwig(bedgraph_file = "coverage.bedgraph", chromosome_sizes = "chromosome_sizes.txt", output_dir = output_folder)
 
     if start_stage <= 6:
 
