@@ -48,6 +48,7 @@ def cli(chain=True):
 @click.option("--index", "-i", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Index of the genome.")
 @click.option("--name", "-n", required = False, default = "sample", type = str, show_default = True, metavar = "<str>",  help = "Name of the analysis.")
 @click.option("--rate", "-r", required = False, default = 1.0, type = float, show_default = True, metavar = "<float>", help = "Rate to use for sub-sampling restriction map.")
+@click.option("--distance", "-D", required = False, default = 1000, type = int, show_default = True, metavar = "<int>", help = "Maximum distance beyond which pairs are discarded in omics mode.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, show_default = True, metavar = "<int>", help = "Threads to use for analysis.")
 @click.option("--kernel-size", "-K", required = False, default = 11, type = int, show_default = True, metavar = "<int>", help = "Size of the gaussian kernel for contact density estimation.")
 @click.option("--deviation", "-d", required = False, default = 0.5, type = float, show_default = True, metavar = "<float>", help = "Standard deviation for contact density estimation.")
@@ -62,11 +63,11 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "groups", "build", "stats", "rescue", "final"]), default = "fastq", show_default = True, metavar = "<str>", help = "Stage to start the pipeline.")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "groups", "build", "stats", "rescue", "final"]), default = "None", show_default = True, metavar = "<str>", help = "Stage to exit the pipeline.")
 @click.option("--force", "-f", is_flag = True, show_default = True, help = "Set if previous analysis files are deleted.")
-def pipeline_cmd(data, index, name, rate, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+def pipeline_cmd(data, index, name, rate, distance, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
     """
     Hi-C pipeline to generate enhanced contact matrix from fastq files.
     """
-    hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+    hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, distance = distance, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
     return
 
 

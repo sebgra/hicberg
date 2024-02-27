@@ -32,7 +32,7 @@ To ensure that HiC-BERG is correctly working, Bowtie2, Samtools, bedGraphToBigWi
 
 mamba install bowtie2 -c bioconda;
 mamba install samtools -c bioconda;
-conda install -c bioconda ucsc-bedgraphtobigwig;
+mamba install -c bioconda ucsc-bedgraphtobigwig;
 mamba install bedtools -c bioconda;
 ```
 
@@ -123,7 +123,7 @@ WEBSITE TO BE ADDED
 
 ```bash
 
-hicberg pipeline  [--enzyme=["DpnII", "HinfI"]]
+hicberg pipeline [--enzyme=["DpnII", "HinfI"]] [--distance=1000]
 [--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--index=None] [--force]  <genome> <input1> <input2>
 
 ```
@@ -301,9 +301,9 @@ hicberg classify -o ~/Desktop/test/
 
 The files created are: 
 
-- __*group0.1.bam*__ and __*group0.2.bam*__ : bam files containing the reads of **group0** i.e. where at least one read of the pair is unaligned.
-- __*group1.1.bam*__ and __*group1.2.bam*__ : bam files containing the reads of **group1** i.e. where both reads of the pair are aligned only one time.
-- __*group2.1.bam*__ and __*group2.2.bam*__ : bam files containing the reads of **group2** i.e. where at least one reads of the pair are aligned more than one time.
+- __*group0.1.bam*__ and __*group0.2.bam*__ : bam files containing the reads of **group0** e.g. where at least one read of the pair is unaligned.
+- __*group1.1.bam*__ and __*group1.2.bam*__ : bam files containing the reads of **group1** e.g. where both reads of the pair are aligned only one time.
+- __*group2.1.bam*__ and __*group2.2.bam*__ : bam files containing the reads of **group2** e.g. where at least one reads of the pair are aligned more than one time.
 
 ### Pairs and matrix building
 
@@ -638,6 +638,7 @@ import hicberg.io #Functions for I/O and folder management.
 import hicberg.align #Functions for sequence alignment steps
 import hicberg.utils #Functions for handling reads and alignment
 import hicberg.statistics #Functions for extract and create statistical models
+import hicberg.omics #Functions to treat non Hi-C data. 
 import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
 ```
 

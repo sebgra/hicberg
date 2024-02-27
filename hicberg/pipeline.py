@@ -36,8 +36,9 @@ def check_tool(name):
 def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str = "None", genome : str = None, index = None,
             fq_for : str = None, fq_rev : str = None, sensitivity : str = "very-sensitive",
             max_alignment : int = None, mapq : int = 35, enzyme  : list[str] = ["DpnII", "HinfI"],
-            circular : str = "", rate : float = 1.0, bins : int = 2000, nb_chunks : int = 1,
-            mode : str = "full", kernel_size : int = 11, deviation : float = 0.5,  verbose : bool = False, cpus : int = 1, output_dir : str = None, force : bool = False) -> None :
+            circular : str = "", rate : float = 1.0, distance : int = 1000, bins : int = 2000, nb_chunks : int = 1,
+            mode : str = "full", kernel_size : int = 11, deviation : float = 0.5,  verbose : bool = False,
+            cpus : int = 1, output_dir : str = None, force : bool = False) -> None :
 
     args = locals()
 
@@ -192,7 +193,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         
         if mode == "omics":
 
-            hom.preprocess_pairs(pairs_file = "all_group.pairs", threshold  = 1000, output_dir = output_folder)
+            hom.preprocess_pairs(pairs_file = "all_group.pairs", threshold  = distance, output_dir = output_folder)
             hom.format_chrom_sizes(chrom_sizes = "chromosome_sizes.npy", output_dir = output_folder)
             hom.get_bed_coverage(chromosome_sizes = "chromosome_sizes.bed", pairs_file = "preprocessed_pairs.pairs", output_dir = output_folder)
             hom.get_bedgraph(bed_coverage  = "coverage.bed", output_dir  = output_folder)
