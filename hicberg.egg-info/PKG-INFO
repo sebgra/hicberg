@@ -37,7 +37,6 @@ Requires-Dist: matplotlib
 Requires-Dist: numpy
 Requires-Dist: pandas
 Requires-Dist: pysam
-Requires-Dist: pybedtools
 Requires-Dist: scipy
 Requires-Dist: scikit-learn
 Requires-Dist: statsmodels
