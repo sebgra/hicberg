@@ -521,11 +521,9 @@ hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] 
 # 4. Compute statistics
 hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage stats  --exit-stage rescue <genome> <input1> <input2>
 
-# 5. Reassign ambiguous reads
+# 5. Reassign ambiguous reads, build pairs & cool then get results
 hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage rescue  --exit-stage final <genome> <input1> <input2>
 
-# 6. Build pairs & cool then get results
-hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage rescue  --exit-stage final <genome> <input1> <input2>
 ```
 
 ## Evaluating the model
