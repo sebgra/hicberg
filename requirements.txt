@@ -9,7 +9,7 @@ matplotlib
 numpy
 pandas
 pysam
-pybedtools
+# pybedtools
 # samtools
 scipy
 scikit-learn

@@ -194,7 +194,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         if mode == "omics":
 
             hom.preprocess_pairs(pairs_file = "all_group.pairs", threshold  = distance, output_dir = output_folder)
-            hom.format_chrom_sizes(chrom_sizes = "chromosome_sizes.npy", output_dir = output_folder)
+            hom.format_chrom_sizes(chromosome_sizes = "chromosome_sizes.npy", output_dir = output_folder)
             hom.get_bed_coverage(chromosome_sizes = "chromosome_sizes.bed", pairs_file = "preprocessed_pairs.pairs", output_dir = output_folder)
             hom.get_bedgraph(bed_coverage  = "coverage.bed", output_dir  = output_folder)
             hom.bedgraph_to_bigwig(bedgraph_file = "coverage.bedgraph", chromosome_sizes = "chromosome_sizes.txt", output_dir = output_folder)
