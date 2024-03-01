@@ -199,6 +199,7 @@ def rescue_cmd(data, enzyme, mode, output, cpus):
     """
     Reallocate ambiguous reads to the most plausible position according to model.
     """
+    # TODO : to uncomment
     restriction_map = hst.get_restriction_map(genome = data[0], enzyme = enzyme, output_dir = output)
     hut.chunk_bam(nb_chunks = cpus, output_dir = output)
         

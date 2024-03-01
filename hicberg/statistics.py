@@ -359,6 +359,9 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
     xs = np.unique(
             np.logspace(0, n_bins, num=n_bins + 1, base=base, dtype=int)
         )
+    
+    # Add 0 to the beginning of the array (allow distance 0 to be counted in the first bin)
+    xs = np.insert(xs, 0, 0)
 
     # # TODO : recent correction to fuse bins n-1 and n    
     # return xs
@@ -1314,6 +1317,17 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
             d1d2 = 1
 
+        # if np.isnan(ps) or np.isnan(cover) or np.isnan(d1d2):
+        #     print(f"ps : {ps}")
+        #     print(f"cover : {cover}")
+        #     print(f"d1d2 : {d1d2}")
+
+        #     print(f"read_forward : {read_forward}")
+        #     print(f"read_forward reference name : {read_forward.reference_name}")
+        #     print(f"read_reverse : {read_reverse}")
+        #     print(f"read_reverse reference name : {read_reverse.reference_name}")
+        #     # sys.exit()
+
         return ps * d1d2 * cover
 
     
@@ -1399,17 +1413,28 @@ def draw_read_couple(propensities : np.array) -> int:
 
     if  np.sum(propensities) > 0: 
 
-        pk = np.divide(propensities, np.sum(propensities))
+        try:
+
+            pk = np.divide(propensities, np.sum(propensities))
+        
+        except:
+
+            print(f"pk : {pk}")
+            print(f"propensities : {propensities}")
 
     elif np.sum(propensities) <= 0:
 
-        pk = np.full(xk.shape, np.divide(1, len(propensities)))
-    # print(f"pk : {pk}")
-    # print(f"xk : {xk}")
+        try : 
+            pk = np.full(xk.shape, np.divide(1, len(propensities)))
+    
+
+        except : 
+                
+                print(f"pk : {pk}")
+                print(f"propensities : {propensities}")
 
     index = choice(xk, p=pk)
 
-    # print(f"index drawn : {index}")
 
     return index
 
