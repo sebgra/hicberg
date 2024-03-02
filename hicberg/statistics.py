@@ -1317,16 +1317,26 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
             d1d2 = 1
 
-        # if np.isnan(ps) or np.isnan(cover) or np.isnan(d1d2):
-        #     print(f"ps : {ps}")
-        #     print(f"cover : {cover}")
-        #     print(f"d1d2 : {d1d2}")
+        if np.isnan(ps) or np.isnan(cover) or np.isnan(d1d2):
+            print(f"ps : {ps}")
+            print(f"cover : {cover}")
+            print(f"d1d2 : {d1d2}")
 
-        #     print(f"read_forward : {read_forward}")
-        #     print(f"read_forward reference name : {read_forward.reference_name}")
-        #     print(f"read_reverse : {read_reverse}")
-        #     print(f"read_reverse reference name : {read_reverse.reference_name}")
-        #     # sys.exit()
+            print(f"read_forward : {read_forward}")
+            print(f"read_forward reference name : {read_forward.reference_name}")
+            print(f"read_reverse : {read_reverse}")
+            print(f"read_reverse reference name : {read_reverse.reference_name}")
+
+            logger.error(f"ps : {ps}")
+            logger.error(f"cover : {cover}")
+            logger.error(f"d1d2 : {d1d2}")
+
+            logger.error(f"read_forward : {read_forward}")
+            logger.error(f"read_forward reference name : {read_forward.reference_name}")
+            logger.error(f"read_reverse : {read_reverse}")
+            logger.error(f"read_reverse reference name : {read_reverse.reference_name}")
+            
+            # sys.exit()
 
         return ps * d1d2 * cover
 
@@ -1432,6 +1442,9 @@ def draw_read_couple(propensities : np.array) -> int:
                 
                 print(f"pk : {pk}")
                 print(f"propensities : {propensities}")
+
+    else : 
+        logger.error(f"Propensities : {propensities}")
 
     index = choice(xk, p=pk)
 
