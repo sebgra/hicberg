@@ -363,9 +363,9 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
     # Add 0 to the beginning of the array (allow distance 0 to be counted in the first bin)
     xs = np.insert(xs, 0, 0)
 
-    # # TODO : recent correction to fuse bins n-1 and n    
-    # return xs
-    return np.delete(xs, -2)
+    return xs
+    # # TODO : recent correction to fuse bins n-1 and n    (to delete ?)
+    # return np.delete(xs, -2)
 
 def log_bin_genome(genome :str, base : float = 1.1, output_dir : str = None) -> dict[str, np.ndarray[int]]:
     
@@ -410,7 +410,8 @@ def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
     """
 
     idx = np.searchsorted(xs, distance, side="right") - 1
-    return idx
+    
+    return idx if distance >=0 else 0 
 
 def get_dist_frags(genome : str = None, restriction_map : dict = None, circular : str = "", rate : float = 1.0, output_dir : str = None) -> None:
     """
@@ -870,14 +871,14 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
         )
 
     # Correction to avoid empty last point on the curve
-        
+    # Corrected case where P(s) is nan due to trapezoid area equal 0
     for chromosome in weirds.keys():
 
-        if weirds[chromosome][-1] == 0:
+        if weirds[chromosome][-1] == 0 or np.isnan(weirds[chromosome][-1]):
             weirds[chromosome][-1] = weirds[chromosome][-2]
-        if uncuts[chromosome][-1] == 0:
+        if uncuts[chromosome][-1] == 0 or np.isnan(uncuts[chromosome][-1]):
             uncuts[chromosome][-1] = uncuts[chromosome][-2]
-        if loops[chromosome][-1] == 0:
+        if loops[chromosome][-1] == 0 or np.isnan(loops[chromosome][-1]):
             loops[chromosome][-1] = loops[chromosome][-2]
 
     np.save(output_path / WEIRDS, weirds)
