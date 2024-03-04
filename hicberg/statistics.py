@@ -411,7 +411,7 @@ def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
 
     idx = np.searchsorted(xs, distance, side="right") - 1
     
-    return idx if distance >=0 else 0 
+    return idx if distance > 0 else 0 
 
 def get_dist_frags(genome : str = None, restriction_map : dict = None, circular : str = "", rate : float = 1.0, output_dir : str = None) -> None:
     """
