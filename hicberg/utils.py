@@ -1264,9 +1264,6 @@ def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
     forward_chunks = sorted(glob(output_dir + '/chunks/chunk_for_*.bam'))
     reverse_chunks = sorted(glob(output_dir + '/chunks/chunk_rev_*.bam'))
 
-    print(output_dir + '/chunks/chunk_rev_*.bam')
-
-
     return (forward_chunks, reverse_chunks)
 
 

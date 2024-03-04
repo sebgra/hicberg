@@ -252,6 +252,18 @@ def tidy_cmd(output):
 
 
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
+@click.argument('data', nargs = -1, metavar = "<input1> <input2>")
+@click.option("--chunks", "-n", required = False, default = 2, type = int, show_default = True, metavar = "<int>", help = "Number of chunks to generate.")
+@click.option("--output", "-o", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Output folder to save the chunks.")
+def chunk_cmd(data, chunks, output):
+    """
+    Chunk provided inputs in a desired number of pieces.
+    """
+    hut.chunk_bam(forward_bam_file = data[0], reverse_bam_file = data[1], nb_chunks = chunks, output_dir = output)
+    
+
+
+@click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
 @click.argument('data', nargs = -1, metavar = "<genome>")
 @click.option("--output", "-o", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Output folder to save results.")
 @click.option("--chromosome", "-c", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Chromosome to get as source for duplication.")
@@ -292,6 +304,7 @@ cli.add_command(rescue_cmd, name="rescue")
 cli.add_command(plot_cmd, name="plot")
 cli.add_command(tidy_cmd, name="tidy")
 cli.add_command(benchmark_cmd, name="benchmark")
+cli.add_command(chunk_cmd, name = "chunk")
 
 
 

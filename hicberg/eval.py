@@ -482,6 +482,414 @@ trans_chromosome :  str = None, output_dir : str = None, trans_position : list[i
     return dictionary_of_intervals
 
 
+def select_reads_multithreads(bam_couple : tuple[str, str], matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str | list[str] = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
+trans_chromosome :  str = None, output_dir : str = None, trans_position : list[int] = None, nb_bins : int = 1, random : bool = False, auto : int = None) -> dict[str, list[(int, int)]]:
+    """
+    Select reads from a given matrix and alignment files. Two groups of alignment files are produced (.bam):
+    - group1.1.in.bam and group1.2.in.bam : Forward and reverse reads from the source and target genomic interval. These reads are going to be duplicated un each intervals.
+    - group1.1.out.bam and group1.2.out.bam : Forward and reverse reads not included the source and target genomic interval. These reads are going to be conserved and not duplicated.
+
+    Parameters
+    ----------
+    bam_for : str, optional
+        Forward alignment file to select reads from, by default "group1.1.bam"
+    bam_rev : str, optional
+        Reverse alignment file to select reads from, by default "group1.2.bam"
+    matrix_file : str, optional
+        Name of the matrix from which the selection will be based (.cool format), by default "unrescued_map.cool"
+    position : int, optional
+        Genomic coordinates (0-based) used to defined the source genomic interval, by default 0
+    chromosome : str or list[str], optional
+        Chromosome associated to the 0-based coordinates given by "position', by default ""
+    bin_size : int, optional
+        Resolution of the given matrix, by default 2000
+    chrom_sizes_dict : str, optional
+        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format, by default "chromosome_sizes.npy"
+    strides : list[int], optional
+        List of strides to apply from "position" to define target genomics intervals (in bp.), by default [0]
+    trans_chromosome : str, optional
+        Chromosomes to consider as trans-chromosomes to define genomic target intervals, by default None
+    trans_position : list[int], optional
+        Genomic coordinates (0-based) used to defined the trans-chromosomal target genomic interval, by default None
+    nb_bins : int, optional
+        Number of bins to consider on each side of the defined source and target intervals, by default 1
+    random : bool, optional
+        Set wether or not the source and target intervals are defined at random, by default False
+    auto : int, optional
+        Set the number of intervals to get while picking at random, by default None
+    output_dir : str, optional
+        Path to the folder where to save alignments, by default None
+
+    Returns
+    -------
+    dict[str, list[(int, int)]]
+        Dictionary of intervals as key : chromosome, value : [(low_limit_0, up_limit_0), (low_limit_1, up_limit_1), ..., (low_limit_n, up_limit_n)].
+
+    """   
+    
+    output_path = Path(output_dir)
+
+    if not output_path.exists():
+        
+        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
+    
+    chrom_sizes_path = output_path / Path(chrom_sizes_dict)
+
+    if not chrom_sizes_path.exists():
+
+        raise ValueError(f"Chromosome sizes file {chrom_sizes_path} does not exist. Please provide existing chromosome sizes file.")
+    
+    if type(chromosome) == "list":
+
+        chromosome = chromosome[0]
+
+    chs = hio.load_dictionary(chrom_sizes_path)
+
+    if trans_position is not None:
+        random = False
+
+    # print(f"bam for : {bam_for}")
+    # print(f"bam rev : {bam_rev}")
+    forward_file_path = output_path / Path(bam_couple[0])
+    reverse_file_path = output_path / Path(bam_couple[1])
+
+    if not forward_file_path.exists():
+            
+        raise ValueError(f"Forward bam file {forward_file_path} does not exist. Please provide existing bam file.")
+    
+    if not reverse_file_path.exists():
+
+        raise ValueError(f"Reverse bam file {reverse_file_path} does not exist. Please provide existing bam file.")
+    
+    matrix_file_path = output_path / Path(matrix_file)
+    
+    if not matrix_file_path.exists():
+
+        raise ValueError(f"Matrix file {matrix_file_path} does not exist. Please provide existing matrix file.")
+    
+    matrix = hio.load_cooler(matrix_file_path)
+    
+    # alignment file handlers
+    # Create handler for files to parse
+    forward_file_handler = ps.AlignmentFile(forward_file_path, "rb")
+    reverse_file_handler = ps.AlignmentFile(reverse_file_path, "rb")
+
+    # Create handlers for files to write
+    ## Files where selected reads and duplicates are going to be written
+    selected_reads_forward = ps.AlignmentFile(
+        output_path / f"{forward_file_path.stem}.in.bam", "wb", template = forward_file_handler
+    )
+    selected_reads_reverse = ps.AlignmentFile(
+        output_path / f"{reverse_file_path.stem}.in.bam", "wb", template = reverse_file_handler
+    )
+
+    ## Files where non selected reads are going to be written
+    depleted_reads_forward = ps.AlignmentFile(
+        output_path / f"{forward_file_path.stem}.out.bam", "wb", template = forward_file_handler
+    )
+    depleted_reads_reverse = ps.AlignmentFile(
+        output_path / f"{reverse_file_path.stem}.out.bam", "wb", template = reverse_file_handler
+    )
+
+    # get acces to dictionary containing chromosomes sizes to pick random position for trans-chromosomal duplication
+    cs_disctionary = hio.load_dictionary(chrom_sizes_path)
+
+    if auto is None:
+
+        ## set areas and boundaries for intra-chromosomal duplications
+        forward_intervals = [
+            get_boundaries(
+                position = position + stride,
+                bins = bin_size,
+                chromosome = chromosome,
+                chrom_sizes_dict = chrom_sizes_path,
+            )
+            for stride in strides
+        ]
+        reverse_intervals = [
+            get_boundaries(
+                position = position + stride,
+                bins = bin_size,
+                chromosome = chromosome,
+                chrom_sizes_dict = chrom_sizes_path,
+            )
+            for stride in strides
+        ]
+
+        # Define list of chromosome to target/duplicate read on.
+        if type(chromosome) == list and len(chromosome) == 1:
+
+            chromosome = chromosome[0]
+
+        if trans_chromosome is not None:
+
+            list_selected_chromosomes = list(chromosome.split()) + list(trans_chromosome)
+
+        else:
+
+            list_selected_chromosomes = chromosome #.split()
+
+        # adjust intervals width
+        if nb_bins > 1:
+
+            forward_intervals = [
+                (
+                    interval[0] - (nb_bins - 1) * bin_size,
+                    interval[1] + (nb_bins - 1) * bin_size,
+                )
+                for interval in forward_intervals
+            ]
+            reverse_intervals = [
+                (
+                    interval[0] - (nb_bins - 1) * bin_size,
+                    interval[1] + (nb_bins - 1) * bin_size,
+                )
+                for interval in reverse_intervals
+            ]
+
+        # build dictionary key : chr , value : list of intervals to perform selection on
+        dictionary_of_intervals = dict()  # Backup
+        dictionary_of_intervals[chromosome] = forward_intervals
+
+        if trans_chromosome is not None:
+
+            for chrom, pos in zip(trans_chromosome, trans_position):
+
+                if random:
+
+                    trans_target_interval = [
+                        get_boundaries(
+                            position = np.random.randint(
+                                low=1, high=cs_disctionary.item().get(chrom)
+                            ),
+                            bins = bin_size,
+                            chromosome = chrom,
+                            chrom_sizes_dict=chrom_sizes_path,
+                        )
+                    ]
+
+                # set areas and boundaries for inter-chromosomal duplications
+                else:
+
+                    trans_target_interval = [
+                        get_boundaries(
+                            position=pos,
+                            bins=bin_size,
+                            chromosome=chrom,
+                            chrom_sizes_dict=chrom_sizes_path,
+                        )
+                    ]
+
+                if chrom not in dictionary_of_intervals.keys():
+
+                    dictionary_of_intervals[chrom] = trans_target_interval
+
+    if auto is not None:
+
+        dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_path, nb_intervals = auto, bins = bin_size)
+
+        # If a randomly selected interval is empty, draw another set of intervals
+        while check_emptiness(intervals = dictionary_of_intervals, matrix = matrix):
+                
+            dictionary_of_intervals = draw_intervals(chrom_sizes_dict  = chrom_sizes_path, nb_intervals = auto, bins = bin_size)
+
+        list_selected_chromosomes = list(dictionary_of_intervals.keys())
+
+    # parse both alignment files to eventually duplicate reads
+    for forward_read, reverse_read in zip(forward_file_handler, reverse_file_handler):
+
+        # Default save status
+        save = True
+
+        ## Order reads by coordinates
+        ordered_forward_read, ordered_reverse_read = hut.get_ordered_reads(
+            forward_read, reverse_read
+        )
+
+        # Avoid cases where chromosomes are not concerned for duplication
+        if (
+            forward_read.reference_name not in list_selected_chromosomes
+            and reverse_read.reference_name not in list_selected_chromosomes
+        ):  # or backp
+            depleted_reads_forward.write(forward_read)
+            depleted_reads_reverse.write(reverse_read)
+            continue
+
+        # Search for intervals where reads potentially belong
+        forward_interval_search = get_interval_index(
+            chromosome = ordered_forward_read.reference_name,
+            value = ordered_forward_read.pos,
+            intervals_dict = dictionary_of_intervals,
+            chrom_sizes_dict = chs,
+        )
+        reverse_interval_search = get_interval_index(
+            chromosome = ordered_reverse_read.reference_name,
+            value = ordered_reverse_read.pos,
+            intervals_dict = dictionary_of_intervals,
+            chrom_sizes_dict = chs,
+        )
+
+        # Case where both forward and reverse reads belong to any of the selected of target interval
+        if (
+            forward_interval_search[ordered_forward_read.reference_name][1][0]
+            is not None
+        ) and (
+            reverse_interval_search[ordered_reverse_read.reference_name][1][0]
+            is not None
+        ):
+
+            # Do duplication and write + set save to false
+            ## original forward and reverse reads save
+            selected_reads_forward.write(ordered_forward_read)
+            selected_reads_reverse.write(ordered_reverse_read)
+
+            # Compute forward and reverse shifts
+            forward_shift = (
+                ordered_forward_read.pos
+                - forward_interval_search[ordered_forward_read.reference_name][1][0]
+            )  # [1] : interval where the read is initially - [0] : select lower bound of this interval
+            reverse_shift = (
+                reverse_interval_search[ordered_reverse_read.reference_name][1][1]
+                - ordered_reverse_read.pos
+            )  # [1] : interval where the read is initially - [1] : select upper bound of this interval
+
+            # Duplicate and save both reads to corresponding files
+            for chromosome in forward_interval_search.keys():
+
+                # Check if forward read reference has valid intervals
+                if forward_interval_search[chromosome][0][0][0] is None:
+                    continue
+
+                else:
+
+                    for forward_interval in forward_interval_search[chromosome][
+                        0
+                    ]:  # parse all intervals where the read is not initially
+
+                        ordered_forward_read.pos = forward_interval[0] + forward_shift
+                        ordered_forward_read.reference_name = chromosome
+                        ordered_forward_read.set_tag("XF", "Fake")
+                        ordered_forward_read.set_tag("XC", "Case_0")
+                        selected_reads_forward.write(ordered_forward_read)
+
+            for chromosome in reverse_interval_search.keys():
+
+                # Check if forward read reference has valid intervals
+                if reverse_interval_search[chromosome][0][0][0] is None:
+                    continue
+
+                else:
+
+                    for reverse_interval in reverse_interval_search[chromosome][
+                        0
+                    ]:  # parse all intervals where the read is not initially
+
+                        ordered_reverse_read.pos = reverse_interval[1] - reverse_shift
+                        ordered_reverse_read.reference_name = chromosome
+                        ordered_reverse_read.set_tag("XF", "Fake")
+                        ordered_reverse_read.set_tag("XC", "Case_0")
+                        selected_reads_reverse.write(ordered_reverse_read)
+
+            # set save at false
+            save = False
+
+        # Case where only forward read belong to any of selected or target interval
+        elif (
+            forward_interval_search[ordered_forward_read.reference_name][1][0]
+            is not None
+        ) and (
+            reverse_interval_search[ordered_reverse_read.reference_name][1][0] is None
+        ):
+
+            ## original forward and reverse reads save
+            selected_reads_forward.write(ordered_forward_read)
+            selected_reads_reverse.write(ordered_reverse_read)
+
+            # Compute forward  shifts
+            forward_shift = (
+                ordered_forward_read.pos
+                - forward_interval_search[ordered_forward_read.reference_name][1][0]
+            )  # [1] : interval where the read is initially - [0] : select lower bound of this interval
+
+            # Do duplication of forward read on all potential interval and save all duplicates
+            for chromosome in forward_interval_search.keys():
+
+                # Check if forward read reference has valid intervals
+                if forward_interval_search[chromosome][0][0][0] is None:
+                    continue
+
+                else:
+
+                    for forward_interval in forward_interval_search[chromosome][
+                        0
+                    ]:  # parse all intervals where the read is not initially
+
+                        ordered_forward_read.pos = forward_interval[0] + forward_shift
+                        ordered_forward_read.reference_name = chromosome
+                        ordered_forward_read.set_tag("XF", "Fake")
+                        selected_reads_forward.write(ordered_forward_read)
+
+            # set save to false
+            save = False
+
+        # Case where only reverse belong to selected or target intervals
+        elif (
+            forward_interval_search[ordered_forward_read.reference_name][1][0] is None
+        ) and (
+            reverse_interval_search[ordered_reverse_read.reference_name][1][0]
+            is not None
+        ):
+
+            ## original forward and reverse reads save
+            selected_reads_forward.write(ordered_forward_read)
+            selected_reads_reverse.write(ordered_reverse_read)
+
+            # Compute reverse  shifts
+            reverse_shift = (
+                reverse_interval_search[ordered_reverse_read.reference_name][1][1]
+                - ordered_reverse_read.pos
+            )  # [1] : interval where the read is initially - [1] : select upper bound of this interval
+
+            # Do duplication of reverse read on all potential interval and save all duplicates
+            for chromosome in reverse_interval_search.keys():
+
+                # Check if forward read reference has valid intervals
+                if reverse_interval_search[chromosome][0][0][0] is None:
+                    continue
+
+                else:
+
+                    for reverse_interval in reverse_interval_search[chromosome][
+                        0
+                    ]:  # parse all intervals where the read is not initially
+
+                        ordered_reverse_read.pos = reverse_interval[1] - reverse_shift
+                        ordered_reverse_read.reference_name = chromosome
+                        ordered_reverse_read.set_tag("XF", "Fake")
+                        selected_reads_reverse.write(ordered_reverse_read)
+
+            # set save at false
+            save = False
+
+        # Write unselected reads to their corresponding files
+        if save:
+
+            depleted_reads_forward.write(ordered_forward_read)
+            depleted_reads_reverse.write(ordered_reverse_read)
+
+    # close all files
+    selected_reads_forward.close()
+    selected_reads_reverse.close()
+
+    depleted_reads_forward.close()
+    depleted_reads_reverse.close()
+
+    forward_file_handler.close()
+    reverse_file_handler.close()
+
+    return dictionary_of_intervals
+
+
 def get_intervals_proportions(chrom_sizes_dict : str = "chromosome_sizes.npy", nb_intervals : int = 1) -> dict[str, float]:
     """
     Extract a dictionary containing the number of intervals to draw considering the size of each chromosome.

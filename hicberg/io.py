@@ -389,6 +389,27 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
                 Path(forward_chunk).unlink()
                 Path(reverse_chunk).unlink()
 
+    elif stage == "benchmark":
+
+        forward_out_chunk_files = sorted(glob(str(output_path / "chunk_for_*.out.bam")))
+        reverse_out_chunk_files = sorted(glob(str(output_path / "chunk_rev_*.out.bam")))
+
+        forward_out_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group1.1.out.bam'} {' '.join(forward_out_chunk_files)}"
+        reverse_out_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group1.2.out.bam'} {' '.join(reverse_out_chunk_files)}"
+
+        # Out reads
+        sp.run(forward_out_merge_cmd, shell=True)
+        sp.run(reverse_out_merge_cmd, shell=True)
+
+        if clean:
+
+            for forward_chunk, reverse_chunk in zip(forward_out_chunk_files, reverse_out_chunk_files):
+
+                Path(forward_chunk).unlink()
+                Path(reverse_chunk).unlink()
+
+        logger.info(f"Out reads successfully merged in {output_path}")
+
 def tidy_folder(output_dir : str = None) -> None:
     """
     Tidy all the files in the output folder.

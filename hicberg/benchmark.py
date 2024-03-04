@@ -235,18 +235,46 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         # Pick reads
         if not picking_status:
             
-            logger.info("Picking reads")
-            intervals_dictionary = hev.select_reads(bam_for = BAM_FOR, bam_rev = BAM_REV, matrix_file = output_path / BASE_MATRIX, position = position, chromosome = chromosome, strides = strides, trans_chromosome = trans_chromosome, trans_position = trans_position, auto = auto, nb_bins = nb_bins, output_dir = output_data_path)
-            logger.info(f"intervals_dictionary : {intervals_dictionary}")
+            # # chunk bam files
+            # # TODO : check file picking
+
+            forward_chunks, reverse_chunks = hut.get_chunks(output_dir = "/home/sardine/Bureau/chunks")
+            # print(f"forward chunks : {forward_chunks}")
+
+            # Multithread part 
+
+            # Reattribute reads
+            with Pool(processes = cpus) as pool: # cpus
+
+                res = pool.map(partial(hev.select_reads_multithreads, matrix_file = output_path / BASE_MATRIX, position = position, chromosome = chromosome, strides = strides, trans_chromosome = trans_chromosome, trans_position = trans_position, auto = auto, nb_bins = nb_bins, output_dir = output_data_path),
+                zip(forward_chunks, reverse_chunks))
+                pool.close()
+                pool.join()
+
+            # print(f"res : {res[0]}")
+            intervals_dictionary = res[0]
+
+            hio.merge_predictions(output_dir  = output_data_path, clean = True, stage = "benchmark", cpus = cpus)
+
+            # TODO : put aside in function
             indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
             picking_status = True
+
+            
+
+            # logger.info("Picking reads")
+            # intervals_dictionary = hev.select_reads(bam_for = BAM_FOR, bam_rev = BAM_REV, matrix_file = output_path / BASE_MATRIX, position = position, chromosome = chromosome, strides = strides, trans_chromosome = trans_chromosome, trans_position = trans_position, auto = auto, nb_bins = nb_bins, output_dir = output_data_path)
+            # logger.info(f"intervals_dictionary : {intervals_dictionary}")
+            # indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
+            # picking_status = True
+
 
         forward_in_path = output_data_path / FORWARD_IN_FILE
         reverse_in_path = output_data_path / REVERSE_IN_FILE
         forward_out_path = output_data_path / FORWARD_OUT_FILE
         reverse_out_path = output_data_path / REVERSE_OUT_FILE
 
-        # TODO : get out of the 
+
         # Get corresponding indexes to the duplicated reads coordinates.
         # Re-build pairs and cooler matrix 
         hio.build_pairs(bam_for = forward_out_path, bam_rev = reverse_out_path, output_dir = output_data_path)
@@ -274,7 +302,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             logger.info("Learning step completed")
 
-            hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads = cpus, output_dir  = output_data_path)
+            # TODO : restore
+            # hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads = cpus, output_dir  = output_data_path)
 
         learning_status = True
 
@@ -283,13 +312,18 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
         for _ in range(iterations):
             # Reattribute reads
             logger.info("Re-attributing reads")
-            # TODO :  New 
             
-            if chunking_status:
-                hut.chunk_bam(forward_bam_file = forward_in_path, reverse_bam_file = reverse_in_path, nb_chunks = cpus, output_dir = output_data_path)
-                chunking_status = False
+            # # TODO :  New 
+            
+            # if chunking_status:
+            #     hut.chunk_bam(forward_bam_file = forward_in_path, reverse_bam_file = reverse_in_path, nb_chunks = cpus, output_dir = output_data_path)
+            #     chunking_status = False
 
+            # Get chunk_for_*.in.bam/chunk_rev_*.in.bam
             forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_data_path.as_posix())
+
+            print(f"forward_chunks : {forward_chunks}")
+            print(f"reverse_chunks : {reverse_chunks}")
 
             # Reattribute reads
             with Pool(processes = cpus) as pool: # cpus
