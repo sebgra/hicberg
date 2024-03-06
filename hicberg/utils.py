@@ -1264,6 +1264,38 @@ def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
     forward_chunks = sorted(glob(output_dir + '/chunks/chunk_for_*.bam'))
     reverse_chunks = sorted(glob(output_dir + '/chunks/chunk_rev_*.bam'))
 
+    print(f"control : {output_dir + '/chunks/chunk_for_*.bam'}")
+
     return (forward_chunks, reverse_chunks)
+
+def is_empty_alignment(alignment_file : str) -> bool:
+    """
+    Check if an alignement file is empty.
+    If emtpy, return True, else return False.
+
+    Parameters
+    ----------
+    alignment_file : str
+        Path to the alignment file to check.
+
+    Returns
+    -------
+    bool
+        Return True if the file is empty, False otherwise.
+    """    
+    try:
+        # Open the SAM/BAM file
+        with pysam.AlignmentFile(alignment_file, "rb") as alignment:
+            # Attempt to fetch the first read
+            try:
+                alignment.__next__()
+                # If we can fetch a read, the file is not empty
+                return False
+            except StopIteration:
+                # If StopIteration is raised, the file is empty
+                return True
+    except FileNotFoundError:
+        print(f"File not found: {filepath}")
+        return True  # Assuming file is "empty" if it doesn't exist
 
 

@@ -119,6 +119,7 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
     # Setting files paths
     output_path = Path(output_dir)
+    output_path_chunks = Path(output_dir, "chunks")
     restriction_map_path = output_path / RESTRICTION_MAP
     bam_for_path = output_path / BAM_FOR
     bam_rev_path = output_path / BAM_REV
@@ -238,8 +239,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             # # chunk bam files
             # # TODO : check file picking
 
-            forward_chunks, reverse_chunks = hut.get_chunks(output_dir = "/home/sardine/Bureau/chunks")
-            # print(f"forward chunks : {forward_chunks}")
+            forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_path.as_posix())
+            print(f"forward chunks : {forward_chunks}")
 
             # Multithread part 
 
@@ -251,10 +252,17 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
                 pool.close()
                 pool.join()
 
-            # print(f"res : {res[0]}")
+
+            
+
+            # Get dictionrary of intervals from Pool
             intervals_dictionary = res[0]
 
+            print(f"intervals_dictionary : {intervals_dictionary}")
+
             hio.merge_predictions(output_dir  = output_data_path, clean = True, stage = "benchmark", cpus = cpus)
+
+            
 
             # TODO : put aside in function
             indexes = hev.get_bin_indexes(matrix = base_matrix, dictionary = intervals_dictionary, )
@@ -307,7 +315,6 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
         learning_status = True
 
-        chunking_status = True
 
         for _ in range(iterations):
             # Reattribute reads
@@ -320,10 +327,30 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             #     chunking_status = False
 
             # Get chunk_for_*.in.bam/chunk_rev_*.in.bam
-            forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_data_path.as_posix())
 
-            print(f"forward_chunks : {forward_chunks}")
-            print(f"reverse_chunks : {reverse_chunks}")
+            forward_chunks = sorted(glob(str(output_data_path / "chunk_for_*.in.bam")))
+            reverse_chunks = sorted(glob(str(output_data_path / "chunk_rev_*.in.bam")))
+
+
+            # forward_chunks, reverse_chunks = hut.get_chunks(output_dir = output_data_path.as_posix())# output_data_path.as_posix())
+
+
+            # print("=====================================")
+            # print(f"forward_chunks : {forward_chunks}")
+            # print(f"reverse_chunks : {reverse_chunks}")
+            print("=====================================")
+
+            # Check if chunks are empty
+            for forward_chunk, reverse_chunk in zip(forward_chunks, reverse_chunks):
+                if hut.is_empty_alignment(forward_chunk) or hut.is_empty_alignment(reverse_chunk):
+                    forward_chunks.remove(forward_chunk)
+                    reverse_chunks.remove(reverse_chunk)
+
+            # print("=====================================")
+            # print(f"forward_chunks : {forward_chunks}")
+            # print(f"reverse_chunks : {reverse_chunks}")
+            # print("=====================================")
+
 
             # Reattribute reads
             with Pool(processes = cpus) as pool: # cpus
@@ -336,6 +363,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             # hst.reattribute_reads(reads_couple = (forward_in_path, reverse_in_path), mode = sub_mode, output_dir = output_data_path)
             hio.merge_predictions(output_dir = output_data_path, clean = False, cpus = cpus)
+
+            
 
             hio.build_pairs(bam_for  = "group1.1.out.bam", bam_rev = "group1.2.out.bam", bam_for_rescued  = "group2.1.rescued.bam", bam_rev_rescued = "group2.2.rescued.bam", mode = True, output_dir = output_data_path)
             hio.build_matrix(mode = True, output_dir = output_data_path)
@@ -400,18 +429,18 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
             logger.info(f"Ending benchmark")
 
     # Clean up
-    forward_in_path.unlink()
-    reverse_in_path.unlink()
-    forward_out_path.unlink()
-    reverse_out_path.unlink()
-    (output_data_path / BASE_MATRIX).unlink()
-    (output_data_path / BAM_FOR).unlink()
-    (output_data_path / BAM_REV).unlink()
-    (output_data_path / RESTRICTION_MAP).unlink()
-    (output_data_path / FRAGMENTS).unlink()
-    (output_data_path / CHROMOSOME_SIZES).unlink()
-    (output_data_path / DIST_FRAGS).unlink()
-    (output_data_path / XS).unlink()
+    # forward_in_path.unlink()
+    # reverse_in_path.unlink()
+    # forward_out_path.unlink()
+    # reverse_out_path.unlink()
+    # (output_data_path / BASE_MATRIX).unlink()
+    # (output_data_path / BAM_FOR).unlink()
+    # (output_data_path / BAM_REV).unlink()
+    # (output_data_path / RESTRICTION_MAP).unlink()
+    # (output_data_path / FRAGMENTS).unlink()
+    # (output_data_path / CHROMOSOME_SIZES).unlink()
+    # (output_data_path / DIST_FRAGS).unlink()
+    # (output_data_path / XS).unlink()
 
     files = [p for p in output_data_path.glob("*")]
 
