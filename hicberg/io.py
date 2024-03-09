@@ -203,7 +203,7 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
     logger.info(f"Pairs file successfully created in {output_path}")
 
 
-def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1.pairs", mode : bool = False, cpus : int = 8, output_dir : str = None) -> None:
+def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1.pairs", mode : bool = False, balance : bool = False, cpus : int = 8, output_dir : str = None) -> None:
     """
     Take table of bins and .pairs file and build a matrix in .cool format.
 
@@ -215,6 +215,8 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
         Path to pairs file, by default "group1.pairs"
     mode : bool, optional
         Choose wether the mode is rescued or un-rescued to construct associated .cool file, by default False
+    balance : bool, optional
+        Set wether or not to balance the matrix, by default False
     output_dir : str, optional
         Path to the folder where to save the cooler matrix file, by default None, by default None
     """
@@ -254,7 +256,9 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
     balance_cmd = f"cooler balance --nproc {cpus} {cool_path}"
 
     sp.run(cooler_cmd, shell=True)
-    sp.run(balance_cmd, shell=True)
+
+    if balance:
+        sp.run(balance_cmd, shell=True)
 
     logger.info(f"Cooler matrix successfully created in {output_path}")
 

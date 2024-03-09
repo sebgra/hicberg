@@ -125,7 +125,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     if start_stage < 4:
 
         hio.build_pairs(output_dir = output_folder)
-        hio.build_matrix(cpus = cpus, output_dir = output_folder)
+        hio.build_matrix(cpus = cpus, balance = True, output_dir = output_folder)
 
     if exit_stage == 4:
         logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
@@ -189,7 +189,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
         hio.build_pairs(mode = True, output_dir = output_folder)
 
-        hio.build_matrix(cpus = cpus, mode = True, output_dir = output_folder)
+        hio.build_matrix(cpus = cpus, balance = True, mode = True, output_dir = output_folder)
         
         if mode == "omics":
 
