@@ -298,8 +298,8 @@ def benchmark(output_dir : str = None, chromosome : str = "", position : int = 0
 
             logger.info("Learning step completed")
 
-            # TODO : restore
-            hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads = cpus, output_dir  = output_data_path)
+            if "density" in mode.split(","):
+                hst.compute_density(cooler_file = UNRESCUED_MATRIX, kernel_size = kernel_size, deviation = deviation, threads = cpus, output_dir  = output_data_path)
 
         learning_status = True
 

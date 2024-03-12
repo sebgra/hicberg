@@ -1228,7 +1228,8 @@ def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "au
 
     mad = median_abs_deviation(vector)
     threshold = np.median(vector) - nmads * mad
-    imputed_nan_data = np.where(vector < threshold, np.nan, vector)
+    # threshold = 0
+    imputed_nan_data = np.where(vector <= threshold, np.nan, vector)
 
     if window_size == "auto":
         # due to centered window, selected windows for rolling mean is :
@@ -1268,8 +1269,8 @@ def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
 
 def is_empty_alignment(alignment_file : str) -> bool:
     """
-    Check if an alignement file is empty.
-    If emtpy, return True, else return False.
+    Check if an alignment file is empty.
+    If empty, return True, else return False.
 
     Parameters
     ----------
