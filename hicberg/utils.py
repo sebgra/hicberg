@@ -1246,6 +1246,51 @@ def mad_smoothing(vector : np.ndarray[int] = None, window_size : int | str = "au
     return averaged_data
 
 
+def replace_consecutive_zeros_with_mean(vector : np.ndarray[float]) -> np.ndarray[float]:
+    """
+    Replace consecutive zeros in a vector with the mean of the flanking values.
+
+    Parameters
+    ----------
+    vector : np.ndarray[float]
+        Array to replace consecutive zeros in.
+
+    Returns
+    -------
+    np.ndarray[float]
+        Array with consecutive zeros replaced by the mean of the flanking values.
+    """    
+    
+    # Initialize variables
+    start = None
+    end = None
+    i = 0
+    
+    # Iterate through the array
+    while i < len(vector):
+        # Check for the start of a sequence of zeros
+        if vector[i] == 0 and start is None:
+            start = i
+        # Check for the end of a sequence of zeros
+        elif vector[i] != 0 and start is not None:
+            end = i
+            # Calculate the mean of the values flanking the sequence of zeros
+            mean_value = (vector[start-1] + vector[end]) / 2 if start > 0 else vector[end]
+            # Replace zeros with the mean value
+            vector[start:end] = mean_value
+            # Reset start and end for the next sequence
+            start = None
+            end = None
+        i += 1
+    
+    # Handle case where sequence of zeros goes till the end of the array
+    if start is not None:
+        mean_value = vector[start-1] if start > 0 else 0  # Use the preceding value or 0 if at the start
+        vector[start:] = mean_value
+    
+    return vector
+
+
 def get_chunks(output_dir : str = None) -> tuple([List[str], List[str]]):
     """
     Return a tuple containing the paths to the forward and reverse chunks.

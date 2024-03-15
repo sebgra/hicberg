@@ -881,9 +881,15 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
         if loops[chromosome][-1] == 0 or np.isnan(loops[chromosome][-1]):
             loops[chromosome][-1] = loops[chromosome][-2]
 
-    np.save(output_path / WEIRDS, weirds)
-    np.save(output_path / UNCUTS, uncuts)
-    np.save(output_path / LOOPS, loops)
+    # Post-processing to avoid nan values
+            
+    smoothed_weirds = {seq_name : hut.replace_consecutive_zeros_with_mean(weirds.get(seq_name)) for seq_name in weirds.keys()}
+    smoothed_uncuts = {seq_name : hut.replace_consecutive_zeros_with_mean(uncuts.get(seq_name)) for seq_name in uncuts.keys()}
+    smoothed_loops = {seq_name : hut.replace_consecutive_zeros_with_mean(loops.get(seq_name)) for seq_name in loops.keys()}
+
+    np.save(output_path / WEIRDS, smoothed_weirds)
+    np.save(output_path / UNCUTS, smoothed_uncuts)
+    np.save(output_path / LOOPS, smoothed_loops)
 
     logger.info(f"Saved {WEIRDS}, {UNCUTS} and {LOOPS} in {output_path}")
 
