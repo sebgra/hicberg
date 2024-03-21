@@ -1,23 +1,13 @@
-library;species;sampling_rates;enzymes;kernel_sizes;deviations;modes;resolutions;max_reports;circularity
+library;species;sampling_rates;enzymes;kernel_sizes;deviations;modes;resolutions;max_reports;circularity;distances
 
 #SC288_2m
-tests_fix3;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;ps;2000;-1;chrM,plasmid_p2-micron
+#tests_fix3;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;ps;2000;-1;chrM,plasmid_p2-micron;1000
 
+#SC288_2m_standard
+#SC288_2m_standard;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;standard;2000;-1;chrM,plasmid_p2-micron;1000
 
-#SC288_2m
-#Sc288_2m_full;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;full;2000;-1;chrM,plasmid_p2-micron
-
-#SC288_2m
-#Sc288_2m_no_density_no_d1d2;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;no_density_no_d1d2;2000;-1;chrM,plasmid_p2-micron
-
-#SC288_2m
-#Sc288_2m_no_d1d2;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;no_d1d2;2000;-1;chrM,plasmid_p2-micron
-
-#SC288_2m
-#Sc288_2m_density_only;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;density_only;2000;-1;chrM,plasmid_p2-micron
-
-#SC288_2m
-#Sc288_2m_no_density;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;no_density;2000;-1;chrM,plasmid_p2-micron
+#SC288_2m_sub
+SC288_2m_sub;s_cerevisiae;1.0;DpnII,HinfI;11;0.5;standard;2000;-1;chrM,plasmid_p2-micron;1000
 
 #CC336
-#CC336;e_coli;0.3;DpnII,HinfI;11;0.5;no_d1d2;2000;-1;NC-000913.3
+#CC336;e_coli;0.3;DpnII,HinfI;11;0.5;no_d1d2;2000;-1;NC-000913.3;1000

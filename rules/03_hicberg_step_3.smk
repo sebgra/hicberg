@@ -17,6 +17,7 @@ rule hicberg_step_3:
         deviation = lambda w: samples.deviations[w.libraries],
         max_reports = lambda w: samples.max_reports[w.libraries],
         circularities = lambda w: samples.circularity[w.libraries],
+        distances = lambda w: samples.distances[w.libraries],
     
     output:
         forward_mapped_bam = temp(join(OUT_DIR, '{libraries}', "unrescued_map.cool")),
@@ -27,5 +28,5 @@ rule hicberg_step_3:
         """
         hicberg pipeline -o {OUT_DIR} -r {params.sampling_rate}  -t {threads} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -K {params.kernel_size} -d {params.deviation} -k {params.max_reports} \
-        -c {params.circularities} --start-stage build  --exit-stage stats -f {input.genome} {input.r1} {input.r2}
+        -D {params.distances} -c {params.circularities} --start-stage build  --exit-stage stats -f {input.genome} {input.r1} {input.r2}
         """

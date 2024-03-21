@@ -34,6 +34,7 @@ kernel_sizes = samples.kernel_sizes
 deviations = samples.deviations
 max_reports = samples.max_reports
 circularity = samples.circularity
+distances = samples.distances
 
 
 wildcard_constraints:
@@ -46,7 +47,8 @@ wildcard_constraints:
     kernel_sizes = "|".join(kernel_sizes),
     deviations = "|".join(deviations),
     max_reports = "|".join(max_reports),
-    circularity = "|".join(circularity)
+    circularity = "|".join(circularity),
+    distances = "|".join(distances)
 
 
 ########################################################################
