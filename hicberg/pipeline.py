@@ -38,7 +38,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
             max_alignment : int = None, mapq : int = 35, enzyme  : list[str] = ["DpnII", "HinfI"],
             circular : str = "", rate : float = 1.0, distance : int = 1000, bins : int = 2000, nb_chunks : int = 1,
             mode : str = "full", kernel_size : int = 11, deviation : float = 0.5,  verbose : bool = False,
-            cpus : int = 1, output_dir : str = None, force : bool = False) -> None :
+            cpus : int = 1, output_dir : str = None, force : bool = False, blacklist : str = None) -> None :
 
     args = locals()
 
@@ -85,6 +85,12 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     # Check if the output directory exists
     output_folder = Path(output_dir, name).as_posix()
+
+    # Reformat blacklisted genomic regions if provided
+    if blacklist is not None:
+
+        blacklist = hut.format_blacklist(blacklist = blacklist)
+        print(f"reformatted blacklist : {blacklist}")
 
     if start_stage < 1 : 
 
@@ -137,7 +143,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
         hst.log_bin_genome(genome = genome, output_dir = output_folder)
 
-        p1 = Process(target = hst.get_patterns, kwargs = dict(circular = circular, output_dir = output_folder))
+        p1 = Process(target = hst.get_patterns, kwargs = dict(circular = circular, blacklist = blacklist, output_dir = output_folder))
         p2 = Process(target = hst.generate_trans_ps, kwargs = dict(output_dir = output_folder))
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))

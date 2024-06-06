@@ -748,7 +748,7 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
     logger.info(f"Saved d1d2 law at : {output_path / D1D2}")
 
-def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", chrom_sizes : str = "chromosome_sizes.npy", circular : str = "", output_dir : str = None) -> None:
+def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", chrom_sizes : str = "chromosome_sizes.npy", circular : str = "", blacklist : str = None, output_dir : str = None) -> None:
     """
     Get the patterns distribution from read pairs alignment. .
 
@@ -814,10 +814,16 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
 
     for forward_read, reverse_read in zip(forward_bam_handler, reverse_bam_handler):
+                # TODO : Add blacklisting system to avoid counting reads from blacklisted regions
+                # if not is_blacklisted(forward_read, reverse_read): --> TO BE ADDED TO UTILS
+                #    continue
+                # blacklisting system per coordinates or per file as a list of coordinates (BED file)
+        if  hut.is_blacklisted(read_forward = forward_read, read_reverse = reverse_read, blacklist = blacklist):
+            print(f"Blacklisted read pair : {forward_read.query_name}")
+            continue
 
         if hut.is_intra_chromosome(forward_read, reverse_read):
                 
-
             if hut.is_weird(forward_read, reverse_read):
 
                 weirds[forward_read.reference_name][

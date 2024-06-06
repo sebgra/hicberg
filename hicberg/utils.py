@@ -1342,4 +1342,94 @@ def is_empty_alignment(alignment_file : str) -> bool:
         print(f"File not found: {filepath}")
         return True  # Assuming file is "empty" if it doesn't exist
 
+def format_blacklist(blacklist : str = None) -> dict[str, Tuple[int, int]]:
+    """
+    Format a blacklist file into a dictionary.
 
+    Parameters
+    ----------
+    blacklist : str, optional
+        Path to the blacklist file, by default None
+
+    Returns
+    -------
+    dict[str, Tuple[int, int]]
+        Dictionary with chromosome name as key and tuple of start and end as value.
+    """
+
+    if blacklist is None:
+        return None
+    
+    if not isinstance(blacklist, str):
+        raise TypeError("Blacklist should be a string")
+
+    if not Path(blacklist).exists():
+        pieces = blacklist.split(',')
+        chromosomes_found = np.unique([blacklist.split(':')[0] for p in pieces])
+        indexes_dict = {chrom: 0 for chrom in chromosomes_found}
+        print(f"chromsomes found : {chromosomes_found}")
+        print(f"indexes dict : {indexes_dict}")
+
+        result = {}
+        for piece in pieces:
+            key, value = piece.split(':')
+            if key in result:
+                index = indexes_dict[key]
+                new_key = f'{key}_{index}'
+                indexes_dict[key] += 1
+
+            else : 
+                new_key = key
+                # print(f"piece : {piece[1]}")
+            result[new_key] = tuple([int(x) for x in value.split('-')])
+
+        return result
+    
+    else:
+        result = {}
+        with open(blacklist, 'r') as f:
+            for line in f:
+                chrom, start, end = line.split()
+                if chrom in result:
+                    index = 0
+                    while f"{chrom}_{index}" in result:
+                        index += 1
+                    result[f"{chrom}_{index}"] = (int(start), int(end))
+                else:
+                    result[chrom] = (int(start), int(end))
+        return result
+
+
+def is_blacklisted(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, blacklist : dict[str, Tuple[int, int]] = None) -> bool:
+    """
+    Check if a read pair is blacklisted based on a list of coordiantes.
+
+    Parameters
+    ----------
+    read_forward : pysam.AlignmentSegment
+        Forward read of the pair.
+    read_reverse : pysam.AlignedSegment
+        Reverse read of the pair.
+    blacklist : dict[str, Tuple[int, int]]
+        Blacklist of coordinates to check against. Chromsome name as key and tuple of start and end as value.
+        Chromosome names should be formatted as 'chr1_A', 'chr1_B', etc. With A and B being the index of the coordinates to blacklist in a given chromosome.
+
+    Returns
+    -------
+    bool
+        True if the read pair is blacklisted, False otherwise.
+    """
+
+    if blacklist is None:
+        return False
+    
+    if read_forward.query_name != read_reverse.query_name:
+        raise ValueError("Reads are not coming from the same chromosome")
+    
+    forward_start = read_forward.reference_start if not is_reverse(read_forward) else read_forward.reference_end
+    reverse_start = read_reverse.reference_start if not is_reverse(read_reverse) else read_reverse.reference_end
+
+    forward_check = [low < forward_start < high and read_forward.reference_name == chrom.split("_")[0] for chrom, (low, high) in blacklist.items()]
+    reverse_check = [low < reverse_start < high and read_reverse.reference_name == chrom.split("_")[0] for chrom, (low, high) in blacklist.items()]
+
+    return any([f_check or r_check for f_check, r_check in zip(forward_check, reverse_check)])

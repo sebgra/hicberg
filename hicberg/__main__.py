@@ -63,11 +63,12 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "groups", "build", "stats", "rescue", "final"]), default = "fastq", show_default = True, metavar = "<str>", help = "Stage to start the pipeline.")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "groups", "build", "stats", "rescue", "final"]), default = "None", show_default = True, metavar = "<str>", help = "Stage to exit the pipeline.")
 @click.option("--force", "-f", is_flag = True, show_default = True, help = "Set if previous analysis files are deleted.")
-def pipeline_cmd(data, index, name, rate, distance, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force):
+@click.option("--blacklist", "-B", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Blacklisted coordintaes to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.")
+def pipeline_cmd(data, index, name, rate, distance, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force, blacklist):
     """
     Hi-C pipeline to generate enhanced contact matrix from fastq files.
     """
-    hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, distance = distance, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force)
+    hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, distance = distance, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force, blacklist = blacklist)
     return
 
 
