@@ -35,6 +35,7 @@ deviations = samples.deviations
 max_reports = samples.max_reports
 circularity = samples.circularity
 distances = samples.distances
+blacklists = samples.blacklists
 
 
 wildcard_constraints:
@@ -48,7 +49,8 @@ wildcard_constraints:
     deviations = "|".join(deviations),
     max_reports = "|".join(max_reports),
     circularity = "|".join(circularity),
-    distances = "|".join(distances)
+    distances = "|".join(distances),
+    blacklists = "|".join(blacklists)
 
 
 ########################################################################
@@ -78,6 +80,6 @@ rule all:
         expand(join(OUT_DIR, '{libraries}', "group1.1.bam"), libraries=libraries),
         expand(join(OUT_DIR, '{libraries}', "unrescued_map.cool"), libraries=libraries),
         expand(join(OUT_DIR, '{libraries}', "restriction_map.npy"), libraries=libraries),
-        expand(join(OUT_DIR, '{libraries}', "contacts", "matrices", "rescued_map.cool"), libraries = libraries)
+        expand(join(OUT_DIR, '{libraries}', "contacts", "matrices", "rescued_map.cool"), libraries = libraries), 
 
 

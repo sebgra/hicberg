@@ -481,3 +481,4 @@ def tidy_folder(output_dir : str = None) -> None:
 
             Path(file).rename(output_path / "plots" / "contact_maps" / Path(file).name)
 
+

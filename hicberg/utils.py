@@ -1349,7 +1349,7 @@ def format_blacklist(blacklist : str = None) -> dict[str, Tuple[int, int]]:
     Parameters
     ----------
     blacklist : str, optional
-        Path to the blacklist file, by default None
+        Path to the blacklist file. If set to -1 this is equivalent to None for workflow managers purpose, by default None
 
     Returns
     -------
@@ -1357,7 +1357,7 @@ def format_blacklist(blacklist : str = None) -> dict[str, Tuple[int, int]]:
         Dictionary with chromosome name as key and tuple of start and end as value.
     """
 
-    if blacklist is None:
+    if blacklist is None or blacklist == "-1":
         return None
     
     if not isinstance(blacklist, str):
@@ -1367,8 +1367,6 @@ def format_blacklist(blacklist : str = None) -> dict[str, Tuple[int, int]]:
         pieces = blacklist.split(',')
         chromosomes_found = np.unique([blacklist.split(':')[0] for p in pieces])
         indexes_dict = {chrom: 0 for chrom in chromosomes_found}
-        print(f"chromsomes found : {chromosomes_found}")
-        print(f"indexes dict : {indexes_dict}")
 
         result = {}
         for piece in pieces:
@@ -1380,7 +1378,6 @@ def format_blacklist(blacklist : str = None) -> dict[str, Tuple[int, int]]:
 
             else : 
                 new_key = key
-                # print(f"piece : {piece[1]}")
             result[new_key] = tuple([int(x) for x in value.split('-')])
 
         return result
