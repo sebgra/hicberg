@@ -158,7 +158,7 @@ def build_matrix_cmd(output, recover, cpus):
 @click.command(context_settings = CONTEXT_SETTINGS, epilog = epilogs["general"], options_metavar = "<options>")
 @click.argument('data', nargs = -1, metavar = "<genome>")
 @click.option("--output", "-o", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Output folder to save results.")
-@click.option("--mode", "-m", required = False, default = "full", type = str, show_default = True, metavar = "<str>", help = "Statistical model to use for ambiguous reads assignment.")
+@click.option("--mode", "-m", required = False, default = "standard", type = str, show_default = True, metavar = "<str>", help = "Statistical model to use for ambiguous reads assignment.")
 @click.option("--kernel-size", "-K", required = False, default = 11, type = int, show_default = True, metavar = "<int>", help = "Size of the gaussian kernel for contact density estimation.")
 @click.option("--deviation", "-d", required = False, default = 0.5, type = float, show_default = True, metavar = "<float>", help = "Standard deviation for contact density estimation.")
 @click.option("--rate", "-r", required = False, default = 1.0, type = float, show_default = True, metavar = "<float>", help = "Rate to use for sub-sampling restriction map.")
@@ -166,15 +166,23 @@ def build_matrix_cmd(output, recover, cpus):
 @click.option("--circular", "-c", required = False, type = str, default = "", show_default = True, metavar = "<str>", help = "Name of the chromosome to consider as circular.")
 @click.option("--bins", "-b", required = False, type = int, default = 2000, show_default = True, metavar = "<int>", help = "Genomic resolution.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, show_default = True, metavar = "<int>", help = "Threads to use for analysis.")
-def statistics_cmd(data, mode, kernel_size, deviation,  rate, enzyme, circular, bins, output, cpus):
+@click.option("--blacklist", "-B", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Blacklisted coordintaes to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.")
+def statistics_cmd(data, mode, kernel_size, deviation,  rate, enzyme, circular, bins, output, cpus, blacklist):
     """
     Extract statistics from non ambiguous Hi-C data.
     """
+
+        # Reformat blacklisted genomic regions if provided
+    if blacklist is not None:
+
+        blacklist = hut.format_blacklist(blacklist = blacklist)
+        print(f"reformatted blacklist : {blacklist}")
+
     restriction_map = hst.get_restriction_map(genome = data[0], enzyme = enzyme, output_dir = output)
     hst.get_dist_frags(genome = data[0], restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output)
     hst.log_bin_genome(genome = data[0], output_dir = output)
 
-    p1 = Process(target = hst.get_patterns(circular = circular, output_dir = output))
+    p1 = Process(target = hst.get_patterns(circular = circular, blacklist = blacklist, output_dir = output))
     p2 = Process(target = hst.generate_trans_ps(output_dir = output))
     p3 = Process(target = hst.generate_coverages(genome = data[0], bins = bins, output_dir = output))
     p4 = Process(target = hst.generate_d1d2(output_dir = output))

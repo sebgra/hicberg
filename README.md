@@ -128,11 +128,11 @@ WEBSITE TO BE ADDED
 hicberg pipeline [--enzyme=["DpnII", "HinfI"]] [--distance=1000]
 [--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"]
 [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"]
-[--exit-stage=None] [--output=DIR] [--index=None] [--force]  <genome> <input1> <input2>
+[--exit-stage=None] [--output=DIR] [--index=None] [--blacklist=STR] [--force]  <genome> <input1> <input2>
 
 ```
 
-For example, to run the pipeline using 8 threads, in default mode, using ARIMA Hi-C kit enzymes (DpnII & HinfI) and generate a matrix and its reconstruction in the directory out: 
+For example, to run the pipeline using 8 threads, in default mode, using ARIMA Hi-C kit enzymes (DpnII & HinfI) without blacklisting and generate a matrix and its reconstruction in the directory out: 
 
 ```bash
 hicberg pipeline -e DpnII -e HinfI --cpus 8 -o out/  genome.fa  reads_for.fq  rev_reads.fq 
@@ -263,7 +263,7 @@ hicberg get-tables --output=DIR --genome=FILE [--bins=2000]
 For example to these files in a folder named "test" previously created on the desktop with a binning size of 2000 bp :
 
 ```bash
-hicberg get-tables -o ~/Desktop/  --bins 2000 <genome>
+hicberg get-tables -o ~/Desktop/test/  --bins 2000 <genome>
 ```
 
 The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be generated in the folder **output/**.
@@ -369,9 +369,10 @@ Thus, the built matrix file will be  __*rescued_map.cool*__.
 After having aligned the reads and built the pairs file __*group1.pairs*__, the cooler matrix  __*unrescued_map.cool*__,  the statistical laws for the reassignment of the reads from **group2** can be learnt by using the following command:
 
 ```bash
-hicberg statistics --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] [--mode="full"] [--kernel-size=11] [--deviation=0.5] <genome>
+hicberg statistics --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] [--mode="standard"]
+[--kernel-size=11] [--deviation=0.5] [--balcklist=STR] <genome>
 ```
-Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes) and default parameters for density estimation, without sub-sampling the restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
+Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes) and default parameters for density estimation, without sub-sampling the restriction map and without blacklisting regions and considering "chrM" as circular in a folder named "test" previously created on the desktop:
 
 ```bash
 hicberg statistics  -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ <genome.fa>
@@ -385,6 +386,44 @@ The statistical laws are going to be saved as:
 - __*coverage*__: dictionary containing the coverage of the genome as dictionary such as ```{chromosome: [coverage]}```
 - __*d1d2.npy*__: np.array containing the d1d2 law as dictionary such as ```[distribution]```
 - __*density_map.npy*__ : dictionary containing the density map as dictionary such as ```{chromosome_pair: [density map]}```
+
+
+
+#####  Blacklisting regions
+
+The user can specify regions to blacklist in the analysis. The regions to blacklist have to be specified in a bed file or a coma separated list of genomic coordinates considering [UCSC](http://genome.ucsc.edu/FAQ/FAQformat) format. The bed file has to be formatted as follow:
+
+```bed
+chr1 200000 220000
+chr1 308000 314000
+...
+chr3 100000 120000
+```
+
+List of blacklisted regions provided as a string can be specified as follow:
+
+```bash
+chr1:200000-220000,chr1:308000-314000,...,chr3:100000-120000
+```
+
+So the learning of the statistical laws, as previously described, with blacklisting regions for P(s) computing can be done using the following command:
+
+* Using a bed file:
+
+```bash
+
+hicberg statistics  -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ -B <blacklist.bed> <genome.fa>
+```
+
+* Using a string:
+
+```bash
+hicberg statistics -o ~/Desktop/test/ -B "chr1:200000-220000,chr1:308000-314000,chr3:100000-120000" <genome>
+```
+
+#### Omics mode
+
+TO be completed
 
 
 ### Reconstruction
