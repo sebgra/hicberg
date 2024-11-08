@@ -255,6 +255,8 @@ def get_local_density(cooler_file : str = None, chrom_name : tuple = (None, None
 
     if size % 2 == 0:
         raise ValueError("Kernel size must be odd")
+    
+    print(f"Cooler file : {cooler_file}")
 
     #Load cooler file
     matrix = cooler.Cooler(cooler_file).matrix(balance = True).fetch(chrom_name[0], chrom_name[1])

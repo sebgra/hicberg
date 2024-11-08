@@ -1432,7 +1432,12 @@ def draw_read_couple(propensities : np.array) -> int:
     """
     # print(f"propensities : {propensities}")
 
+
+
     xk = np.arange(len(propensities))
+
+
+
 
     if  np.sum(propensities) > 0: 
 
@@ -1458,6 +1463,16 @@ def draw_read_couple(propensities : np.array) -> int:
 
     else : 
         logger.error(f"Propensities : {propensities}")
+
+    #TODO: Added 08/11/2024
+    ## Correct propensities to avoid nan values
+    ## If propensity contains nan values, replace them with 0
+
+    if np.sum(np.isnan(pk)) > 0:
+        pk = np.nan_to_num(pk)
+
+
+    
 
     index = choice(xk, p=pk)
 

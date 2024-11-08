@@ -204,7 +204,7 @@ def test_generate_trans_ps(temporary_folder, test_get_restriction_map_mono, test
     Test if the transchromosomal P(s) are correctly generated.
     """
     temp_dir_path = Path(temporary_folder)
-    hst.generate_trans_ps(matrix = test_build_matrix, restriction_map = test_get_restriction_map_mono, output_dir = temp_dir_path)
+    hst.generate_trans_ps(matrix = test_build_matrix, output_dir = temp_dir_path)
     
     trans_ps_path = temp_dir_path / TRANS_PS
 
@@ -519,10 +519,11 @@ def test_generate_density_map(temporary_folder, test_get_bin_table, test_hic_bui
     Test if the density map is correctly generated.
     """
     temp_dir_path = Path(temporary_folder)
-    hio.build_matrix(output_dir = temp_dir_path, mode = False)
+    hio.build_matrix(output_dir = temp_dir_path, mode = False, balance = True)
+    
 
     unrescued_map_path = temp_dir_path / UNRESCUED_MAP
-    hst.generate_density_map(matrix = unrescued_map_path, output_dir = temp_dir_path)
+    hst.compute_density(cooler_file = unrescued_map_path, output_dir = temp_dir_path, threads = 16)
     density_map_path = temp_dir_path / DENSITY_MAP
     yield density_map_path
     assert density_map_path.is_file()

@@ -5,7 +5,6 @@ LICENSE
 README.md
 Snakefile
 dag.png
-pytest
 requirements.txt
 rg.png
 setup.py
@@ -188,6 +187,7 @@ hicberg/benchmark.py
 hicberg/eval.py
 hicberg/filter.py
 hicberg/io.py
+hicberg/omics.py
 hicberg/pipeline.py
 hicberg/plot.py
 hicberg/statistics.py

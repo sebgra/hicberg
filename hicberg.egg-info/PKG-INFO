@@ -69,12 +69,14 @@ mamba env create -n [ENV_NAME] -f hicberg.yaml;
 
 ### Dependencies
 
-To ensure that HiC-BERG is correctly working, Bowtie2 and Samtools have to be installed. These can be install through : 
+To ensure that HiC-BERG is correctly working, Bowtie2, Samtools, bedGraphToBigWig and BedTools have to be installed. These can be install through : 
 
 ```bash
 
 mamba install bowtie2 -c bioconda;
 mamba install samtools -c bioconda;
+mamba install -c bioconda ucsc-bedgraphtobigwig;
+mamba install bedtools -c bioconda;
 ```
 
 
@@ -107,8 +109,10 @@ wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambafor
 bash Mambaforge-$(uname)-$(uname -m).sh
 mamba create -n hicberg python=3.11.4
 mamba activate hicberg
-mamba install -c bioconda samtools
-
+mamba install bioconda::bowtie2
+mamba install bioconda::samtools
+mamba install bioconda::bedtools
+mamba install bioconda::ucsc-bedgraphtobigwig
 ```
 
 TO BE COMPLETED
@@ -136,16 +140,16 @@ sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hic
 
 N.B : _working_directory_ and _output (-o argument)_ of HiC-BERG command have to be the same.
 
-For instance if you need to access the help of HiC-BERG thorugh Docker :
+For instance if you need to access the help of HiC-BERG through Docker :
 
 ```bash
-sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 hicberg --help
+sudo docker run -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 hicberg --help
 ```
 
 HiC-BERG can also be used through Docker in interactive mode using :
 
 ```bash
-sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g) -it  hicberg:0.0.1
+sudo docker run -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g) -it  hicberg:0.0.1
 ```
 
 Then, the user will be directly placed in an interactive shell where HiC-BERG can be use directly, by typing any of HiC-BERG command such as further examples.
@@ -164,12 +168,14 @@ WEBSITE TO BE ADDED
 
 ```bash
 
-hicberg pipeline  [--enzyme=["DpnII", "HinfI"]]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"] [--exit-stage=None] [--output=DIR] [--index=None] [--force]  <genome> <input1> <input2>
+hicberg pipeline [--enzyme=["DpnII", "HinfI"]] [--distance=1000]
+[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"]
+[--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"]
+[--exit-stage=None] [--output=DIR] [--index=None] [--blacklist=STR] [--force]  <genome> <input1> <input2>
 
 ```
 
-For example, to run the pipeline using 8 threads using ARIMA Hi-C kit enzymes (DpnII & HinfI) and generate a matrix and its reconstruction in the directory out: 
+For example, to run the pipeline using 8 threads, in default mode, using ARIMA Hi-C kit enzymes (DpnII & HinfI) without blacklisting and generate a matrix and its reconstruction in the directory out: 
 
 ```bash
 hicberg pipeline -e DpnII -e HinfI --cpus 8 -o out/  genome.fa  reads_for.fq  rev_reads.fq 
@@ -267,6 +273,8 @@ N.B 3: The ressources allocated to each job can be modified in the file cluster_
 
 #### Create folder
 
+Be careful to create a folder before running the pipeline. The folder can be created using the following command:
+
 ```bash
 hicberg create-folder --output=DIR [--name="folder_name"] [--force]
 ```
@@ -340,9 +348,9 @@ hicberg classify -o ~/Desktop/test/
 
 The files created are: 
 
-- __*group0.1.bam*__ and __*group0.2.bam*__ : bam files containing the reads of **group0** i.e. where at least one read of the pair is unaligned.
-- __*group1.1.bam*__ and __*group1.2.bam*__ : bam files containing the reads of **group1** i.e. where both reads of the pair are aligned only one time.
-- __*group2.1.bam*__ and __*group2.2.bam*__ : bam files containing the reads of **group2** i.e. where at least one reads of the pair are aligned more than one time.
+- __*group0.1.bam*__ and __*group0.2.bam*__ : bam files containing the reads of **group0** e.g. where at least one read of the pair is unaligned.
+- __*group1.1.bam*__ and __*group1.2.bam*__ : bam files containing the reads of **group1** e.g. where both reads of the pair are aligned only one time.
+- __*group2.1.bam*__ and __*group2.2.bam*__ : bam files containing the reads of **group2** e.g. where at least one reads of the pair are aligned more than one time.
 
 ### Pairs and matrix building
 
@@ -404,9 +412,10 @@ Thus, the built matrix file will be  __*rescued_map.cool*__.
 After having aligned the reads and built the pairs file __*group1.pairs*__, the cooler matrix  __*unrescued_map.cool*__,  the statistical laws for the reassignment of the reads from **group2** can be learnt by using the following command:
 
 ```bash
-hicberg statistics --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] [--mode="full"] [--kernel-size=11] [--deviation=0.5] <genome>
+hicberg statistics --output=DIR [--bins=bins_number] [--circular=""] [--rate=1.0] [--mode="standard"]
+[--kernel-size=11] [--deviation=0.5] [--balcklist=STR] <genome>
 ```
-Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes) and default parameters for density estimation, without sub-sampling the restriction map and considering "chrM" as circular in a folder named "test" previously created on the desktop:
+Considering the previous example, to get the statistical laws (with respect of [ARIMA](https://arimagenomics.com/products/genome-wide-hic/) kit enzymes) and default parameters for density estimation, without sub-sampling the restriction map and without blacklisting regions and considering "chrM" as circular in a folder named "test" previously created on the desktop:
 
 ```bash
 hicberg statistics  -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ <genome.fa>
@@ -420,6 +429,44 @@ The statistical laws are going to be saved as:
 - __*coverage*__: dictionary containing the coverage of the genome as dictionary such as ```{chromosome: [coverage]}```
 - __*d1d2.npy*__: np.array containing the d1d2 law as dictionary such as ```[distribution]```
 - __*density_map.npy*__ : dictionary containing the density map as dictionary such as ```{chromosome_pair: [density map]}```
+
+
+
+#####  Blacklisting regions
+
+The user can specify regions to blacklist in the analysis. The regions to blacklist have to be specified in a bed file or a coma separated list of genomic coordinates considering [UCSC](http://genome.ucsc.edu/FAQ/FAQformat) format. The bed file has to be formatted as follow:
+
+```bed
+chr1 200000 220000
+chr1 308000 314000
+...
+chr3 100000 120000
+```
+
+List of blacklisted regions provided as a string can be specified as follow:
+
+```bash
+chr1:200000-220000,chr1:308000-314000,...,chr3:100000-120000
+```
+
+So the learning of the statistical laws, as previously described, with blacklisting regions for P(s) computing can be done using the following command:
+
+* Using a bed file:
+
+```bash
+
+hicberg statistics  -e DpnII -e HinfI -c "chrM" -o ~/Desktop/test/ -B <blacklist.bed> <genome.fa>
+```
+
+* Using a string:
+
+```bash
+hicberg statistics -o ~/Desktop/test/ -B "chr1:200000-220000,chr1:308000-314000,chr3:100000-120000" <genome>
+```
+
+#### Omics mode
+
+TO be completed
 
 
 ### Reconstruction
@@ -501,6 +548,7 @@ After tidying the folders architecture will be the following:
 │       ├── all_group.pairs
 │       └── group1.pairs
 ├── fragments_fixed_sizes.txt
+├── chromosome_sizes.txt
 ├── index
 │   ├── index.1.bt2l
 │   ├── index.2.bt2l
@@ -526,8 +574,14 @@ After tidying the folders architecture will be the following:
     ├── trans_ps.npy
     ├── uncuts.npy
     ├── weirds.npy
-    └── xs.npy
+    ├── xs.npy
+    ├── chromsome_sizes.bed(*) 
+    ├── coverage.bed(*)
+    ├── coverage.bedgraph(*)
+    └── signal.bw(*)
 ```
+  
+  _(*) : files generated by hicberg in omics mode_
 
 ## Chaining pipeline steps
 
@@ -535,25 +589,23 @@ It is possible to chain the different steps of the pipeline by using the followi
 
 ```bash
 # 0. Prepare analysis
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage fastq  --exit-stage bam
+hicberg pipeline  -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage fastq  --exit-stage bam <genome> <input1> <input2>
 
 # 1. Align reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage bam  --exit-stage groups
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage bam  --exit-stage groups <genome> <input1> <input2>
 
 # 2. Group reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage groups  --exit-stage build
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage groups  --exit-stage build <genome> <input1> <input2>
 
 # 3. Build pairs & cool
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage build  --exit-stage stats
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage build  --exit-stage stats <genome> <input1> <input2>
 
 # 4. Compute statistics
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage stats  --exit-stage rescue
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage stats  --exit-stage rescue <genome> <input1> <input2>
 
-# 5. Reassign ambiguous reads
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
+# 5. Reassign ambiguous reads, build pairs & cool then get results
+hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage rescue  --exit-stage final <genome> <input1> <input2>
 
-# 6. Build pairs & cool then get results
-hicberg pipeline --genome=FILE --fq-for=FILE --fq-rev=FILE -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME   --start-stage rescue  --exit-stage final
 ```
 
 ## Evaluating the model
@@ -640,7 +692,7 @@ Considering a benchmark with 4 artificially duplicated sequences set at _chr1:10
 
 
 ```bash
-hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7 -P 50000,30000 -m full,ps_only -g <genome.fa>
+hicberg benchmark  -o ~/Desktop/test/ -c chr1 -p 100000 -s 0,100000 -C chr4,chr7 -P 50000,30000 -m full,ps_only -g <genome>
 ```
 
 It is also possible to let the source and target intervals being picked at random. However in such cases, the empty bins are not considered in the evaluation. The random mode is activated by setting the parameter __*--auto*__ to the number of desired artificially duplicated sequences. 
@@ -677,6 +729,7 @@ import hicberg.io #Functions for I/O and folder management.
 import hicberg.align #Functions for sequence alignment steps
 import hicberg.utils #Functions for handling reads and alignment
 import hicberg.statistics #Functions for extract and create statistical models
+import hicberg.omics #Functions to treat non Hi-C data. 
 import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
 ```
 

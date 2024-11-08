@@ -28,11 +28,11 @@ rule hicberg_step_1:
         forward_sorted_bam = temp(join(OUT_DIR, '{libraries}', "1.sorted.bam")),
         reverse_sorted_bam = temp(join(OUT_DIR, '{libraries}', "2.sorted.bam"))
 
-    threads: 16
+    threads: 64
 
     shell: 
         """
         hicberg pipeline -o {OUT_DIR} -r {params.sampling_rate} -t {threads} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -K {params.kernel_size} -d {params.deviation} -k {params.max_reports} \
-        -D {params.distances} -c {params.circularities} -B {params.blacklists}  --start-stage bam  --exit-stage groups -f {input.genome} {input.r1} {input.r2}
+        -D {params.distances} -c {params.circularities} -B {params.blacklists}  --start-stage bam  --exit-stage groups  {input.genome} {input.r1} {input.r2}
         """

@@ -42,7 +42,7 @@ def test_hic_align(test_hic_build_index, temporary_folder):
     fq_for_path = Path(FOR_FQ)
     fq_rev_path = Path(REV_FQ)
 
-    hal.hic_align(genome = genome_path, index = test_hic_build_index, fq_for = fq_for_path, fq_rev = fq_rev_path, output_dir = temp_dir_path, verbose = True)
+    hal.hic_align(index = test_hic_build_index, fq_for = fq_for_path, fq_rev = fq_rev_path, output_dir = temp_dir_path, verbose = True)
 
     for_sam_path = temp_dir_path / FOR_SAM
     rev_sam_path = temp_dir_path / REV_SAM

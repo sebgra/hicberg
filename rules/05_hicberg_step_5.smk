@@ -23,11 +23,11 @@ rule hicberg_step_5:
     output:
         rescued_matrix = join(OUT_DIR, '{libraries}', "contacts", "matrices", "rescued_map.cool")
 
-    threads: 16
+    threads: 32
     
     shell:
         """
         hicberg pipeline -o {OUT_DIR} -r {params.sampling_rate}  -t {threads} \
         -m {params.mode}  -e {params.enzyme} -s very-sensitive -n {params.name} -K {params.kernel_size} -d {params.deviation} -k {params.max_reports} \
-        -D {params.distances} -c {params.circularities} -B {params.blacklists}  --start-stage rescue  --exit-stage final -f {input.genome} {input.r1} {input.r2}
+        -D {params.distances} -c {params.circularities} -B {params.blacklists}  --start-stage rescue  --exit-stage final {input.genome} {input.r1} {input.r2}
         """
