@@ -3,7 +3,6 @@
 
 ## Badges
 
-Add badges from somewhere like: [shields.io](https://shields.io/)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
@@ -11,6 +10,7 @@ Add badges from somewhere like: [shields.io](https://shields.io/)
 
 ## Table of contents
 
+- [Description](#description)
 
 
 ## Environment and dependencies
@@ -116,7 +116,7 @@ Then, the user will be directly placed in an interactive shell where HiC-BERG ca
 
 ## Full pipeline
 
-<img src="/docs/images/Workflow.png" alt="HiC-BERG"/>
+<img src="/docs/images/Hicberg_pipeline.png" alt="HiC-BERG"/>
 
 All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command.\
 By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
@@ -423,8 +423,16 @@ hicberg statistics -o ~/Desktop/test/ -B "chr1:200000-220000,chr1:308000-314000,
 
 #### Omics mode
 
-TO be completed
+The omics mode can be used to reconstruct any pair-ended sequenced genomic data. For such, the model used relies on the $P(s)$ and the coverage. 
+After reconstruction, the data is located in the folder **statistics/**. The files generated are:
+  - coverage.bed : bed file containing the coverage of the genome
+  - coverage.bedgraph : bedgraph file containing the coverage of the genome
+  - **signal.bw : bigwig file containing the reconstructed signal (pair-ended data**)
 
+The omics mode can be used using the following command:
+```bash
+hicberg pipeline  -o <out folder> -t <cpus> -m omics  -s <alignment sensitivity>   genome.fa  reads_for.fq  rev_reads.fq 
+```
 
 ### Reconstruction
 
@@ -633,6 +641,7 @@ The benchmark can be performed considering several modes. The modes are defined 
 - density
 - standard (ps and cov)
 - one_enzyme (ps, cov and d1d2)
+- omics (ps, cov)
 
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
@@ -739,6 +748,21 @@ NS500150:487:HNLLNBGXC:1:11101:6488:14927       chr2    379433  chr2    379138  
 * bt2l files: Thi format is used to store index of genomes performer using Bowtie2. 
 
 * bam files: This format is used to built analyses on, by several functions of hicberg. It is a compressed standard alignment format file providing multiple information about read alignments performer by [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml). Such files can be handled through [Samtools](http://www.htslib.org/doc/) and it's Python wrapper [PySam](https://pysam.readthedocs.io/en/latest/api.html). More details about SAM and BAM format can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
+
+* bed files: This format is used to store genomic intervals. It is a tab-separated format holding information about genomic intervals. It is a standard format used by the [UCSC genome browser](http://genome.ucsc.edu/FAQ/FAQformat). 
+
+```
+chr4    150    200
+chr6    300    400
+chr4    800    900
+chr2    680000 684000
+...
+```
+
+  * *chromosome_sizes.bed* : This file is used to store the size of each chromosome. Structure is the following : ```chromosome start end```
+  * *coverage.bed* : This file is used to store the coverage of the genome. Structure is the following : ```chromosome start end coverage```
+  * *coverage.bedgraph* : This file is used to store the coverage of the genome. Structure is the following : ```chromosome start end coverage```
+  * *signal.bw* : This file is used to store the coverage of the genome. Structure is the following : ```chromosome start end coverage```
 
 * fragments_fixed_sizes.txt: 
 

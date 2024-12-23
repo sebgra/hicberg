@@ -27,7 +27,6 @@ UNRESCUED_MATRIX = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
 
 
-
 def check_tool(name):
     """Check whether `name` is on PATH and marked as executable."""
 
@@ -131,13 +130,19 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     if start_stage < 4:
 
         hio.build_pairs(output_dir = output_folder)
-        hio.build_matrix(cpus = cpus, balance = True, output_dir = output_folder)
+
+        if mode != "omics":
+
+            hio.build_matrix(cpus = cpus, balance = True, output_dir = output_folder)
+        else:
+            hio.build_matrix(cpus = cpus, balance = False, output_dir = output_folder)
 
     if exit_stage == 4:
         logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
         return
     
     if start_stage < 5:
+
 
         restriction_map = hst.get_restriction_map(genome = genome, enzyme = enzyme, output_dir = output_folder)
         hst.get_dist_frags(genome = genome, restriction_map = restriction_map, circular = circular, rate = rate, output_dir = output_folder)
@@ -148,11 +153,21 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         p3 = Process(target = hst.generate_coverages, kwargs = dict(genome = genome, bins = bins, output_dir = output_folder))
         p4 = Process(target = hst.generate_d1d2, kwargs = dict(output_dir = output_folder))
 
-        for process in [p1, p2, p3, p4]:
-            process.start()
+        if mode != "omics":
 
-        for process in [p1, p2, p3, p4]:
-            process.join()
+            for process in [p1, p2, p3, p4]:
+                process.start()
+
+            for process in [p1, p2, p3, p4]:
+                process.join()
+
+        elif mode == "omics":
+
+            for process in [p1, p2, p3]:
+                process.start()
+
+            for process in [p1, p2, p3]:
+                process.join()
 
         if mode in ["full", "density"]:
 
