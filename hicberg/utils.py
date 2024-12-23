@@ -675,8 +675,8 @@ def classify_reads(bam_couple : tuple[str, str] = ("1.sorted.bam", "2.sorted.bam
 
 
     # Cleaning files after classification
-    forward_bam_file_path.unlink()
-    reverse_bam_file_path.unlink()
+    # forward_bam_file_path.unlink()
+    # reverse_bam_file_path.unlink()
 
 def is_intra_chromosome(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment) -> bool:
     """

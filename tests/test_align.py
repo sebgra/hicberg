@@ -5,7 +5,7 @@ import hicberg.align as hal
 from .conftest import temporary_folder
 
 
-GENOME = "data_test/SC288_with_micron.fa"
+GENOME = "data_test/sub_genome.fa"
 FOR_FQ = "data_test/forward_reads_test.fq.gz"
 REV_FQ = "data_test/reverse_reads_test.fq.gz"
 FOR_SAM = "1.sam"

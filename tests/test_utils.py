@@ -10,7 +10,7 @@ from .conftest import temporary_folder
 
 from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
 
-GENOME = "data_test/SC288_with_micron.fa"
+GENOME = "data_test/sub_genome.fa"
 CHROM_SIZES_DIC = "chromosome_sizes.npy"
 FRAG_FILE = "fragments_fixed_sizes.txt"
 
@@ -27,8 +27,8 @@ UNRESCUED_MAP = "data_test/unrescued_map.cool"
 
 
 MIN_READ_MAPQ = 30
-DICT_FIRST_KEY = "chr10"
-DICT_FIRST_CHR_LAST_POS = 745751
+DICT_FIRST_KEY = "chr1"
+DICT_FIRST_CHR_LAST_POS = 230218
 
 FIRST_QUERY_NAME = "NS500150:487:HNLLNBGXC:1:11101:1047:14348"
 

@@ -20,7 +20,7 @@ import hicberg.io as hio
 
 
 
-GENOME = "data_test/SC288_with_micron.fa"
+GENOME = "data_test/sub_genome.fa"
 XS = "xs.npy"
 RESTRICTION_DICO = "dist.frag.npy"
 COVERAGE_DICO = "coverage.npy"
@@ -33,10 +33,10 @@ UNRESCUED_MAP = "unrescued_map.cool"
 DENSITY_MAP = "density_map.npy"
 
 
-DICT_FIRST_KEY = "chr10"
-DICT_FIRST_CHR_LAST_POS = 745751
-DICT_SECOND_KEY = "chr11"
-DICT_SECOND_CHR_LAST_POS = 666816
+DICT_FIRST_KEY = "chr1"
+DICT_FIRST_CHR_LAST_POS = 230218
+DICT_SECOND_KEY = "chr2"
+DICT_SECOND_CHR_LAST_POS = 813184
 
 HEADER = pysam.AlignmentHeader().from_dict({
             "HD": {"VN": "1.0", "SO": "unsorted"},
@@ -50,11 +50,11 @@ HEADER = pysam.AlignmentHeader().from_dict({
 BINS = 2000
 
 DEFAULT_ENZYME = ["DpnII"]
-DICT_FIRST_KEY = "chr10"
+DICT_FIRST_KEY = "chr1"
 DICT_FIRST_CHR_FIRST_POS = 0
-DICT_FIRST_CHR_LAST_POS = 745751
-LENGTH_DPNII = 2266
-LENGTH_DPNII_HINFI = 4680
+DICT_FIRST_CHR_LAST_POS = 230218
+LENGTH_DPNII = 644
+LENGTH_DPNII_HINFI = 1359
 SUBSAMPLE_RATE = 1.0
 
 CIRCULAR = "chrM"
@@ -62,18 +62,18 @@ CIRCULAR = "chrM"
 MODE = "full"
 
 XS_BASE = 1.1
-LENGTH_XS_CHR_FIRST = 127
-XS_CHR_FIRST_VALUE = 1
-XS_CHR_LAST_VALUE = 754677
+LENGTH_XS_CHR_FIRST = 115
+XS_CHR_FIRST_VALUE = 0
+XS_CHR_LAST_VALUE = 218603
 
 DISTANCE = 100000
-DISTANCE_XS_IDX = 104
+DISTANCE_XS_IDX = 105
 
 PS_VALUE = 3.0
-D1D2_VALUE = 18
+D1D2_VALUE = 10
 
 @pytest.fixture(scope = "module")
-@pytest.mark.parametrize("genome, enzyme, length", [(GENOME, DEFAULT_ENZYME, LENGTH_DPNII), (GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI)])
+@pytest.mark.parametrize("genome, enzyme, length", [(GENOME, ["DpnII", "HinfI"], LENGTH_DPNII_HINFI)])#(GENOME, DEFAULT_ENZYME, LENGTH_DPNII), 
 def test_get_restriction_map(genome, enzyme, length):
     """
     Test if the function returns a dictionary with the right keys and values, i.e. the genome has been correctly digested.

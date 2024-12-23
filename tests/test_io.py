@@ -18,8 +18,8 @@ PREDICTED_BAM_FORWARD = "group2.1.rescued.bam"
 PREDICTED_BAM_REVERSE = "group2.2.rescued.bam"
 
 
-DICT_FIRST_KEY = "chr10"
-DICT_FIRST_SIZE = 745751
+DICT_FIRST_KEY = "chr1"
+DICT_FIRST_SIZE = 230218
 
 def test_create_folder(temporary_folder):
     """
