@@ -1414,7 +1414,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         return density
 
-
     
 def draw_read_couple(propensities : np.array) -> int:
     """
@@ -1430,52 +1429,36 @@ def draw_read_couple(propensities : np.array) -> int:
     int
         Index of the couple of reads drawn.
     """
-    # print(f"propensities : {propensities}")
-
-
 
     xk = np.arange(len(propensities))
 
-
-
-
     if  np.sum(propensities) > 0: 
-
         try:
-
             pk = np.divide(propensities, np.sum(propensities))
         
         except:
-
             print(f"pk : {pk}")
             print(f"propensities : {propensities}")
 
     elif np.sum(propensities) <= 0:
-
         try : 
             pk = np.full(xk.shape, np.divide(1, len(propensities)))
-    
 
-        except : 
-                
+        except :    
                 print(f"pk : {pk}")
                 print(f"propensities : {propensities}")
 
     else : 
+        pk = np.full(xk.shape, np.divide(1, len(propensities)))
         logger.error(f"Propensities : {propensities}")
 
     #TODO: Added 08/11/2024
     ## Correct propensities to avoid nan values
     ## If propensity contains nan values, replace them with 0
-
     if np.sum(np.isnan(pk)) > 0:
         pk = np.nan_to_num(pk)
 
-
-    
-
     index = choice(xk, p=pk)
-
 
     return index
 

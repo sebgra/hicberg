@@ -1,16 +1,4 @@
 # CPU ans memory settings
-threads_accessory: "4"
-threads_small: 8
-threads_basic: 16
-threads_learning: 32
-threads_big: 64
-
-memory_accessory: "8G"
-memory_small: 16G
-memory_basic: 32G
-memory_learning: 64G
-memory_big: 128G
-
 
 __default__:
     queue: fast
@@ -28,15 +16,15 @@ hicberg_step_0:
     ncpus: 4
     mem: 8G
     ntasks: 1
-    name: preprocessing-'{wildcards.libraries}'
+    name: hicberg.{rule}.{wildcards}
     output: ../logs/cluster/preprocessing-'{wildcards.libraries}'.out
     error: ../logs/cluster/preprocessing-'{wildcards.libraries}'.log
 
 hicberg_step_1:
     queue: normal
     partition: common
-    ncpus: 16
-    mem: 32G
+    ncpus: 32
+    mem: 64G
     ntasks: 1
     name: aligning-'{wildcards.libraries}'
     output: ../logs/cluster/aligning-'{wildcards.libraries}'.out
@@ -75,8 +63,8 @@ hicberg_step_4:
 hicberg_step_5:
     queue: normal
     partition: common
-    ncpus: 32
-    mem: 64G
+    ncpus: 64
+    mem: 128G
     ntasks: 1
     name: rescuing-'{wildcards.libraries}'
     output: ../logs/cluster/rescuing-'{wildcards.libraries}'.out

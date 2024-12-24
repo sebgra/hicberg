@@ -1,12 +1,21 @@
 samples: "config/samples.csv"
-base_dir: "/home/sardine/Documents/"
-out_dir: "/home/sardine/Bureau/results"
+base_dir: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/"
+out_dir: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/results"
 ref_dir: "genomes/"
 fastq_dir: "reads/"
 
-threads: 64
-threads_small: 32
-threads_big : 128
+
+threads_accessory: 4
+threads_small: 8
+threads_basic: 16
+threads_learning: 32
+threads_big: 64
+
+memory_accessory: 8000
+memory_small: 16000
+memory_basic: 32000
+memory_learning: 64000
+memory_big: 128000
 
 # Alignment arguments
 max_alignment: 100
@@ -14,48 +23,2263 @@ bowtie2_args: "--very-sensitive"
 
 # Species arguments
 
-Sc288_2m_standard:
-
-    name : "Sc288_2m"
-    ref: "Sc288_2m/SC288_with_micron.fa"
-    R1: "/home/sardine/Documents/reads/AC1/AC1.end1.fastq.gz"
-    R2: "/home/sardine/Documents/reads/AC1/AC1.end2.fastq.gz"
+AC1:
+    name : "AC1"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/AC1/AC1.end1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/AC1/AC1.end2.fastq.gz"
     circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 1.0
     res: 2000
 
-SC288_2m_sub:
-    
-        name : "SC288_2m_sub"
-        ref: "Sc288_2m/sub_genome.fa"
-        R1: "/home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq"
-        R2: "/home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq"
-        circular: ["plasmid_p2-micron", "chrM"]
-        enzymes : ["DpnII", "HinfI"]
-        sampling_rate: 1.0
-        res: 2000
-
-
-
-CC336:
-    name : "CC336"
-    ref: "e_coli/ecoli_k12_mg1655.fa"
-    R1 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R1_sub.fq"
-    R2 : "/home/sardine/Documents/reads/CC336/CC336_nxq_R2_sub.fq"
-    circular: ["NC-000913.3"]
-    enzymes : ["DpnII", "HinfI"]
-    sampling_rate: 0.3
-    res: 2000
-
-
-tests_fix3:
-    name : "tests_fix3"
-    ref: "Sc288_2m/sub_genome.fa"
-    R1 : "/home/sardine/Documents/reads/AC1/AC1.end1_sub.fastq"
-    R2 : "/home/sardine/Documents/reads/AC1/AC1.end2_sub.fastq"
-    circular: ["NC-000913.3"]
+AC1_T2T:
+    name : "AC1_T2T"
+    ref: "Sc288/S288C_T2T.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/AC1/AC1.end1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/AC1/AC1.end2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
     enzymes : ["DpnII", "HinfI"]
     sampling_rate: 1.0
     res: 2000
 
+LM168:
+    name : "LM168"
+    ref: "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM168/LM168_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM168/LM168_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LM169:
+    name : "LM169"
+    ref: "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM169/LM169_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM169/LM169_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LM170:
+    name : "LM170"
+    ref: "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM170/LM170_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM170/LM170_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LM171:
+    name : "LM171"
+    ref: "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM171/LM171_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM171/LM171_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+# Sc288 version of quiescience
+
+LM168_sc288:
+    name : "LM168_sc288"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM168/LM168_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM168/LM168_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LM169_sc288:
+    name : "LM169_sc288"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM169/LM169_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM169/LM169_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LM170_sc288:
+    name : "LM170_sc288"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM170/LM170_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM170/LM170_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LM171_sc288:
+    name : "LM171_sc288"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM171/LM171_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LM171/LM171_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+CH276_sc288:
+    name : "CH276_sc288"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH276/CH276_S13_R1_001.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH276/CH276_S13_R2_001.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+epichloe_festucase:
+
+    name : "epichloe_festucase"
+    ref: "epichloe_festucase/GCA_003814445.1_ASM381444v1_genomic.fna"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/epichloe_festucase/SRR8238190_Epichloe_festucase_Fl1_HiC_sequences_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/epichloe_festucase/SRR8238190_Epichloe_festucase_Fl1_HiC_sequences_2.fastq.gz"
+    circular: ["CP031392.1"]
+    enzymes : ["HindIII"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+## rDNA analyses
+
+G1_ON_WT:
+    name : "G1_ON_WT"
+    ref :  "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_WT/SRR12108215_Hi-C_of_S._cerevisiae_G1_overnight_culture_WT_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_WT/SRR12108215_Hi-C_of_S._cerevisiae_G1_overnight_culture_WT_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G1_ON_dSIR3:
+    name : "G1_ON_dSIR3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_dSIR3/SRR12108214_Hi-C_of_S._cerevisiae_G1_overnight_culture_Sir3-delta_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_dSIR3/SRR12108214_Hi-C_of_S._cerevisiae_G1_overnight_culture_Sir3-delta_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G1_ON_OE_A2Q:
+    name : "G1_ON_OE_A2Q"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_OE_A2Q/SRR12108212_Hi-C_of_S._cerevisiae_G1_overnight_culture_sir3-A2Q_OE_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_OE_A2Q/SRR12108212_Hi-C_of_S._cerevisiae_G1_overnight_culture_sir3-A2Q_OE_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G1_ON_OE_SIR3:
+    name : "G1_ON_OE_SIR3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_OE_SIR3/SRR12108213_Hi-C_of_S._cerevisiae_G1_overnight_culture_SIR3_OE_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_ON_OE_SIR3/SRR12108213_Hi-C_of_S._cerevisiae_G1_overnight_culture_SIR3_OE_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+G1_WT:
+    name : "G1_WT"
+    ref :  "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_WT/SRR12108219_Hi-C_of_S._cerevisiae_G1_WT_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_WT/SRR12108219_Hi-C_of_S._cerevisiae_G1_WT_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G1_dSIR3:
+    name : "G1_dSIR3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_dSIR3/SRR12108218_Hi-C_of_S._cerevisiae_G1_Sir3-delta_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_dSIR3/SRR12108218_Hi-C_of_S._cerevisiae_G1_Sir3-delta_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G1_OE_A2Q:
+    name : "G1_OE_A2Q"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_OE_A2Q/SRR12108216_Hi-C_of_S._cerevisiae_G1_sir3-A2Q_OE_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_OE_A2Q/SRR12108216_Hi-C_of_S._cerevisiae_G1_sir3-A2Q_OE_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G1_OE_SIR3:
+    name : "G1_OE_SIR3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_OE_SIR3/SRR12108217_Hi-C_of_S._cerevisiae_G1_SIR3_OE_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_OE_SIR3/SRR12108217_Hi-C_of_S._cerevisiae_G1_SIR3_OE_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G2M_WT:
+    name : "G2M_WT"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G2M_WT/SRR12108211_Hi-C_of_S._cerevisiae_G2M_nocodazole_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G2M_WT/SRR12108211_Hi-C_of_S._cerevisiae_G2M_nocodazole_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+G2M_OE_SIR3:
+    name : "G2M_OE_SIR3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G2M_OE_SIR3/SRR12108210_Hi-C_of_S._cerevisiae_G2M_nocodazole_SIR3_OE_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G2M_OE_SIR3/SRR12108210_Hi-C_of_S._cerevisiae_G2M_nocodazole_SIR3_OE_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII"]
+    sampling_rate: 1.0
+    res: 2000
+
+## P. falciparum PfAP2 - KO analyses
+
+Pf_WT_16h:
+    name : "Pf_WT_16h"
+    ref : "p_falciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_WT_16h_rep2/SRR19611540_Hi-C_of_P._falciparum_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_WT_16h_rep2/SRR19611540_Hi-C_of_P._falciparum_2.fastq.gz"
+    circular: ["Pf3D7_API_v3", "Pf3D7_MIT_v3"]
+    enzymes: ["MboI"]
+    sampling_rate: 0.5
+    res: 10000
+
+
+Pf_WT_40h:
+    name : "Pf_WT_40h"
+    ref : "p_falciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_WT_40h_rep2/SRR19611536_Hi-C_of_P._falciparum_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_WT_40h_rep2/SRR19611536_Hi-C_of_P._falciparum_2.fastq.gz"
+    circular: ["Pf3D7_API_v3", "Pf3D7_MIT_v3"]
+    enzymes: ["MboI"]
+    sampling_rate: 0.5
+    res: 10000
+
+Pf_PfRAP2_KO_16h:
+    name : "Pf_PfRAP2_KO_16h"
+    ref : "p_falciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_PfRAP2_MRP_KO_16h_rep2/SRR19611538_Hi-C_of_Pfalciparum_PfAP2-MRP_knockout_strain_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_PfRAP2_MRP_KO_16h_rep2/SRR19611538_Hi-C_of_Pfalciparum_PfAP2-MRP_knockout_strain_2.fastq.gz"
+    circular: ["Pf3D7_API_v3", "Pf3D7_MIT_v3"]
+    enzymes: ["MboI"]
+    sampling_rate: 0.5
+    res: 10000
+
+Pf_PfRAP2_KO_40h:
+    name : "Pf_PfRAP2_KO_40h"
+    ref : "p_falciparum/PlasmoDB-55_Pfalciparum3D7_Genome_w_mit_api.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_PfRAP2_MRP_KO_40h_rep2/SRR19611534_Hi-C_of_Pfalciparum_PfAP2-MRP_knockout_strain_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/p_falciparum/trophozoites_PfRAP2_MRP_KO_40h_rep2/SRR19611534_Hi-C_of_Pfalciparum_PfAP2-MRP_knockout_strain_2.fastq.gz"
+    circular: ["Pf3D7_API_v3", "Pf3D7_MIT_v3"]
+    enzymes: ["MboI"]
+    sampling_rate: 0.5
+    res: 10000
+
+T2T:
+    name : "T2T"
+    ref : "hg19/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/T2T/CHM13.rep1_lane1_R1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/T2T/CHM13.rep1_lane1_R2.fastq.gz"
+    circular: ["Pf3D7_API_v3", "Pf3D7_MIT_v3"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 0.4
+    res: 40000
+
+kosh_15_m:
+    name : "kosh_15_m"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_15min/SRR11893107_GSM4585143_timecourse-23C-15min_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_15min/SRR11893107_GSM4585143_timecourse-23C-15min_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+kosh_30_m:
+    name : "kosh_30_m"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_30min/SRR11893108_GSM4585144_timecourse-23C-30min_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_30min/SRR11893108_GSM4585144_timecourse-23C-30min_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+kosh_45_m:
+    name : "kosh_45_m"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_45min/SRR11893109_GSM4585145_timecourse-23C-45min_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_45min/SRR11893109_GSM4585145_timecourse-23C-45min_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+kosh_60_m:
+    name : "kosh_60_m"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_60min/SRR11893110_GSM4585146_timecourse-23C-60min_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_60min/SRR11893110_GSM4585146_timecourse-23C-60min_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+kosh_75_m:
+    name : "kosh_75_m"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_75min/SRR11893111_GSM4585147_timecourse-23C-75min_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_75min/SRR11893111_GSM4585147_timecourse-23C-75min_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+kosh_90_m:
+    name : "kosh_90_m"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_90min/SRR11893112_GSM4585148_timecourse-23C-90min_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_90min/SRR11893112_GSM4585148_timecourse-23C-90min_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+kosh_105_m:
+    name : "kosh_105_m"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_105min/SRR11893113_GSM4585149_timecourse-23C-105min_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/koshland_105min/SRR11893113_GSM4585149_timecourse-23C-105min_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG125:
+    name : "FG125"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG125/FG0125_S15_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG125/FG0125_S15_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG126:
+    name : "FG126"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG126/FG0126_S17_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG126/FG0126_S17_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG127:
+    name : "FG127"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG127/FG0127_S20_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG127/FG0127_S20_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG128:
+    name : "FG128"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG128/FG0128_S19_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG128/FG0128_S19_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG56:
+    name : "FG56"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG56/FG0056_S22_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG56/FG0056_S22_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG57:
+    name : "FG57"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG57/FG0057_S16_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG57/FG0057_S16_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG58:
+    name : "FG58"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG58/FG0058_S11_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG58/FG0058_S11_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG59:
+    name : "FG59"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG59/FG0059_S7_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG59/FG0059_S7_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG60:
+    name : "FG60"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG60/FG0060_S20_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG60/FG0060_S20_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG61:
+    name : "FG61"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG61/FG0061_S19_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG61/FG0061_S19_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG62:
+    name : "FG62"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG62/FG0062_S17_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG62/FG0062_S17_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG63:
+    name : "FG63"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG63/FG0063_S12_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG63/FG0063_S12_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG225:
+    name : "FG225"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG225/FG0225_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG225/FG0225_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG226:
+    name : "FG226"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG226/FG0226_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG226/FG0226_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL54:
+    name : "PL54"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL54/PL54_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL54/PL54_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL55:
+    name : "PL55"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL55/PL55_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL55/PL55_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL56:
+    name : "PL56"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL56/PL56_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL56/PL56_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL70:
+    name : "PL70"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL70/PL70_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL70/PL70_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL71:
+    name : "PL71"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL71/PL71_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL71/PL71_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL72:
+    name : "PL72"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL72/PL72_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL72/PL72_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL54_whole:
+    name : "PL54_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL54/PL54_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL54/PL54_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL55_whole:
+    name : "PL55_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL55/PL55_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL55/PL55_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL56_whole:
+    name : "PL56_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL56/PL56_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL56/PL56_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL70_whole:
+    name : "PL70_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL70/PL70_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL70/PL70_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL71_whole:
+    name : "PL71_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL71/PL71_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL71/PL71_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+PL72_whole:
+    name : "PL72_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL72/PL72_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/PL72/PL72_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG125_whole:
+    name : "FG125_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG125/FG0125_S15_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG125/FG0125_S15_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG126_whole:
+    name : "FG126_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG126/FG0126_S17_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG126/FG0126_S17_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG127_whole:
+    name : "FG127_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG127/FG0127_S20_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG127/FG0127_S20_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG128_whole:
+    name : "FG128_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG128/FG0128_S19_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG128/FG0128_S19_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG56_whole:
+    name : "FG56_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG56/FG0056_S22_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG56/FG0056_S22_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG57_whole:
+    name : "FG57_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG57/FG0057_S16_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG57/FG0057_S16_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG58_whole:
+    name : "FG58_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG58/FG0058_S11_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG58/FG0058_S11_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG59_whole:
+    name : "FG59_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG59/FG0059_S7_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG59/FG0059_S7_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG60_whole:
+    name : "FG60_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG60/FG0060_S20_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG60/FG0060_S20_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG61_whole:
+    name : "FG61_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG61/FG0061_S19_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG61/FG0061_S19_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG62_whole:
+    name : "FG62_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG62/FG0062_S17_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG62/FG0062_S17_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG63_whole:
+    name : "FG63_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG63/FG0063_S12_R1_001.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG63/FG0063_S12_R2_001.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG225_whole:
+    name : "FG225_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG225/FG0225_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG225/FG0225_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG226_whole:
+    name : "FG226_whole"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG226/FG0226_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG226/FG0226_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG651_whole:
+    name : "FG651"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG651/FG0651_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG651/FG0651_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+FG652_whole:
+    name : "FG652"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG652/FG0652_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG652/FG0652_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG221:
+    name : "FG221"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG221/FG0221_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG221/FG0221_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG651:
+    name : "FG651"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG651/FG0651_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG651/FG0651_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+FG652:
+    name : "FG652"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG652/FG0652_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG652/FG0652_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+FG223:
+    name : "FG223"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG223/FG0223_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG223/FG0223_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_1:
+    name : "KJ_1"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_1/SRR13147962_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_1/SRR13147962_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_2:
+    name : "KJ_2"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_2/SRR13147963_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_2/SRR13147963_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_3:
+    name : "KJ_3"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_3/SRR13147964_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_3/SRR13147964_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_4:
+    name : "KJ_4"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_4/SRR13147965_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_4/SRR13147965_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_5:
+    name : "KJ_5"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_5/SRR13147966_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_5/SRR13147966_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_12:
+    name : "KJ_12"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_12/SRR13147967_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_12/SRR13147967_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_13:
+    name : "KJ_13"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_13/SRR13147968_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_13/SRR13147968_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_14:
+    name : "KJ_14"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_14/SRR13147969_GSM4946273_Scc2-AID_aux_dox_DMSO_KJ14_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_14/SRR13147969_GSM4946273_Scc2-AID_aux_dox_DMSO_KJ14_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+
+KJ_15:
+    name : "KJ_15"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_15/SRR13147970_GSM4946274_Scc2-AID_aux_dox_thiolutin_KJ15_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_15/SRR13147970_GSM4946274_Scc2-AID_aux_dox_thiolutin_KJ15_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_16:
+    name : "KJ_16"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_16/SRR13147971_GSM4946275_Wpl1-AID_aux_dox_DMSO_KJ16_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_16/SRR13147971_GSM4946275_Wpl1-AID_aux_dox_DMSO_KJ16_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_17:
+    name : "KJ_17"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_17/SRR13147972_GSM4946276_Wpl1-AID_aux_dox_thiolutin_KJ17_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_17/SRR13147972_GSM4946276_Wpl1-AID_aux_dox_thiolutin_KJ17_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_18:
+    name : "KJ_18"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_18/SRR13147973_GSM4946277_Scc2-AID_aux_dox_DMSO_KJ18_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_18/SRR13147973_GSM4946277_Scc2-AID_aux_dox_DMSO_KJ18_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_19:
+    name : "KJ_19"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_19/SRR13147974_GSM4946278_Scc2-AID_aux_dox_thiolutin_KJ19_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_19/SRR13147974_GSM4946278_Scc2-AID_aux_dox_thiolutin_KJ19_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+
+KJ_20:
+    name : "KJ_20"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_20/SRR13147975_GSM4946279_WT_HU_KJ20_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_20/SRR13147975_GSM4946279_WT_HU_KJ20_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_22:
+    name : "KJ_22"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_22/SRR13147976_GSM4946280_Scc2-AID_HU_aux_dox_KJ22_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_22/SRR13147976_GSM4946280_Scc2-AID_HU_aux_dox_KJ22_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_23:
+    name : "KJ_23"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_23/SRR13147977_GSM4946281_Wpl1-AID_HU_aux_dox_KJ23_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_23/SRR13147977_GSM4946281_Wpl1-AID_HU_aux_dox_KJ23_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_24:
+    name : "KJ_24"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_24/SRR17299206_GSM5746898_WT_aux_dox_DMSO_KJ24_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_24/SRR17299206_GSM5746898_WT_aux_dox_DMSO_KJ24_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_25:
+    name : "KJ_25"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_25/SRR17299207_GSM5746899_WT_aux_dox_thiolutin_KJ25_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_25/SRR17299207_GSM5746899_WT_aux_dox_thiolutin_KJ25_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_26:
+    name : "KJ_26"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_26/SRR17299208_GSM5746900_WT_aux_dox_DMSO_KJ26_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_26/SRR17299208_GSM5746900_WT_aux_dox_DMSO_KJ26_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_27:
+    name : "KJ_27"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_27/SRR17299209_GSM5746901_WT_aux_dox_thiolutin_KJ27_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_27/SRR17299209_GSM5746901_WT_aux_dox_thiolutin_KJ27_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_28:
+    name : "KJ_28"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_28/SRR17299210_GSM5746902_Scc2-AID_aux_dox_thiolutin_KJ28_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_28/SRR17299210_GSM5746902_Scc2-AID_aux_dox_thiolutin_KJ28_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_29:
+    name : "KJ_29"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_29/SRR17299211_GSM5746903_Scc2-AID_aux_dox_thiolutin_KJ29_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_29/SRR17299211_GSM5746903_Scc2-AID_aux_dox_thiolutin_KJ29_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_31:
+    name : "KJ_31"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_31/SRR17299213_GSM5746905_WT_HU_aux_dox_KJ31_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_31/SRR17299213_GSM5746905_WT_HU_aux_dox_KJ31_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_36:
+    name : "KJ_36"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_36/SRR17299214_GSM5746906_WT_37_C_KJ36_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_36/SRR17299214_GSM5746906_WT_37_C_KJ36_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_37:
+    name : "KJ_37"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_37/SRR17299215_GSM5746907_WT_37_C_KJ37_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_37/SRR17299215_GSM5746907_WT_37_C_KJ37_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_38:
+    name : "KJ_38"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_38/SRR17299216_GSM5746908_rpb1-1_37_C_KJ38_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_38/SRR17299216_GSM5746908_rpb1-1_37_C_KJ38_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_39:
+    name : "KJ_39"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_39/SRR17299217_GSM5746909_rpb1-1_37_C_KJ39_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_39/SRR17299217_GSM5746909_rpb1-1_37_C_KJ39_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_1:
+    name : "KJ_Sc288_1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_1/SRR13147962_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_1/SRR13147962_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_2:
+    name : "KJ_Sc288_2"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_2/SRR13147963_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_2/SRR13147963_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_3:
+    name : "KJ_Sc288_3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_3/SRR13147964_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_3/SRR13147964_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_4:
+    name : "KJ_Sc288_4"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_4/SRR13147965_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_4/SRR13147965_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_5:
+    name : "KJ_Sc288_5"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_5/SRR13147966_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_5/SRR13147966_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_12:
+    name : "KJ_Sc288_12"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_12/SRR13147967_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_12/SRR13147967_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_13:
+    name : "KJ_Sc288_13"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_13/SRR13147968_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_13/SRR13147968_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_14:
+    name : "KJ_Sc288_14"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_14/SRR13147969_GSM4946273_Scc2-AID_aux_dox_DMSO_KJ14_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_14/SRR13147969_GSM4946273_Scc2-AID_aux_dox_DMSO_KJ14_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+
+KJ_Sc288_15:
+    name : "KJ_Sc288_15"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_15/SRR13147970_GSM4946274_Scc2-AID_aux_dox_thiolutin_KJ15_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_15/SRR13147970_GSM4946274_Scc2-AID_aux_dox_thiolutin_KJ15_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_Sc288_16:
+    name : "KJ_Sc288_16"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_16/SRR13147971_GSM4946275_Wpl1-AID_aux_dox_DMSO_KJ16_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_16/SRR13147971_GSM4946275_Wpl1-AID_aux_dox_DMSO_KJ16_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_Sc288_17:
+    name : "KJ_Sc288_17"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_17/SRR13147972_GSM4946276_Wpl1-AID_aux_dox_thiolutin_KJ17_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_17/SRR13147972_GSM4946276_Wpl1-AID_aux_dox_thiolutin_KJ17_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_Sc288_18:
+    name : "KJ_Sc288_18"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_18/SRR13147973_GSM4946277_Scc2-AID_aux_dox_DMSO_KJ18_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_18/SRR13147973_GSM4946277_Scc2-AID_aux_dox_DMSO_KJ18_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_Sc288_19:
+    name : "KJ_Sc288_19"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_19/SRR13147974_GSM4946278_Scc2-AID_aux_dox_thiolutin_KJ19_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_19/SRR13147974_GSM4946278_Scc2-AID_aux_dox_thiolutin_KJ19_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+
+KJ_Sc288_20:
+    name : "KJ_Sc288_20"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_20/SRR13147975_GSM4946279_WT_HU_KJ20_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_20/SRR13147975_GSM4946279_WT_HU_KJ20_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_22:
+    name : "KJ_Sc288_22"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_22/SRR13147976_GSM4946280_Scc2-AID_HU_aux_dox_KJ22_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_22/SRR13147976_GSM4946280_Scc2-AID_HU_aux_dox_KJ22_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_23:
+    name : "KJ_Sc288_23"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_23/SRR13147977_GSM4946281_Wpl1-AID_HU_aux_dox_KJ23_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_23/SRR13147977_GSM4946281_Wpl1-AID_HU_aux_dox_KJ23_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_24:
+    name : "KJ_Sc288_24"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_24/SRR17299206_GSM5746898_WT_aux_dox_DMSO_KJ24_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_24/SRR17299206_GSM5746898_WT_aux_dox_DMSO_KJ24_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_Sc288_25:
+    name : "KJ_Sc288_25"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_25/SRR17299207_GSM5746899_WT_aux_dox_thiolutin_KJ25_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_25/SRR17299207_GSM5746899_WT_aux_dox_thiolutin_KJ25_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_26:
+    name : "KJ_Sc288_26"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_26/SRR17299208_GSM5746900_WT_aux_dox_DMSO_KJ26_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_26/SRR17299208_GSM5746900_WT_aux_dox_DMSO_KJ26_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_Sc288_27:
+    name : "KJ_Sc288_27"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_27/SRR17299209_GSM5746901_WT_aux_dox_thiolutin_KJ27_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_27/SRR17299209_GSM5746901_WT_aux_dox_thiolutin_KJ27_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_28:
+    name : "KJ_Sc288_28"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_28/SRR17299210_GSM5746902_Scc2-AID_aux_dox_thiolutin_KJ28_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_28/SRR17299210_GSM5746902_Scc2-AID_aux_dox_thiolutin_KJ28_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_29:
+    name : "KJ_Sc288_29"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_29/SRR17299211_GSM5746903_Scc2-AID_aux_dox_thiolutin_KJ29_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_29/SRR17299211_GSM5746903_Scc2-AID_aux_dox_thiolutin_KJ29_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_31:
+    name : "KJ_Sc288_31"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_31/SRR17299213_GSM5746905_WT_HU_aux_dox_KJ31_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_31/SRR17299213_GSM5746905_WT_HU_aux_dox_KJ31_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+
+KJ_Sc288_36:
+    name : "KJ_Sc288_36"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_36/SRR17299214_GSM5746906_WT_37_C_KJ36_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_36/SRR17299214_GSM5746906_WT_37_C_KJ36_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_37:
+    name : "KJ_Sc288_37"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_37/SRR17299215_GSM5746907_WT_37_C_KJ37_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_37/SRR17299215_GSM5746907_WT_37_C_KJ37_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_38:
+    name : "KJ_Sc288_38"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_38/SRR17299216_GSM5746908_rpb1-1_37_C_KJ38_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_38/SRR17299216_GSM5746908_rpb1-1_37_C_KJ38_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_Sc288_39:
+    name : "KJ_Sc288_39"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_39/SRR17299217_GSM5746909_rpb1-1_37_C_KJ39_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_39/SRR17299217_GSM5746909_rpb1-1_37_C_KJ39_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+KJ_20_T2T:
+    name : "KJ_20_T2T"
+    ref : "W303/W303_T2T.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_20/SRR13147975_GSM4946279_WT_HU_KJ20_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/KJ_20/SRR13147975_GSM4946279_WT_HU_KJ20_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+G1_arrested:
+    name : "G1_arrested"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_arrested/SRR12284705_WT_G1_arrest_no_DSB__1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G1_arrested/SRR12284705_WT_G1_arrest_no_DSB__2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+G2_arrested:
+    name : "G2_arrested"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G2_arrested/SRR13736508_cdc20_t4_without_DSB_replicate_1_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/G2_arrested/SRR13736508_cdc20_t4_without_DSB_replicate_1_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+l_kluyveri_0h:
+    name : "l_kluyveri_0h"
+    ref : "l_kluyveri/CBS10367asRef_snpIndelsInferred.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_0h/SRR24904918_GSM7474604_WT_t0h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_0h/SRR24904918_GSM7474604_WT_t0h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_2.fastq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+l_kluyveri_2h:
+    name : "l_kluyveri_2h"
+    ref : "l_kluyveri/CBS10367asRef_snpIndelsInferred.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_2h/SRR24904917_GSM7474605_WT_t2h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_2h/SRR24904917_GSM7474605_WT_t2h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_2.fastq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+l_kluyveri_3h:
+    name : "l_kluyveri_3h"
+    ref : "l_kluyveri/CBS10367asRef_snpIndelsInferred.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_3h/SRR24904916_GSM7474606_WT_t3h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_3h/SRR24904916_GSM7474606_WT_t3h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_2.fastq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+l_kluyveri_4h:
+    name : "l_kluyveri_4h"
+    ref : "l_kluyveri/CBS10367asRef_snpIndelsInferred.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_4h/SRR24904915_GSM7474607_WT_t4h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_4h/SRR24904915_GSM7474607_WT_t4h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_2.fastq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+l_kluyveri_5h:
+    name : "l_kluyveri_5h"
+    ref : "l_kluyveri/CBS10367asRef_snpIndelsInferred.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_5h/SRR24904914_GSM7474608_WT_t5h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_5h/SRR24904914_GSM7474608_WT_t5h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_2.fastq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+l_kluyveri_6h:
+    name : "l_kluyveri_6h"
+    ref : "l_kluyveri/CBS10367asRef_snpIndelsInferred.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_6h/SRR24904913_GSM7474609_WT_t6h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/l_kluyveri_6h/SRR24904913_GSM7474609_WT_t6h_of_meiotic_time_course_Lachancea_kluyveri_Hi-C_2.fastq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+# Martial bacteria
+
+wolbachia:
+    name : "wolbachia"
+    ref : "wolbachia/R1_MAG_Wolbachia_obc_no_plasmid.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MM_analysis/MM265a_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MM_analysis/MM265a_nxq_R2.fq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 1000
+
+wolbachia_fused:
+    name : "wolbachia_fused"
+    ref : "wolbachia/R1_MAG_Wolbachia_obc_fused.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MM_analysis/MM265a_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MM_analysis/MM265a_nxq_R2.fq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 1000
+
+wolbachia_fused_no_plasmid:
+    name : "wolbachia_fused_no_plasmid"
+    ref : "wolbachia/R1_MAG_Wolbachia_obc_no_plasmid.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MM_analysis/MM265a_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MM_analysis/MM265a_nxq_R2.fq.gz"
+    circular: ["mitoCBS6626:1"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 1000
+
+# Lengronne G2 heat-shock - W303
+
+LCH_1:
+    name : "LCH_1"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_1/LCH1_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_1/LCH1_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_2:
+    name : "LCH_2"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_2/LCH2_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_2/LCH2_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_3:
+    name : "LCH_3"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_3/LCH3_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_3/LCH3_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_4:
+    name : "LCH_4"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_4/LCH4_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_4/LCH4_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_5:
+    name : "LCH_5"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_5/LCH5_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_5/LCH5_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_6:
+    name : "LCH_6"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_6/LCH6_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_6/LCH6_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+
+LCH_7:
+    name : "LCH_7"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_7/LCH7_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_7/LCH7_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_8:
+    name : "LCH_8"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_8/LCH8_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_8/LCH8_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_9:
+    name : "LCH_9"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_9/LCH9_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_9/LCH9_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_10:
+    name : "LCH_10"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_10/LCH10_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_10/LCH10_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_11:
+    name : "LCH_11"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_11/LCH11_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_11/LCH11_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_12:
+    name : "LCH_12"
+    ref : "W303/W303.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_12/LCH12_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_12/LCH12_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+# Lengronne G2 heat-shock - Sc_288
+
+LCH_Sc288_1:
+    name : "LCH_1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_1/LCH1_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_1/LCH1_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_2:
+    name : "LCH_2"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_2/LCH2_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_2/LCH2_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_3:
+    name : "LCH_3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_3/LCH3_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_3/LCH3_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_4:
+    name : "LCH_4"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_4/LCH4_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_4/LCH4_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_5:
+    name : "LCH_5"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_5/LCH5_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_5/LCH5_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_6:
+    name : "LCH_6"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_6/LCH6_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_6/LCH6_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+
+LCH_Sc288_7:
+    name : "LCH_7"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_7/LCH7_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_7/LCH7_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_8:
+    name : "LCH_8"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_8/LCH8_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_8/LCH8_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_9:
+    name : "LCH_9"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_9/LCH9_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_9/LCH9_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_10:
+    name : "LCH_10"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_10/LCH10_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_10/LCH10_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_11:
+    name : "LCH_11"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_11/LCH11_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_11/LCH11_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+LCH_Sc288_12:
+    name : "LCH_12"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_12/LCH12_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/LCH_12/LCH12_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+# SMC whole
+
+## WT
+CH422:
+    name : "CH422"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH422/CH422_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH422/CH422_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+##SMC3-AID
+CH423:
+    name : "CH423"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH423/CH423_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH423/CH423_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+## SMC5_AID
+CH424:
+    name : "CH424"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH424/CH424_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/CH424/CH424_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+SMC2_AID:
+    name : "SMC2_AID"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID/SRR9040343_HiC-Seq_of_Saccharomyces_cerevisiae_W303_Smc2_degron_with_Rap1_multi-sites_array_rep2_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID/SRR9040343_HiC-Seq_of_Saccharomyces_cerevisiae_W303_Smc2_degron_with_Rap1_multi-sites_array_rep2_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC2_AID_Sc288:
+    name : "SMC2_AID"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID/SRR9040343_HiC-Seq_of_Saccharomyces_cerevisiae_W303_Smc2_degron_with_Rap1_multi-sites_array_rep2_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID/SRR9040343_HiC-Seq_of_Saccharomyces_cerevisiae_W303_Smc2_degron_with_Rap1_multi-sites_array_rep2_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC2_AID_Sc288_ctrl:
+    name : "SMC2_AID_ctrl"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_ctrl/SRR9040345_HiC-Seq_of_Saccharomyces_cerevisiae_W303_without_multi-sites_array_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_ctrl/SRR9040345_HiC-Seq_of_Saccharomyces_cerevisiae_W303_without_multi-sites_array_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+SMC2_AID_cdc_15:
+    SMC2_AID_Sc288:
+    name : "SMC2_AID_cdc_15"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15/SRR5077824_GSM2417298_anaphase_cdc15smc2_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15/SRR5077824_GSM2417298_anaphase_cdc15smc2_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC2_AID_cdc_15_NOC:
+    SMC2_AID_cdc_15_NOC:
+    name : "SMC2_AID"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15_NOC/SRR5077825_GSM2417299_anaphase_cdc15_NOC_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15_NOC/SRR5077825_GSM2417299_anaphase_cdc15_NOC_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+#--------------------------------------------------
+
+SMC2_AID_Sc288_ctrl_whole:
+    name : "SMC2_AID_ctrl"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_ctrl/SRR9040345_HiC-Seq_of_Saccharomyces_cerevisiae_W303_without_multi-sites_array_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_ctrl/SRR9040345_HiC-Seq_of_Saccharomyces_cerevisiae_W303_without_multi-sites_array_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+SMC2_AID_cdc_15_whole:
+    SMC2_AID_Sc288:
+    name : "SMC2_AID_cdc_15"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15/SRR5077824_GSM2417298_anaphase_cdc15smc2_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15/SRR5077824_GSM2417298_anaphase_cdc15smc2_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC2_AID_cdc_15_NOC_whole:  
+    SMC2_AID_cdc_15_NOC:
+    name : "SMC2_AID"
+    ref : "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15_NOC/SRR5077825_GSM2417299_anaphase_cdc15_NOC_Saccharomyces_cerevisiae_Hi-C_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC2_AID_cdc_15_NOC/SRR5077825_GSM2417299_anaphase_cdc15_NOC_Saccharomyces_cerevisiae_Hi-C_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+
+# Thesis
+
+d_melanogaster_S4:  
+    name : "d_melanogaster_S4"
+    ref : ""
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    circular: [""]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+d_melanogaster_S4:  
+    name : "d_melanogaster_S4"
+    ref : "d_melanogaster/dmel-all-chromosome-r6.59.fasta"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/d_melanogaster_S4/HiC_Sg4_Lane4_R1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/d_melanogaster_S4/HiC_Sg4_Lane4_R2.fastq.gz"
+    circular: [""]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+mm_male_mECs_E14_rep1:  
+    name : "mm_male_mECs_E14_rep1"
+    ref : "m_musculus/Mus_musculus.GRCm39.dna.chromosome.X.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/mm_male_mECs_E14_rep1/SRR407658_GSM873934_male-mESCs-E14-replicate-1_Mus_musculus_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/mm_male_mECs_E14_rep1/SRR407658_GSM873934_male-mESCs-E14-replicate-1_Mus_musculus_OTHER_2.fastq.gz"
+    circular: [""]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+mm_male_mEFs_Rep1:  
+    name : "mm_male_mEFs_Rep1"
+    ref : "m_musculus/Mus_musculus.GRCm39.dna.chromosome.X.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/mm_male_mEFs_Rep1/SRR407653_GSM873929_male-MEFs-replicate-1_Mus_musculus_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/mm_male_mEFs_Rep1/SRR407653_GSM873929_male-MEFs-replicate-1_Mus_musculus_OTHER_2.fastq.gz"
+    circular: [""]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+mm_male_NPCs_E14_rep1:  
+    name : "mm_male_NPCs_E14_rep1"
+    ref : "m_musculus/Mus_musculus.GRCm39.dna.chromosome.X.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/mm_male_NPCs_E14_rep1/SRR407666_GSM873942_male-NPCs-E14-replicate-1_Mus_musculus_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/mm_male_NPCs_E14_rep1/SRR407666_GSM873942_male-NPCs-E14-replicate-1_Mus_musculus_OTHER_2.fastq.gz"
+    circular: [""]
+    enzymes: ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_mhs_rep1:
+    name : "hsf1_mhs_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_mhs/SRR5511958_GSM2601072_Hsf1_ChIP-Exo_MHS_replicate1_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_mhs/SRR5511958_GSM2601072_Hsf1_ChIP-Exo_MHS_replicate1_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_mhs_rep2:
+    name : "hsf2_mhs_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_mhs/SRR5511959_GSM2601073_Hsf1_ChIP-Exo_MHS_replicate2_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_mhs/SRR5511959_GSM2601073_Hsf1_ChIP-Exo_MHS_replicate2_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_mhs_rep3:
+    name : "hsf3_mhs_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_mhs/SRR5511960_GSM2601074_Hsf1_ChIP-Exo_MHS_replicate3_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_mhs/SRR5511960_GSM2601074_Hsf1_ChIP-Exo_MHS_replicate3_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_hs3m_rep1:
+    name : "hsf1_hs3m_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_3m/SRR5511961_GSM2601075_Hsf1_ChIP-Exo_HS3_replicate1_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_3m/SRR5511961_GSM2601075_Hsf1_ChIP-Exo_HS3_replicate1_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_hs3m_rep2:
+    name : "hsf1_hs3m_rep2"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_3m/SRR5511962_GSM2601076_Hsf1_ChIP-Exo_HS3_replicate2_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_3m/SRR5511962_GSM2601076_Hsf1_ChIP-Exo_HS3_replicate2_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_hs3m_rep3:
+    name : "hsf1_hs3m_rep3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_3m/SRR5511963_GSM2601077_Hsf1_ChIP-Exo_HS3_replicate3_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_3m/SRR5511963_GSM2601077_Hsf1_ChIP-Exo_HS3_replicate3_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_hs6m_rep1:
+    name : "hsf1_hs6m_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_6m/SRR5511964_GSM2601078_Hsf1_ChIP-Exo_HS6_replicate1_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_6m/SRR5511964_GSM2601078_Hsf1_ChIP-Exo_HS6_replicate1_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_hs6m_rep2:
+    name : "hsf1_hs6m_rep2"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_6m/SRR5511965_GSM2601079_Hsf1_ChIP-Exo_HS6_replicate2_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_6m/SRR5511965_GSM2601079_Hsf1_ChIP-Exo_HS6_replicate2_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+hsf1_hs6m_rep3:
+    name : "hsf1_hs3m_rep3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_6m/SRR5511966_GSM2601080_Hsf1_ChIP-Exo_HS6_replicate3_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/hsf1_6m/SRR5511966_GSM2601080_Hsf1_ChIP-Exo_HS6_replicate3_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_mhs_rep1:
+    name : "rpb3_mhs_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_mhs_rep2:
+    name : "hsf2_mhs_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/rpb3_mhs/SRR5511905_GSM2601019_Rpb3_ChIP-Exo_MHS_replicate2_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/rpb3_mhs/SRR5511905_GSM2601019_Rpb3_ChIP-Exo_MHS_replicate2_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_mhs_rep3:
+    name : "hsf3_mhs_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_hs3m_rep1:
+    name : "rpb3_hs3m_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_hs3m_rep2:
+    name : "rpb3_hs3m_rep2"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_hs3m_rep3:
+    name : "rpb3_hs3m_rep3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/rpb3_3m/SRR5511909_GSM2601023_Rpb3_ChIP-Exo_HS3_replicate3_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/rpb3_3m/SRR5511909_GSM2601023_Rpb3_ChIP-Exo_HS3_replicate3_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_hs6m_rep1:
+    name : "rpb3_hs6m_rep1"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_hs6m_rep2:
+    name : "rpb3_hs6m_rep2"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+rpb3_hs6m_rep3:
+    name : "rpb3_hs3m_rep3"
+    ref : "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/rpb3_6m/SRR5511912_GSM2601026_Rpb3_ChIP-Exo_HS6_replicate3_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/rpb3_6m/SRR5511912_GSM2601026_Rpb3_ChIP-Exo_HS6_replicate3_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes: [100]
+    sampling_rate: 1.0
+    res: 2000
+
+# Quiescence microC-XL
+log_cells:
+    name : "log_cells"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/log_cells/SRR7939017_GSM3405625_Log_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/log_cells/SRR7939017_GSM3405625_Log_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+quiescent_cells:
+    name : "quiescent_cells"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/quiescent_cells/SRR7939018_GSM3405626_Quiescent_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/quiescent_cells/SRR7939018_GSM3405626_Quiescent_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC4_off:
+    name : "SMC4_off"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_off/SRR7939019_GSM3405627_SMC4-off_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_off/SRR7939019_GSM3405627_SMC4-off_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micr2n", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC4_on:
+    name : "SMC4_on"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_on/SRR7939020_GSM3405628_SMC4-on_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_on/SRR7939020_GSM3405628_SMC4-on_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+## whole_rdna
+log_cells_whole:
+    name : "log_cells_whole"
+    ref: "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/log_cells/SRR7939017_GSM3405625_Log_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/log_cells/SRR7939017_GSM3405625_Log_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+quiescent_cells_whole:
+    name : "quiescent_cells_whole"
+    ref: "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/quiescent_cells/SRR7939018_GSM3405626_Quiescent_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/quiescent_cells/SRR7939018_GSM3405626_Quiescent_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC4_off_whole:
+    name : "SMC4_off_whole"
+    ref: "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_off/SRR7939019_GSM3405627_SMC4-off_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_off/SRR7939019_GSM3405627_SMC4-off_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micr2n", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+SMC4_on_whole:
+    name : "SMC4_on_whole"
+    ref: "Sc288/SC288_with_micron_whole_rDNA.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_on/SRR7939020_GSM3405628_SMC4-on_cells_Saccharomyces_cerevisiae_OTHER_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/SMC4_on/SRR7939020_GSM3405628_SMC4-on_cells_Saccharomyces_cerevisiae_OTHER_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+## MP experiments
+
+MP72:
+    name : "MP72"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MP72/MP072_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MP72/MP072_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+MP73:
+    name : "MP73"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MP73/MP073_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MP73/MP073_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+MP74:
+    name : "MP74"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MP74/MP074_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/MP74/MP074_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+# UV stress
+
+UV_ctrl:
+    name : "UV_ctrl"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/UV_exp/ctrl/ERR2010619_Illumina_HiSeq_2000_paired_end_sequencing_Chromatin_structure_changes_upon_oxidative_stress_or_UV_irradiation_in_the_yeast_Saccharomyces_cerevisiae_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/UV_exp/ctrl/ERR2010619_Illumina_HiSeq_2000_paired_end_sequencing_Chromatin_structure_changes_upon_oxidative_stress_or_UV_irradiation_in_the_yeast_Saccharomyces_cerevisiae_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+oxidative_stress:
+    name : "oxidative_stress"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/UV_exp/oxidative/ERR2010620_Illumina_HiSeq_2000_paired_end_sequencing_Chromatin_structure_changes_upon_oxidative_stress_or_UV_irradiation_in_the_yeast_Saccharomyces_cerevisiae_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/UV_exp/oxidative/ERR2010620_Illumina_HiSeq_2000_paired_end_sequencing_Chromatin_structure_changes_upon_oxidative_stress_or_UV_irradiation_in_the_yeast_Saccharomyces_cerevisiae_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+UV_stress:
+    name : "UV_stress"
+    ref: "Sc288/SC288_with_micron.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/UV_exp/UV/ERR2010621_Illumina_HiSeq_2000_paired_end_sequencing_Chromatin_structure_changes_upon_oxidative_stress_or_UV_irradiation_in_the_yeast_Saccharomyces_cerevisiae_1.fastq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/UV_exp/UV/ERR2010621_Illumina_HiSeq_2000_paired_end_sequencing_Chromatin_structure_changes_upon_oxidative_stress_or_UV_irradiation_in_the_yeast_Saccharomyces_cerevisiae_2.fastq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
+
+FG177:
+    name : "FG177"
+    ref: "Sc288/SC288_with_pRS413.fa"
+    R1: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG177/FG0177_nxq_R1.fq.gz"
+    R2: "/pasteur/zeus/projets/p02/rsg_fast/sgradit/reads/FG177/FG0177_nxq_R2.fq.gz"
+    circular: ["plasmid_p2-micron", "chrM"]
+    enzymes : ["DpnII", "HinfI"]
+    sampling_rate: 1.0
+    res: 2000
