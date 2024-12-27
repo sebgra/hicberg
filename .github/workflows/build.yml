@@ -24,6 +24,14 @@ jobs:
         pip install .
       shell: micromamba-shell {0}
 
+    - name: Install additional packages
+      run: |
+        mamba install bioconda::bowtie2
+        mamba install bioconda::samtools
+        mamba install bioconda::bedtools
+        mamba install bioconda::ucsc-bedgraphtobigwig
+      shell: micromamba-shell {0}
+
     - name: Check installed package
       run: |
         hicberg --version
