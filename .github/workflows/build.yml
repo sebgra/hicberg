@@ -44,3 +44,6 @@ jobs:
         pytest --cov=hicberg
         codecov
       shell: micromamba-shell {0}
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5

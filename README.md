@@ -7,6 +7,12 @@
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
+**Python package to reconstruct Hi-C contact maps.**
+
+## Documentation
+
+Documentation and analyses examples: https://hicberg.readthedocs.io/en/latest/
+
 ## Table of contents
 
 - [Environment and dependencies](#env_dependencies)
