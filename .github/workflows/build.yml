@@ -3,27 +3,23 @@ name: build
 on: [push]
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 5
-
+      matrix:
+        python-version: ["3.11"]
     steps:
-
-    - name: Checkout repo
-      uses: actions/checkout@v2
-    
-    - name: Set up conda
-      uses: conda-incubator/setup-miniconda@v2
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
       with:
-        auto-update-conda: true
-        environment-file: hicberg.yaml
-        activate-environment: hicberg 
-
-    - name: Install package
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
       run: |
-        pip install .
-      shell: bash -l {0} 
+        python -m pip install --upgrade pip
+        pip install -v -Ur requirements.txt
+        pip install codecov nose2 nose
+        pip install -e .
 
     - name: Check installed package (hicberg)
       run: hicberg --version
