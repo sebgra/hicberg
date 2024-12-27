@@ -3,33 +3,36 @@ name: build
 on: [push]
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        python-version: ["3.11"]
+      max-parallel: 5
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    
+    - name: Create micromamba env. for package
+      uses: mamba-org/setup-micromamba@v1
       with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+        generate-run-shell: true
+        environment-file: hicberg.yaml
+
+    - name: Install package
       run: |
-        python -m pip install --upgrade pip
-        pip install -v -Ur requirements.txt
-        pip install codecov nose2 nose
-        pip install -e .
+        pip install .
+      shell: micromamba-shell {0}
 
-    - name: Check installed package (hicberg)
-      run: hicberg --version
-
-    - name: Check installed package (cooler)
-      run: cooler --version
+    - name: Check installed package
+      run: |
+        hicberg --version
+      shell: micromamba-shell {0}
 
     - name: Lint and test
       run: |
         pip install pytest-pylint pytest pytest-cov pylint codecov mappy
-        pytest -s
-        pytest -x --cov=hicberg
+        pytest --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
+        pytest --cov=hicberg
         codecov
+      shell: micromamba-shell {0}
