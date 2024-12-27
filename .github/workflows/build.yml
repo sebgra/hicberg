@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v2
     
     - name: Create micromamba env. for package
-      uses: mamba-org/setup-micromamba@v2
+      uses: mamba-org/setup-micromamba@v1
       with:
         generate-run-shell: true
         environment-file: hicberg.yaml
@@ -24,12 +24,12 @@ jobs:
         pip install .
       shell: micromamba-shell {0}
 
-    - name: Check installed package
+    - name: Check installed package (hicberg)
       run: |
         hicberg --version
       shell: micromamba-shell {0}
 
-    - name: Check installed package
+    - name: Check installed package (cooler) 
       run: |
         cooler --version
       shell: micromamba-shell {0}
@@ -41,3 +41,7 @@ jobs:
         pytest -x --cov=hicberg
         codecov
       shell: micromamba-shell {0}
+
+    - name: Deactivate conda environment # Add this step
+      run: |
+        conda deactivate 
