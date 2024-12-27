@@ -7,26 +7,37 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
+
     steps:
+
     - name: Checkout repo
       uses: actions/checkout@v2
+    
     - name: Create micromamba env. for package
-      uses: mamba-org/setup-micromamba@v1
+      uses: mamba-org/setup-micromamba@v2
       with:
+        generate-run-shell: true
         environment-file: hicberg.yaml
+
     - name: Install package
       run: |
-        micromamba install -y -n hicberg --file hicberg.yaml
-        micromamba run -n hicberg pip install .
-    - name: Check installed package (hicberg)
+        pip install .
+      shell: micromamba-shell {0}
+
+    - name: Check installed package
       run: |
-        micromamba run -n hicberg hicberg --version
-    - name: Check installed package (cooler) 
+        hicberg --version
+      shell: micromamba-shell {0}
+
+    - name: Check installed package
       run: |
-        micromamba run -n hicberg cooler --version
+        cooler --version
+      shell: micromamba-shell {0}
+
     - name: Lint and test
       run: |
-        micromamba run -n hicberg pip install pytest-pylint pytest pytest-cov pylint codecov mappy
-        micromamba run -n hicberg pytest -x --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
-        micromamba run -n hicberg pytest -x --cov=hicberg
-        micromamba run -n hicberg codecov
+        pip install pytest-pylint pytest pytest-cov pylint codecov mappy
+        pytest -x --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
+        pytest -x --cov=hicberg
+        codecov
+      shell: micromamba-shell {0}

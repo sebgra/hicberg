@@ -1,4 +1,4 @@
-name: /home/sardine/mambaforge/envs/hicberg
+name: hicberg
 channels:
   - anaconda
   - bioconda
