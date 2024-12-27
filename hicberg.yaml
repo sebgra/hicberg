@@ -238,7 +238,6 @@ dependencies:
       - natsort==8.4.0
       - ncls==0.0.68
       - numpydoc==1.6.0
-      - pairtools==1.0.3
       - pandas==2.2.0
       - patsy==0.5.6
       - pillow==10.2.0
