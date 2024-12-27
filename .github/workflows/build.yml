@@ -16,7 +16,7 @@ jobs:
     - name: Create micromamba env. for package
       uses: mamba-org/setup-micromamba@v1
       with:
-        generate-run-shell: false
+        generate-run-shell: true
         environment-file: hicberg.yaml
 
     - name: Install package
