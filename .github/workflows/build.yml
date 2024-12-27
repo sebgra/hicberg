@@ -35,6 +35,7 @@ jobs:
     - name: Check installed package
       run: |
         hicberg --version
+        bowtie2 --version
       shell: micromamba-shell {0}
 
     - name: Lint and test
@@ -44,6 +45,3 @@ jobs:
         pytest --cov=hicberg
         codecov
       shell: micromamba-shell {0}
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v5
