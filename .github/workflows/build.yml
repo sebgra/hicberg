@@ -22,6 +22,10 @@ jobs:
     - name: Install package
       run: |
         pip install .
+        mamba install bowtie2 -c bioconda;
+        mamba install samtools -c bioconda;
+        mamba install -c bioconda ucsc-bedgraphtobigwig;
+        mamba install bedtools -c bioconda;
       shell: micromamba-shell {0}
 
     - name: Check installed package
