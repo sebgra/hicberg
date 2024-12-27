@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hicberg.io &mdash; hicberg 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -68,34 +68,510 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hicberg.io</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">getcwd</span><span class="p">,</span> <span class="n">mkdir</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">rmtree</span>
 
 <span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">sp</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">cooler</span>
+<span class="kn">import</span> <span class="nn">pysam</span> <span class="k">as</span> <span class="nn">ps</span>
 
-<div class="viewcode-block" id="create_folder"><a class="viewcode-back" href="../../hicberg.html#hicberg.io.create_folder">[docs]</a><span class="k">def</span> <span class="nf">create_folder</span><span class="p">():</span>
-    <span class="k">pass</span></div>
+<span class="kn">from</span> <span class="nn">hicberg</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<div class="viewcode-block" id="build_pairs"><a class="viewcode-back" href="../../hicberg.html#hicberg.io.build_pairs">[docs]</a><span class="k">def</span> <span class="nf">build_pairs</span><span class="p">():</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="create_folder">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.io.create_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">create_folder</span><span class="p">(</span><span class="n">sample_name</span> <span class="p">:</span> <span class="nb">str</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates folder architecture to store results and intermediate files for the full HiC-BERG pipeline.</span>
 
-<div class="viewcode-block" id="build_matrix"><a class="viewcode-back" href="../../hicberg.html#hicberg.io.build_matrix">[docs]</a><span class="k">def</span> <span class="nf">build_matrix</span><span class="p">():</span>
-    <span class="k">pass</span></div>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sample_name : str</span>
+<span class="sd">        Name of the folder to be created.</span>
+<span class="sd">    force : bool</span>
+<span class="sd">        Set if existing folder has to be deleted before folder creation.</span>
+<span class="sd">    output_dir : str</span>
+<span class="sd">        Path where the folder will be created.</span>
 
-<div class="viewcode-block" id="load_dictionary"><a class="viewcode-back" href="../../hicberg.html#hicberg.io.load_dictionary">[docs]</a><span class="k">def</span> <span class="nf">load_dictionary</span><span class="p">():</span>
-    <span class="k">pass</span></div>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    [str]</span>
+<span class="sd">        Path of the folder created</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="load_cooler"><a class="viewcode-back" href="../../hicberg.html#hicberg.io.load_cooler">[docs]</a><span class="k">def</span> <span class="nf">load_cooler</span><span class="p">():</span>
-    <span class="k">pass</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating folder </span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">sample_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
-<div class="viewcode-block" id="merge_predictions"><a class="viewcode-back" href="../../hicberg.html#hicberg.io.merge_predictions">[docs]</a><span class="k">def</span> <span class="nf">merge_predictions</span><span class="p">():</span>
-    <span class="k">pass</span></div>
+        <span class="n">sample_name</span> <span class="o">=</span> <span class="s2">&quot;sample&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">sample_name</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">sample_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">folder_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">force</span> <span class="p">:</span> 
+
+        <span class="n">rmtree</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;index&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;alignments&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;statistics&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;contacts&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;contacts&quot;</span> <span class="o">/</span> <span class="s2">&quot;matrices&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;contacts&quot;</span> <span class="o">/</span> <span class="s2">&quot;pairs&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;contact_maps&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;densities&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;ps&quot;</span><span class="p">)</span>
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;coverages&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folder </span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">folder_path</span><span class="si">}</span><span class="s2"> created.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">folder_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span></div>
+
+
+    
+
+<div class="viewcode-block" id="build_pairs">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.io.build_pairs">[docs]</a>
+<span class="k">def</span> <span class="nf">build_pairs</span><span class="p">(</span><span class="n">bam_for</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group1.1.bam&quot;</span><span class="p">,</span> <span class="n">bam_rev</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group1.2.bam&quot;</span><span class="p">,</span> <span class="n">bam_for_rescued</span> <span class="p">:</span><span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group2.1.rescued.bam&quot;</span><span class="p">,</span> <span class="n">bam_rev_rescued</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group2.2.rescued.bam&quot;</span><span class="p">,</span> <span class="n">mode</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build pairs of reads from the aligned reads.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bam_for : str, optional</span>
+<span class="sd">        Path to forward .bam file for the construction of the .pairs equivalent file (non rescued)., by default &quot;group1.1.bam&quot;</span>
+<span class="sd">    bam_rev : str, optional</span>
+<span class="sd">        Path to reverse .bam file for the construction of the .pairs equivalent file (non rescued)., by default None, by default &quot;group1.2.bam&quot;</span>
+<span class="sd">    bam_for_rescued : str, optional</span>
+<span class="sd">        Path to forward .bam file for the construction of the .pairs equivalent file (rescued)., by default &quot;group2.1.rescued.bam&quot;</span>
+<span class="sd">    bam_rev_rescued : str, optional</span>
+<span class="sd">        Path to reverse .bam file for the construction of the .pairs equivalent file (rescued)., by default &quot;group2.2.rescued.bam&quot;</span>
+<span class="sd">    mode : bool, optional</span>
+<span class="sd">        Choose wether the mode is rescued or unrescued to construct associated .pairs file, by default False</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path where the alignment files (.sam) should be stored, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">chromosome_sizes_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;chromosome_sizes.npy&quot;</span><span class="p">)</span>
+    <span class="n">chromosome_sizes</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">chromosome_sizes_path</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing output path.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span><span class="p">:</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start building pairs file for unambiguously aligned reads&quot;</span><span class="p">)</span>
+
+        <span class="n">bam_for_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">bam_for</span><span class="p">)</span>
+        <span class="n">bam_rev_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">bam_rev</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bam_for_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward bam file </span><span class="si">{</span><span class="n">bam_for</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bam_rev_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reverse bam file </span><span class="si">{</span><span class="n">bam_rev</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        
+        <span class="n">bam_for_handler</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">bam_for_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="n">bam_rev_handler</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">bam_rev_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;group1.pairs&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_out</span><span class="p">:</span>
+
+            <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;## pairs format v1.0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#columns: readID chr1 pos1 strand1 chr2 pos2 strand2</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">chromosome</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">chromosome_sizes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+                <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#chromsize: </span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">forward_read</span><span class="p">,</span> <span class="n">reverse_read</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bam_for_handler</span><span class="p">,</span> <span class="n">bam_rev_handler</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">forward_read</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">reverse_read</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward and reverse reads do not match. Please check the bam files.&quot;</span><span class="p">)</span>
+                
+                <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">query_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">reference_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">pos</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">reference_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">pos</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;+&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;+&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">reverse_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">f_out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">bam_for_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">bam_rev_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">mode</span><span class="p">:</span> 
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start building pairs file for ambiguously aligned reads&quot;</span><span class="p">)</span>
+        <span class="n">bam_for_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">bam_for</span><span class="p">)</span>
+        <span class="n">bam_rev_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">bam_rev</span><span class="p">)</span>
+        <span class="n">bam_for_path_rescued</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">bam_for_rescued</span><span class="p">)</span>
+        <span class="n">bam_rev_path_rescued</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">bam_rev_rescued</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bam_for_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward bam file </span><span class="si">{</span><span class="n">bam_for_rescued</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bam_rev_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reverse bam file </span><span class="si">{</span><span class="n">bam_rev_rescued</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bam_for_path_rescued</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward rescued bam file </span><span class="si">{</span><span class="n">bam_for_rescued</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bam_rev_path_rescued</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reverse rescued bam file </span><span class="si">{</span><span class="n">bam_rev_rescued</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        
+
+        <span class="n">bam_for_handler</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">bam_for_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="n">bam_rev_handler</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">bam_rev_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="n">bam_for_handler_rescued</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">bam_for_path_rescued</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="n">bam_rev_handler_rescued</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">bam_rev_path_rescued</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;all_group.pairs&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_out</span><span class="p">:</span>
+
+            <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;## pairs format v1.0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#columns: readID chr1 pos1 strand1 chr2 pos2 strand2</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">for</span> <span class="n">chromosome</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">chromosome_sizes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+                <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#chromsize: </span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">forward_read</span><span class="p">,</span> <span class="n">reverse_read</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bam_for_handler</span><span class="p">,</span> <span class="n">bam_rev_handler</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">forward_read</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">reverse_read</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward and reverse reads do not match. Please check the bam files.&quot;</span><span class="p">)</span>
+
+                <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">query_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">reference_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">pos</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">reference_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">pos</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;+&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;+&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">reverse_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">forward_read</span><span class="p">,</span> <span class="n">reverse_read</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bam_for_handler_rescued</span><span class="p">,</span> <span class="n">bam_rev_handler_rescued</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">forward_read</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">reverse_read</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward and reverse reads do not match. Please check the bam files.&quot;</span><span class="p">)</span>
+
+                <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">query_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">reference_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">forward_read</span><span class="o">.</span><span class="n">pos</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">reference_name</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">pos</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;+&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="s1">&#39;+&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">reverse_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">forward_read</span><span class="o">.</span><span class="n">flag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">f_out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">bam_for_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">bam_rev_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">bam_for_handler_rescued</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">bam_rev_handler_rescued</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pairs file successfully created in </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="build_matrix">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.io.build_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">build_matrix</span><span class="p">(</span><span class="n">bins</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;fragments_fixed_sizes.txt&quot;</span><span class="p">,</span> <span class="n">pairs</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group1.pairs&quot;</span><span class="p">,</span> <span class="n">mode</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">balance</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Take table of bins and .pairs file and build a matrix in .cool format.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bins : str</span>
+<span class="sd">        Path to the bin file.</span>
+<span class="sd">    pairs : str, optional</span>
+<span class="sd">        Path to pairs file, by default &quot;group1.pairs&quot;</span>
+<span class="sd">    mode : bool, optional</span>
+<span class="sd">        Choose wether the mode is rescued or un-rescued to construct associated .cool file, by default False</span>
+<span class="sd">    balance : bool, optional</span>
+<span class="sd">        Set wether or not to balance the matrix, by default False</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the cooler matrix file, by default None, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing ouput path.&quot;</span><span class="p">)</span>
+    
+    <span class="n">pairs_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pairs_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pairs file </span><span class="si">{</span><span class="n">pairs_path</span><span class="si">}</span><span class="s2"> not found. Please provide existing pairs file.&quot;</span><span class="p">)</span>
+    
+    <span class="n">bins_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bins_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bins file </span><span class="si">{</span><span class="n">bins_path</span><span class="si">}</span><span class="s2"> not found. Please provide existing bins file.&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span><span class="p">:</span>
+
+        <span class="n">cool_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;unrescued_map.cool&quot;</span>
+
+        <span class="n">cooler_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cooler cload pairs --zero-based -c1 2 -p1 3 -p2 4 -c2 5 </span><span class="si">{</span><span class="n">bins_path</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pairs_path</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cool_path</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">elif</span> <span class="n">mode</span><span class="p">:</span>
+
+        <span class="n">pairs_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span><span class="s2">&quot;all_group.pairs&quot;</span>
+
+        <span class="n">cool_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;rescued_map.cool&quot;</span>
+
+        <span class="n">cooler_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cooler cload pairs --zero-based -c1 2 -p1 3 -p2 4 -c2 5 </span><span class="si">{</span><span class="n">bins_path</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pairs_path</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cool_path</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">balance_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cooler balance --nproc </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cool_path</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cooler_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">balance</span><span class="p">:</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">balance_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cooler matrix successfully created in </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_dictionary">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.io.load_dictionary">[docs]</a>
+<span class="k">def</span> <span class="nf">load_dictionary</span><span class="p">(</span><span class="n">dictionary</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load dictionary save into numpy format (.npy).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dictionary : str, optional</span>
+<span class="sd">        Path to a the dictionary saved in numpy (.npy) format, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Python native dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    
+    <span class="k">except</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_cooler">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.io.load_cooler">[docs]</a>
+<span class="k">def</span> <span class="nf">load_cooler</span><span class="p">(</span><span class="n">matrix</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cooler</span><span class="o">.</span><span class="n">Cooler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load cooler matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : str, optional</span>
+<span class="sd">        Path to a cooler matrix, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cooler.Cooler</span>
+<span class="sd">        Cooler matrix object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">cooler</span><span class="o">.</span><span class="n">Cooler</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="merge_predictions">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.io.merge_predictions">[docs]</a>
+<span class="k">def</span> <span class="nf">merge_predictions</span><span class="p">(</span><span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clean</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">stage</span> <span class="o">=</span> <span class="s2">&quot;prediction&quot;</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge predictions of all chunks of ambiguous reads predictions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the fused alignment file, by default None</span>
+<span class="sd">    clean : bool, optional</span>
+<span class="sd">        Set weither or not to remove temporary chunks, by default True</span>
+<span class="sd">    stage : str, optional</span>
+<span class="sd">        Set the stage of the merging, by default &quot;prediction&quot;. Can be &quot;prediction&quot; or &quot;classification&quot;</span>
+<span class="sd">    cpus : int, optional</span>
+<span class="sd">        Number of cpus to use for the merging, by default 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start merging predictions&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="s2">&quot;prediction&quot;</span><span class="p">:</span>
+
+        <span class="n">forward_alignment_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;forward_*_predicted.bam&quot;</span><span class="p">)))</span>
+        <span class="n">reverse_alignment_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;reverse_*_predicted.bam&quot;</span><span class="p">)))</span>
+
+        <span class="n">forward_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group2.1.rescued.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forward_alignment_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">reverse_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group2.2.rescued.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">reverse_alignment_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Launch merge</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">forward_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Launch merge</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">reverse_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">clean</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">forward_chunk</span><span class="p">,</span> <span class="n">reverse_chunk</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">forward_alignment_chunk_files</span><span class="p">,</span> <span class="n">reverse_alignment_chunk_files</span><span class="p">):</span>
+
+                <span class="n">Path</span><span class="p">(</span><span class="n">forward_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">reverse_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">stage</span> <span class="o">==</span> <span class="s2">&quot;classification&quot;</span><span class="p">:</span>
+
+        <span class="n">forward_unaligned_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;group_*_0.1.bam&quot;</span><span class="p">)))</span>
+        <span class="n">reverse_unaligned_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;group_*_0.2.bam&quot;</span><span class="p">)))</span>
+        <span class="n">forward_aligned_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;group_*_1.1.bam&quot;</span><span class="p">)))</span>
+        <span class="n">reverse_aligned_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;group_*_1.2.bam&quot;</span><span class="p">)))</span>
+        <span class="n">forward_multi_aligned_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;group_*_2.1.bam&quot;</span><span class="p">)))</span>
+        <span class="n">reverse_multi_aligned_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;group_*_2.2.bam&quot;</span><span class="p">)))</span>
+
+
+        <span class="n">forward_group0_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group0.1.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forward_unaligned_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">reverse_group0_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group0.2.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">reverse_unaligned_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">forward_group1_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group1.1.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forward_aligned_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">reverse_group1_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group1.2.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">reverse_aligned_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">forward_group2_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group2.1.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forward_multi_aligned_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">reverse_group2_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group2.2.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">reverse_multi_aligned_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Unaligned reads</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">forward_group0_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">reverse_group0_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Aligned once reads</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">forward_group1_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">reverse_group1_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Multi-aligned reads</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">forward_group2_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">reverse_group2_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Groups successfully merged in </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">clean</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">forward_chunk</span><span class="p">,</span> <span class="n">reverse_chunk</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">forward_unaligned_chunk_files</span><span class="p">,</span> <span class="n">reverse_unaligned_chunk_files</span><span class="p">):</span>
+
+                <span class="n">Path</span><span class="p">(</span><span class="n">forward_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">reverse_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">forward_chunk</span><span class="p">,</span> <span class="n">reverse_chunk</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">forward_aligned_chunk_files</span><span class="p">,</span> <span class="n">reverse_aligned_chunk_files</span><span class="p">):</span>
+
+                <span class="n">Path</span><span class="p">(</span><span class="n">forward_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">reverse_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+    
+            <span class="k">for</span> <span class="n">forward_chunk</span><span class="p">,</span> <span class="n">reverse_chunk</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">forward_multi_aligned_chunk_files</span><span class="p">,</span> <span class="n">reverse_multi_aligned_chunk_files</span><span class="p">):</span>
+
+                <span class="n">Path</span><span class="p">(</span><span class="n">forward_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">reverse_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">stage</span> <span class="o">==</span> <span class="s2">&quot;benchmark&quot;</span><span class="p">:</span>
+
+        <span class="n">forward_out_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;chunk_for_*.out.bam&quot;</span><span class="p">)))</span>
+        <span class="n">reverse_out_chunk_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;chunk_rev_*.out.bam&quot;</span><span class="p">)))</span>
+
+        <span class="n">forward_out_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group1.1.out.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">forward_out_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">reverse_out_merge_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools merge -f -n --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;group1.2.out.bam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">reverse_out_chunk_files</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Out reads</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">forward_out_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">reverse_out_merge_cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">clean</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">forward_chunk</span><span class="p">,</span> <span class="n">reverse_chunk</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">forward_out_chunk_files</span><span class="p">,</span> <span class="n">reverse_out_chunk_files</span><span class="p">):</span>
+
+                <span class="n">Path</span><span class="p">(</span><span class="n">forward_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">reverse_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Out reads successfully merged in </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tidy_folder">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.io.tidy_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">tidy_folder</span><span class="p">(</span><span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tidy all the files in the output folder.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the fused alignment file, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># Tidy folder</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span>  <span class="n">p</span> <span class="ow">in</span> <span class="n">output_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.bt2l&quot;</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;index&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.bam&quot;</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;alignments&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.npy&quot;</span><span class="p">,</span> <span class="s2">&quot;.bed&quot;</span><span class="p">,</span> <span class="s2">&quot;.bedgraph&quot;</span><span class="p">,</span> <span class="s2">&quot;.bw&quot;</span><span class="p">]:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;statistics&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.pairs&quot;</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;contacts&quot;</span> <span class="o">/</span> <span class="s2">&quot;pairs&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.cool&quot;</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;contacts&quot;</span> <span class="o">/</span> <span class="s2">&quot;matrices&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.pdf&quot;</span> <span class="ow">or</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.svg&quot;</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># Tidy plots</span>
+    <span class="n">plot_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span>  <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.pdf&quot;</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">plot_files</span> <span class="p">:</span>
+
+        <span class="k">if</span> <span class="s2">&quot;density&quot;</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;densities&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="s2">&quot;coverage&quot;</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;coverages&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        
+        <span class="k">elif</span> <span class="s2">&quot;patterns&quot;</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;ps&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;chr&quot;</span><span class="p">):</span>
+
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;plots&quot;</span> <span class="o">/</span> <span class="s2">&quot;contact_maps&quot;</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+
 
 </pre></div>
 

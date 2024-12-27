@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hicberg.align &mdash; hicberg 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -72,12 +72,15 @@
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">from</span> <span class="nn">hicberg</span> <span class="kn">import</span> <span class="n">logger</span>
 
-
-<div class="viewcode-block" id="hic_build_index"><a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_build_index">[docs]</a><span class="k">def</span> <span class="nf">hic_build_index</span><span class="p">(</span><span class="n">genome</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="hic_build_index">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_build_index">[docs]</a>
+<span class="k">def</span> <span class="nf">hic_build_index</span><span class="p">(</span><span class="n">genome</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_dir</span>  <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Building of bowtie2 index (.bt2l files) for read alignement.</span>
+<span class="sd">    Building of bowtie2 index (.bt2l files) for read alignment.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -85,11 +88,13 @@
 <span class="sd">        Path to the genome file along which reads are going to be aligned.</span>
 <span class="sd">    cpus : int, optional</span>
 <span class="sd">        Number of threads allocated for the alignment, by default 1</span>
-<span class="sd">    output : str, optional</span>
+<span class="sd">    output_dir : str, optional</span>
 <span class="sd">        Path where the Bowtie2 index files should be stored, by default None</span>
 <span class="sd">    verbose : bool, optional</span>
-<span class="sd">        Set weither or not the shell command should be printed, by default False</span>
+<span class="sd">        Set wether or not the shell command should be printed, by default False</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Start building index for alignment&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
 
@@ -107,12 +112,11 @@
         
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Genome file </span><span class="si">{</span><span class="n">genome</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
 
-    <span class="c1"># output_path  = Path(output)</span>
     <span class="k">else</span> <span class="p">:</span> 
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
 
         
     <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -120,92 +124,107 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing ouput path.&quot;</span><span class="p">)</span>
     
     <span class="n">sample</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
-    <span class="n">index_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+    <span class="n">index_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
 
-    <span class="n">cmd_index</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2-build -q -f  --large-index </span><span class="si">{</span><span class="n">genome</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">cmd_index</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2-build -q -f --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> --large-index </span><span class="si">{</span><span class="n">genome</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_index</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_index</span><span class="p">)</span>
 
     <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_index</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index built at </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Index built at </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">index_path</span></div>
 
 
-<div class="viewcode-block" id="hic_align"><a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_align">[docs]</a><span class="k">def</span> <span class="nf">hic_align</span><span class="p">(</span><span class="n">genome</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">index</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fq_for</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fq_rev</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sensitivity</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;very-sensitive&#39;</span><span class="p">,</span> <span class="n">max_alignment</span> <span class="p">:</span>  <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="hic_align">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_align">[docs]</a>
+<span class="k">def</span> <span class="nf">hic_align</span><span class="p">(</span><span class="n">index</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fq_for</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fq_rev</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sensitivity</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;very-sensitive&#39;</span><span class="p">,</span> <span class="n">max_alignment</span> <span class="p">:</span>  <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    lignement of reads from HiC experiments along an indexed genome.</span>
+<span class="sd">    Alignment of reads from HiC experiments along an indexed genome.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : str</span>
-<span class="sd">        Path to the genome file along which reads are going to be aligned.</span>
 <span class="sd">    index : str</span>
 <span class="sd">        Path to the index of the genome along which reads are going to be aligned (path to .bt2l files). Default to None, index files are searched to sample_name/data/index/sample_name.</span>
 <span class="sd">    fq_for : str</span>
-<span class="sd">        Path to .fatsa containing set of reads to align (forward mate).</span>
+<span class="sd">        Path to .fasta containing set of reads to align (forward mate).</span>
 <span class="sd">    fq_rev : str</span>
-<span class="sd">        Path to .fatsa containing set of reads to align (forward mate).</span>
+<span class="sd">        Path to .fasta containing set of reads to align (forward mate).</span>
 <span class="sd">    sensitivity : str, optional</span>
 <span class="sd">        Sensitivity of the alignment., by default &#39;very_sensitive&#39;</span>
 <span class="sd">    max_alignment : int, optional</span>
 <span class="sd">        Maximum number of alignments to be returned, by default None</span>
 <span class="sd">    cpus : int, optional</span>
 <span class="sd">        Number of threads allocated for the alignment, by default 1</span>
-<span class="sd">    output : str, optional</span>
-<span class="sd">        Path where the alignement files (.sam) should be stored, by default None</span>
-<span class="sd">    verbonse : bool, optional</span>
-<span class="sd">        Set weither or not the shell command should be printed, by default False</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path where the alignment files (.sam) should be stored, by default None</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Set wether or not the shell command should be printed, by default False</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Start aligning reads&quot;</span><span class="p">)</span>
 
     <span class="n">fq_for_path</span><span class="p">,</span> <span class="n">fq_rev_path</span>  <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fq_for</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="n">fq_rev</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">fq_for_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">fq_rev_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
 
-        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wront path to fastq files : </span><span class="si">{</span><span class="n">fq_for_path</span><span class="si">}</span><span class="s2"> or </span><span class="si">{</span><span class="n">fq_rev_path</span><span class="si">}</span><span class="s2"> given. </span><span class="se">\</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrong path to fastq files : </span><span class="si">{</span><span class="n">fq_for_path</span><span class="si">}</span><span class="s2"> or </span><span class="si">{</span><span class="n">fq_rev_path</span><span class="si">}</span><span class="s2"> given. </span><span class="se">\</span>
 <span class="s2">                    Pease provide existing files.&quot;</span><span class="p">)</span>
     
-    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
     
     <span class="k">else</span> <span class="p">:</span> 
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing ouput path.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing output path.&quot;</span><span class="p">)</span>
 
     <span class="n">index_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">index</span><span class="p">)</span>
 
-    
-    <span class="k">if</span> <span class="n">max_alignment</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">max_alignment</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_alignment</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         
-        <span class="n">cmd_alignment_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2 --</span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> -a -x </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.sam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fq_rev</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">cmd_alignment_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2 --</span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> -a -x </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.sam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fq_for</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">cmd_alignment_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2 --</span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> -a -x </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.sam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fq_rev</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">max_alignment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             
-        <span class="n">cmd_alignment_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2 --</span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> -k </span><span class="si">{</span><span class="n">max_alignment</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">  -x </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.sam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fq_for</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">cmd_alignment_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2 --</span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> -k </span><span class="si">{</span><span class="n">max_alignment</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">  -x </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.sam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fq_rev</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">cmd_alignment_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2 --</span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> -k </span><span class="si">{</span><span class="n">max_alignment</span><span class="si">}</span><span class="s2">  -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">  -x </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.sam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fq_for</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">cmd_alignment_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;bowtie2 --</span><span class="si">{</span><span class="n">sensitivity</span><span class="si">}</span><span class="s2"> -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2"> -k </span><span class="si">{</span><span class="n">max_alignment</span><span class="si">}</span><span class="s2">  -p </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">  -x </span><span class="si">{</span><span class="n">index_path</span><span class="si">}</span><span class="s2"> -S </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.sam&#39;</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">fq_rev</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="n">verbose</span> <span class="p">:</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_alignment_for</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_alignment_rev</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_alignment_for</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_alignment_rev</span><span class="p">)</span>
 
-    
-    <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_alignment_for</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_alignment_rev</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">p_for</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd_alignment_for</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stdout</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">stdout_for</span><span class="p">,</span> <span class="n">stderr_for</span>  <span class="o">=</span> <span class="n">p_for</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="n">p_rev</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd_alignment_rev</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stdout</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>  <span class="n">stderr</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">stdout_rev</span><span class="p">,</span> <span class="n">stderr_rev</span> <span class="o">=</span> <span class="n">p_rev</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alignement done at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">stdout_for</span> <span class="p">:</span> 
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">stdout_for</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">stderr_for</span> <span class="p">:</span> 
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">stderr_for</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">stdout_rev</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">stdout_rev</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">stderr_rev</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">stderr_rev</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alignment saved at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-
-
-<div class="viewcode-block" id="hic_view"><a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_view">[docs]</a><span class="k">def</span> <span class="nf">hic_view</span><span class="p">(</span><span class="n">sam_for</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.sam&quot;</span><span class="p">,</span> <span class="n">sam_rev</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.sam&quot;</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="hic_view">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_view">[docs]</a>
+<span class="k">def</span> <span class="nf">hic_view</span><span class="p">(</span><span class="n">sam_for</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.sam&quot;</span><span class="p">,</span> <span class="n">sam_rev</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.sam&quot;</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Conversion of .sam alignement files to .bam alignement format (using samtools).</span>
+<span class="sd">    Conversion of .sam alignment files to .bam alignment format (using samtools).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -215,11 +234,13 @@
 <span class="sd">        Path to reverse .sam alignment file, by default &quot;2.sam&quot;</span>
 <span class="sd">    cpus : int, optional</span>
 <span class="sd">        Number of threads allocated for the alignment, by default 1</span>
-<span class="sd">    output : str, optional</span>
-<span class="sd">        Path where the alignement files (.bam) should be stored, by default None</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path where the alignment files (.bam) should be stored, by default None</span>
 <span class="sd">    verbose : bool, optional</span>
-<span class="sd">        Set weither or not the shell command should be printed, by default False</span>
+<span class="sd">        Set wether or not the shell command should be printed, by default False</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Start converting .sam to .bam&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
 
@@ -231,56 +252,56 @@
             <span class="s2">&quot;Samtools not found; check if it is installed and in $PATH</span><span class="se">\n</span><span class="s2"> install Samtools with : conda install samtools&quot;</span>
         <span class="p">)</span>
 
-
-    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
     
     <span class="k">else</span> <span class="p">:</span> 
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing ouput path.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing output path.&quot;</span><span class="p">)</span>
     
-
-    <span class="n">cmd_view_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools view -S -b </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sam_for</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">cmd_view_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools view -S -b </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sam_rev</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">cmd_view_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools view -h  -b </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sam_for</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">cmd_view_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools view -h  -b </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sam_rev</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_view_for</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_view_rev</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_view_for</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_view_rev</span><span class="p">)</span>
 
-    <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_view_for</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_view_rev</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sp_for</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd_view_for</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sp_for</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="n">sp_rev</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd_view_rev</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sp_rev</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="c1"># Delete .sam files after .bam conversion</span>
+    <span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">sam_for</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">sam_rev</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Compressed alignemnet alignement done at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Compressed  alignment done at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-
-
-<div class="viewcode-block" id="hic_sort"><a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_sort">[docs]</a><span class="k">def</span> <span class="nf">hic_sort</span><span class="p">(</span><span class="n">bam_for</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.bam&quot;</span><span class="p">,</span> <span class="n">bam_rev</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.bam&quot;</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="hic_sort">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_sort">[docs]</a>
+<span class="k">def</span> <span class="nf">hic_sort</span><span class="p">(</span><span class="n">bam_for</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.bam&quot;</span><span class="p">,</span> <span class="n">bam_rev</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.bam&quot;</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sort .bam alignement files by read_name  (using samtools).</span>
+<span class="sd">    Sort .bam alignment files by read_name  (using samtools).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    bam_for : str, optional</span>
-<span class="sd">        Forward alignement file to be sorted, by default &quot;1.bam&quot;</span>
+<span class="sd">        Forward alignment file to be sorted, by default &quot;1.bam&quot;</span>
 <span class="sd">    bam_rev : str, optional</span>
-<span class="sd">        Reverse alignement file to be sorted, by default &quot;2.bam&quot;</span>
+<span class="sd">        Reverse alignment file to be sorted, by default &quot;2.bam&quot;</span>
 <span class="sd">    cpus : int, optional</span>
 <span class="sd">        Number of threads allocated for the alignment, by default 1</span>
-<span class="sd">    output : str, optional</span>
-<span class="sd">        Path where the alignement files (.bam) should be stored, by default None</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path where the alignment files (.bam) should be stored, by default None</span>
 <span class="sd">    verbose : bool, optional</span>
-<span class="sd">        Set weither or not the shell command should be printed, by default False</span>
+<span class="sd">        Set wether or not the shell command should be printed, by default False</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    [type]</span>
-<span class="sd">        [description]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Start sorting .bam alignment files&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
 
@@ -292,54 +313,57 @@
             <span class="s2">&quot;Samtools not found; check if it is installed and in $PATH</span><span class="se">\n</span><span class="s2"> install Samtools with : conda install samtools&quot;</span>
         <span class="p">)</span>
 
-
-    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
     
     <span class="k">else</span> <span class="p">:</span> 
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing ouput path.&quot;</span><span class="p">)</span>
     
-
-    <span class="n">cmd_sort_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools sort -n </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.bam&#39;</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.sorted.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">cmd_sort_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools sort -n </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.bam&#39;</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.sorted.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">id_for</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+    <span class="n">id_rev</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+    
+    <span class="n">cmd_sort_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools sort -n -T </span><span class="si">{</span><span class="n">id_for</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.bam&#39;</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;1.sorted.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">cmd_sort_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools sort -n -T </span><span class="si">{</span><span class="n">id_rev</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.bam&#39;</span><span class="si">}</span><span class="s2"> -o </span><span class="si">{</span><span class="n">output_path</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;2.sorted.bam&#39;</span><span class="si">}</span><span class="s2"> --threads </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_sort_for</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_sort_rev</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_sort_for</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_sort_rev</span><span class="p">)</span>
 
-    <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_sort_for</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_sort_rev</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sp_for</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd_sort_for</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sp_for</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="n">sp_rev</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd_sort_rev</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sp_rev</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>    
+    <span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s1">&#39;1.bam&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s1">&#39;2.bam&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sorted alignement done at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sorted alignment done at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="hic_index"><a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_index">[docs]</a><span class="k">def</span> <span class="nf">hic_index</span><span class="p">(</span><span class="n">bam_for</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.sorted.bam&quot;</span><span class="p">,</span> <span class="n">bam_rev</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.sorted.bam&quot;</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="hic_index">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.align.hic_index">[docs]</a>
+<span class="k">def</span> <span class="nf">hic_index</span><span class="p">(</span><span class="n">bam_for</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;1.sorted.bam&quot;</span><span class="p">,</span> <span class="n">bam_rev</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;2.sorted.bam&quot;</span><span class="p">,</span> <span class="n">cpus</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Index a coordinate-sorted BGZIP-compressed SAM, BAM or CRAM file for fast random access.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    bam_for : str, optional</span>
-<span class="sd">        Forward alignement file to be indexed, by default &quot;1.sorted.bam&quot;</span>
+<span class="sd">        Forward alignment file to be indexed, by default &quot;1.sorted.bam&quot;</span>
 <span class="sd">    bam_rev : str, optional</span>
-<span class="sd">        Reverse alignement file to be indexed,, by default &quot;2.sorted.bam&quot;</span>
+<span class="sd">        Reverse alignment file to be indexed,, by default &quot;2.sorted.bam&quot;</span>
 <span class="sd">    cpus : int, optional</span>
 <span class="sd">        Number of threads allocated for the alignment, by default 1</span>
-<span class="sd">    output : str, optional</span>
-<span class="sd">        Path where the alignement files (.bam) should be stored, by default None</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path where the alignment files (.bam) should be stored, by default None</span>
 <span class="sd">    verbose : bool, optional</span>
-<span class="sd">        Set weither or not the shell command should be printed, by default False</span>
+<span class="sd">        Set wether or not the shell command should be printed, by default False</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    [type]</span>
-<span class="sd">        [description]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -352,29 +376,29 @@
             <span class="s2">&quot;Samtools not found; check if it is installed and in $PATH</span><span class="se">\n</span><span class="s2"> install Samtools with : conda install samtools&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>    
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
     
     <span class="k">else</span> <span class="p">:</span> 
-        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing ouput path.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> does not exist. Please provide existing output path.&quot;</span><span class="p">)</span>
     
-
     <span class="n">cmd_index_for</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools index -b </span><span class="si">{</span><span class="n">bam_for</span><span class="si">}</span><span class="s2"> -@ </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">cmd_index_rev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;samtools index -b </span><span class="si">{</span><span class="n">bam_rev</span><span class="si">}</span><span class="s2"> -@ </span><span class="si">{</span><span class="n">cpus</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_index_for</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">cmd_index_rev</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_index_for</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">cmd_index_rev</span><span class="p">)</span>
 
     <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_index_for</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">sp</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">cmd_index_rev</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indexed alignement done at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indexed alignment done at </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
 
 
 
