@@ -26,7 +26,7 @@ jobs:
 
     - name: Install additional packages
       run: |
-        conda install bioconda::bowtie2
+        apt install bowtie2
         conda install bioconda::samtools
         conda install bioconda::bedtools
         conda install bioconda::ucsc-bedgraphtobigwig
