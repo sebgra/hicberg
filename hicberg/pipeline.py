@@ -27,8 +27,20 @@ UNRESCUED_MATRIX = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
 
 
-def check_tool(name):
-    """Check whether `name` is on PATH and marked as executable."""
+def check_tool(name: str) -> bool:
+    """
+    Check whether `name` is on PATH and marked as executable.
+
+    Parameters
+    ----------
+    name : [str]
+        Depenedency to check.
+
+    Returns
+    -------
+    [bool]
+        True if the tool is available, False otherwise.
+    """    
 
     return which(name) is not None
 
