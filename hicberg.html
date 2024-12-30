@@ -16,9 +16,11 @@
       <script src="_static/documentation_options.js?v=01f34227"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hicberg tutorial" href="notebooks/tutorial.html" />
     <link rel="prev" title="hicberg" href="modules.html" /> 
 </head>
 
@@ -188,6 +190,10 @@
 </li>
 </ul>
 </li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/tutorial.html">Hicberg tutorial</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">hicberg package</a><ul>
@@ -1397,8 +1403,19 @@ Retain columns are : chromosome, start, end, count.</p>
 <span id="hicberg-pipeline-module"></span><h2>hicberg.pipeline module<a class="headerlink" href="#module-hicberg.pipeline" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="hicberg.pipeline.check_tool">
-<span class="sig-prename descclassname"><span class="pre">hicberg.pipeline.</span></span><span class="sig-name descname"><span class="pre">check_tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hicberg/pipeline.html#check_tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.pipeline.check_tool" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">hicberg.pipeline.</span></span><span class="sig-name descname"><span class="pre">check_tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/hicberg/pipeline.html#check_tool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.pipeline.check_tool" title="Link to this definition"></a></dt>
 <dd><p>Check whether <cite>name</cite> is on PATH and marked as executable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>[</em><em>str</em><em>]</em>) – Depenedency to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the tool is available, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>[bool]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2766,6 +2783,7 @@ full matrix.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="modules.html" class="btn btn-neutral float-left" title="hicberg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="notebooks/tutorial.html" class="btn btn-neutral float-right" title="Hicberg tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
