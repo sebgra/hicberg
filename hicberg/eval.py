@@ -1181,6 +1181,50 @@ def select_reads_multithreads(bam_couple : tuple[str, str], interval_dictionary 
 
 def generate_dict_coordinates(matrix_file: str = "unrescued_map.cool", position : int = 0, chromosome : str | list[str] = "", bin_size : int  = 2000, chrom_sizes_dict : str =  "chromosome_sizes.npy", strides : list[int] = [0],
 trans_chromosome :  str = None, output_dir : str = None, trans_position : list[int] = None, nb_bins : int = 1, random : bool = False, auto : int = None) -> dict[str, list[(int, int)]]:
+    """
+    Generates a dictionary of genomic coordinates for selecting regions in a Hi-C contact map.
+
+    This function defines genomic intervals based on provided parameters such as chromosome, position, strides, and bin size. 
+    It can generate intervals for both intra-chromosomal and inter-chromosomal interactions. The intervals can be used to 
+    select specific regions in a Hi-C contact map for further analysis, such as simulating deletions or duplications.
+
+    Parameters
+    ----------
+    matrix_file : str, optional
+        Path to the cooler file containing the Hi-C contact map, by default "unrescued_map.cool"
+    position : int, optional
+        Genomic position on the chromosome, by default 0
+    chromosome : str | list[str], optional
+        Chromosome or list of chromosomes, by default ""
+    bin_size : int, optional
+        Size of the bins in the Hi-C contact map, by default 2000
+    chrom_sizes_dict : str, optional
+        Path to the chromosome sizes dictionary, by default "chromosome_sizes.npy"
+    strides : list[int], optional
+        List of strides to use for generating intervals, by default [0]
+    trans_chromosome : str, optional
+        Chromosome for trans-interactions, by default None
+    output_dir : str, optional
+        Path to the output directory, by default None
+    trans_position : list[int], optional
+        List of positions on the trans-chromosome, by default None
+    nb_bins : int, optional
+        Number of bins to include in each interval, by default 1
+    random : bool, optional
+        Whether to generate random intervals, by default False
+    auto : int, optional
+        Number of random intervals to generate, by default None
+
+    Returns
+    -------
+    dict[str, list[(int, int)]]
+        A dictionary where keys are chromosomes and values are lists of (start, end) genomic intervals.
+
+    Raises
+    ------
+    ValueError
+        If the output path, chromosome sizes file, or matrix file does not exist.
+    """
 
     output_path = Path(output_dir)
 
