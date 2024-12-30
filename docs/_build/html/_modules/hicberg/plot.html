@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hicberg.plot &mdash; hicberg 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hicberg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">hicberg</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hicberg.html">hicberg package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hicberg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hicberg.plot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hicberg.plot</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">getcwd</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">combinations</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">plc</span>
+<span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="k">as</span> <span class="nn">gridspec</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+
+<span class="kn">import</span> <span class="nn">cooler</span>
+<span class="kn">import</span> <span class="nn">bioframe</span> <span class="k">as</span> <span class="nn">bf</span>
+<span class="kn">import</span> <span class="nn">pysam</span> <span class="k">as</span> <span class="nn">ps</span>
+
+<span class="kn">from</span> <span class="nn">hicberg.io</span> <span class="kn">import</span> <span class="n">load_dictionary</span><span class="p">,</span> <span class="n">load_cooler</span>
+<span class="kn">from</span> <span class="nn">hicberg</span> <span class="kn">import</span> <span class="n">logger</span>
+
+
+<span class="n">DIST_FRAG</span> <span class="o">=</span> <span class="s2">&quot;dist.frag.npy&quot;</span>
+<span class="n">XS</span> <span class="o">=</span> <span class="s2">&quot;xs.npy&quot;</span>
+<span class="n">COVERAGE</span> <span class="o">=</span> <span class="s2">&quot;coverage.npy&quot;</span>
+<span class="n">D1D2</span> <span class="o">=</span> <span class="s2">&quot;d1d2.npy&quot;</span>
+<span class="n">UNCUTS</span> <span class="o">=</span> <span class="s2">&quot;uncuts.npy&quot;</span>
+<span class="n">WEIRDS</span> <span class="o">=</span> <span class="s2">&quot;weirds.npy&quot;</span>
+<span class="n">LOOPS</span> <span class="o">=</span> <span class="s2">&quot;loops.npy&quot;</span>
+<span class="n">TRANS_PS</span> <span class="o">=</span> <span class="s2">&quot;trans_ps.npy&quot;</span>
+<span class="n">CLR</span> <span class="o">=</span> <span class="s2">&quot;unrescued_map.cool&quot;</span>
+<span class="n">RESTRICTION_MAP</span> <span class="o">=</span> <span class="s2">&quot;restriction_map.npy&quot;</span>
+<span class="n">DENSITY_MAP</span> <span class="o">=</span> <span class="s2">&quot;density_map.npy&quot;</span>
+
+
+<div class="viewcode-block" id="plot_density">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_density">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_density</span><span class="p">(</span><span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot density maps</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the plots (one plot per chromosome couple), by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># reload dictionaries</span>
+    <span class="n">density_map</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">DENSITY_MAP</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">chromosome_couple</span> <span class="ow">in</span> <span class="n">density_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">density_map</span><span class="p">[</span><span class="n">chromosome_couple</span><span class="p">]</span>
+
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;seismic&quot;</span><span class="p">)</span>
+        <span class="n">cmap</span><span class="o">.</span><span class="n">set_bad</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Contact density for  </span><span class="si">{</span><span class="n">chromosome_couple</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;density_</span><span class="si">{</span><span class="n">chromosome_couple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">chromosome_couple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved plots of densities at : </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_benchmark">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_benchmark">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_benchmark</span><span class="p">(</span><span class="n">original_matrix</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">depleted_matrix</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rescued_matrix</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">chromosomes</span> <span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot benchmark results (original, depleted and rescued matrices with associated log ratios). One plot per chromosome.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    original_matrix : str, optional</span>
+<span class="sd">        Path to the original matrix, by default None</span>
+<span class="sd">    rescued_matrix : str, optional</span>
+<span class="sd">        Path to the rescued matrix (re-attributed reads), by default None</span>
+<span class="sd">    chromosomes : list[str], optional</span>
+<span class="sd">        List of chromosomes to plot, by default None</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to where to save plots, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># if no output directory is provided, save in current directory     </span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>    
+
+    <span class="n">chromosomes</span> <span class="o">=</span> <span class="n">chromosomes</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">chromosomes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="k">else</span> <span class="n">chromosomes</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+    <span class="c1"># define paths</span>
+    <span class="n">original_matrix_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">original_matrix</span>
+    <span class="n">depleted_matrix_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">depleted_matrix</span>
+    <span class="n">rescued_matrix_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">rescued_matrix</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">original_matrix_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original matrix not found at </span><span class="si">{</span><span class="n">original_matrix_path</span><span class="si">}</span><span class="s2">. Please provide a valid path.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">depleted_matrix_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Depleted matrix not found at </span><span class="si">{</span><span class="n">depleted_matrix_path</span><span class="si">}</span><span class="s2">. Please provide a valid path.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rescued_matrix_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rescued matrix not found at </span><span class="si">{</span><span class="n">rescued_matrix_path</span><span class="si">}</span><span class="s2">. Please provide a valid path.&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Relaod matricies</span>
+    <span class="n">original_matrix</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">original_matrix_path</span><span class="p">)</span>
+    <span class="n">depleted_matrix</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">depleted_matrix_path</span><span class="p">)</span>
+    <span class="n">rescued_matrix</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">rescued_matrix_path</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">chrm</span> <span class="ow">in</span> <span class="n">chromosomes</span><span class="p">:</span>
+
+        <span class="n">ori_matrix</span> <span class="o">=</span> <span class="n">original_matrix</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">chrm</span><span class="p">)</span>
+        <span class="n">dep_matrix</span> <span class="o">=</span> <span class="n">depleted_matrix</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">chrm</span><span class="p">)</span>
+        <span class="n">res_matrix</span> <span class="o">=</span> <span class="n">rescued_matrix</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">chrm</span><span class="p">)</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
+            <span class="n">res_matrix</span><span class="p">,</span>
+            <span class="n">ori_matrix</span><span class="p">,</span>
+            <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">res_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+            <span class="n">where</span><span class="o">=</span><span class="n">ori_matrix</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">log_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+
+        <span class="c1"># TODO : Adjust log non log and exponent</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ori_matrix</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;afmhot_r&quot;</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ori_matrix</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original map - </span><span class="si">{</span><span class="n">chrm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">dep_matrix</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;afmhot_r&quot;</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ori_matrix</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Depleted map - </span><span class="si">{</span><span class="n">chrm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">res_matrix</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;afmhot_r&quot;</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ori_matrix</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rescued map - </span><span class="si">{</span><span class="n">chrm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">log_ratio</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;bwr&quot;</span> <span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> 
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log ratio - </span><span class="si">{</span><span class="n">chrm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;benchmark_</span><span class="si">{</span><span class="n">chrm</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="plot_d1d2">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_d1d2">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_d1d2</span><span class="p">(</span><span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot d1d2 law</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the plot, by default None, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># reload dictionary</span>
+    <span class="n">d1d2</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">D1D2</span><span class="p">)</span>
+
+    <span class="n">histo</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">d1d2</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">d1d2</span><span class="p">))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">histo</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Log distribution of d1d2 distance&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;d1+d2&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;No. occurences&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;d1d2.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved plots of d1d2 at : </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_laws">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_laws">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_laws</span><span class="p">(</span><span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot P(s) patterns laws</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the plot, by default None, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># reload dictionaries</span>
+
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">XS</span><span class="p">)</span>
+    <span class="n">weirds</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">WEIRDS</span><span class="p">)</span>
+    <span class="n">uncuts</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">UNCUTS</span><span class="p">)</span>
+    <span class="n">loops</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">LOOPS</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">chromosome</span> <span class="ow">in</span> <span class="n">xs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">chromosome</span><span class="p">],</span> <span class="n">weirds</span><span class="p">[</span><span class="n">chromosome</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;++/--&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">chromosome</span><span class="p">],</span> <span class="n">uncuts</span><span class="p">[</span><span class="n">chromosome</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;+-&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="n">chromosome</span><span class="p">],</span> <span class="n">loops</span><span class="p">[</span><span class="n">chromosome</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;-+&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distribution of weirds, uncuts and loops events across </span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Logarithmic binned genomic distances&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of events&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;patterns_distribution_</span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved plots of patterns at : </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_trans_ps">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_trans_ps">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_trans_ps</span><span class="p">(</span><span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot P(s) patterns laws</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the plot, by default None, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># reload dictionaries</span>
+    <span class="n">dist_frag</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">DIST_FRAG</span><span class="p">)</span>
+    <span class="n">clr_unambiguous</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">CLR</span><span class="p">)</span>
+    <span class="n">chrm_sets</span> <span class="o">=</span> <span class="n">product</span><span class="p">((</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">t_ps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">all_interaction_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">n_frags_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">trans_ps_dictionary</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chrm_sets</span><span class="p">):</span>
+
+        <span class="n">all_interactions</span> <span class="o">=</span> <span class="n">clr_unambiguous</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">n_frags</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">dist_frag</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="p">)</span>
+        <span class="n">trans_ps_dictionary</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">all_interactions</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">n_frags</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+
+        <span class="n">t_ps</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">all_interactions</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">n_frags</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">all_interaction_matrix</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_interactions</span>
+        <span class="n">n_frags_matrix</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_frags</span>
+
+    <span class="n">t_ps</span> <span class="o">=</span> <span class="n">t_ps</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+        <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+    <span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">t_ps</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="n">all_interaction_matrix</span> <span class="o">=</span> <span class="n">all_interaction_matrix</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+        <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+    <span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">all_interaction_matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="n">n_frags_matrix</span> <span class="o">=</span> <span class="n">n_frags_matrix</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+        <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+    <span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">n_frags_matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">t_ps</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Wistia&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()))),</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+        <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()))),</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">dist_frag</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Pseudo P(s)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;pseudo_ps.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved pseudo P(s) of patterns at : </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_coverages">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_coverages">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_coverages</span><span class="p">(</span><span class="n">bins</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot coverages of chromosomes</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bins : int, optional</span>
+<span class="sd">        Size of the desired bin., by default 2000</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the plot, by default None, by default None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># reload dictionaries</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">XS</span><span class="p">)</span>
+    <span class="n">coverage</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">COVERAGE</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">chromosome</span> <span class="ow">in</span> <span class="n">xs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">coverage</span><span class="p">[</span><span class="n">chromosome</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Covering smoothed&quot;</span><span class="p">)</span>        
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Covering across </span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="s2"> - bins of </span><span class="si">{</span><span class="n">bins</span><span class="si">}</span><span class="s2"> bp&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bin number&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of reads&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;coverage_</span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved coverages at : </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_couple_repartition">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_couple_repartition">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_couple_repartition</span><span class="p">(</span><span class="n">forward_bam_file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group2.1.rescued.bam&quot;</span><span class="p">,</span> <span class="n">reverse_bam_file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group2.2.rescued.bam&quot;</span><span class="p">,</span>  <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot read couples sizes distribution</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    forward_bam_file : str, optional</span>
+<span class="sd">        Path to forward .bam alignment file, by default 1.sorted.bam</span>
+<span class="sd">    reverse_bam_file : str, optional</span>
+<span class="sd">        Path to reverse .bam alignment file, by default 2.sorted.bam</span>
+<span class="sd">        Minimal read quality under which a Hi-C read pair will not be kept, by default 30</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the plot, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="n">merged_forward_alignment_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="n">forward_bam_file</span>
+    <span class="n">merged_reverse_alignment_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="n">reverse_bam_file</span>
+
+    <span class="n">merged_forward_alignment_file_handler</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">merged_forward_alignment_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+    <span class="n">merged_reverse_alignment_file_handler</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">merged_reverse_alignment_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get the number of possible couples</span>
+    <span class="n">couple_lenght</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">forward_read</span><span class="p">,</span> <span class="n">reverse_read</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">merged_forward_alignment_file_handler</span><span class="p">,</span> <span class="n">merged_reverse_alignment_file_handler</span><span class="p">):</span>
+
+        <span class="n">couple_lenght</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">forward_read</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;XL&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">reverse_read</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;XL&quot;</span><span class="p">))</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">bins_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">couple_lenght</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">couple_lenght</span><span class="p">))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">couple_lenght</span><span class="p">),</span>
+        <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">ymax</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">_</span><span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+        <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">couple_lenght</span><span class="p">),</span>
+        <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">ymax</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">_</span><span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span>
+        <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">couple_lenght</span><span class="p">,</span> <span class="mi">99</span><span class="p">),</span>
+        <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">ymax</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">_</span><span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;99 percentile&quot;</span><span class="p">,</span>
+        <span class="n">linestyles</span><span class="o">=</span><span class="s2">&quot;dashed&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">couple_lenght</span><span class="p">,</span> <span class="mi">99</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">couple_lenght</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Size of the set of possible couple&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of couples&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of set of potential couple sizes&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;Couple_sizes_distribution.pdf&quot;</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved couple size distribution at : </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="plot_matrix">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_matrix</span><span class="p">(</span><span class="n">unrescued_matrix</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unrescued_map.cool&quot;</span><span class="p">,</span> <span class="n">rescued_matrix</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rescued_map.cool&quot;</span><span class="p">,</span> <span class="n">restriction_map</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;restriction_map.npy&quot;</span><span class="p">,</span> <span class="n">genome</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">vmin</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.5</span><span class="p">,</span> <span class="n">bins</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot matrix with additional trackss</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    unrescued_matrix : str, optional</span>
+<span class="sd">        Path to the unrescued map file, by default unrescued_map.cool</span>
+<span class="sd">    rescued_matrix : str, optional</span>
+<span class="sd">        Path to rescued map file, by default rescued_map.cool</span>
+<span class="sd">    restriction_map : dict, optional</span>
+<span class="sd">        Restriction map saved as a dictionary like chrom_name : list of restriction sites&#39; position, by default dist.frag.npy</span>
+<span class="sd">    genome : str, optional</span>
+<span class="sd">        Path to the genome to digest, by default None, by default None</span>
+<span class="sd">    vmin : float, optional</span>
+<span class="sd">        Inferior limit for the colorscale, by default 0.0</span>
+<span class="sd">    vmax : float, optional</span>
+<span class="sd">        Superior limit for the colorscale, by default 3.5</span>
+<span class="sd">    bins : int, optional</span>
+<span class="sd">        Size of the desired bin., by default 2000</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the plot, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># Get the matrix</span>
+    <span class="n">unrescued_matrix</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">unrescued_matrix</span><span class="p">)</span>
+    <span class="n">rescued_matrix</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span><span class="n">rescued_matrix</span><span class="p">)</span>
+
+    <span class="n">genome_file</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">load_fasta</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pysam&quot;</span><span class="p">)</span>
+    <span class="n">restriction_map</span> <span class="o">=</span> <span class="n">load_dictionary</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">restriction_map</span><span class="p">)</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="n">unrescued_matrix</span><span class="o">.</span><span class="n">bins</span><span class="p">()[:]</span>
+    <span class="n">gc_cov</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">frac_gc</span><span class="p">(</span><span class="n">bins</span><span class="p">[[</span><span class="s2">&quot;chrom&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">]],</span> <span class="n">genome_file</span><span class="p">)</span>
+
+    <span class="c1">### to make a list of chromosome start/ends in bins:</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rescued_matrix</span><span class="o">.</span><span class="n">chromnames</span><span class="p">:</span>
+
+        <span class="n">lower</span> <span class="o">=</span> <span class="n">rescued_matrix</span><span class="o">.</span><span class="n">extent</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">upper</span> <span class="o">=</span> <span class="n">rescued_matrix</span><span class="o">.</span><span class="n">extent</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Unrescued</span>
+        <span class="n">coverage_unrescued</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">unrescued_matrix</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">median_coverage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">coverage_unrescued</span><span class="p">),</span> <span class="n">coverage_unrescued</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Rescued</span>
+        <span class="n">coverage_rescued</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">rescued_matrix</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Plot the matrix</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">height_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">divider1</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
+        <span class="n">cax1</span> <span class="o">=</span> <span class="n">divider1</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;5%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">im_unrescued</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">unrescued_matrix</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">,</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;afmhot_r&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im_unrescued</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;corrected frequencies&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unrescued map of chromosome </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> binned at </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">rescued_matrix</span><span class="o">.</span><span class="n">binsize</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="p">)</span><span class="si">}</span><span class="s2">kb&quot;</span><span class="p">,</span>
+            <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Synchronize rescued and unrescued parts</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+
+        <span class="c1"># Rescued map</span>
+        <span class="n">divider2</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax2</span><span class="p">)</span>
+        <span class="n">cax2</span> <span class="o">=</span> <span class="n">divider2</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;5%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">im_rescued</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">rescued_matrix</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">,</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;afmhot_r&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im_rescued</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;corrected frequencies&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Rescued map of chromosome </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> binned at </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">unrescued_matrix</span><span class="o">.</span><span class="n">binsize</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="si">}</span><span class="s2">kb&quot;</span><span class="p">,</span>
+            <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">ax3</span> <span class="o">=</span> <span class="n">divider1</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;15%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">coverage_unrescued</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">median_coverage</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Coverage&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Natural coverage&#39;</span><span class="p">)</span>
+
+        <span class="n">ax4</span> <span class="o">=</span> <span class="n">divider1</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;15%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">gc_cov</span><span class="p">[</span><span class="s2">&quot;GC&quot;</span><span class="p">][</span><span class="n">lower</span><span class="p">:</span><span class="n">upper</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">)</span>
+        <span class="n">ax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;GC Content&quot;</span><span class="p">)</span>
+
+        <span class="n">ax5</span> <span class="o">=</span> <span class="n">divider2</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;15%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">coverage_unrescued</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before HiC-BERG&quot;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">coverage_rescued</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;After HiC-BERG&quot;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">median_coverage</span><span class="p">,</span> <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Enhanced coverage&#39;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">unrescued_matrix</span><span class="o">.</span><span class="n">bins</span><span class="p">()</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)))])</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Coverage&quot;</span><span class="p">)</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center left&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+        <span class="n">ax5</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+
+        <span class="n">ax6</span> <span class="o">=</span> <span class="n">divider2</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;15%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+        <span class="n">ax6</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">gc_cov</span><span class="p">[</span><span class="s2">&quot;GC&quot;</span><span class="p">][</span><span class="n">lower</span><span class="p">:</span><span class="n">upper</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">)</span>
+        <span class="n">ax6</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;GC Content&quot;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+            <span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;chr_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+        <span class="c1"># # Plot the balanced matrix</span>
+        <span class="c1"># fig = plt.figure(figsize=(20, 20))</span>
+        <span class="c1"># gs = gridspec.GridSpec(2, 2, height_ratios=[10, 1], width_ratios=[1, 1])</span>
+
+        <span class="c1"># ax1 = plt.subplot(gs[0])</span>
+        <span class="c1"># divider1 = make_axes_locatable(ax1)</span>
+        <span class="c1"># cax1 = divider1.append_axes(&quot;right&quot;, size=&quot;5%&quot;, pad=0.1)</span>
+        <span class="c1"># im_unrescued = ax1.imshow(</span>
+        <span class="c1">#     np.log10(unrescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,</span>
+        <span class="c1">#     cmap = &quot;afmhot_r&quot;,</span>
+        <span class="c1"># )</span>
+        <span class="c1"># fig.colorbar(im_unrescued, cax=cax1, label=&quot;corrected frequencies&quot;)</span>
+        <span class="c1"># ax1.set_title(</span>
+        <span class="c1">#     f&quot;Unrescued map of chromosome {i} \n binned at {int(rescued_matrix.binsize / 1000 )}kb&quot;,</span>
+        <span class="c1">#     loc=&quot;center&quot;,</span>
+        <span class="c1"># )</span>
+
+        <span class="c1"># # Synchronize rescued and unrescued parts</span>
+        <span class="c1"># ax2 = plt.subplot(gs[1], sharex=ax1, sharey=ax1)</span>
+
+        <span class="c1"># # Rescued map</span>
+        <span class="c1"># divider2 = make_axes_locatable(ax2)</span>
+        <span class="c1"># cax2 = divider2.append_axes(&quot;right&quot;, size=&quot;5%&quot;, pad=0.1)</span>
+        <span class="c1"># im_rescued = ax2.imshow(</span>
+        <span class="c1">#     np.log10(rescued_matrix.matrix(balance=True).fetch(i)), vmin = vmin, vmax = vmax,</span>
+        <span class="c1">#     cmap = &quot;afmhot_r&quot;,</span>
+        <span class="c1"># )</span>
+        <span class="c1"># fig.colorbar(im_rescued, cax=cax2, label=&quot;corrected frequencies&quot;)</span>
+        <span class="c1"># ax2.set_title(</span>
+        <span class="c1">#     f&quot;Rescued map of chromosome {i} \n binned at {int(unrescued_matrix.binsize / 1000 ) }kb&quot;,</span>
+        <span class="c1">#     loc=&quot;center&quot;,</span>
+        <span class="c1"># )</span>
+
+        <span class="c1"># ax3 = divider1.append_axes(&quot;bottom&quot;, size=&quot;15%&quot;, pad=0.5, sharex=ax1)</span>
+        <span class="c1"># ax3.plot(tot_coverage_unrescued[lower:upper], label=&quot;total&quot;)</span>
+        <span class="c1"># ax3.plot(cis_coverage_unrescued[lower:upper], label=&quot;cis&quot;)</span>
+        <span class="c1"># ax3.set_ylabel(&quot;Coverage&quot;)</span>
+        <span class="c1"># ax3.legend(loc=&quot;lower left&quot;, bbox_to_anchor=(1, 0.5))</span>
+        <span class="c1"># ax3.set_xticks([])</span>
+
+        <span class="c1"># ax4 = divider1.append_axes(&quot;bottom&quot;, size=&quot;15%&quot;, pad=0.5, sharex=ax1)</span>
+        <span class="c1"># ax4.plot(list(gc_cov[&quot;GC&quot;][lower:upper]), color=&quot;purple&quot;)</span>
+        <span class="c1"># ax4.set_ylabel(&quot;GC Content&quot;)</span>
+
+        <span class="c1"># ax5 = divider2.append_axes(&quot;bottom&quot;, size=&quot;15%&quot;, pad=0.5, sharex=ax2)</span>
+        <span class="c1"># ax5.plot(tot_coverage_unrescued[lower:upper], label=&quot;Before recovery&quot;)</span>
+        <span class="c1"># ax5.plot(tot_coverage[lower:upper], label=&quot;After recovery&quot;)</span>
+        <span class="c1"># ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])</span>
+        <span class="c1"># ax5.set_ylabel(&quot;Coverage&quot;)</span>
+        <span class="c1"># ax5.legend(loc=&quot;center left&quot;, bbox_to_anchor=(1, 0.5))</span>
+        <span class="c1"># ax5.set_xticks([])</span>
+
+        <span class="c1"># ax6 = divider2.append_axes(&quot;bottom&quot;, size=&quot;15%&quot;, pad=0.5, sharex=ax2)</span>
+        <span class="c1"># ax6.plot(list(gc_cov[&quot;GC&quot;][lower:upper]), color=&quot;purple&quot;)</span>
+        <span class="c1"># ax6.set_ylabel(&quot;GC Content&quot;)</span>
+
+        <span class="c1"># plt.savefig(</span>
+        <span class="c1">#     output_path / f&quot;chr_{i}_normalized.pdf&quot;,</span>
+        <span class="c1">#     format=&quot;pdf&quot;,</span>
+        <span class="c1"># )</span>
+
+        <span class="c1"># plt.close()</span>
+
+<div class="viewcode-block" id="plot_pattern_reconstruction">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.plot.plot_pattern_reconstruction">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_pattern_reconstruction</span><span class="p">(</span><span class="n">table</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">original_cool</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rescued_cool</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">chromosome</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">threshold</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">case</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a plot of pattern reconstruction quality.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    table : pd.DataFrame, optional</span>
+<span class="sd">        Table containing either true positives, false positives or false negatives patterns, by default None</span>
+<span class="sd">    original_cool : str, optional</span>
+<span class="sd">        Path to the original matrix in .cool format, by default None</span>
+<span class="sd">    rescued_cool : str, optional</span>
+<span class="sd">        Path to the rescued matrix in .cool format, by default None</span>
+<span class="sd">    chromosome : str, optional</span>
+<span class="sd">        Selected chromosome, by default None</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        Threshold for pattern score significance, by default 0.0</span>
+<span class="sd">    case : str, optional</span>
+<span class="sd">        Mode to consider, either true positives, false positives or false negatives, by default &quot;&quot;</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to save plots, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="n">original_matrix</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">original_cool</span><span class="p">)</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">rescued_matrix</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">rescued_cool</span><span class="p">)</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">bin_size</span> <span class="o">=</span> <span class="n">load_cooler</span><span class="p">(</span><span class="n">original_cool</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;bin-size&#39;</span><span class="p">]</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reconstructed pattern </span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">case</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Use imshow to add the first set of data to the plot</span>
+    <span class="n">img1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">original_matrix</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span><span class="s1">&#39;afmhot_r&#39;</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rescued_matrix</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.15</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">colormap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colormaps</span><span class="p">[</span><span class="s1">&#39;Blues&#39;</span><span class="p">]</span> <span class="c1"># &#39;plasma&#39; or &#39;viridis&#39;</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">colormap</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">])</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">plc</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="c1"># Create a divider for the existing axes instance</span>
+        <span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="c1"># Append axes to the right of the main axes.</span>
+        <span class="n">cax1</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;5%&quot;</span><span class="p">,</span> <span class="n">pad</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="c1"># Add the colorbar to the figure</span>
+        <span class="n">cbar1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">cax</span> <span class="o">=</span> <span class="n">cax1</span><span class="p">)</span>
+
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;start1&#39;</span><span class="p">]</span> <span class="o">//</span> <span class="n">bin_size</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s1">&#39;start2&#39;</span><span class="p">]</span> <span class="o">//</span> <span class="n">bin_size</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolors</span> <span class="o">=</span> <span class="n">colors</span><span class="p">)</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span> <span class="o">=</span> <span class="n">colormap</span><span class="p">)</span>
+
+        <span class="c1"># Append axes to the bottom of the main axes.</span>
+        <span class="n">cax2</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;5%&quot;</span><span class="p">,</span> <span class="n">pad</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">)</span>
+
+        <span class="c1"># Add the second colorbar to the figure</span>
+        <span class="n">cbar2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">cax</span> <span class="o">=</span> <span class="n">cax2</span><span class="p">,</span> <span class="n">orientation</span> <span class="o">=</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="p">)</span>
+        <span class="n">cbar2</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pattern score - threshold : </span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;pattern_</span><span class="si">{</span><span class="n">case</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">chromosome</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">),</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;pdf&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sébastien Gradit.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

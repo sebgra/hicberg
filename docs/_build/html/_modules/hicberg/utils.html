@@ -1,0 +1,1631 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hicberg.utils &mdash; hicberg 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            hicberg
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">hicberg</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hicberg.html">hicberg package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hicberg</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hicberg.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for hicberg.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">shutil</span> <span class="k">as</span> <span class="nn">sh</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">getcwd</span><span class="p">,</span> <span class="n">mkdir</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">choice</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">median_abs_deviation</span>
+
+<span class="kn">import</span> <span class="nn">pysam</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">import</span> <span class="nn">cooler</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="k">as</span> <span class="nn">gridspec</span>
+
+<span class="kn">import</span> <span class="nn">hicberg.io</span> <span class="k">as</span> <span class="nn">hio</span>
+<span class="kn">import</span> <span class="nn">hicberg.statistics</span> <span class="k">as</span> <span class="nn">hst</span>
+<span class="kn">from</span> <span class="nn">hicberg</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<div class="viewcode-block" id="sum_mat_bins">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.sum_mat_bins">[docs]</a>
+<span class="k">def</span> <span class="nf">sum_mat_bins</span><span class="p">(</span><span class="n">matrix</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adapted from : https://github.com/koszullab/hicstuff/tree/master/hicstuff</span>
+<span class="sd">    Compute the sum of matrices bins (i.e. rows or columns) using</span>
+<span class="sd">    only the upper triangle, assuming symmetrical matrices.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mat : scipy.sparse.coo_matrix</span>
+<span class="sd">        Contact map in sparse format, either in upper triangle or</span>
+<span class="sd">        full matrix.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray :</span>
+<span class="sd">        1D array of bin sums.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Equivalaent to row or col sum on a full matrix</span>
+    <span class="c1"># Note: mat.sum returns a &#39;matrix&#39; object. A1 extracts the 1D flat array</span>
+    <span class="c1"># from the matrix</span>
+
+    <span class="k">if</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+        <span class="k">return</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">matrix</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">else</span> <span class="p">:</span>
+
+        <span class="k">return</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="generate_gaussian_kernel">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.generate_gaussian_kernel">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_gaussian_kernel</span><span class="p">(</span><span class="n">size</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sigma</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a 2D Gaussian kernel of a given size and standard deviation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    size : int, optional</span>
+<span class="sd">        Size of the kernel, by default 1</span>
+<span class="sd">    sigma : int, optional</span>
+<span class="sd">        Standard deviation to use for the kernel build, by default 2</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.array</span>
+<span class="sd">        2D Gaussian kernel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">sigma</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">kern1d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">kern2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">kern1d</span><span class="p">,</span> <span class="n">kern1d</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">kern2d</span> <span class="o">/</span> <span class="n">kern2d</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="detrend_matrix">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.detrend_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">detrend_matrix</span><span class="p">(</span><span class="n">matrix</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detrend a matrix by P(s).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : np.array</span>
+<span class="sd">        Hi-C matrix to detrend.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.array</span>
+<span class="sd">        Detrended Hi-C matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">zeros_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="n">zeros_indexes</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># Cis case</span>
+    <span class="k">if</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+        <span class="n">detrended_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">detrended_matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">matrix</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">diagonal_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">detrended_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">diagonal_mean</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">detrended_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">:],</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">:])</span> <span class="o">/</span> <span class="n">diagonal_mean</span><span class="p">)</span>
+
+    <span class="c1"># Trans case</span>
+    <span class="k">else</span><span class="p">:</span>   
+        <span class="n">expected_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="n">detrended_matrix</span> <span class="o">=</span> <span class="n">matrix</span> <span class="o">/</span> <span class="n">expected_value</span>
+
+    <span class="k">return</span> <span class="n">detrended_matrix</span></div>
+
+
+<div class="viewcode-block" id="get_bad_bins">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.get_bad_bins">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bad_bins</span><span class="p">(</span><span class="n">matrix</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">n_mads</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detect bad bins (poor interacting bins) in a normalized Hi-C matrix and return their indexes.</span>
+<span class="sd">    Bins where the nan sum of interactions is zero  are considered as bad bins.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : Normalized Hi-C matrix to detect bad bins from, by default None.</span>
+<span class="sd">        </span>
+<span class="sd">    n_mads : int, optional</span>
+<span class="sd">        Number of median absolute deviations to set poor interacting bins threshold, by default 2</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.array</span>
+<span class="sd">        Indexes of bad bins.</span>
+<span class="sd">    &quot;&quot;&quot;</span>   
+
+    <span class="c1"># Cis case</span>
+    <span class="k">if</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+        <span class="n">nan_sum_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">bad_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_sum_bins</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">bad_indexes</span><span class="p">)</span>
+    
+    <span class="c1"># Trans case</span>
+    <span class="k">else</span> <span class="p">:</span>
+
+        <span class="n">x_sum_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_sum_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">x_bad_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x_sum_bins</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_bad_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_sum_bins</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> 
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">x_bad_indexes</span><span class="p">,</span> <span class="n">y_bad_indexes</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="nan_conv">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.nan_conv">[docs]</a>
+<span class="k">def</span> <span class="nf">nan_conv</span><span class="p">(</span><span class="n">matrix</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kernel</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">nan_threshold</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom convolution function that takes into account nan values when convolving.</span>
+<span class="sd">    Used to compute the local density of a Hi-C matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    matrix : np.array, optional</span>
+<span class="sd">        Hi-C matrix to detect bad bins from, by default None</span>
+<span class="sd">    kernel : np.array, optional</span>
+<span class="sd">        Kernel to use for convolution (dimension must be odd), by default None</span>
+<span class="sd">    nan_threshold : bool, optional</span>
+<span class="sd">        Set wether or not convolution return nan if not enough value are caught, by default False</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.array</span>
+<span class="sd">        Convolution product of the matrix and the kernel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mat_cp</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">half_kernel</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">density_threshold</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">half_kernel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="c1"># Cis case</span>
+    <span class="k">if</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half_kernel</span> <span class="p">,</span> <span class="p">(</span><span class="n">mat_cp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">half_kernel</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span> 
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half_kernel</span> <span class="p">,</span> <span class="p">(</span><span class="n">mat_cp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">half_kernel</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span> 
+
+                <span class="n">patch</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="n">half_kernel</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span>  <span class="n">half_kernel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="p">(</span><span class="n">half_kernel</span><span class="p">)</span> <span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">half_kernel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+                <span class="c1"># Disrupt the kernel if too many nan values</span>
+                <span class="k">if</span> <span class="n">nan_threshold</span><span class="p">:</span>
+                    <span class="n">nb_nan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">patch</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">nb_nan</span> <span class="o">&gt;</span> <span class="n">density_threshold</span><span class="p">:</span>
+
+                        <span class="n">mat_cp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                        <span class="k">continue</span>
+
+                <span class="n">masked_patch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">MaskedArray</span><span class="p">(</span><span class="n">patch</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">patch</span><span class="p">))</span>
+                <span class="n">mat_cp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">masked_patch</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">)</span>
+
+    <span class="c1"># Trans case</span>
+    <span class="k">else</span> <span class="p">:</span> 
+
+        <span class="n">mean_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half_kernel</span> <span class="p">,</span> <span class="p">(</span><span class="n">mat_cp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">half_kernel</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span> 
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">half_kernel</span> <span class="p">,</span> <span class="p">(</span><span class="n">mat_cp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">half_kernel</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span> 
+
+                <span class="n">patch</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="n">half_kernel</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span>  <span class="n">half_kernel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">,</span> <span class="n">j</span> <span class="o">-</span> <span class="p">(</span><span class="n">half_kernel</span><span class="p">)</span> <span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="n">half_kernel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">nb_nan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">patch</span><span class="p">))</span>
+
+                <span class="c1"># Disrupt the kernel if too many nan values</span>
+                <span class="k">if</span> <span class="n">nan_threshold</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">nb_nan</span> <span class="o">&gt;</span> <span class="n">density_threshold</span><span class="p">:</span>
+
+                        <span class="n">mat_cp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                        <span class="k">continue</span>
+
+                <span class="n">masked_patch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">MaskedArray</span><span class="p">(</span><span class="n">patch</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">patch</span><span class="p">))</span>
+                <span class="n">conv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">masked_patch</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">conv</span><span class="p">):</span>
+
+                    <span class="n">mat_cp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">mat_cp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">conv</span>
+
+    <span class="k">return</span> <span class="n">mat_cp</span></div>
+
+
+
+<div class="viewcode-block" id="get_local_density">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.get_local_density">[docs]</a>
+<span class="k">def</span> <span class="nf">get_local_density</span><span class="p">(</span><span class="n">cooler_file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">chrom_name</span> <span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">size</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span> <span class="n">sigma</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">n_mads</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nan_threshold</span> <span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.</span>
+<span class="sd">    Density is obtained by getting the local density of each pairwise bin using a gaussian kernel convolution.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cooler_file : str, optional</span>
+<span class="sd">        Path to Hi-C matrix (or sub-matrix) to dget density from, by default None, by default None</span>
+<span class="sd">    chrom_name : tuple, optional</span>
+<span class="sd">        Tuple containing the sub-matrix to fetch, by default (None, None)</span>
+<span class="sd">    size : int, optional</span>
+<span class="sd">        Size of the gaussian kernel to use, by default 5</span>
+<span class="sd">    sigma : int, optional</span>
+<span class="sd">        Standard deviation to use for the kernel, by default 2</span>
+<span class="sd">    n_mads : int, optional</span>
+<span class="sd">        Number of median absolute deviations to set poor interacting bins threshold, by default 2</span>
+<span class="sd">    nan_threshold : bool, optional</span>
+<span class="sd">        Set wether or not convolution return nan if not enough value are caught, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.array</span>
+<span class="sd">        Map of local contact density.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Kernel size must be odd&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cooler file : </span><span class="si">{</span><span class="n">cooler_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1">#Load cooler file</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">cooler</span><span class="o">.</span><span class="n">Cooler</span><span class="p">(</span><span class="n">cooler_file</span><span class="p">)</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">balance</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">chrom_name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chrom_name</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+
+    <span class="n">mat_cp</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mat_cp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">bad_bins</span> <span class="o">=</span> <span class="n">get_bad_bins</span><span class="p">(</span><span class="n">mat_cp</span><span class="p">,</span> <span class="n">n_mads</span> <span class="o">=</span> <span class="n">n_mads</span><span class="p">)</span>
+    
+    <span class="n">detrended_matrix</span> <span class="o">=</span> <span class="n">detrend_matrix</span><span class="p">(</span><span class="n">mat_cp</span><span class="p">)</span>
+
+
+    <span class="n">log_detrended_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">detrended_matrix</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">detrended_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">detrended_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+        <span class="n">log_detrended_matrix</span><span class="p">[</span><span class="n">bad_bins</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">log_detrended_matrix</span><span class="p">[:,</span> <span class="n">bad_bins</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="k">else</span> <span class="p">:</span>
+
+        <span class="n">log_detrended_matrix</span><span class="p">[</span><span class="n">bad_bins</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">log_detrended_matrix</span><span class="p">[:,</span> <span class="n">bad_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">generate_gaussian_kernel</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="n">log_density</span> <span class="o">=</span> <span class="n">nan_conv</span><span class="p">(</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">log_detrended_matrix</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">nan_threshold</span> <span class="o">=</span> <span class="n">nan_threshold</span><span class="p">)</span>
+
+    <span class="n">density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_density</span><span class="p">)</span>
+
+    <span class="c1"># Edge cases correction</span>
+    <span class="k">if</span> <span class="n">density</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">density</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">density</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+
+            <span class="c1"># TODO : replace by 1 ?</span>
+            <span class="n">density</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">))</span> <span class="k">if</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="p">)))</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
+
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">density</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+
+            <span class="n">density</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
+            
+    <span class="k">return</span> <span class="p">(</span><span class="n">chrom_name</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_chromosomes_sizes">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.get_chromosomes_sizes">[docs]</a>
+<span class="k">def</span> <span class="nf">get_chromosomes_sizes</span><span class="p">(</span><span class="n">genome</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a dictionary save in .npy format where keys are chromosome name and value are size in bp.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    genome : str, optional</span>
+<span class="sd">        Path to the genome, by default None</span>
+
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the dictionary, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start getting chromosome sizes&quot;</span><span class="p">)</span>
+
+    <span class="n">genome_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">genome_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Genome file </span><span class="si">{</span><span class="n">genome_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="n">chrom_sizes</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;chromosome_sizes.npy&quot;</span>
+
+    <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">genome_path</span><span class="p">,</span><span class="s2">&quot;fasta&quot;</span><span class="p">):</span>
+
+        <span class="n">chrom_sizes</span><span class="p">[</span><span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">chrom_sizes</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chromosome sizes have been saved in </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_bin_table">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.get_bin_table">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bin_table</span><span class="p">(</span><span class="n">chrom_sizes_dict</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;chromosome_sizes.npy&quot;</span><span class="p">,</span> <span class="n">bins</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create bin table containing start and end position for fixed size bin per chromosome.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    chrom_sizes_dict : str</span>
+<span class="sd">        Path to a dictionary containing chromosome sizes as {chromosome : size} saved in .npy format. By default chromosome_sizes.npy</span>
+<span class="sd">    bins : int</span>
+<span class="sd">        Size of the desired bin, by default 2000.</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the dictionary, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start getting bin table&quot;</span><span class="p">)</span>
+
+    <span class="n">chrom_sizes_dict_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">chrom_sizes_dict</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">chrom_sizes_dict_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Genome file </span><span class="si">{</span><span class="n">chrom_sizes_dict_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;fragments_fixed_sizes.txt&quot;</span>
+
+    <span class="n">chrom_size_dic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">chrom_sizes_dict_path</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">chr_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_out</span><span class="p">:</span>
+        
+        <span class="k">for</span> <span class="n">chrom</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">chrom_size_dic</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">chrom_size_dic</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+
+            <span class="n">curr_chr</span><span class="p">,</span> <span class="n">curr_length</span> <span class="o">=</span> <span class="n">chrom</span><span class="p">,</span> <span class="n">length</span>
+            <span class="n">chr_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">curr_length</span> <span class="o">%</span> <span class="n">bins</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">interval_end</span> <span class="o">=</span> <span class="n">curr_length</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">interval_end</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">curr_length</span> <span class="o">+</span> <span class="n">bins</span><span class="p">)</span> <span class="o">/</span> <span class="n">bins</span><span class="p">))</span> <span class="o">*</span> <span class="n">bins</span>
+
+                <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">interval_end</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
+                    <span class="n">curr_start</span> <span class="o">=</span> <span class="n">val</span>
+
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">+</span> <span class="n">bins</span> <span class="o">&gt;</span> <span class="n">curr_length</span><span class="p">:</span>
+
+                        <span class="n">curr_end</span> <span class="o">=</span> <span class="n">curr_length</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">curr_end</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="n">bins</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">chr_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">val</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                        <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">f_out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="n">curr_chr</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">curr_start</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+                        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">curr_end</span><span class="p">))</span>
+                        <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+        <span class="c1"># close the output fragment file</span>
+        <span class="n">f_out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="is_duplicated">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_duplicated">[docs]</a>
+<span class="k">def</span> <span class="nf">is_duplicated</span><span class="p">(</span><span class="n">read</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if read from pysam AlignmentFile is mapping more than once along the genome.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read : pysam.AlignedSegment</span>
+<span class="sd">        pysam AlignedSegment object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the read is duplicated i.e. mapping to more than one position.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+    <span class="k">if</span> <span class="s2">&quot;XS&quot;</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">read</span><span class="o">.</span><span class="n">get_tags</span><span class="p">()]:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_poor_quality">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_poor_quality">[docs]</a>
+<span class="k">def</span> <span class="nf">is_poor_quality</span><span class="p">(</span><span class="n">read</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">mapq</span> <span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if read from pysam AlignmentFile is under mapping quality threshold</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read : pysam.AlignedSegment</span>
+<span class="sd">        pysam AlignedSegment object.</span>
+<span class="sd">    mapq : int</span>
+<span class="sd">        Mapping quality threshold.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the read quality is below mapq threshold.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">read</span><span class="o">.</span><span class="n">mapping_quality</span> <span class="o">&lt;</span> <span class="n">mapq</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_unqualitative">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_unqualitative">[docs]</a>
+<span class="k">def</span> <span class="nf">is_unqualitative</span><span class="p">(</span><span class="n">read</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the read is not qualitative.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read : pysam.AlignedSegment</span>
+<span class="sd">        pysam AlignedSegment object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the read is not qualitative, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">read</span><span class="o">.</span><span class="n">mapping_quality</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_unmapped">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_unmapped">[docs]</a>
+<span class="k">def</span> <span class="nf">is_unmapped</span><span class="p">(</span><span class="n">read</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if read from pysam AlignmentFile is unmapped</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read : pysam.AlignedSegment</span>
+<span class="sd">        pysam AlignedSegment object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the read is unmapped.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">if</span> <span class="n">read</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_reverse">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_reverse">[docs]</a>
+<span class="k">def</span> <span class="nf">is_reverse</span><span class="p">(</span><span class="n">read</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if read from pysam AlignmentFile is reverse</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read : pysam.AlignedSegment</span>
+<span class="sd">        pysam AlignedSegment object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the read is reverse.</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+
+    <span class="k">if</span> <span class="n">read</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span> <span class="ow">or</span> <span class="n">read</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="classify_reads">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.classify_reads">[docs]</a>
+<span class="k">def</span> <span class="nf">classify_reads</span><span class="p">(</span><span class="n">bam_couple</span> <span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;1.sorted.bam&quot;</span><span class="p">,</span> <span class="s2">&quot;2.sorted.bam&quot;</span><span class="p">),</span> <span class="n">chromosome_sizes</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;chromosome_sizes.npy&quot;</span><span class="p">,</span> <span class="n">mapq</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">35</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classification of pairs of reads in 2 different groups:</span>
+<span class="sd">        Group 0) --&gt; (Unmappable) - files :group0.1.bam and group0.2.bam</span>
+<span class="sd">        Group 1) --&gt; (Uniquely Mapped  Uniquely Mapped) - files :group1.1.bam and group1.2.bam</span>
+<span class="sd">        Group 2) --&gt; (Uniquely Mapped Multi Mapped) or (Multi Mapped  Multi Mapped).- files :group2.1.bam and group2.2.bam</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bam_couple : tuple[str, str]</span>
+<span class="sd">        Tuple containing the paths to the forward and reverse alignment files. By default (&quot;1.sorted.bam&quot;, &quot;2.sorted.bam&quot;)</span>
+<span class="sd">    chromosome_sizes : str, optional</span>
+<span class="sd">        Path to a chromosome size dictionary save in .npy format, by default chromosome_sizes.npy</span>
+<span class="sd">    mapq : int, optional</span>
+<span class="sd">        Minimal read quality under which a Hi-C read pair will not be kept, by default 30</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the classified alignment files, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">forward_bam_file_path</span><span class="p">,</span> <span class="n">reverse_bam_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">bam_couple</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">bam_couple</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">chromosome_sizes_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">chromosome_sizes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">forward_bam_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forward alignment file </span><span class="si">{</span><span class="n">forward_bam_file_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">reverse_bam_file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reverse alignment file </span><span class="si">{</span><span class="n">reverse_bam_file_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">chromosome_sizes_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chromosome sizes file </span><span class="si">{</span><span class="n">chromosome_sizes_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="n">chromosome_sizes_dic</span> <span class="o">=</span> <span class="n">hio</span><span class="o">.</span><span class="n">load_dictionary</span><span class="p">(</span><span class="n">chromosome_sizes_path</span><span class="p">)</span>
+
+    <span class="c1">#opening files to parse</span>
+    <span class="n">forward_bam_file</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">forward_bam_file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+    <span class="n">reverse_bam_file</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">reverse_bam_file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+
+    <span class="c1">#retrieve headers</span>
+    <span class="n">forward_header</span> <span class="o">=</span> <span class="n">forward_bam_file</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">reverse_header</span> <span class="o">=</span> <span class="n">reverse_bam_file</span><span class="o">.</span><span class="n">header</span>
+
+    <span class="c1"># create iterators</span>
+    <span class="n">forward_bam_file_iter</span> <span class="o">=</span> <span class="n">bam_iterator</span><span class="p">(</span><span class="n">forward_bam_file_path</span><span class="p">)</span>
+    <span class="n">reverse_bam_file_iter</span> <span class="o">=</span> <span class="n">bam_iterator</span><span class="p">(</span><span class="n">reverse_bam_file_path</span><span class="p">)</span>
+
+    <span class="n">unmapped_bam_file_foward</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;group0.1.bam&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">forward_bam_file</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">forward_header</span><span class="p">)</span>
+    <span class="n">unmapped_bam_file_reverse</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;group0.2.bam&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">reverse_bam_file</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">reverse_header</span><span class="p">)</span>
+
+    <span class="n">uniquely_mapped_bam_file_foward</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;group1.1.bam&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">forward_bam_file</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">forward_header</span><span class="p">)</span>
+    <span class="n">uniquely_mapped_bam_file_reverse</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;group1.2.bam&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">reverse_bam_file</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">reverse_header</span><span class="p">)</span>
+
+    <span class="n">multi_mapped_bam_file_foward</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;group2.1.bam&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">forward_bam_file</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">forward_header</span><span class="p">)</span>
+    <span class="n">multi_mapped_bam_file_reverse</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;group2.2.bam&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">reverse_bam_file</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">reverse_header</span><span class="p">)</span>
+
+    <span class="n">nb_unmapped_reads_forward</span><span class="p">,</span> <span class="n">nb_unmapped_reads_reverse</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">nb_uniquely_mapped_reads_forward</span><span class="p">,</span> <span class="n">nb_uniquely_mapped_reads_reverse</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="n">nb_multi_mapped_reads_forward</span><span class="p">,</span> <span class="n">nb_multi_mapped_reads_reverse</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">forward_block</span><span class="p">,</span> <span class="n">reverse_block</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">forward_bam_file_iter</span><span class="p">,</span> <span class="n">reverse_bam_file_iter</span><span class="p">):</span>
+
+        <span class="n">unmapped_couple</span><span class="p">,</span> <span class="n">multi_mapped_couple</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span>
+
+        <span class="n">forward_reverse_combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">forward_block</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reverse_block</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">forward_reverse_combinations</span><span class="p">:</span>
+
+            <span class="k">if</span>  <span class="n">is_unmapped</span><span class="p">(</span><span class="n">combination</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="ow">or</span> <span class="n">is_unmapped</span><span class="p">(</span><span class="n">combination</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+
+                <span class="n">unmapped_couple</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">is_duplicated</span><span class="p">(</span><span class="n">combination</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span> <span class="n">is_poor_quality</span><span class="p">(</span><span class="n">combination</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mapq</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_duplicated</span><span class="p">(</span><span class="n">combination</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">or</span> <span class="n">is_poor_quality</span><span class="p">(</span><span class="n">combination</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mapq</span><span class="p">):</span>
+
+                <span class="n">multi_mapped_couple</span> <span class="o">=</span> <span class="kc">True</span>
+                
+                <span class="k">break</span>
+
+        <span class="k">for</span> <span class="n">forward_read</span> <span class="ow">in</span> <span class="n">forward_block</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">unmapped_couple</span> <span class="p">:</span>
+
+                <span class="n">unmapped_bam_file_foward</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">forward_read</span><span class="p">)</span>
+                <span class="n">nb_unmapped_reads_forward</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">elif</span> <span class="n">multi_mapped_couple</span><span class="p">:</span>
+
+                <span class="n">forward_read</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;XG&quot;</span><span class="p">,</span> <span class="n">chromosome_sizes_dic</span><span class="p">[</span><span class="n">forward_read</span><span class="o">.</span><span class="n">reference_name</span><span class="p">])</span>
+                <span class="n">multi_mapped_bam_file_foward</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">forward_read</span><span class="p">)</span>
+                <span class="n">nb_multi_mapped_reads_forward</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">else</span><span class="p">:</span> 
+
+                <span class="n">forward_read</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;XG&quot;</span><span class="p">,</span> <span class="n">chromosome_sizes_dic</span><span class="p">[</span><span class="n">forward_read</span><span class="o">.</span><span class="n">reference_name</span><span class="p">])</span>
+                <span class="n">uniquely_mapped_bam_file_foward</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">forward_read</span><span class="p">)</span>
+                <span class="n">nb_uniquely_mapped_reads_forward</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">reverse_read</span> <span class="ow">in</span> <span class="n">reverse_block</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">unmapped_couple</span><span class="p">:</span>
+
+                <span class="n">unmapped_bam_file_reverse</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">reverse_read</span><span class="p">)</span>
+                <span class="n">nb_unmapped_reads_reverse</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">elif</span> <span class="n">multi_mapped_couple</span><span class="p">:</span>
+
+                <span class="n">reverse_read</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;XG&quot;</span><span class="p">,</span> <span class="n">chromosome_sizes_dic</span><span class="p">[</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">reference_name</span><span class="p">])</span>
+                <span class="n">multi_mapped_bam_file_reverse</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">reverse_read</span><span class="p">)</span>
+                <span class="n">nb_multi_mapped_reads_reverse</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">else</span> <span class="p">:</span> 
+
+                <span class="n">reverse_read</span><span class="o">.</span><span class="n">set_tag</span><span class="p">(</span><span class="s2">&quot;XG&quot;</span><span class="p">,</span> <span class="n">chromosome_sizes_dic</span><span class="p">[</span><span class="n">reverse_read</span><span class="o">.</span><span class="n">reference_name</span><span class="p">])</span>
+                <span class="n">uniquely_mapped_bam_file_reverse</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">reverse_read</span><span class="p">)</span>
+                <span class="n">nb_uniquely_mapped_reads_reverse</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1">#closing files</span>
+    <span class="n">forward_bam_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">reverse_bam_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">unmapped_bam_file_foward</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">unmapped_bam_file_reverse</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">uniquely_mapped_bam_file_foward</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">uniquely_mapped_bam_file_reverse</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">multi_mapped_bam_file_foward</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">multi_mapped_bam_file_reverse</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Files for the different groups have been saved in </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of unmapped reads in forward file : </span><span class="si">{</span><span class="n">nb_unmapped_reads_forward</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of unmapped reads in reverse file : </span><span class="si">{</span><span class="n">nb_unmapped_reads_reverse</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of uniquely mapped reads in forward file : </span><span class="si">{</span><span class="n">nb_uniquely_mapped_reads_forward</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of uniquely mapped reads in reverse file : </span><span class="si">{</span><span class="n">nb_uniquely_mapped_reads_reverse</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of multi mapped reads in forward file : </span><span class="si">{</span><span class="n">nb_multi_mapped_reads_forward</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of multi mapped reads in reverse file : </span><span class="si">{</span><span class="n">nb_multi_mapped_reads_reverse</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+    <span class="c1"># Cleaning files after classification</span>
+    <span class="c1"># forward_bam_file_path.unlink()</span>
+    <span class="c1"># reverse_bam_file_path.unlink()</span>
+
+<div class="viewcode-block" id="is_intra_chromosome">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_intra_chromosome">[docs]</a>
+<span class="k">def</span> <span class="nf">is_intra_chromosome</span><span class="p">(</span><span class="n">read_forward</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return True if two reads of a pair came from the same chromosome.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read_forward : pysam.AlignedSegment</span>
+<span class="sd">        Forward read of the pair.</span>
+<span class="sd">    read_reverse : pysam.AlignedSegment</span>
+<span class="sd">        Reverse read of the pair.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the pair is intra-chromosomic, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reads are not coming from the same pair&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">reference_name</span> <span class="o">==</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span> </div>
+
+
+<div class="viewcode-block" id="get_ordered_reads">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.get_ordered_reads">[docs]</a>
+<span class="k">def</span> <span class="nf">get_ordered_reads</span><span class="p">(</span><span class="n">read_forward</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the ordered pair of reads in the same chromosome as the two reads .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read_forward : pysam.AlignedSegment</span>
+<span class="sd">        Forward read to compare with the reverse read.</span>
+<span class="sd">    read_reverse : pysam.AlignedSegment</span>
+<span class="sd">        Reverse read to compare with the forward read.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[pysam.AlignedSegment, pysam.AlignedSegment]</span>
+<span class="sd">        The ordered pair of reads in the same chromosome as the two reads.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+            
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The two reads must come from the same pair.&quot;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">is_reverse</span><span class="p">(</span><span class="n">read_forward</span><span class="p">):</span>
+
+        <span class="n">forward_start</span> <span class="o">=</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">reference_end</span>
+    
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_reverse</span><span class="p">(</span><span class="n">read_forward</span><span class="p">):</span>
+                
+        <span class="n">forward_start</span> <span class="o">=</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">reference_start</span>
+
+    <span class="k">if</span> <span class="n">is_reverse</span><span class="p">(</span><span class="n">read_reverse</span><span class="p">):</span>
+            
+        <span class="n">reverse_start</span> <span class="o">=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_end</span>
+
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">is_reverse</span><span class="p">(</span><span class="n">read_reverse</span><span class="p">):</span>
+    
+        <span class="n">reverse_start</span> <span class="o">=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_start</span>
+
+    
+    <span class="k">if</span> <span class="n">forward_start</span> <span class="o">&lt;=</span> <span class="n">reverse_start</span><span class="p">:</span>
+        
+        <span class="k">return</span> <span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">)</span>
+    
+    <span class="k">elif</span> <span class="n">forward_start</span> <span class="o">&gt;</span> <span class="n">reverse_start</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">read_reverse</span><span class="p">,</span> <span class="n">read_forward</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_weird">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_weird">[docs]</a>
+<span class="k">def</span> <span class="nf">is_weird</span><span class="p">(</span><span class="n">read_forward</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if two reads are forming a weird pattern .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read_forward : pysam.AlignedSegment</span>
+<span class="sd">        Forward read of the pair</span>
+<span class="sd">    read_reverse : pysam.AlignedSegment</span>
+<span class="sd">        Reverse read of the pair</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the two reads are forming a weird pattern, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The two reads must be mapped on the same chromosome.&quot;</span><span class="p">)</span>
+
+    <span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="o">=</span> <span class="n">get_ordered_reads</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">256</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">256</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">256</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_uncut">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_uncut">[docs]</a>
+<span class="k">def</span> <span class="nf">is_uncut</span><span class="p">(</span><span class="n">read_forward</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if two reads are forming an uncut pattern .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read_forward : pysam.AlignedSegment</span>
+<span class="sd">        Forward read of the pair</span>
+<span class="sd">    read_reverse : pysam.AlignedSegment</span>
+<span class="sd">        Reverse read of the pair</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the two reads are forming an uncut pattern, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The two reads must be mapped on the same chromosome.&quot;</span><span class="p">)</span>
+    
+    <span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="o">=</span> <span class="n">get_ordered_reads</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">256</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">256</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    
+
+<div class="viewcode-block" id="is_circle">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_circle">[docs]</a>
+<span class="k">def</span> <span class="nf">is_circle</span><span class="p">(</span><span class="n">read_forward</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if two reads are forming a loop pattern .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read_forward : pysam.AlignedSegment</span>
+<span class="sd">        Forward read of the pair</span>
+<span class="sd">    read_reverse : pysam.AlignedSegment</span>
+<span class="sd">        Reverse read of the pair</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the two reads are forming a loop pattern, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reads are not coming from the same pair&quot;</span><span class="p">)</span>
+
+    <span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="o">=</span> <span class="n">get_ordered_reads</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">16</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">256</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">272</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="get_cis_distance">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.get_cis_distance">[docs]</a>
+<span class="k">def</span> <span class="nf">get_cis_distance</span><span class="p">(</span><span class="n">read_forward</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">circular</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the distance between two reads in the same pairwise alignment .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read_forward : pysam.aligned_segment</span>
+<span class="sd">        Forward read of the pair</span>
+<span class="sd">    read_reverse : pysam.AlignedSegment</span>
+<span class="sd">        Reverse read of the pair</span>
+<span class="sd">    circular : str, optional</span>
+<span class="sd">        Name of the chromosomes to consider as circular, by default None, by default &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Genomic distance separating the two reads (bp).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reads are not coming from the same pair&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_intra_chromosome</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">):</span>
+
+        <span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="o">=</span> <span class="n">get_ordered_reads</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_weird</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">):</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">reference_start</span><span class="p">,</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_start</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">is_uncut</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">):</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">reference_start</span><span class="p">,</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_end</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">is_circle</span><span class="p">(</span><span class="n">read_forward</span><span class="p">,</span> <span class="n">read_reverse</span><span class="p">):</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">reference_end</span><span class="p">,</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_start</span><span class="p">))</span>
+
+        <span class="c1"># circular mode</span>
+        <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">reference_name</span> <span class="ow">in</span> <span class="n">circular</span><span class="p">:</span>
+
+            <span class="n">clockwise_distance</span> <span class="o">=</span> <span class="n">distance</span>
+            <span class="n">anti_clockwise_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">read_forward</span><span class="o">.</span><span class="n">get_tag</span><span class="p">(</span><span class="s2">&quot;XG&quot;</span><span class="p">),</span> <span class="n">distance</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">clockwise_distance</span><span class="p">,</span> <span class="n">anti_clockwise_distance</span><span class="p">])</span>
+
+        <span class="c1"># linear mode</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">distance</span></div>
+
+
+
+<div class="viewcode-block" id="bam_iterator">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.bam_iterator">[docs]</a>
+<span class="k">def</span> <span class="nf">bam_iterator</span><span class="p">(</span><span class="n">bam_file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an iterator for the given SAM/BAM file (must be query-sorted).</span>
+<span class="sd">    In each call, the alignments of a single read are yielded as a 3-tuple: (list of primary pysam.AlignedSegment, list of supplementary pysam.AlignedSegment, list of secondary pysam.AlignedSegment).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bam : [str]</span>
+<span class="sd">        Path to alignment file in .sam or .bam format.</span>
+
+<span class="sd">    Yields</span>
+<span class="sd">    -------</span>
+<span class="sd">    Iterator[pysam.AlignedSegment]</span>
+<span class="sd">        Yields a list containing pysam AlignmentSegment objects, within which all the reads have the same id.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bam_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">bam_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bam_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BAM file </span><span class="si">{</span><span class="n">bam_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">bam_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">bam_handler</span><span class="p">:</span>
+    
+        <span class="n">alignments</span> <span class="o">=</span> <span class="n">bam_handler</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">until_eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">current_aln</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">alignments</span><span class="p">)</span>
+        <span class="n">current_read_name</span> <span class="o">=</span> <span class="n">current_aln</span><span class="o">.</span><span class="n">query_name</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_aln</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">next_aln</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">alignments</span><span class="p">)</span>
+                <span class="n">next_read_name</span> <span class="o">=</span> <span class="n">next_aln</span><span class="o">.</span><span class="n">query_name</span>
+                <span class="k">if</span> <span class="n">next_read_name</span> <span class="o">!=</span> <span class="n">current_read_name</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="p">(</span><span class="n">block</span><span class="p">)</span>
+                    <span class="n">current_read_name</span> <span class="o">=</span> <span class="n">next_read_name</span>
+                    <span class="n">block</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_aln</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_aln</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">yield</span> <span class="p">(</span><span class="n">block</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="block_counter">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.block_counter">[docs]</a>
+<span class="k">def</span> <span class="nf">block_counter</span><span class="p">(</span><span class="n">forward_bam_file</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reverse_bam_file</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="p">:</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return as a tuple the number of blocks in the forward and reverse bam files.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    forward_bam_file : str, optional</span>
+<span class="sd">        Path to forward .bam alignment file.</span>
+<span class="sd">    reverse_bam_file : str, optional</span>
+<span class="sd">        Path to reverse .bam alignment file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[int, int]</span>
+<span class="sd">        Number of blocks in the forward and reverse bam files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    
+    <span class="n">forward_bam_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">forward_bam_file</span><span class="p">)</span>
+    <span class="n">reverse_bam_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">reverse_bam_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">forward_bam_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BAM file </span><span class="si">{</span><span class="n">forward_bam_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">reverse_bam_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BAM file </span><span class="si">{</span><span class="n">reverse_bam_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+
+    <span class="n">iterator_for</span><span class="p">,</span> <span class="n">iterator_rev</span> <span class="o">=</span> <span class="n">bam_iterator</span><span class="p">(</span><span class="n">forward_bam_path</span><span class="p">),</span> <span class="n">bam_iterator</span><span class="p">(</span><span class="n">reverse_bam_path</span><span class="p">)</span>
+    <span class="n">nb_blocks_for</span><span class="p">,</span> <span class="n">nb_blocks_rev</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">forward_block</span><span class="p">,</span> <span class="n">reverse_block</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">iterator_for</span><span class="p">,</span> <span class="n">iterator_rev</span><span class="p">):</span>
+
+        <span class="n">nb_blocks_for</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">nb_blocks_rev</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="k">return</span> <span class="p">(</span><span class="n">nb_blocks_for</span><span class="p">,</span> <span class="n">nb_blocks_rev</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="chunk_bam">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.chunk_bam">[docs]</a>
+<span class="k">def</span> <span class="nf">chunk_bam</span><span class="p">(</span><span class="n">forward_bam_file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group2.1.bam&quot;</span><span class="p">,</span> <span class="n">reverse_bam_file</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;group2.2.bam&quot;</span><span class="p">,</span> <span class="n">nb_chunks</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split a .bam file into chunks .bam files.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    forward_bam_file : str, optional</span>
+<span class="sd">        Path to forward .bam alignment file, by default group2.1.bam</span>
+<span class="sd">    reverse_bam_file : str, optional</span>
+<span class="sd">        Path to reverse .bam alignment file, by default group2.2.bam</span>
+<span class="sd">    nb_chunks : int, optional</span>
+<span class="sd">        Number of chunks to create, by default 2</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to the folder where to save the classified alignment files, by default None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start chunking BAM files&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">getcwd</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="c1"># Create folder for chunks</span>
+    <span class="n">chunks_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;chunks&quot;</span>
+
+    <span class="k">if</span> <span class="n">chunks_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="n">sh</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">chunks_path</span><span class="p">)</span>
+
+    <span class="n">mkdir</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;chunks&quot;</span><span class="p">)</span>
+
+    <span class="n">forward_bam_path</span><span class="p">,</span> <span class="n">reverse_bam_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">forward_bam_file</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">reverse_bam_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">forward_bam_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BAM file </span><span class="si">{</span><span class="n">forward_bam_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">reverse_bam_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BAM file </span><span class="si">{</span><span class="n">reverse_bam_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found. Please provide a valid path.&quot;</span><span class="p">)</span>
+    
+    <span class="n">forward_bam_handler</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">forward_bam_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+    <span class="n">reverse_bam_handler</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">reverse_bam_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+
+    <span class="c1">#retrieve headers</span>
+    <span class="n">forward_header</span> <span class="o">=</span> <span class="n">forward_bam_handler</span><span class="o">.</span><span class="n">header</span>
+    <span class="n">reverse_header</span> <span class="o">=</span> <span class="n">reverse_bam_handler</span><span class="o">.</span><span class="n">header</span>
+
+    <span class="c1"># Create placeholder for chunks</span>
+
+    <span class="n">output_chunk_for</span> <span class="o">=</span> <span class="n">chunks_path</span> <span class="o">/</span> <span class="s2">&quot;chunk_for_</span><span class="si">%d</span><span class="s2">.bam&quot;</span>
+    <span class="n">output_chunk_rev</span> <span class="o">=</span> <span class="n">chunks_path</span> <span class="o">/</span> <span class="s2">&quot;chunk_rev_</span><span class="si">%d</span><span class="s2">.bam&quot;</span>
+
+    <span class="n">nb_forward_block</span><span class="p">,</span> <span class="n">nb_reverse_blocks</span> <span class="o">=</span> <span class="n">block_counter</span><span class="p">(</span><span class="n">forward_bam_path</span><span class="p">,</span> <span class="n">reverse_bam_path</span><span class="p">)</span>
+
+    <span class="c1"># Compute euclidean division to know chunks sizes</span>
+    <span class="n">size_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divmod</span><span class="p">(</span><span class="n">nb_forward_block</span><span class="p">,</span> <span class="p">(</span><span class="n">nb_chunks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Create list of chunk sizes</span>
+    <span class="n">cut_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">size_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="n">nb_chunks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">cut_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">size_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Instanciate index for list of chunks sizes</span>
+    <span class="n">chunk_size_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Instanciate generators to yield blocks of multi-mapping reads</span>
+    <span class="n">for_iterator</span><span class="p">,</span> <span class="n">rev_iterator</span> <span class="o">=</span> <span class="n">bam_iterator</span><span class="p">(</span><span class="n">forward_bam_path</span><span class="p">),</span> <span class="n">bam_iterator</span><span class="p">(</span><span class="n">reverse_bam_path</span><span class="p">)</span>
+
+    <span class="c1"># Create empty lists to store blocks of reads</span>
+    <span class="n">read_stack_for</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">read_stack_rev</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Set first output file</span>
+    <span class="n">outfile_for</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">output_chunk_for</span><span class="p">)</span> <span class="o">%</span> <span class="n">chunk_size_index</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">forward_bam_handler</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">forward_header</span>
+    <span class="p">)</span>
+    <span class="n">outfile_rev</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">output_chunk_rev</span><span class="p">)</span> <span class="o">%</span> <span class="n">chunk_size_index</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">reverse_bam_handler</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">reverse_header</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Parse alignment file to yield reads blocks</span>
+    <span class="k">for</span> <span class="n">block_for_</span><span class="p">,</span> <span class="n">block_rev_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">for_iterator</span><span class="p">,</span> <span class="n">rev_iterator</span><span class="p">):</span>
+
+        <span class="c1"># Fill containers with blocks</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">read_stack_for</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">cut_list</span><span class="p">[</span><span class="n">chunk_size_index</span><span class="p">]:</span>
+
+            <span class="n">read_stack_for</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block_for_</span><span class="p">)</span>
+            <span class="n">read_stack_rev</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block_rev_</span><span class="p">)</span>
+
+        <span class="c1"># Write reads alignment in chunks once the container is full</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">read_stack_for</span><span class="p">)</span> <span class="o">==</span> <span class="n">cut_list</span><span class="p">[</span><span class="n">chunk_size_index</span><span class="p">]:</span>
+
+            <span class="k">for</span> <span class="n">block_for</span> <span class="ow">in</span> <span class="n">read_stack_for</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">read_for</span> <span class="ow">in</span> <span class="n">block_for</span><span class="p">:</span>
+
+                    <span class="n">outfile_for</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">read_for</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">block_rev</span> <span class="ow">in</span> <span class="n">read_stack_rev</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">read_rev</span> <span class="ow">in</span> <span class="n">block_rev</span><span class="p">:</span>
+
+                    <span class="n">outfile_rev</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">read_rev</span><span class="p">)</span>
+            
+            <span class="c1"># Close current chunk</span>
+            <span class="n">outfile_for</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">outfile_rev</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="c1"># Switch to next chunk</span>
+            <span class="n">chunk_size_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Free containers</span>
+            <span class="n">read_stack_for</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">read_stack_rev</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># Save current block</span>
+            <span class="n">read_stack_for</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block_for_</span><span class="p">)</span>
+            <span class="n">read_stack_rev</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block_rev_</span><span class="p">)</span>
+
+            <span class="c1"># Update output chunk file</span>
+            <span class="n">outfile_for</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">output_chunk_for</span><span class="p">)</span> <span class="o">%</span> <span class="n">chunk_size_index</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">forward_bam_handler</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">forward_header</span>
+            <span class="p">)</span>
+            <span class="n">outfile_rev</span> <span class="o">=</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">output_chunk_rev</span><span class="p">)</span> <span class="o">%</span> <span class="n">chunk_size_index</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">template</span> <span class="o">=</span> <span class="n">reverse_bam_handler</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">reverse_header</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Fill last chunk</span>
+    <span class="k">for</span> <span class="n">block_for</span> <span class="ow">in</span> <span class="n">read_stack_for</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">read_for</span> <span class="ow">in</span> <span class="n">block_for</span><span class="p">:</span>
+
+            <span class="n">outfile_for</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">read_for</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">block_rev</span> <span class="ow">in</span> <span class="n">read_stack_rev</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">read_rev</span> <span class="ow">in</span> <span class="n">block_rev</span><span class="p">:</span>
+
+            <span class="n">outfile_rev</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">read_rev</span><span class="p">)</span>
+    
+    <span class="c1"># Close last chunk</span>
+    <span class="n">outfile_for</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">outfile_rev</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">forward_bam_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">reverse_bam_handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Chunks saved in </span><span class="si">{</span><span class="n">output_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;chunks&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="subsample_restriction_map">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.subsample_restriction_map">[docs]</a>
+<span class="k">def</span> <span class="nf">subsample_restriction_map</span><span class="p">(</span><span class="n">restriction_map</span> <span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rate</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subsample a restriction map by a given rate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    restriction_map : dict, optional</span>
+<span class="sd">        Restriction map saved as a dictionary like chrom_name : list of restriction sites&#39; position, by default None</span>
+<span class="sd">    rate : float, optional</span>
+<span class="sd">        Set the proportion of restriction sites to consider. Avoid memory overflow when restriction maps are very dense, by default 1.0</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict[str, np.ndarray[int]]</span>
+<span class="sd">        Dictionary of sub-sampled restriction map with keys as chromosome names and values as lists of restriction sites&#39; position.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&gt;</span> <span class="n">rate</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">rate</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sub-sampling rate must be between 0.0 and 1.0.&quot;</span><span class="p">)</span>
+    
+
+    <span class="n">subsampled_restriction_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">chromosome</span> <span class="ow">in</span> <span class="n">restriction_map</span><span class="p">:</span>
+            
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">restriction_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)))</span> <span class="o">*</span> <span class="n">rate</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+
+            <span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)]</span> <span class="o">=</span> <span class="n">restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)]</span>
+
+            <span class="k">continue</span>
+
+        <span class="n">size_sample</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">restriction_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)))</span> <span class="o">*</span> <span class="n">rate</span><span class="p">)</span>
+
+        <span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+            <span class="n">restriction_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)),</span> <span class="n">size_sample</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        
+        <span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)])</span>
+
+        <span class="k">if</span> <span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="o">!=</span> <span class="n">restriction_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="n">subsampled_restriction_map</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">)][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">restriction_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">chromosome</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>        
+
+    <span class="k">return</span> <span class="n">subsampled_restriction_map</span></div>
+
+
+
+<div class="viewcode-block" id="max_consecutive_nans">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.max_consecutive_nans">[docs]</a>
+<span class="k">def</span> <span class="nf">max_consecutive_nans</span><span class="p">(</span><span class="n">vector</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the maximum number of consecutive NaN values in a vector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vector : np.ndarray</span>
+<span class="sd">        Vector to get the maximum number of consecutive NaN values from.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Number of maximum consecutive NaN values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="kc">False</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">vector</span><span class="p">),</span> <span class="p">[</span><span class="kc">False</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="o">~</span><span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">mask</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">idx</span><span class="p">[::</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="mad_smoothing">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.mad_smoothing">[docs]</a>
+<span class="k">def</span> <span class="nf">mad_smoothing</span><span class="p">(</span><span class="n">vector</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">window_size</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">nmads</span> <span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply MAD smoothing to an vector .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vector : np.ndarray[int], optional</span>
+<span class="sd">        Data to smooth, by default None</span>
+<span class="sd">    window_size : int or str, optional</span>
+<span class="sd">        Size of the window to perform mean sliding average in. Window is center on current value as [current_value - window_size/2] U [current_value + window_size/2], by default &quot;auto&quot;</span>
+<span class="sd">    nmads : int, optional</span>
+<span class="sd">        number of median absolute deviation tu use, by default 1</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray[int]</span>
+<span class="sd">        MAD smoothed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mad</span> <span class="o">=</span> <span class="n">median_abs_deviation</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span> <span class="o">-</span> <span class="n">nmads</span> <span class="o">*</span> <span class="n">mad</span>
+    <span class="c1"># threshold = 0</span>
+    <span class="n">imputed_nan_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vector</span> <span class="o">&lt;=</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">window_size</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+        <span class="c1"># due to centered window, selected windows for rolling mean is :</span>
+        <span class="c1"># [window_size / 2 &lt;-- center_value --&gt; window_size / 2]</span>
+        <span class="n">window_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_consecutive_nans</span><span class="p">(</span><span class="n">imputed_nan_data</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">averaged_data</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">imputed_nan_data</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">averaged_data</span></div>
+
+
+
+<div class="viewcode-block" id="replace_consecutive_zeros_with_mean">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.replace_consecutive_zeros_with_mean">[docs]</a>
+<span class="k">def</span> <span class="nf">replace_consecutive_zeros_with_mean</span><span class="p">(</span><span class="n">vector</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replace consecutive zeros in a vector with the mean of the flanking values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vector : np.ndarray[float]</span>
+<span class="sd">        Array to replace consecutive zeros in.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray[float]</span>
+<span class="sd">        Array with consecutive zeros replaced by the mean of the flanking values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    
+    <span class="c1"># Initialize variables</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Iterate through the array</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
+        <span class="c1"># Check for the start of a sequence of zeros</span>
+        <span class="k">if</span> <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="c1"># Check for the end of a sequence of zeros</span>
+        <span class="k">elif</span> <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="c1"># Calculate the mean of the values flanking the sequence of zeros</span>
+            <span class="n">mean_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">vector</span><span class="p">[</span><span class="n">start</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">vector</span><span class="p">[</span><span class="n">end</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">vector</span><span class="p">[</span><span class="n">end</span><span class="p">]</span>
+            <span class="c1"># Replace zeros with the mean value</span>
+            <span class="n">vector</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_value</span>
+            <span class="c1"># Reset start and end for the next sequence</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="c1"># Handle case where sequence of zeros goes till the end of the array</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mean_value</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="n">start</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>  <span class="c1"># Use the preceding value or 0 if at the start</span>
+        <span class="n">vector</span><span class="p">[</span><span class="n">start</span><span class="p">:]</span> <span class="o">=</span> <span class="n">mean_value</span>
+    
+    <span class="k">return</span> <span class="n">vector</span></div>
+
+
+
+<div class="viewcode-block" id="get_chunks">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.get_chunks">[docs]</a>
+<span class="k">def</span> <span class="nf">get_chunks</span><span class="p">(</span><span class="n">output_dir</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a tuple containing the paths to the forward and reverse chunks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output_dir : str, optional</span>
+<span class="sd">        Path to get chunks from, by default None</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple([List[str], List[str]]</span>
+<span class="sd">        Tuple containing the paths to the forward and reverse chunks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">forward_chunks</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">+</span> <span class="s1">&#39;/chunks/chunk_for_*.bam&#39;</span><span class="p">))</span>
+    <span class="n">reverse_chunks</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">+</span> <span class="s1">&#39;/chunks/chunk_rev_*.bam&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">forward_chunks</span><span class="p">,</span> <span class="n">reverse_chunks</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_empty_alignment">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_empty_alignment">[docs]</a>
+<span class="k">def</span> <span class="nf">is_empty_alignment</span><span class="p">(</span><span class="n">alignment_file</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if an alignment file is empty.</span>
+<span class="sd">    If empty, return True, else return False.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alignment_file : str</span>
+<span class="sd">        Path to the alignment file to check.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        Return True if the file is empty, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Open the SAM/BAM file</span>
+        <span class="k">with</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignmentFile</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">alignment</span><span class="p">:</span>
+            <span class="c1"># Attempt to fetch the first read</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">alignment</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span>
+                <span class="c1"># If we can fetch a read, the file is not empty</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="c1"># If StopIteration is raised, the file is empty</span>
+                <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Assuming file is &quot;empty&quot; if it doesn&#39;t exist</span></div>
+
+
+<div class="viewcode-block" id="format_blacklist">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.format_blacklist">[docs]</a>
+<span class="k">def</span> <span class="nf">format_blacklist</span><span class="p">(</span><span class="n">blacklist</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format a blacklist file into a dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    blacklist : str, optional</span>
+<span class="sd">        Path to the blacklist file. If set to -1 this is equivalent to None for workflow managers purpose, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict[str, Tuple[int, int]]</span>
+<span class="sd">        Dictionary with chromosome name as key and tuple of start and end as value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">blacklist</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">blacklist</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">blacklist</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Blacklist should be a string&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">blacklist</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">pieces</span> <span class="o">=</span> <span class="n">blacklist</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">chromosomes_found</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span><span class="n">blacklist</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pieces</span><span class="p">])</span>
+        <span class="n">indexes_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">chrom</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">chrom</span> <span class="ow">in</span> <span class="n">chromosomes_found</span><span class="p">}</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">piece</span> <span class="ow">in</span> <span class="n">pieces</span><span class="p">:</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">piece</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">indexes_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">new_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">indexes_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">else</span> <span class="p">:</span> 
+                <span class="n">new_key</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)])</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">blacklist</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">chrom</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">chrom</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">while</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chrom</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">result</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chrom</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">chrom</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">start</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">end</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="is_blacklisted">
+<a class="viewcode-back" href="../../hicberg.html#hicberg.utils.is_blacklisted">[docs]</a>
+<span class="k">def</span> <span class="nf">is_blacklisted</span><span class="p">(</span><span class="n">read_forward</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">read_reverse</span> <span class="p">:</span> <span class="n">pysam</span><span class="o">.</span><span class="n">AlignedSegment</span><span class="p">,</span> <span class="n">blacklist</span> <span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a read pair is blacklisted based on a list of coordiantes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    read_forward : pysam.AlignmentSegment</span>
+<span class="sd">        Forward read of the pair.</span>
+<span class="sd">    read_reverse : pysam.AlignedSegment</span>
+<span class="sd">        Reverse read of the pair.</span>
+<span class="sd">    blacklist : dict[str, Tuple[int, int]]</span>
+<span class="sd">        Blacklist of coordinates to check against. Chromsome name as key and tuple of start and end as value.</span>
+<span class="sd">        Chromosome names should be formatted as &#39;chr1_A&#39;, &#39;chr1_B&#39;, etc. With A and B being the index of the coordinates to blacklist in a given chromosome.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the read pair is blacklisted, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">blacklist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">if</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">query_name</span> <span class="o">!=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">query_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reads are not coming from the same chromosome&quot;</span><span class="p">)</span>
+    
+    <span class="n">forward_start</span> <span class="o">=</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">reference_start</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_reverse</span><span class="p">(</span><span class="n">read_forward</span><span class="p">)</span> <span class="k">else</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">reference_end</span>
+    <span class="n">reverse_start</span> <span class="o">=</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_start</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_reverse</span><span class="p">(</span><span class="n">read_reverse</span><span class="p">)</span> <span class="k">else</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_end</span>
+
+    <span class="n">forward_check</span> <span class="o">=</span> <span class="p">[</span><span class="n">low</span> <span class="o">&lt;</span> <span class="n">forward_start</span> <span class="o">&lt;</span> <span class="n">high</span> <span class="ow">and</span> <span class="n">read_forward</span><span class="o">.</span><span class="n">reference_name</span> <span class="o">==</span> <span class="n">chrom</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">chrom</span><span class="p">,</span> <span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span> <span class="ow">in</span> <span class="n">blacklist</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+    <span class="n">reverse_check</span> <span class="o">=</span> <span class="p">[</span><span class="n">low</span> <span class="o">&lt;</span> <span class="n">reverse_start</span> <span class="o">&lt;</span> <span class="n">high</span> <span class="ow">and</span> <span class="n">read_reverse</span><span class="o">.</span><span class="n">reference_name</span> <span class="o">==</span> <span class="n">chrom</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">chrom</span><span class="p">,</span> <span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span> <span class="ow">in</span> <span class="n">blacklist</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+
+    <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">f_check</span> <span class="ow">or</span> <span class="n">r_check</span> <span class="k">for</span> <span class="n">f_check</span><span class="p">,</span> <span class="n">r_check</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">forward_check</span><span class="p">,</span> <span class="n">reverse_check</span><span class="p">)])</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sébastien Gradit.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
