@@ -9,8 +9,8 @@ on:
 
 jobs:
 
-  # Notre job
-  build-and-deploy:
+    # Notre job
+    build-and-deploy:
     runs-on: ubuntu-latest
 
     # Tâches à effectuer, comme expliquées ci-dessus
