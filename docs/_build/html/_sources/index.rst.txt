@@ -12,7 +12,6 @@ Welcome to hicberg's documentation!
 
    modules
 
-
 Indices and tables
 ==================
 

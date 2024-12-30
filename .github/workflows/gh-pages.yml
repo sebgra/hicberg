@@ -21,7 +21,6 @@ jobs:
           pip3 install sphinx sphinx-rtd-theme
       - name: Build Sphinx Doc
         run: |
-
             make -C docs clean
             make -C docs html
       - name: Deploy Github Pages
