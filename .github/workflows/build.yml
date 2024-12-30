@@ -44,6 +44,8 @@ jobs:
         pytest --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
         coverage run --source=hicberg -m pytest -v tests
         coverage report -m
+        coverage run --source=hicberg -m pytest -v tests --cov-report=xml
+        coverage xml
       shell: micromamba-shell {0}
 
     - name: Upload coverage reports to Codecov with GitHub Action
