@@ -42,6 +42,11 @@ jobs:
       run: |
         pip install pytest-pylint pytest pytest-cov pylint codecov mappy
         pytest --pylint --pylint-error-types=EF --pylint-rcfile=.pylintrc --doctest-modules --doctest-modules hicberg
-        pytest --cov=hicberg
-        codecov
+        coverage run --source=hicberg -m pytest -v tests
+        coverage report -m
       shell: micromamba-shell {0}
+
+    - name: Upload coverage reports to Codecov with GitHub Action
+      uses: codecov/codecov-action@v5
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
