@@ -40,8 +40,8 @@ CLASSIFIERS = [
 
 name = "hicberg"
 
-MAJOR = 0
-MINOR = 1
+MAJOR = 1
+MINOR = 0
 MAINTENANCE = 0
 VERSION = "{}.{}.{}".format(MAJOR, MINOR, MAINTENANCE)
 
@@ -71,7 +71,7 @@ setup(
     classifiers=CLASSIFIERS,
     url=URL,
     packages=find_packages(),
-    python_requires=">=3.6",
+    python_requires=">=3.11",
     include_package_data=True,
     install_requires=REQUIREMENTS,
     long_description_content_type="text/markdown",

@@ -136,7 +136,7 @@ Then, the user will be directly placed in an interactive shell where HiC-BERG ca
 All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command.\
 By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
 
-WEBSITE TO BE ADDED
+https://sebgra.github.io/hicberg/
 
 ```bash
 
@@ -809,8 +809,8 @@ All contributions are welcome, in the form of bug reports, suggestions, document
 The code formatting standard we use is black, with --line-length=79 to follow PEP8 recommendations. We use pytest with the pytest-doctest and pytest-pylint plugins as our testing framework. Ideally, new functions should have associated unit tests, placed in the tests folder. To test the code, you can run:
 
 ```bash
+coverage run --source=hicberg -m pytest -v tests --cov-report=xml
 
-PUT CODE HERE
 ```
 
 ## <a id="authors"></a> Authors
@@ -818,4 +818,3 @@ PUT CODE HERE
 - [@sebgra](https://www.github.com/sebgra)
 
 ## <a id="citation"></a> Citation
-TO BE COMPLETED
