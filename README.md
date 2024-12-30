@@ -11,7 +11,7 @@
 
 ## Documentation
 
-Documentation and analyses examples: https://hicberg.readthedocs.io/en/latest/
+Documentation and tutorial: https://sebgra.github.io/hicberg/
 
 ## Table of contents
 
