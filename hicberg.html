@@ -86,7 +86,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#hicberg.eval.select_reads_multithreads_bckp"><code class="docutils literal notranslate"><span class="pre">select_reads_multithreads_bckp()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#hicberg-filter-module">hicberg.filter module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-hicberg.io">hicberg.io module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#hicberg.io.build_matrix"><code class="docutils literal notranslate"><span class="pre">build_matrix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hicberg.io.build_pairs"><code class="docutils literal notranslate"><span class="pre">build_pairs()</span></code></a></li>
@@ -95,6 +94,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#hicberg.io.load_dictionary"><code class="docutils literal notranslate"><span class="pre">load_dictionary()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hicberg.io.merge_predictions"><code class="docutils literal notranslate"><span class="pre">merge_predictions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hicberg.io.tidy_folder"><code class="docutils literal notranslate"><span class="pre">tidy_folder()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-hicberg.omics">hicberg.omics module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#hicberg.omics.bedgraph_to_bigwig"><code class="docutils literal notranslate"><span class="pre">bedgraph_to_bigwig()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hicberg.omics.format_chrom_sizes"><code class="docutils literal notranslate"><span class="pre">format_chrom_sizes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hicberg.omics.get_bed_coverage"><code class="docutils literal notranslate"><span class="pre">get_bed_coverage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hicberg.omics.get_bedgraph"><code class="docutils literal notranslate"><span class="pre">get_bedgraph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hicberg.omics.preprocess_pairs"><code class="docutils literal notranslate"><span class="pre">preprocess_pairs()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-hicberg.pipeline">hicberg.pipeline module</a><ul>
@@ -225,7 +232,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#hicberg.eval.select_reads_multithreads_bckp"><code class="docutils literal notranslate"><span class="pre">select_reads_multithreads_bckp()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#hicberg-filter-module">hicberg.filter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hicberg.io">hicberg.io module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#hicberg.io.build_matrix"><code class="docutils literal notranslate"><span class="pre">build_matrix()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#hicberg.io.build_pairs"><code class="docutils literal notranslate"><span class="pre">build_pairs()</span></code></a></li>
@@ -234,6 +240,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#hicberg.io.load_dictionary"><code class="docutils literal notranslate"><span class="pre">load_dictionary()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#hicberg.io.merge_predictions"><code class="docutils literal notranslate"><span class="pre">merge_predictions()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#hicberg.io.tidy_folder"><code class="docutils literal notranslate"><span class="pre">tidy_folder()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hicberg.omics">hicberg.omics module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.omics.bedgraph_to_bigwig"><code class="docutils literal notranslate"><span class="pre">bedgraph_to_bigwig()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.omics.format_chrom_sizes"><code class="docutils literal notranslate"><span class="pre">format_chrom_sizes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.omics.get_bed_coverage"><code class="docutils literal notranslate"><span class="pre">get_bed_coverage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.omics.get_bedgraph"><code class="docutils literal notranslate"><span class="pre">get_bedgraph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hicberg.omics.preprocess_pairs"><code class="docutils literal notranslate"><span class="pre">preprocess_pairs()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hicberg.pipeline">hicberg.pipeline module</a><ul>
@@ -1175,9 +1189,6 @@ respectively that do not overlap with any interval in the other set.</p></li>
 </dd></dl>
 
 </section>
-<section id="hicberg-filter-module">
-<h2>hicberg.filter module<a class="headerlink" href="#hicberg-filter-module" title="Link to this heading"></a></h2>
-</section>
 <section id="module-hicberg.io">
 <span id="hicberg-io-module"></span><h2>hicberg.io module<a class="headerlink" href="#module-hicberg.io" title="Link to this heading"></a></h2>
 <dl class="py function">
@@ -1293,6 +1304,90 @@ respectively that do not overlap with any interval in the other set.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>output_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the folder where to save the fused alignment file, by default None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-hicberg.omics">
+<span id="hicberg-omics-module"></span><h2>hicberg.omics module<a class="headerlink" href="#module-hicberg.omics" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.omics.bedgraph_to_bigwig">
+<span class="sig-prename descclassname"><span class="pre">hicberg.omics.</span></span><span class="sig-name descname"><span class="pre">bedgraph_to_bigwig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bedgraph_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'coverage.bedgraph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'chromosome_sizes.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/omics.html#bedgraph_to_bigwig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.omics.bedgraph_to_bigwig" title="Link to this definition"></a></dt>
+<dd><p>Convert bedgraph to bigwig format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bedgraph_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to coverage (.bedgraph), by default “coverage.bedgraph”</p></li>
+<li><p><strong>chromosome_sizes</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to chromosome sizes file (chrom_id, size), by default “chromosome_sizes.txt”</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IOError</strong> – [description]</p></li>
+<li><p><strong>IOError</strong> – [description]</p></li>
+<li><p><strong>IOError</strong> – [description]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.omics.format_chrom_sizes">
+<span class="sig-prename descclassname"><span class="pre">hicberg.omics.</span></span><span class="sig-name descname"><span class="pre">format_chrom_sizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chromosome_sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'chromosome_sizes.npy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/omics.html#format_chrom_sizes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.omics.format_chrom_sizes" title="Link to this definition"></a></dt>
+<dd><p>Format chromosome sizes to bed and txt format.
+- bed format : chrom, start, end
+- txt format : chrom, size
+:param chrom_sizes: Path to chromosome sizes file (.npy), by default “chromosome_sizes.npy”
+:type chrom_sizes: str, optional
+:param output_dir: Path where the formatted chromosome sizes will be saved, by default None
+:type output_dir: str, optional</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.omics.get_bed_coverage">
+<span class="sig-prename descclassname"><span class="pre">hicberg.omics.</span></span><span class="sig-name descname"><span class="pre">get_bed_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chromosome_sizes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'chromosome_sizes.bed'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'preprocessed_pairs.pairs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/omics.html#get_bed_coverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.omics.get_bed_coverage" title="Link to this definition"></a></dt>
+<dd><p>Get bed coverage from pairs file (using bedtools).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chromosome_sizes</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to chromsomes sizes files (.bed format), by default “chromosome_sizes.bed”</p></li>
+<li><p><strong>pairs_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to processed pairs files (columns : chrom, start, end, count), by default “preprocessed_pairs.pairs”</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the coverage (.bed) will be saved, by default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.omics.get_bedgraph">
+<span class="sig-prename descclassname"><span class="pre">hicberg.omics.</span></span><span class="sig-name descname"><span class="pre">get_bedgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bed_coverage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'coverage.bed'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/omics.html#get_bedgraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.omics.get_bedgraph" title="Link to this definition"></a></dt>
+<dd><p>Convert bed coverage to bedgraph format.
+Format is : chrom, start, end, count.
+Start and end are different by 1bp (end  = start + 1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bed_coverage</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to coverage (.bed), by default “coverage.bed”</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the coverage (.bedgraph) will be saved, by default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hicberg.omics.preprocess_pairs">
+<span class="sig-prename descclassname"><span class="pre">hicberg.omics.</span></span><span class="sig-name descname"><span class="pre">preprocess_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairs_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all_group.pairs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hicberg/omics.html#preprocess_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hicberg.omics.preprocess_pairs" title="Link to this definition"></a></dt>
+<dd><p>Preprocess pairs file to remove pairs that are not in the same chromosome or are greater than a threshold.
+Retain columns are : chromosome, start, end, count.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pairs_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the pairs file, by default “all_group.pairs”</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Threshold distance beyond which pairs will not be kept, by default 1000</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the formatted pairs will be saved, by default None</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

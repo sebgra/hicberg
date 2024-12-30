@@ -28,18 +28,18 @@ hicberg.eval module
    :undoc-members:
    :show-inheritance:
 
-hicberg.filter module
----------------------
-
-.. automodule:: hicberg.filter
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 hicberg.io module
 -----------------
 
 .. automodule:: hicberg.io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+hicberg.omics module
+--------------------
+
+.. automodule:: hicberg.omics
    :members:
    :undoc-members:
    :show-inheritance:
