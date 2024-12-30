@@ -12,6 +12,12 @@ Welcome to hicberg's documentation!
 
    modules
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorial:
+
+   notebooks/tutorial
+
 Indices and tables
 ==================
 

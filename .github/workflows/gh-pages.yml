@@ -19,6 +19,18 @@ jobs:
         run: |
           pip3 install setuptools
           pip3 install sphinx sphinx-rtd-theme
+          pip install nbsphinx
+
+      - name: Create micromamba env. for package
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          generate-run-shell: true
+
+      - name: Install package pandoc
+        run: |
+          conda install -c conda-forge pandoc
+        shell: micromamba-shell {0}
+
       - name: Build Sphinx Doc
         run: |
             make -C docs clean
