@@ -85,15 +85,11 @@ setup.py
 config/cluster_slurm.yaml
 config/config.yaml
 config/samples.csv
-data_test/SC288_with_micron.fa
-data_test/SC288_with_micron.fa.fai
 data_test/chromosome_sizes.npy
 data_test/forward_reads_test.fq.gz
 data_test/reverse_reads_test.fq.gz
 data_test/unrescued_map.cool
-data_test/alignments/1.bam
 data_test/alignments/1.sorted.bam
-data_test/alignments/2.bam
 data_test/alignments/2.sorted.bam
 data_test/alignments/group0.1.bam
 data_test/alignments/group0.2.bam
@@ -101,18 +97,8 @@ data_test/alignments/group1.1.bam
 data_test/alignments/group1.2.bam
 data_test/alignments/group2.1.bam
 data_test/alignments/group2.2.bam
-data_test/alignments/chunks/forward_1690813501.2912793_predicted.bam
-data_test/alignments/chunks/forward_1690813501.31245_predicted.bam
 data_test/alignments/chunks/group2.1.rescued.bam
 data_test/alignments/chunks/group2.2.rescued.bam
-data_test/alignments/chunks/reverse_1690813501.2912793_predicted.bam
-data_test/alignments/chunks/reverse_1690813501.31245_predicted.bam
-data_test/index/SC288_with_micron.1.bt2l
-data_test/index/SC288_with_micron.2.bt2l
-data_test/index/SC288_with_micron.3.bt2l
-data_test/index/SC288_with_micron.4.bt2l
-data_test/index/SC288_with_micron.rev.1.bt2l
-data_test/index/SC288_with_micron.rev.2.bt2l
 docs/Makefile
 docs/conf.py
 docs/hicberg.rst
@@ -135,7 +121,6 @@ docs/_build/html/searchindex.js
 docs/_build/html/_modules/index.html
 docs/_build/html/_modules/hicberg/align.html
 docs/_build/html/_modules/hicberg/benchmark.html
-docs/_build/html/_modules/hicberg/filter.html
 docs/_build/html/_modules/hicberg/io.html
 docs/_build/html/_modules/hicberg/pipeline.html
 docs/_build/html/_modules/hicberg/plot.html
@@ -175,8 +160,6 @@ docs/_build/html/_static/css/fonts/lato-normal-italic.woff2
 docs/_build/html/_static/css/fonts/lato-normal.woff
 docs/_build/html/_static/css/fonts/lato-normal.woff2
 docs/_build/html/_static/js/badge_only.js
-docs/_build/html/_static/js/html5shiv-printshiv.min.js
-docs/_build/html/_static/js/html5shiv.min.js
 docs/_build/html/_static/js/theme.js
 docs/images/Evaluation.png
 docs/images/Workflow.png
@@ -185,7 +168,6 @@ hicberg/__main__.py
 hicberg/align.py
 hicberg/benchmark.py
 hicberg/eval.py
-hicberg/filter.py
 hicberg/io.py
 hicberg/omics.py
 hicberg/pipeline.py
@@ -262,7 +244,6 @@ tests/conftest.py
 tests/test_align.py
 tests/test_benchmark.py
 tests/test_eval.py
-tests/test_filter.py
 tests/test_io.py
 tests/test_pipeline.py
 tests/test_plot.py

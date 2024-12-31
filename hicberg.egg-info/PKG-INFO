@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: hicberg
-Version: 0.1.0
+Version: 1.0.0
 Summary: Standalone command line tool to visualize coverage from a BAM file
 Home-page: https://github.com/sebgra/hicberg
 Author: sgradit
@@ -24,7 +24,7 @@ Classifier: Operating System :: Microsoft :: Windows
 Classifier: Operating System :: POSIX
 Classifier: Operating System :: Unix
 Classifier: Operating System :: MacOS
-Requires-Python: >=3.6
+Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: bioframe
@@ -46,17 +46,34 @@ Requires-Dist: statsmodels
 
 ## Badges
 
-Add badges from somewhere like: [shields.io](https://shields.io/)
-
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
+[![codecov](https://codecov.io/gh/sebgra/hicberg/graph/badge.svg?token=2HIR20JCVG)](https://codecov.io/gh/sebgra/hicberg)
+
+**Python package to reconstruct Hi-C contact maps.**
+
+## Documentation
+
+Documentation and tutorial: https://sebgra.github.io/hicberg/
 
 ## Table of contents
 
+- [Environment and dependencies](#env_dependencies)
+- [Docker](#Docker)
+- [Installation](#installation)
+- [Usage/Examples](#usage)
+- [Snakemake usage](#snakemake_usage)
+- [Individual components](#individual_components)
+- [Chaining pipeline steps](#chaining_steps)
+- [Model evaluation](#model_evaluation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Authors](#authors)
+- [Citation](#citation)
 
 
-## Environment and dependencies
+## <a id="env_dependencies"></a> Environment and dependencies
 
 ### Environnement  
 
@@ -65,7 +82,6 @@ Create environment by using following command :
 ```bash
 mamba env create -n [ENV_NAME] -f hicberg.yaml;
 ```
-
 
 ### Dependencies
 
@@ -79,8 +95,7 @@ mamba install -c bioconda ucsc-bedgraphtobigwig;
 mamba install bedtools -c bioconda;
 ```
 
-
-## Installation
+## <a id="installation"></a> Installation
 
 Install my-project with pip
 
@@ -89,7 +104,7 @@ Install my-project with pip
   pip install -e . ;
 ```
 
-## pip
+### pip
 
 Install HiC-BERG locally by using
 
@@ -117,7 +132,7 @@ mamba install bioconda::ucsc-bedgraphtobigwig
 
 TO BE COMPLETED
 
-### Docker
+### <a id="Docker"></a> Docker
 
 HiC-BERG can be used via Docker to limit dependency compatibility problems. More information about container such as Docker can be found [there](https://www.docker.com/get-started/).
 
@@ -153,18 +168,18 @@ sudo docker run -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g) -it  h
 ```
 
 Then, the user will be directly placed in an interactive shell where HiC-BERG can be use directly, by typing any of HiC-BERG command such as further examples.
-    
-## Usage/Examples
+
+## <a id="usage"></a> Usage/Examples
 
 
 ## Full pipeline
 
-<img src="/docs/images/Workflow.png" alt="HiC-BERG"/>
+<img src="/docs/images/Hicberg_pipeline.png" alt="HiC-BERG"/>
 
 All components of the pipeline can be run at once using the hicberg pipeline command. This allows to generate a contact matrix and its reconstruction from reads in a single command.\
 By default, the output is in COOL format. More detailed documentation can be found on the readthedocs website:
 
-WEBSITE TO BE ADDED
+https://sebgra.github.io/hicberg/
 
 ```bash
 
@@ -181,8 +196,8 @@ For example, to run the pipeline using 8 threads, in default mode, using ARIMA H
 hicberg pipeline -e DpnII -e HinfI --cpus 8 -o out/  genome.fa  reads_for.fq  rev_reads.fq 
 
 ```
+## <a id="snakemake_usage"></a> Snakemake usage
 
-## Snakemake usage
 
 ### Configuration
 
@@ -264,10 +279,12 @@ And such for each rule defined in the file cluster_slurm.yaml, through all the l
 Log files will be saved in the folder logs/cluster. The output and error files will be named as the following: `{rule}.{wildcards}.out` and `{rule}.{wildcards}.err`. The wildcards are the parameters specified in the file _samples.csv_.
 
 _N.B: The parameter `--rerun-incomplete` is used to restart the pipeline from the last step if it has been interrupted.
+
 N.B 2: The parameter `-j` is used to specify the number of jobs to run in parallel. It is recommended to set this parameter to the number of libraries to process.
+
 N.B 3: The ressources allocated to each job can be modified in the file cluster_slurm.yaml. The parameters `mem` and `ncpus` are used to specify the memory and the number of CPUs to allocate to each job. The parameter `ntasks` is used to specify the number of tasks to run in parallel. The parameter `queue` is used to specify the queue to use. The parameter `partition` is used to specify the partition to use. The parameters `name`, `output` and `error` are used to specify the name of the job and the output and error files._
 
-## Individual components
+## <a id="individual_components"></a> Individual components
 
 ### I/O
 
@@ -466,8 +483,16 @@ hicberg statistics -o ~/Desktop/test/ -B "chr1:200000-220000,chr1:308000-314000,
 
 #### Omics mode
 
-TO be completed
+The omics mode can be used to reconstruct any pair-ended sequenced genomic data. For such, the model used relies on the $P(s)$ and the coverage. 
+After reconstruction, the data is located in the folder **statistics/**. The files generated are:
+  - coverage.bed : bed file containing the coverage of the genome
+  - coverage.bedgraph : bedgraph file containing the coverage of the genome
+  - **signal.bw : bigwig file containing the reconstructed signal (pair-ended data**)
 
+The omics mode can be used using the following command:
+```bash
+hicberg pipeline  -o <out folder> -t <cpus> -m omics  -s <alignment sensitivity>   genome.fa  reads_for.fq  rev_reads.fq 
+```
 
 ### Reconstruction
 
@@ -583,7 +608,7 @@ After tidying the folders architecture will be the following:
   
   _(*) : files generated by hicberg in omics mode_
 
-## Chaining pipeline steps
+## <a id="chaining_steps"></a> Chaining pipeline steps
 
 It is possible to chain the different steps of the pipeline by using the following command:
 
@@ -607,6 +632,7 @@ hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] 
 hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage rescue  --exit-stage final <genome> <input1> <input2>
 
 ```
+## <a id="model_evaluation"></a> Evaluating the model
 
 ## Evaluating the model
 
@@ -676,6 +702,7 @@ The benchmark can be performed considering several modes. The modes are defined 
 - density
 - standard (ps and cov)
 - one_enzyme (ps, cov and d1d2)
+- omics (ps, cov)
 
 
 _N.B : depending on the modes selected for the benchmark, if one of the mode is not included in the list of modes selected for the reconstruction, the reconstruction will not be performed for this mode, and the corresponding statistics will not be computed._ 
@@ -709,7 +736,7 @@ A pattern based strategy can be set. Such strategy is similar to the strategy wh
 
 Such patterns are going to be detected from the original Hi-C map using [Chromosight](https://github.com/koszullab/chromosight). Then genomic coordinates of the detected patterns are going to be used to select the reads for the evaluation. The number of duplication are going to be adjusted by specifying the chromosome name with `--chromosome` parameter, the `--threshold` parameter to set the minimum Pearson score to consider a pattern as detected and the `--top` parameter to eventually keep the top k% to the remaining detected patterns. Thus, the genomic intervals are going to be defined as the genomic coordinates of the detected patterns.
 
-Thus, the same read strategy will be applied. After reconstruction, the evaluation will be performed using the Pearson correlation coefficient between the original and reconstructed bins selected from the original map. Furthermore, a second patter detection with Chromosight will be performed on the reconstructed map. Then, the precision, recall and F1 score will be computed to evaluate the reconstruction, by comparing the number of retrieved patterns while identifying false positives and false negatives.
+Thus, the same read strategy will be applied. After reconstruction, the evaluation will be performed using the Pearson correlation coefficient between the original and reconstructed bins selected from the original map. Furthermore, a second pattern detection with Chromosight will be performed on the reconstructed map. Then, the precision, recall and F1 score will be computed to evaluate the reconstruction, by comparing the number of retrieved patterns while identifying false positives and false negatives.
 
 _N.B. : Because of the stochasticity of Chromosight while splitting the Hi-C map for pattern detection, some patterns can be considered as false positives and negatives because their coordinates after reconstruction are aside of the original one. We recommend using the  `--jitter` parameter to allow pattern to be considered as retrieved post-reconstruction if they are detected at **j** bins from the original coordinates._
 
@@ -719,8 +746,7 @@ Considering a benchmark based on loops patterns on chromosome 7 with a threshold
 hicberg benchmark  -o ~/Desktop/test/ -c chr7 -p 100000 -S loops -t 0.5 -k 100 -j 0 -T -m random -g <genome.fa>
 ```
 
-
-## Library
+## <a id="python_usage"></a> Python usage
 
 All components of the hicberg program can be used as python modules. See the documentation on readthedocs. The expected contact map format for the library is a simple COOL file, and the objects handled by the library are simple Numpy arrays through Cooler. The various submodules of hicberg contain various utilities.
 
@@ -737,7 +763,7 @@ import hicberg.pipeline #Functions to run end to end Hi-C map reconstruction.
 
 All the steps described here are handled automatically when running the ```hicberg``` pipeline. But if you want to connect the different modules manually, the intermediate input and output files can be processed using some python scripting.
 
-## File formats
+## <a id="file_formats"></a> File formats
 
 * pair files: This format is used for all intermediate files in the pipeline and is also used by hicberg build_matrix. It is a tab-separated format holding information about Hi-C pairs. It has an official specification defined by the 4D Nucleome data coordination and integration center.
   * *readID*: Read (pair) identifier.
@@ -767,7 +793,7 @@ NS500150:487:HNLLNBGXC:1:11101:6488:14927       chr2    379433  chr2    379138  
 
 * cool files: This format is used to store genomic interaction data such as Hi-C contact matrices. These file can be handled using `cooler` Python library.
 
-* npy files: This format is used to store dictionaries containing information about genomic coordinates, binning or statistical laws. Dictionaries are stores with * chromosome * as key and * arrays* as values. Such file can be handled using `numpy` Python library. 
+* npy files: This format is used to store dictionaries containing information about genomic coordinates, binning or statistical laws. Dictionaries are stores with *chromosome* as key and *arrays* as values. Such file can be handled using `numpy` Python library. 
 
   * *chromosome_sizes.npy* : This file is used to store the size of each chromosome. Structure is the following : ```{chromosome: size}```
   * *xs.npy* : This file is used to store the log binned genome. Structure is the following : ```{chromosome: [log bins]}``` with log bins a list of integers.
@@ -782,6 +808,21 @@ NS500150:487:HNLLNBGXC:1:11101:6488:14927       chr2    379433  chr2    379138  
 * bt2l files: Thi format is used to store index of genomes performer using Bowtie2. 
 
 * bam files: This format is used to built analyses on, by several functions of hicberg. It is a compressed standard alignment format file providing multiple information about read alignments performer by [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml). Such files can be handled through [Samtools](http://www.htslib.org/doc/) and it's Python wrapper [PySam](https://pysam.readthedocs.io/en/latest/api.html). More details about SAM and BAM format can be found [here](https://en.wikipedia.org/wiki/SAM_(file_format)).
+
+* bed files: This format is used to store genomic intervals. It is a tab-separated format holding information about genomic intervals. It is a standard format used by the [UCSC genome browser](http://genome.ucsc.edu/FAQ/FAQformat). 
+
+```
+chr4    150    200
+chr6    300    400
+chr4    800    900
+chr2    680000 684000
+...
+```
+
+  * *chromosome_sizes.bed* : This file is used to store the size of each chromosome. Structure is the following : ```chromosome start end```
+  * *coverage.bed* : This file is used to store the coverage of the genome. Structure is the following : ```chromosome start end coverage```
+  * *coverage.bedgraph* : This file is used to store the coverage of the genome. Structure is the following : ```chromosome start end coverage```
+  * *signal.bw* : This file is used to store the coverage of the genome. Structure is the following : ```chromosome start end coverage```
 
 * fragments_fixed_sizes.txt: 
 
@@ -804,22 +845,19 @@ chr2  2000  4000
 ...
 ```
 
-
-## Contributing
+## <a id="contributing"></a> Contributing
 
 All contributions are welcome, in the form of bug reports, suggestions, documentation or pull requests. We use the Numpy standard for docstrings when documenting functions.
 
 The code formatting standard we use is black, with --line-length=79 to follow PEP8 recommendations. We use pytest with the pytest-doctest and pytest-pylint plugins as our testing framework. Ideally, new functions should have associated unit tests, placed in the tests folder. To test the code, you can run:
 
 ```bash
+coverage run --source=hicberg -m pytest -v tests --cov-report=xml
 
-PUT CODE HERE
 ```
 
-
-## Authors
+## <a id="authors"></a> Authors
 
 - [@sebgra](https://www.github.com/sebgra)
 
-## Citation
-TO BE COMPLETED
+## <a id="citation"></a> Citation
