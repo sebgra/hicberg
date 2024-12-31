@@ -54,7 +54,13 @@ mamba install bedtools -c bioconda;
 
 ## <a id="installation"></a> Installation
 
-Install my-project with pip
+Install my-project with pip:
+
+```bash
+  pip install hicberg
+```
+
+or in developper mode:
 
 ```bash
   mamba activate [ENV_NAME];
