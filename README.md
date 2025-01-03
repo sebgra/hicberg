@@ -82,6 +82,10 @@ Install HiC-BERG locally by using
 We highly recommend installing HiC-BERG through [Mamba](https://mamba.readthedocs.io/en/latest/mamba-installation.html#mamba-install).
 
 ```bash
+conda install -c bioconda hicberg
+```
+
+```bash
 
 wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
 bash Mambaforge-$(uname)-$(uname -m).sh
