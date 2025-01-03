@@ -36,18 +36,37 @@ def test_hic_build_index_bowtie2_not_found(monkeypatch):
     """
     Test that hic_build_index raises a RuntimeError when bowtie2-build is not found.
     """
-
+    # 
     def mock_check_output(cmd):
+        """
+        Mock function to simulate the behavior of subprocess.check_output.
+        Raises OSError if the command is 'bowtie2-build' to simulate 
+        the scenario where it's not found.
+        """
         if cmd[0] == "bowtie2-build":
             raise OSError("Mock OSError: Command not found")
         else:
             return sp.check_output(cmd)  # Allow other commands to execute normally
-
+    # Replace the actual subprocess.check_output with our mock function
     monkeypatch.setattr(sp, "check_output", mock_check_output)
 
+    # Call the function and assert that it raises the expected RuntimeError
     with pytest.raises(RuntimeError) as excinfo:
         hal.hic_build_index(genome="genome.fasta", output_dir=".") 
     assert "bowtie2-build not found; check if it is installed and in $PATH\n install Bowtie2 with : conda install bowtie2" in str(excinfo.value)
+
+@pytest.fixture(scope = "session")
+def test_hic_build_index_genome_not_found(temporary_folder):
+    """
+    Test if the file not found ValueError is correctly raised
+    """
+
+    temp_dir_path = Path(temporary_folder)
+    genome_path  = Path("wrong_path")
+
+    with pytest.raises(ValueError) as excinfo:
+        hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
+    assert str(excinfo.value) == f"Output path {output_path} does not exist. Please provide existing ouput path."
 
 
 @pytest.fixture(scope = "session")
