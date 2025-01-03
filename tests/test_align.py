@@ -1,4 +1,5 @@
 import pytest
+import subprocess as sp
 from pathlib import Path
 import hicberg.align as hal
 
@@ -30,6 +31,24 @@ def test_hic_build_index(temporary_folder):
     yield temp_dir_path / genome_path.stem
 
     assert  any(temp_dir_path.iterdir()) == True
+
+def test_hic_build_index_bowtie2_not_found(monkeypatch):
+    """
+    Test that hic_build_index raises a RuntimeError when bowtie2-build is not found.
+    """
+
+    def mock_check_output(cmd):
+        if cmd[0] == "bowtie2-build":
+            raise OSError("Mock OSError: Command not found")
+        else:
+            return sp.check_output(cmd)  # Allow other commands to execute normally
+
+    monkeypatch.setattr(sp, "check_output", mock_check_output)
+
+    with pytest.raises(RuntimeError) as excinfo:
+        hal.hic_build_index(genome="genome.fasta", output_dir=".") 
+    assert "bowtie2-build not found; check if it is installed and in $PATH\n install Bowtie2 with : conda install bowtie2" in str(excinfo.value)
+
 
 @pytest.fixture(scope = "session")
 def test_hic_align(test_hic_build_index, temporary_folder):
