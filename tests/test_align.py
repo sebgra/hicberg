@@ -28,7 +28,19 @@ def test_hic_build_index(temporary_folder):
     
     hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
 
+    assert  any(temp_dir_path.iterdir()) == True
     yield temp_dir_path / genome_path.stem
+
+
+def test_hic_build_index_no_fixture(temporary_folder):
+    """
+    Test if the bowtie2 index is correctly created
+    """    
+
+    temp_dir_path = Path(temporary_folder)
+    genome_path  = Path(GENOME)
+    
+    hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
 
     assert  any(temp_dir_path.iterdir()) == True
 
@@ -55,18 +67,20 @@ def test_hic_build_index_bowtie2_not_found(monkeypatch):
         hal.hic_build_index(genome="genome.fasta", output_dir=".") 
     assert "bowtie2-build not found; check if it is installed and in $PATH\n install Bowtie2 with : conda install bowtie2" in str(excinfo.value)
 
-@pytest.fixture(scope = "session")
-def test_hic_build_index_genome_not_found(temporary_folder):
-    """
-    Test if the file not found ValueError is correctly raised
-    """
+# @pytest.fixture()
+# def test_hic_build_index_genome_not_found(temporary_folder):
+#     """
+#     Test if the file not found ValueError is correctly raised
+#     """
 
-    temp_dir_path = Path(temporary_folder)
-    genome_path  = Path("wrong_path")
+#     print("Test is effective")
 
-    with pytest.raises(ValueError) as excinfo:
-        hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
-    assert str(excinfo.value) == f"Output path {output_path} does not exist. Please provide existing ouput path."
+#     temp_dir_path = Path(temporary_folder)
+#     genome_path  = Path("wrong_path")
+
+#     with pytest.raises(ValueError) as excinfo:
+#         hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
+#     assert str(excinfo.value) == f"Output path {output_path} does not exist. Please provide existing ouput path."
 
 
 @pytest.fixture(scope = "session")
