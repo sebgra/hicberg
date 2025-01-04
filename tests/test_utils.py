@@ -8,7 +8,7 @@ import hicberg.io as hio
 
 from .conftest import temporary_folder
 
-from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
+from .test_align import hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort
 
 GENOME = "data_test/sub_genome.fa"
 CHROM_SIZES_DIC = "chromosome_sizes.npy"

@@ -9,7 +9,7 @@ import hicberg.eval as hev
 import hicberg.io as hio
 
 from .conftest import temporary_folder
-from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
+from .test_align import hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort
 
 from .test_utils import test_get_chromosomes_sizes, test_classify_reads, test_get_bin_table
 from .test_io import test_build_matrix, test_build_pairs

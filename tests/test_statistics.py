@@ -10,7 +10,7 @@ from Bio import SeqIO, Restriction
 
 from .conftest import temporary_folder
 from.test_utils import test_classify_reads, test_get_chromosomes_sizes, test_get_bin_table, test_chunk_bam
-from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
+from .test_align import hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort
 from.test_io import test_build_matrix, test_build_pairs
 
 
@@ -514,7 +514,7 @@ def test_reattribute_reads(temporary_folder, test_classify_reads, test_get_restr
     assert True
 
 @pytest.fixture(scope = "module")
-def test_generate_density_map(temporary_folder, test_get_bin_table, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads, test_build_pairs):
+def test_generate_density_map(temporary_folder, test_get_bin_table, hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads, test_build_pairs):
     """
     Test if the density map is correctly generated.
     """

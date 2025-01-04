@@ -18,6 +18,20 @@ REV_SORTED_BAM = "2.sorted.bam"
 
 
 @pytest.fixture(scope = "session")
+def hic_build_index_fixture(temporary_folder):
+    """
+    Fixture fot index building tests.
+    """    
+
+    temp_dir_path = Path(temporary_folder)
+    genome_path  = Path(GENOME)
+    
+    hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = False)
+
+    assert  any(temp_dir_path.iterdir()) == True
+    yield temp_dir_path / genome_path.stem
+
+
 def test_hic_build_index(temporary_folder):
     """
     Test if the bowtie2 index is correctly created
@@ -26,21 +40,7 @@ def test_hic_build_index(temporary_folder):
     temp_dir_path = Path(temporary_folder)
     genome_path  = Path(GENOME)
     
-    hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
-
-    assert  any(temp_dir_path.iterdir()) == True
-    yield temp_dir_path / genome_path.stem
-
-
-def test_hic_build_index_no_fixture(temporary_folder):
-    """
-    Test if the bowtie2 index is correctly created
-    """    
-
-    temp_dir_path = Path(temporary_folder)
-    genome_path  = Path(GENOME)
-    
-    hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
+    hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = False)
 
     assert  any(temp_dir_path.iterdir()) == True
 
@@ -67,24 +67,24 @@ def test_hic_build_index_bowtie2_not_found(monkeypatch):
         hal.hic_build_index(genome="genome.fasta", output_dir=".") 
     assert "bowtie2-build not found; check if it is installed and in $PATH\n install Bowtie2 with : conda install bowtie2" in str(excinfo.value)
 
-# @pytest.fixture()
-# def test_hic_build_index_genome_not_found(temporary_folder):
-#     """
-#     Test if the file not found ValueError is correctly raised
-#     """
+def test_hic_build_index_genome_not_found(temporary_folder):
+    """
+    Test if the file not found ValueError is correctly raised
+    """
 
-#     print("Test is effective")
+    print("Test is effective")
 
-#     temp_dir_path = Path(temporary_folder)
-#     genome_path  = Path("wrong_path")
+    temp_dir_path = Path(temporary_folder)
+    genome_path  = Path("wrong_path")
 
-#     with pytest.raises(ValueError) as excinfo:
-#         hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
-#     assert str(excinfo.value) == f"Output path {output_path} does not exist. Please provide existing ouput path."
+    with pytest.raises(ValueError) as excinfo:
+        hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
+
+    assert str(excinfo.value) == f"Genome file {genome_path} not found"
 
 
 @pytest.fixture(scope = "session")
-def test_hic_align(test_hic_build_index, temporary_folder):
+def test_hic_align(hic_build_index_fixture, temporary_folder):
     """
     Test if the alignement is correctly performed.
     """
@@ -94,7 +94,7 @@ def test_hic_align(test_hic_build_index, temporary_folder):
     fq_for_path = Path(FOR_FQ)
     fq_rev_path = Path(REV_FQ)
 
-    hal.hic_align(index = test_hic_build_index, fq_for = fq_for_path, fq_rev = fq_rev_path, output_dir = temp_dir_path, verbose = True)
+    hal.hic_align(index = hic_build_index_fixture, fq_for = fq_for_path, fq_rev = fq_rev_path, output_dir = temp_dir_path, verbose = True)
 
     for_sam_path = temp_dir_path / FOR_SAM
     rev_sam_path = temp_dir_path / REV_SAM
@@ -104,7 +104,7 @@ def test_hic_align(test_hic_build_index, temporary_folder):
     assert rev_sam_path.is_file()
 
 @pytest.fixture(scope = "session")
-def test_hic_view(temporary_folder, test_hic_build_index, test_hic_align):
+def test_hic_view(temporary_folder, hic_build_index_fixture, test_hic_align):
     """
     Test if the alignement compression is correctly performed.
     """
@@ -119,7 +119,7 @@ def test_hic_view(temporary_folder, test_hic_build_index, test_hic_align):
     assert rev_bam_path.is_file()
 
 @pytest.fixture(scope = "session")
-def test_hic_sort(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view):
+def test_hic_sort(temporary_folder, hic_build_index_fixture, test_hic_align, test_hic_view):
     """
     Test if the alignement sorting by read ids is correctly performed.
     """
@@ -139,7 +139,7 @@ def test_hic_sort(temporary_folder, test_hic_build_index, test_hic_align, test_h
     # assert rev_sorted_bam_path.is_file()
 
 @pytest.fixture(scope = "session")
-def test_hic_index(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort):
+def test_hic_index(temporary_folder, hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort):
     """
     Test if the alignement indexing is correctly performed.
     """

@@ -6,7 +6,7 @@ import hicberg.io as hio
 
 from .conftest import temporary_folder
 from .test_utils import test_get_chromosomes_sizes, test_classify_reads, test_get_bin_table, test_chunk_bam
-from .test_align import test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort
+from .test_align import hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort
 
 
 FOLDER_TO_CREATE = "test_sample"
@@ -32,7 +32,7 @@ def test_create_folder(temporary_folder):
     assert (temp_dir_path / FOLDER_TO_CREATE).is_dir()
 
 @pytest.fixture(scope = "session")
-def test_build_pairs(temporary_folder, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads):
+def test_build_pairs(temporary_folder, hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads):
     """
     Test if the pairs file is correctly created.
     """    
@@ -41,7 +41,7 @@ def test_build_pairs(temporary_folder, test_hic_build_index, test_hic_align, tes
     assert (temp_dir_path / GROUP1_PAIRS).is_file() 
 
 @pytest.fixture(scope = "session")
-def test_build_matrix(temporary_folder, test_get_bin_table, test_hic_build_index, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads, test_build_pairs):
+def test_build_matrix(temporary_folder, test_get_bin_table, hic_build_index_fixture, test_hic_align, test_hic_view, test_hic_sort, test_classify_reads, test_build_pairs):
     """
     Test if the cool file is correctly created.
     """
