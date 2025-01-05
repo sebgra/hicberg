@@ -21,7 +21,7 @@ file_handler.setFormatter(file_format)
 # Add handlers to the logger
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
-logger.propagate = False
+logger.propagate = True
 
 
 save = pysam.set_verbosity(0)

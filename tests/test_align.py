@@ -1,5 +1,7 @@
 import pytest
+from unittest import mock  # Import the mock module
 import subprocess as sp
+import logging
 from pathlib import Path
 import hicberg.align as hal
 
@@ -15,6 +17,15 @@ FOR_BAM = "1.bam"
 REV_BAM = "2.bam"
 FOR_SORTED_BAM = "1.sorted.bam"
 REV_SORTED_BAM = "2.sorted.bam"
+
+#####################################################
+################### Fixtures ########################
+#####################################################
+
+@pytest.fixture(scope="function")
+def capture_logs(caplog):
+    """Fixture to capture log messages."""
+    yield caplog
 
 
 @pytest.fixture(scope = "session")
@@ -81,6 +92,31 @@ def test_hic_build_index_genome_not_found(temporary_folder):
         hal.hic_build_index(genome = genome_path, output_dir = temp_dir_path, verbose = True)
 
     assert str(excinfo.value) == f"Genome file {genome_path} not found"
+
+def test_hic_build_index_logging(capture_logs, temporary_folder):
+    """
+    Test that hic_build_index logs the expected messages.
+    """
+    temp_dir_path = Path(temporary_folder)
+    genome_path = Path(GENOME)
+
+    # Mock sp.run
+    with mock.patch("subprocess.run"):
+        hal.hic_build_index(genome=genome_path, output_dir=temp_dir_path, verbose=True)
+
+    # Get the logger used in hic_build_index
+    hic_build_logger = logging.getLogger("hicberg")  # Replace your_module
+
+    # Access logs from the specific logger
+    captured_messages = [
+        record.message for record in capture_logs.records if record.name == "hicberg"
+    ]
+
+    # Check for expected log messages
+    assert "Start building index for alignment" in captured_messages
+    assert f"Index built at {temp_dir_path / genome_path.stem}" in captured_messages
+    assert f"bowtie2-build -q -f --threads 1 --large-index {genome_path} {temp_dir_path / genome_path.stem}" in captured_messages
+
 
 
 @pytest.fixture(scope = "session")
