@@ -13,15 +13,15 @@ import logging
 
 import numpy as np
 
-import hicberg.align as hal
-import hicberg.io as hio
-import hicberg.utils as hut
-import hicberg.plot as hpl
-import hicberg.statistics as hst
-import hicberg.omics as hom
+import Hicberg.align as hal
+import Hicberg.io as hio
+import Hicberg.utils as hut
+import Hicberg.plot as hpl
+import Hicberg.statistics as hst
+import Hicberg.omics as hom
 
 
-from hicberg import logger
+from Hicberg import logger
 
 UNRESCUED_MATRIX = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
@@ -80,14 +80,14 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     exit_stage = out_stage[exit_stage]
 
-    logger.info(f"HiC-BERG command used : {' '.join(sys.argv)}")
+    logger.info(f"Hicberg command used : {' '.join(sys.argv)}")
 
     if fq_for == fq_rev :
 
         logger.error(f"The two provided inputs {fq_for} and {fq_rev} files must be different.")
         raise IOError(f"The two provided inputs {fq_for} and {fq_rev} files must be different.")
         
-    logger.info("Start HiCBERG pipeline")
+    logger.info("Start Hicberg pipeline")
 
     # Keep track of the arguments used
     for arg in args:
@@ -112,7 +112,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     if exit_stage == 1:
 
-        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        logger.info(f"Ending Hicberg pipeline at {exit_stage}")
         return
     
     if start_stage < 2: 
@@ -126,7 +126,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     if exit_stage == 2:
 
-        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        logger.info(f"Ending Hicberg pipeline at {exit_stage}")
         return
     
     if start_stage < 3:
@@ -136,7 +136,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     if exit_stage == 3:
 
-        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        logger.info(f"Ending Hicberg pipeline at {exit_stage}")
         return
     
     if start_stage < 4:
@@ -150,7 +150,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
             hio.build_matrix(cpus = cpus, balance = False, output_dir = output_folder)
 
     if exit_stage == 4:
-        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        logger.info(f"Ending Hicberg pipeline at {exit_stage}")
         return
     
     if start_stage < 5:
@@ -167,10 +167,10 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
         if mode != "omics":
 
-            for process in [p1, p2, p3, p4]:
+            for process in [p1, p2, p3]:
                 process.start()
 
-            for process in [p1, p2, p3, p4]:
+            for process in [p1, p2, p3]:
                 process.join()
 
         elif mode == "omics":
@@ -187,7 +187,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
         
     if exit_stage == 5:
 
-        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        logger.info(f"Ending Hicberg pipeline at {exit_stage}")
         return
 
     if start_stage < 6:
@@ -215,7 +215,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     if exit_stage == 5:
 
-        logger.info(f"Ending HiCBERG pipeline at {exit_stage}")
+        logger.info(f"Ending Hicberg pipeline at {exit_stage}")
         return
 
     if start_stage < 6:
@@ -258,5 +258,5 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
 
     hio.tidy_folder(output_dir = output_folder)
 
-    logger.info("Ending HiCBERG pipeline")
+    logger.info("Ending Hicberg pipeline")
 

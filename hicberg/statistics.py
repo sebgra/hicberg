@@ -445,7 +445,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
 
         folder_path = Path(output_dir)
 
-    if (0.0 > rate) or (rate > 1.0):
+    if (rate <= 0.0) or (rate > 1.0):
         raise ValueError("Subsampling rate must be between 0.0 and 1.0.")
 
     genome_path = Path(genome)
@@ -507,10 +507,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
             dist_frag[seq_name][attribute_xs(xs[seq_name], distance)] += 1
 
     # Save dictionaries
-    np.save(
-        folder_path / DIST_FRAG,
-        dist_frag,
-    )
+    np.save(folder_path / DIST_FRAG, dist_frag)
 
     logger.info(f"Saved restriction map at : {folder_path / DIST_FRAG}")
 
@@ -748,9 +745,10 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
     logger.info(f"Saved d1d2 law at : {output_path / D1D2}")
 
-def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", xs : str = "xs.npy", chrom_sizes : str = "chromosome_sizes.npy", circular : str = "", blacklist : str = None, output_dir : str = None) -> None:
+def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", 
+                 xs : str = "xs.npy", chrom_sizes : str = "chromosome_sizes.npy", circular : str = "", blacklist : str = None, output_dir : str = None) -> None:
     """
-    Get the patterns distribution from read pairs alignment. .
+    Get the patterns distribution from read pairs alignment.
 
     Parameters
     ----------
@@ -761,7 +759,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     xs : str, optional
         Path to the dictionary containing the xs values, by default "xs.npy"
     dist_frag : str, optional
-        Path to the dictionary containing the inter fragment distances, by default "dist.frag.npy"
+        Path to the dictionary containing the inter-fragment distances, by default "dist.frag.npy"
     circular : str, optional
         Name of the chromosomes to consider as circular, by default ""
     output_dir : str, optional
@@ -1228,12 +1226,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
-
-            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
-            if ps == 0:
-
-                ps = 1
-
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
         # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
@@ -1273,12 +1265,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
         else:
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
-
-
-            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
-            if ps == 0:
-
-                ps = 1
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
@@ -1372,12 +1358,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
-
-            # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
-            if ps == 0:
-
-                ps = 1
-
         return ps
 
     elif mode == "cov":
@@ -1452,7 +1432,6 @@ def draw_read_couple(propensities : np.array) -> int:
         pk = np.full(xk.shape, np.divide(1, len(propensities)))
         logger.error(f"Propensities : {propensities}")
 
-    #TODO: Added 08/11/2024
     ## Correct propensities to avoid nan values
     ## If propensity contains nan values, replace them with 0
     if np.sum(np.isnan(pk)) > 0:
@@ -1462,7 +1441,9 @@ def draw_read_couple(propensities : np.array) -> int:
 
     return index
 
-def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", bins : int = 2000, d1d2 : dict = "d1d2.npy", density_map : dict = "density_map.npy",  mode : str = "full", output_dir : str = None) -> None:
+def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", 
+                      loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", 
+                      bins : int = 2000, d1d2 : dict = "d1d2.npy", density_map : dict = "density_map.npy",  mode : str = "full", output_dir : str = None) -> None:
     """
     Re-attribute multi-mapping (ambiguous) reads considering sets of statistical laws.
 
@@ -1554,7 +1535,10 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
         for combination in combinations:
 
-            propensities.append(compute_propensity(read_forward = combination[0], read_reverse = combination[1], restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, density_map = density, mode = mode))
+            propensities.append(compute_propensity(read_forward = combination[0], read_reverse = combination[1], 
+                                                   restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, 
+                                                   loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, 
+                                                   density_map = density, mode = mode))
 
         selected_couple_index = draw_read_couple(propensities)
 
