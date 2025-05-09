@@ -98,9 +98,6 @@ mamba install bioconda::ucsc-bedgraphtobigwig
 mamba install bioconda::cooler
 mamba install bioconda::pysam
 ```
-
-TO BE COMPLETED
-
 ### <a id="Docker"></a> Docker
 
 Hicberg can be used via Docker to limit dependency compatibility problems. More information about container such as Docker can be found [there](https://www.docker.com/get-started/).
