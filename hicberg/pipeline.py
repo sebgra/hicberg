@@ -13,15 +13,15 @@ import logging
 
 import numpy as np
 
-import Hicberg.align as hal
-import Hicberg.io as hio
-import Hicberg.utils as hut
-import Hicberg.plot as hpl
-import Hicberg.statistics as hst
-import Hicberg.omics as hom
+import hicberg.align as hal
+import hicberg.io as hio
+import hicberg.utils as hut
+import hicberg.plot as hpl
+import hicberg.statistics as hst
+import hicberg.omics as hom
 
 
-from Hicberg import logger
+from hicberg import logger
 
 UNRESCUED_MATRIX = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
