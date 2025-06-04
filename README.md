@@ -826,3 +826,7 @@ coverage run --source=hicberg -m pytest -v tests --cov-report=xml
 - [@sebgra](https://www.github.com/sebgra)
 
 ## <a id="citation"></a> Citation
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15594031.svg)](https://doi.org/10.5281/zenodo.15594031)
+
+
