@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: hicberg
-Version: 1.0.0
+Version: 1.0.1
 Summary: Standalone command line tool to visualize coverage from a BAM file
 Home-page: https://github.com/sebgra/hicberg
 Author: sgradit
@@ -13,9 +13,6 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
-Classifier: Programming Language :: Python :: 3.6
-Classifier: Programming Language :: Python :: 3.7
-Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Topic :: Scientific/Engineering
 Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
@@ -40,6 +37,17 @@ Requires-Dist: pysam
 Requires-Dist: scipy
 Requires-Dist: scikit-learn
 Requires-Dist: statsmodels
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 
 # HiC-BERG
@@ -97,7 +105,13 @@ mamba install bedtools -c bioconda;
 
 ## <a id="installation"></a> Installation
 
-Install my-project with pip
+Install my-project with pip:
+
+```bash
+  pip install hicberg
+```
+
+or in developper mode:
 
 ```bash
   mamba activate [ENV_NAME];
@@ -117,6 +131,10 @@ Install HiC-BERG locally by using
 ### Conda / Mamba
 
 We highly recommend installing HiC-BERG through [Mamba](https://mamba.readthedocs.io/en/latest/mamba-installation.html#mamba-install).
+
+```bash
+conda install -c bioconda hicberg
+```
 
 ```bash
 
