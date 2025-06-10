@@ -29,6 +29,36 @@ import hicberg.io as hio
 import hicberg.statistics as hst
 from hicberg import logger
 
+def _run_command(cmd_list: list[str], description: str, verbose: bool = False) -> None:
+    """
+    Helper function to execute a shell command, log its output, and handle errors.
+
+    Parameters
+    ----------
+    cmd_list : list[str]
+        The command and its arguments as a list.
+    description : str
+        A descriptive string for logging purposes.
+    verbose : bool
+        If True, the command string will be logged.
+    """
+    cmd_str = " ".join(cmd_list)
+    if verbose:
+        logger.info(f"Executing: {cmd_str}")
+
+    process = sp.Popen(cmd_list, stdout=sp.PIPE, stderr=sp.PIPE, shell=True)
+    stdout, stderr = process.communicate()
+
+    if stdout:
+        logger.info(f"STDOUT ({description}):\n{stdout.decode('utf-8', errors='ignore')}")
+    if stderr:
+        # Errors or warnings from tools usually go to stderr
+        logger.warning(f"STDERR ({description}):\n{stderr.decode('utf-8', errors='ignore')}")
+
+    if process.returncode != 0:
+        raise RuntimeError(f"Command failed: {description} (Exit code: {process.returncode})\nCommand: {cmd_str}\nSTDERR: {stderr.decode('utf-8', errors='ignore')}")
+
+
 
 def sum_mat_bins(matrix: np.array) -> np.array:
     """

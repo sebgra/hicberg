@@ -5,8 +5,8 @@ from os.path import join
 from pathlib import Path
 import subprocess as sp
 import uuid
-import click
 from hicberg import logger
+from hicberg.utils import _run_command
 
 
 def hic_build_index(
@@ -100,28 +100,31 @@ def hic_build_index(
         case "bowtie2":
 
             cmd_index = f"bowtie2-build -q -f --threads {cpus} --large-index {genome} {index_path}"
+            _run_command([cmd_index], description="Indexing genome using Bowtie2")
 
-            if verbose:
+            # if verbose:
 
-                logger.info(cmd_index)
+            #     logger.info(cmd_index)
 
-            sp.run([cmd_index], shell=True)
+            # sp.run([cmd_index], shell=True)
 
-            logger.info(f"Index built at {index_path}")
+            # logger.info(f"Index built at {index_path}")
 
             return index_path
 
         case "bwa":
 
             cmd_index = f"bwa index -p {join(index_path)} {genome}"
+            
+            _run_command([cmd_index], description="Indexing genome using BWA")
 
-            if verbose:
+            # if verbose:
 
-                logger.info(cmd_index)
+            #     logger.info(cmd_index)
 
-            sp.run([cmd_index], shell=True)
+            # sp.run([cmd_index], shell=True)
 
-            logger.info(f"Index built at {index_path}")
+            # logger.info(f"Index built at {index_path}")
 
             return index_path
 
@@ -218,67 +221,37 @@ def hic_align(
                 cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '1.sam'} {fq_for}"
                 cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '2.sam'} {fq_rev}"
 
-            if verbose:
 
-                logger.info(cmd_alignment_for)
-                logger.info(cmd_alignment_rev)
+            _run_command([cmd_alignment_for], description = "Forward reads alignment with Bowtie2", verbose=True)
+            _run_command([cmd_alignment_rev], description = "Reverse reads alignment with Bowtie2", verbose=True)
 
-            p_for = sp.Popen(
-                [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            )
-            stdout_for, stderr_for = p_for.communicate()
-            p_rev = sp.Popen(
-                [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            )
-            stdout_rev, stderr_rev = p_rev.communicate()
-
-            if stdout_for:
-                logger.info(stdout_for.decode("ascii"))
-            if stderr_for:
-                logger.info(stderr_for.decode("ascii"))
-
-            if stdout_rev:
-                logger.info(stdout_rev.decode("ascii"))
-            if stderr_rev:
-                logger.info(stderr_rev.decode("ascii"))
 
         case "bwa":
+            
+            print(f"Max alignment: {max_alignment}")
 
             if max_alignment is None or max_alignment == -1:
 
-                cmd_alignment_rev = f"bwa mem -t {cpus} -a -o {output_path / '1.sam'} {genome} {fq_for}"
-                cmd_alignment_for = f"bwa mem -t {cpus} -a -o {output_path / '2.sam'} {genome} {fq_rev}"
+                cmd_alignment_for = f"bwa mem -t {cpus} -a -o {output_path / '1.sam'} {genome} {fq_rev}"
+                cmd_alignment_rev = f"bwa mem -t {cpus} -a -o {output_path / '2.sam'} {genome} {fq_for}"
+                
+                _run_command([cmd_alignment_for], description = "Forward reads alignment with BWA", verbose=True)
+                _run_command([cmd_alignment_rev], description = "Reverse reads alignment with BWA", verbose=True)
+
 
             elif max_alignment is not None:
+    
+                cmd_pre_alignment_for = f"bwa aln -n 2 -o 1 -q 0 -t {cpus} -f {output_path / '1.sai'} {genome} {fq_for}"
+                cmd_pre_alignment_rev = f"bwa aln -n 2 -o 1 -q 0 -t {cpus} -f {output_path / '2.sai'} {genome} {fq_rev}"
                 
-                pass
-
-                # cmd_alignment_for = f"bwa aln"
-                # cmd_alignment_rev = f"bwa aln"
-
-            if verbose:
-
-                logger.info(cmd_alignment_for)
-                logger.info(cmd_alignment_rev)
-
-            p_for = sp.Popen(
-                [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            )
-            stdout_for, stderr_for = p_for.communicate()
-            p_rev = sp.Popen(
-                [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            )
-            stdout_rev, stderr_rev = p_rev.communicate()
-
-            if stdout_for:
-                logger.info(stdout_for.decode("ascii"))
-            if stderr_for:
-                logger.info(stderr_for.decode("ascii"))
-
-            if stdout_rev:
-                logger.info(stdout_rev.decode("ascii"))
-            if stderr_rev:
-                logger.info(stderr_rev.decode("ascii"))
+                cmd_alignment_for = f"bwa samse -n {max_alignment} -f {output_path / '1.sam'} {genome} {output_path / '1.sai'} {fq_for}"
+                cmd_alignment_rev = f"bwa samse -n {max_alignment} -f {output_path / '2.sam'} {genome} {output_path / '2.sai'} {fq_rev}"
+                
+                _run_command([cmd_pre_alignment_for], description = "Forward reads pre-alignment with BWA", verbose=True)
+                _run_command([cmd_pre_alignment_rev], description = "Reverse reads pre-alignment with BWA", verbose=True)
+                
+                _run_command([cmd_alignment_for], description = "Forward reads alignment with BWA", verbose=True)
+                _run_command([cmd_alignment_rev], description = "Reverse reads alignment with BWA", verbose=True)
 
         case "minimap2":
 
@@ -374,15 +347,17 @@ def hic_view(
     cmd_view_for = f"samtools view -h  -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
     cmd_view_rev = f"samtools view -h  -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
 
-    if verbose:
+    _run_command([cmd_view_for], description=".sam to .bam conversion of forward alignments")
+    _run_command([cmd_view_rev], description=".sam to .bam conversion of reverse alignments")
+    # if verbose:
 
-        logger.info(cmd_view_for)
-        logger.info(cmd_view_rev)
+    #     logger.info(cmd_view_for)
+    #     logger.info(cmd_view_rev)
 
-    sp_for = sp.Popen([cmd_view_for], shell=True)
-    sp_for.communicate()
-    sp_rev = sp.Popen([cmd_view_rev], shell=True)
-    sp_rev.communicate()
+    # sp_for = sp.Popen([cmd_view_for], shell=True)
+    # sp_for.communicate()
+    # sp_rev = sp.Popen([cmd_view_rev], shell=True)
+    # sp_rev.communicate()
     # Delete .sam files after .bam conversion
     (output_path / sam_for).unlink()
     (output_path / sam_rev).unlink()
@@ -444,15 +419,19 @@ def hic_sort(
     cmd_sort_for = f"samtools sort -n -T {id_for} {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
     cmd_sort_rev = f"samtools sort -n -T {id_rev} {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"
 
-    if verbose:
+    _run_command([cmd_sort_for], description="Sorting of forward alignments considering read names")
+    _run_command([cmd_sort_rev], description="Sorting of reverse alignments considering read names")
 
-        logger.info(cmd_sort_for)
-        logger.info(cmd_sort_rev)
 
-    sp_for = sp.Popen([cmd_sort_for], shell=True)
-    sp_for.communicate()
-    sp_rev = sp.Popen([cmd_sort_rev], shell=True)
-    sp_rev.communicate()
+    # if verbose:
+
+    #     logger.info(cmd_sort_for)
+    #     logger.info(cmd_sort_rev)
+
+    # sp_for = sp.Popen([cmd_sort_for], shell=True)
+    # sp_for.communicate()
+    # sp_rev = sp.Popen([cmd_sort_rev], shell=True)
+    # sp_rev.communicate()
     (output_path / "1.bam").unlink()
     (output_path / "2.bam").unlink()
 
