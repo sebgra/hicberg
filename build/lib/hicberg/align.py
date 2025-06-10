@@ -102,14 +102,6 @@ def hic_build_index(
             cmd_index = f"bowtie2-build -q -f --threads {cpus} --large-index {genome} {index_path}"
             _run_command([cmd_index], description="Indexing genome using Bowtie2")
 
-            # if verbose:
-
-            #     logger.info(cmd_index)
-
-            # sp.run([cmd_index], shell=True)
-
-            # logger.info(f"Index built at {index_path}")
-
             return index_path
 
         case "bwa":
@@ -117,14 +109,6 @@ def hic_build_index(
             cmd_index = f"bwa index -p {join(index_path)} {genome}"
             
             _run_command([cmd_index], description="Indexing genome using BWA")
-
-            # if verbose:
-
-            #     logger.info(cmd_index)
-
-            # sp.run([cmd_index], shell=True)
-
-            # logger.info(f"Index built at {index_path}")
 
             return index_path
 
@@ -205,7 +189,7 @@ def hic_align(
             f"Output path {output_path} does not exist. Please provide existing output path."
         )
 
-    index_path = Path(output_path / index)
+    index_path = Path(output_path / index) if index is not None else None
 
     match aligner:
 
@@ -257,37 +241,40 @@ def hic_align(
 
             if max_alignment is None or max_alignment == -1:
 
-                cmd_alignment_rev = f""
-                cmd_alignment_for = f""
+                cmd_alignment_rev = f"minimap2 -a --secondary yes -t {cpus} -o {output_path / '1.sam'} {genome} {fq_for}"
+                cmd_alignment_for = f"minimap2 -a --secondary yes -t {cpus} -o {output_path / '2.sam'} {genome} {fq_rev}"
 
             elif max_alignment is not None:
 
-                cmd_alignment_for = f""
-                cmd_alignment_rev = f""
+                cmd_alignment_for = f"minimap2 -a --secondary yes -N {max_alignment} -t {cpus} -o {output_path / '1.sam'} {genome} {fq_for}"
+                cmd_alignment_rev = f"minimap2 -a --secondary yes -N {max_alignment} -t {cpus} -o {output_path / '2.sam'} {genome} {fq_rev}"
 
-            if verbose:
 
-                logger.info(cmd_alignment_for)
-                logger.info(cmd_alignment_rev)
+            _run_command([cmd_alignment_for], description = "Forward reads alignment with Minimap2", verbose = True)
+            _run_command([cmd_alignment_rev], description = "Reverse reads alignment with Minimap2", verbose = True)
+ # if verbose:
 
-            p_for = sp.Popen(
-                [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            )
-            stdout_for, stderr_for = p_for.communicate()
-            p_rev = sp.Popen(
-                [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            )
-            stdout_rev, stderr_rev = p_rev.communicate()
+            #     logger.info(cmd_alignment_for)
+            #     logger.info(cmd_alignment_rev)
 
-            if stdout_for:
-                logger.info(stdout_for.decode("ascii"))
-            if stderr_for:
-                logger.info(stderr_for.decode("ascii"))
+            # p_for = sp.Popen(
+            #     [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            # )
+            # stdout_for, stderr_for = p_for.communicate()
+            # p_rev = sp.Popen(
+            #     [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            # )
+            # stdout_rev, stderr_rev = p_rev.communicate()
 
-            if stdout_rev:
-                logger.info(stdout_rev.decode("ascii"))
-            if stderr_rev:
-                logger.info(stderr_rev.decode("ascii"))
+            # if stdout_for:
+            #     logger.info(stdout_for.decode("ascii"))
+            # if stderr_for:
+            #     logger.info(stderr_for.decode("ascii"))
+
+            # if stdout_rev:
+            #     logger.info(stdout_rev.decode("ascii"))
+            # if stderr_rev:
+            #     logger.info(stderr_rev.decode("ascii"))
 
         case "_":
 
@@ -349,15 +336,7 @@ def hic_view(
 
     _run_command([cmd_view_for], description=".sam to .bam conversion of forward alignments")
     _run_command([cmd_view_rev], description=".sam to .bam conversion of reverse alignments")
-    # if verbose:
 
-    #     logger.info(cmd_view_for)
-    #     logger.info(cmd_view_rev)
-
-    # sp_for = sp.Popen([cmd_view_for], shell=True)
-    # sp_for.communicate()
-    # sp_rev = sp.Popen([cmd_view_rev], shell=True)
-    # sp_rev.communicate()
     # Delete .sam files after .bam conversion
     (output_path / sam_for).unlink()
     (output_path / sam_rev).unlink()
@@ -422,16 +401,6 @@ def hic_sort(
     _run_command([cmd_sort_for], description="Sorting of forward alignments considering read names")
     _run_command([cmd_sort_rev], description="Sorting of reverse alignments considering read names")
 
-
-    # if verbose:
-
-    #     logger.info(cmd_sort_for)
-    #     logger.info(cmd_sort_rev)
-
-    # sp_for = sp.Popen([cmd_sort_for], shell=True)
-    # sp_for.communicate()
-    # sp_rev = sp.Popen([cmd_sort_rev], shell=True)
-    # sp_rev.communicate()
     (output_path / "1.bam").unlink()
     (output_path / "2.bam").unlink()
 

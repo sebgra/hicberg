@@ -149,13 +149,13 @@ https://sebgra.github.io/hicberg/
 ```bash
 
 hicberg pipeline [--enzyme=["DpnII", "HinfI"]] [--distance=1000]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--max-alignments=None] [--sensitivity="very-sensitive"]
+[--rate=1.0] [--cpus=1] [--mode="full"] [--aligner="bowtie2"] [--max-alignments=None] [--sensitivity="very-sensitive"]
 [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"]
 [--exit-stage=None] [--output=DIR] [--index=None] [--blacklist=STR] [--force]  <genome> <input1> <input2>
 
 ```
 
-For example, to run the pipeline using 8 threads, in default mode, using ARIMA Hi-C kit enzymes (DpnII & HinfI) without blacklisting and generate a matrix and its reconstruction in the directory out: 
+For example, to run the pipeline using 8 threads, performing alignments with bowtie2, in default mode, using ARIMA Hi-C kit enzymes (DpnII & HinfI) without blacklisting and generate a matrix and its reconstruction in the directory out: 
 
 ```bash
 hicberg pipeline -e DpnII -e HinfI --cpus 8 -o out/  genome.fa  reads_for.fq  rev_reads.fq 
@@ -298,7 +298,7 @@ The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be 
 After having created a folder with the previous command mentioned in **create folder** and performed the creation of fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__ , the reads can be aligned using the following command:
 
 ```bash
-hicberg alignment  --output=DIR [--cpus=1] [--max-alignments=None] [--sensitivity="very-sensitive"] [--index=index]
+hicberg alignment  --output=DIR [--cpus=1] [--aligner="bowtie2"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--index=index]
   [--verbosity] <genome> <forward> <reverse>
 ```
 
@@ -314,7 +314,9 @@ If the user have already created the index, the following command can be used:
 hicberg alignment -o ~/Desktop/test/ --cpus 8 --index index_prefix  <genome.fa>  <reads_for.fq>  <rev_reads.fq>
 ```
 
-The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created.
+The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created if using  `bowtie2` as aligner `--aligner parameter` or `-a`.
+
+If the aligner used is `BWA`, the files  __*XXX.fa.amb*__, __*XXX.fa.ann*__, __*XXX.fa.bwt*__, __*XXX.fa.pac*__ and __*XXX.fa.sa*__ will be created.
 
 ### Classification
 
@@ -540,12 +542,17 @@ After tidying the folders architecture will be the following:
 ├── fragments_fixed_sizes.txt
 ├── chromosome_sizes.txt
 ├── index
-│   ├── index.1.bt2l
-│   ├── index.2.bt2l
-│   ├── index.3.bt2l
-│   ├── index.4.bt2l
-│   ├── index.rev.1.bt2l
-│   └── index.rev.2.bt2l
+│   ├── index.1.bt2l (Bowtie2)
+│   ├── index.2.bt2l (Bowtie2)
+│   ├── index.3.bt2l (Bowtie2)
+│   ├── index.4.bt2l (Bowtie2)
+│   ├── index.rev.1.bt2l (Bowtie2)
+│   ├── index.rev.2.bt2l (Bowtie2)
+│   ├── index.fa.amb (BWA)
+│   ├── index.fa.ann (BWA)
+│   ├── index.fa.bwt (BWA)
+│   ├── index.fa.pac (BWA)
+|   └── index.fa.sa (BWA)
 ├── plots
 │   ├── chr_X.pdf
 │   ├── Couple_sizes_distribution.pdf
@@ -582,7 +589,7 @@ It is possible to chain the different steps of the pipeline by using the followi
 hicberg pipeline  -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage fastq  --exit-stage bam <genome> <input1> <input2>
 
 # 1. Align reads
-hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage bam  --exit-stage groups <genome> <input1> <input2>
+hicberg pipeline -o --output=DIR  [--cpus=1] [--aligner=STR] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage bam  --exit-stage groups <genome> <input1> <input2>
 
 # 2. Group reads
 hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage groups  --exit-stage build <genome> <input1> <input2>
