@@ -63,12 +63,13 @@ def cli(chain=True):
 @click.option("--start-stage", required = False, type = click.Choice(["fastq", "bam", "groups", "build", "stats", "rescue", "final"]), default = "fastq", show_default = True, metavar = "<str>", help = "Stage to start the pipeline.")
 @click.option("--exit-stage", required = False, type = click.Choice(["None", "bam", "groups", "build", "stats", "rescue", "final"]), default = "None", show_default = True, metavar = "<str>", help = "Stage to exit the pipeline.")
 @click.option("--force", "-f", is_flag = True, show_default = True, help = "Set if previous analysis files are deleted.")
-@click.option("--blacklist", "-B", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Blacklisted coordintaes to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.")
-def pipeline_cmd(data, index, name, rate, distance, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force, blacklist):
+@click.option("--blacklist", "-B", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Blacklisted coordinates to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.")
+@click.option("--aligner", "-a", required = False, default = "bowtie2", type = str, show_default = True, metavar = "<str>", help = "Aligner to be used for alignment.")
+def pipeline_cmd(data, index, name, rate, distance, mode, kernel_size, deviation, cpus, output, max_alignment, sensitivity, bins, enzyme, circular, mapq, start_stage, exit_stage, force, blacklist, aligner):
     """
     Hi-C pipeline to generate enhanced contact matrix from fastq files.
     """
-    hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, distance = distance, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force, blacklist = blacklist)
+    hpp.pipeline(genome = data[0], index = index, name = name, fq_for = data[1], fq_rev = data[2], output_dir = output, cpus = cpus, rate = rate, distance = distance, nb_chunks = 2 * cpus, mode = mode, kernel_size = kernel_size, deviation = deviation, max_alignment = max_alignment,  sensitivity = sensitivity, bins = bins, enzyme = enzyme, circular = circular, mapq = mapq, start_stage = start_stage, exit_stage = exit_stage, force = force, blacklist = blacklist, aligner = aligner)
     return
 
 
@@ -104,6 +105,7 @@ def get_tables_cmd(data, bins, output):
 @click.option("--max-alignment", '-k', required = False, type = int, default = None, show_default = True, metavar = "<int>", help = "Set the number of alignments to report in ambiguous reads case. If set to -1, all alignments are reported.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, show_default = True, metavar = "<int>", help = "Threads to use for analysis.")
 @click.option("--verbose", "-v", is_flag = True, help = "Set verbosity level.")
+@click.option("--aligner", "-a", required = False, default = "bowtie2", type = str, show_default = True, metavar = "<str>", help = "Aligner to use to perform alignments.")
 def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose):
     """
     Perform alignment of Hi-C reads.
@@ -166,7 +168,7 @@ def build_matrix_cmd(output, recover, cpus):
 @click.option("--circular", "-c", required = False, type = str, default = "", show_default = True, metavar = "<str>", help = "Name of the chromosome to consider as circular.")
 @click.option("--bins", "-b", required = False, type = int, default = 2000, show_default = True, metavar = "<int>", help = "Genomic resolution.")
 @click.option("--cpus", "-t", required = False, default = 1, type = int, show_default = True, metavar = "<int>", help = "Threads to use for analysis.")
-@click.option("--blacklist", "-B", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Blacklisted coordintaes to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.")
+@click.option("--blacklist", "-B", required = False, default = None, type = str, show_default = True, metavar = "<str>", help = "Blacklisted coordinates to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.")
 def statistics_cmd(data, mode, kernel_size, deviation,  rate, enzyme, circular, bins, output, cpus, blacklist):
     """
     Extract statistics from non ambiguous Hi-C data.
@@ -208,7 +210,6 @@ def rescue_cmd(data, enzyme, mode, output, cpus):
     """
     Reallocate ambiguous reads to the most plausible position according to model.
     """
-    # TODO : to uncomment
     restriction_map = hst.get_restriction_map(genome = data[0], enzyme = enzyme, output_dir = output)
     hut.chunk_bam(nb_chunks = cpus, output_dir = output)
         

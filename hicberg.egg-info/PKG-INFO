@@ -148,8 +148,6 @@ mamba install bioconda::bedtools
 mamba install bioconda::ucsc-bedgraphtobigwig
 ```
 
-TO BE COMPLETED
-
 ### <a id="Docker"></a> Docker
 
 HiC-BERG can be used via Docker to limit dependency compatibility problems. More information about container such as Docker can be found [there](https://www.docker.com/get-started/).
@@ -162,13 +160,13 @@ export HOST_UID=$(id -u);
 export HOST_GID=$(id -g);
 
 # Build container
-sudo docker build --build-arg UID=$HOST_UID --build-arg GID=$HOST_GID -t hicberg:0.0.1 .
+sudo docker build --build-arg UID=$HOST_UID --build-arg GID=$HOST_GID -t hicberg:1.0.1 .
 ```
 
 HiC-BERG can therefore be used with usual command detailed further using : 
 
 ```bash
-sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 <hicberg_command>
+sudo docker run   -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:1.0.1 <hicberg_command>
 ```
 
 N.B : _working_directory_ and _output (-o argument)_ of HiC-BERG command have to be the same.
@@ -176,7 +174,7 @@ N.B : _working_directory_ and _output (-o argument)_ of HiC-BERG command have to
 For instance if you need to access the help of HiC-BERG through Docker :
 
 ```bash
-sudo docker run -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:0.0.1 hicberg --help
+sudo docker run -v $PWD:$PWD  -w <working directory> -u $(id -u):$(id -g)  hicberg:1.0.1 hicberg --help
 ```
 
 HiC-BERG can also be used through Docker in interactive mode using :
@@ -879,3 +877,7 @@ coverage run --source=hicberg -m pytest -v tests --cov-report=xml
 - [@sebgra](https://www.github.com/sebgra)
 
 ## <a id="citation"></a> Citation
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15594031.svg)](https://doi.org/10.5281/zenodo.15594031)
+
+

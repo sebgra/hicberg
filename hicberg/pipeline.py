@@ -49,7 +49,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
             max_alignment : int = None, mapq : int = 35, enzyme  : list[str] = ["DpnII", "HinfI"],
             circular : str = "", rate : float = 1.0, distance : int = 1000, bins : int = 2000, nb_chunks : int = 1,
             mode : str = "full", kernel_size : int = 11, deviation : float = 0.5,  verbose : bool = False,
-            cpus : int = 1, output_dir : str = None, force : bool = False, blacklist : str = None) -> None :
+            cpus : int = 1, output_dir : str = None, force : bool = False, blacklist : str = None, aligner : str = "bowtie2") -> None :
 
     args = locals()
 
@@ -118,7 +118,7 @@ def pipeline(name : str = "sample",start_stage : str = "fastq", exit_stage : str
     if start_stage < 2: 
 
         if index is None:
-            index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose)
+            index = hal.hic_build_index(genome = genome, output_dir = output_folder, cpus = cpus, verbose = verbose, aligner = aligner)
 
         hal.hic_align(index = index, fq_for = fq_for, fq_rev = fq_rev, sensitivity = sensitivity, max_alignment = max_alignment, output_dir = output_folder, cpus = cpus, verbose = True)
         hal.hic_view(cpus = cpus, output_dir = output_folder, verbose = True)

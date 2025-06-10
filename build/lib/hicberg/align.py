@@ -1,3 +1,5 @@
+import sys
+import shutil
 from os import getcwd
 from os.path import join
 from pathlib import Path
@@ -6,7 +8,7 @@ import uuid
 import click
 from hicberg import logger
 
-def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , verbose : bool = False) -> None:
+def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , verbose : bool = False, aligner : str = 'bowtie2') -> None:
     """
     Building of bowtie2 index (.bt2l files) for read alignment.
 
@@ -20,19 +22,46 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
         Path where the Bowtie2 index files should be stored, by default None
     verbose : bool, optional
         Set wether or not the shell command should be printed, by default False
+    aligner : str, optional
+        Aligner algorithm to use for alignment, by default bowtie2
+        Supported aligners: 'bowtie2', 'bwa', 'minimap2'.
     """
 
     logger.info("Start building index for alignment")
 
-    try:
+    supported_aligners = {
+        'bowtie2': 'bowtie2-build',
+        'bwa': 'bwa index',  # bwa index is used for building the index
+        'minimap2': 'minimap2' # minimap2 does not have a separate index build command like bowtie2 or bwa
+    }
 
-        sp.check_output(["bowtie2-build", "-h"])
+    if aligner not in supported_aligners:
+        raise ValueError(f"Aligner '{aligner}' is not supported. Supported aligners are: {', '.join(supported_aligners.keys())}")
 
-    except OSError:
+    aligner_command = supported_aligners[aligner].split()[0] # Get the base command
 
+    print(f"aligner_command: {aligner_command}")
+
+    # Map aligner names to their primary executable names
+    aligner_executables = {
+        'bowtie2': 'bowtie2-build', # For index building
+        'bwa': 'bwa',              # For index building (via 'bwa index')
+        'minimap2': 'minimap2'     # No separate index building step
+    }
+
+    if aligner not in aligner_executables:
+        raise ValueError(f"Aligner '{aligner}' is not supported. Supported aligners are: {', '.join(aligner_executables.keys())}")
+
+    base_command = aligner_executables[aligner]
+
+    # --- Robustly check for aligner executable existence in PATH ---
+    if shutil.which(base_command) is None:
         raise RuntimeError(
-            "bowtie2-build not found; check if it is installed and in $PATH\n install Bowtie2 with : conda install bowtie2"
+            f"Aligner '{base_command}' not found in your system's PATH. "
+            f"Please ensure {aligner} is installed and its executable is accessible.\n"
+            f"You can often install it with: conda install {aligner}"
         )
+    logger.info(f"Aligner '{aligner}' ({base_command}) found in PATH.")
     
     genome_path = Path(genome)
 
@@ -54,17 +83,50 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
     sample = Path(genome).stem
     index_path = Path(output_dir, sample)
 
-    cmd_index = f"bowtie2-build -q -f --threads {cpus} --large-index {genome} {index_path}"
+    print(f"Aligner: {aligner}")
 
-    if verbose:
+    match aligner:
 
-        logger.info(cmd_index)
+        case "bowtie2":
 
-    sp.run([cmd_index], shell=True)
+            cmd_index = f"bowtie2-build -q -f --threads {cpus} --large-index {genome} {index_path}"
 
-    logger.info(f"Index built at {index_path}")
+            if verbose:
 
-    return index_path
+                logger.info(cmd_index)
+
+            sp.run([cmd_index], shell=True)
+
+            logger.info(f"Index built at {index_path}")
+
+            return index_path
+        
+        case "bwa":
+
+            # print(f"{join(index_path, sample)}")
+            # sys.exit(1)
+            cmd_index = f"bwa index -p {join(index_path)} {genome}"
+            # print(genome)
+            # print(cmd_index)
+
+            if verbose:
+
+                logger.info(cmd_index)
+
+            sp.run([cmd_index], shell=True)
+
+            logger.info(f"Index built at {index_path}")
+
+            return index_path
+
+        case "minimap2":
+
+            logger.info(f"Minimap2 does not require a separate index build step like Bowtie2 or BWA.")
+            logger.info(f"When using minimap2, the index is often built on-the-fly during alignment.")
+
+        case "_":
+
+            pass
 
 
 def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
