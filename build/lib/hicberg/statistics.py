@@ -1271,6 +1271,12 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
         # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
         if cover <= 0:
             cover = 1
+        # if ps is None:
+        #     print(f"ps : {ps}")
+        #     print(f"cover: {cover}")
+            
+        #     print(f"Forward\n{read_forward}")
+        #     print(f"Reverse\n{read_reverse}")
 
         return ps * cover
 

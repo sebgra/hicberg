@@ -8,7 +8,14 @@ import uuid
 import click
 from hicberg import logger
 
-def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , verbose : bool = False, aligner : str = 'bowtie2') -> None:
+
+def hic_build_index(
+    genome: str,
+    output_dir: str = None,
+    cpus: int = 1,
+    verbose: bool = False,
+    aligner: str = "bowtie2",
+) -> None:
     """
     Building of bowtie2 index (.bt2l files) for read alignment.
 
@@ -30,27 +37,31 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
     logger.info("Start building index for alignment")
 
     supported_aligners = {
-        'bowtie2': 'bowtie2-build',
-        'bwa': 'bwa index',  # bwa index is used for building the index
-        'minimap2': 'minimap2' # minimap2 does not have a separate index build command like bowtie2 or bwa
+        "bowtie2": "bowtie2-build",
+        "bwa": "bwa index",  # bwa index is used for building the index
+        "minimap2": "minimap2",  # minimap2 does not have a separate index build command like bowtie2 or bwa
     }
 
     if aligner not in supported_aligners:
-        raise ValueError(f"Aligner '{aligner}' is not supported. Supported aligners are: {', '.join(supported_aligners.keys())}")
+        raise ValueError(
+            f"Aligner '{aligner}' is not supported. Supported aligners are: {', '.join(supported_aligners.keys())}"
+        )
 
-    aligner_command = supported_aligners[aligner].split()[0] # Get the base command
+    aligner_command = supported_aligners[aligner].split()[0]  # Get the base command
 
     print(f"aligner_command: {aligner_command}")
 
     # Map aligner names to their primary executable names
     aligner_executables = {
-        'bowtie2': 'bowtie2-build', # For index building
-        'bwa': 'bwa',              # For index building (via 'bwa index')
-        'minimap2': 'minimap2'     # No separate index building step
+        "bowtie2": "bowtie2-build",  # For index building
+        "bwa": "bwa",  # For index building (via 'bwa index')
+        "minimap2": "minimap2",  # No separate index building step
     }
 
     if aligner not in aligner_executables:
-        raise ValueError(f"Aligner '{aligner}' is not supported. Supported aligners are: {', '.join(aligner_executables.keys())}")
+        raise ValueError(
+            f"Aligner '{aligner}' is not supported. Supported aligners are: {', '.join(aligner_executables.keys())}"
+        )
 
     base_command = aligner_executables[aligner]
 
@@ -62,28 +73,27 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
             f"You can often install it with: conda install {aligner}"
         )
     logger.info(f"Aligner '{aligner}' ({base_command}) found in PATH.")
-    
+
     genome_path = Path(genome)
 
     if not genome_path.is_file():
-        
+
         raise ValueError(f"Genome file {genome} not found")
 
-    if output_dir is None:    
+    if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
-        
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
-    
+        raise ValueError(
+            f"Output path {output_path} does not exist. Please provide existing ouput path."
+        )
+
     sample = Path(genome).stem
     index_path = Path(output_dir, sample)
-
-    print(f"Aligner: {aligner}")
 
     match aligner:
 
@@ -100,14 +110,10 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
             logger.info(f"Index built at {index_path}")
 
             return index_path
-        
+
         case "bwa":
 
-            # print(f"{join(index_path, sample)}")
-            # sys.exit(1)
             cmd_index = f"bwa index -p {join(index_path)} {genome}"
-            # print(genome)
-            # print(cmd_index)
 
             if verbose:
 
@@ -121,15 +127,30 @@ def hic_build_index(genome : str, output_dir  : str = None , cpus : int = 1 , ve
 
         case "minimap2":
 
-            logger.info(f"Minimap2 does not require a separate index build step like Bowtie2 or BWA.")
-            logger.info(f"When using minimap2, the index is often built on-the-fly during alignment.")
+            logger.info(
+                f"Minimap2 does not require a separate index build step like Bowtie2 or BWA."
+            )
+            logger.info(
+                f"When using minimap2, the index is often built on-the-fly during alignment."
+            )
 
-        case "_":
+        case "_":  # Default case
 
             pass
 
 
-def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very-sensitive', max_alignment :  int = None, cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
+def hic_align(
+    index: str,
+    genome: str,
+    fq_for: str,
+    fq_rev: str,
+    sensitivity: str = "very-sensitive",
+    max_alignment: int = None,
+    cpus: int = 1,
+    output_dir: str = None,
+    verbose: bool = False,
+    aligner: str = "bowtie2",
+) -> None:
     """
     Alignment of reads from HiC experiments along an indexed genome.
 
@@ -137,6 +158,8 @@ def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very
     ----------
     index : str
         Path to the index of the genome along which reads are going to be aligned (path to .bt2l files). Default to None, index files are searched to sample_name/data/index/sample_name.
+    genome : str
+        Path to the genome to perform alignment on.
     fq_for : str
         Path to .fasta containing set of reads to align (forward mate).
     fq_rev : str
@@ -151,62 +174,162 @@ def hic_align(index : str, fq_for : str, fq_rev : str, sensitivity : str = 'very
         Path where the alignment files (.sam) should be stored, by default None
     verbose : bool, optional
         Set wether or not the shell command should be printed, by default False
-    """    
+    aligner : str, optional
+        Aligner algorithm to use for alignment, by default bowtie2
+        Supported aligners: 'bowtie2', 'bwa', 'minimap2'.
+    """
 
     logger.info("Start aligning reads")
 
-    fq_for_path, fq_rev_path  = Path(fq_for), Path(fq_rev)
+    fq_for_path, fq_rev_path = Path(fq_for), Path(fq_rev)
 
     if not fq_for_path.is_file() or not fq_rev_path.is_file():
 
-        raise IOError(f"Wrong path to fastq files : {fq_for_path} or {fq_rev_path} given. \
-                    Pease provide existing files.")
-    
-    if output_dir is None:    
+        raise IOError(
+            f"Wrong path to fastq files : {fq_for_path} or {fq_rev_path} given. \
+                    Pease provide existing files."
+        )
+
+    if output_dir is None:
         output_path = Path(getcwd())
-    
-    else : 
+
+    else:
         output_path = Path(output_dir)
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
+        raise ValueError(
+            f"Output path {output_path} does not exist. Please provide existing output path."
+        )
 
     index_path = Path(output_path / index)
 
-    if max_alignment is None or max_alignment == -1:
-        
-        cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
-        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
+    match aligner:
 
-    elif max_alignment is not None:
-            
-        cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '1.sam'} {fq_for}"
-        cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '2.sam'} {fq_rev}"
+        case "bowtie2":
 
-    if verbose :
+            if max_alignment is None or max_alignment == -1:
 
-        logger.info(cmd_alignment_for)
-        logger.info(cmd_alignment_rev)
+                cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
+                cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
 
-    p_for = sp.Popen([cmd_alignment_for], shell=True, stdout = sp.PIPE, stderr = sp.PIPE)
-    stdout_for, stderr_for  = p_for.communicate()
-    p_rev = sp.Popen([cmd_alignment_rev], shell=True, stdout = sp.PIPE,  stderr = sp.PIPE)
-    stdout_rev, stderr_rev = p_rev.communicate()
+            elif max_alignment is not None:
 
-    if stdout_for : 
-        logger.info(stdout_for.decode('ascii'))
-    if stderr_for : 
-        logger.info(stderr_for.decode('ascii'))
+                cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '1.sam'} {fq_for}"
+                cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '2.sam'} {fq_rev}"
 
-    if stdout_rev:
-        logger.info(stdout_rev.decode('ascii'))
-    if stderr_rev:
-        logger.info(stderr_rev.decode('ascii'))
+            if verbose:
+
+                logger.info(cmd_alignment_for)
+                logger.info(cmd_alignment_rev)
+
+            p_for = sp.Popen(
+                [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            )
+            stdout_for, stderr_for = p_for.communicate()
+            p_rev = sp.Popen(
+                [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            )
+            stdout_rev, stderr_rev = p_rev.communicate()
+
+            if stdout_for:
+                logger.info(stdout_for.decode("ascii"))
+            if stderr_for:
+                logger.info(stderr_for.decode("ascii"))
+
+            if stdout_rev:
+                logger.info(stdout_rev.decode("ascii"))
+            if stderr_rev:
+                logger.info(stderr_rev.decode("ascii"))
+
+        case "bwa":
+
+            if max_alignment is None or max_alignment == -1:
+
+                cmd_alignment_rev = f"bwa mem -t {cpus} -a -o {output_path / '1.sam'} {genome} {fq_for}"
+                cmd_alignment_for = f"bwa mem -t {cpus} -a -o {output_path / '2.sam'} {genome} {fq_rev}"
+
+            elif max_alignment is not None:
+                
+                pass
+
+                # cmd_alignment_for = f"bwa aln"
+                # cmd_alignment_rev = f"bwa aln"
+
+            if verbose:
+
+                logger.info(cmd_alignment_for)
+                logger.info(cmd_alignment_rev)
+
+            p_for = sp.Popen(
+                [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            )
+            stdout_for, stderr_for = p_for.communicate()
+            p_rev = sp.Popen(
+                [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            )
+            stdout_rev, stderr_rev = p_rev.communicate()
+
+            if stdout_for:
+                logger.info(stdout_for.decode("ascii"))
+            if stderr_for:
+                logger.info(stderr_for.decode("ascii"))
+
+            if stdout_rev:
+                logger.info(stdout_rev.decode("ascii"))
+            if stderr_rev:
+                logger.info(stderr_rev.decode("ascii"))
+
+        case "minimap2":
+
+            if max_alignment is None or max_alignment == -1:
+
+                cmd_alignment_rev = f""
+                cmd_alignment_for = f""
+
+            elif max_alignment is not None:
+
+                cmd_alignment_for = f""
+                cmd_alignment_rev = f""
+
+            if verbose:
+
+                logger.info(cmd_alignment_for)
+                logger.info(cmd_alignment_rev)
+
+            p_for = sp.Popen(
+                [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            )
+            stdout_for, stderr_for = p_for.communicate()
+            p_rev = sp.Popen(
+                [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+            )
+            stdout_rev, stderr_rev = p_rev.communicate()
+
+            if stdout_for:
+                logger.info(stdout_for.decode("ascii"))
+            if stderr_for:
+                logger.info(stderr_for.decode("ascii"))
+
+            if stdout_rev:
+                logger.info(stdout_rev.decode("ascii"))
+            if stderr_rev:
+                logger.info(stderr_rev.decode("ascii"))
+
+        case "_":
+
+            pass
 
     logger.info(f"Alignment saved at {output_path}")
 
-def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
+
+def hic_view(
+    sam_for: str = "1.sam",
+    sam_rev: str = "2.sam",
+    cpus: int = 1,
+    output_dir: str = None,
+    verbose: bool = False,
+) -> None:
     """
     Conversion of .sam alignment files to .bam alignment format (using samtools).
 
@@ -236,16 +359,18 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
             "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
         )
 
-    if output_dir is None:    
+    if output_dir is None:
         output_path = Path(getcwd())
-    
-    else : 
+
+    else:
         output_path = Path(output_dir)
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
-    
+        raise ValueError(
+            f"Output path {output_path} does not exist. Please provide existing output path."
+        )
+
     cmd_view_for = f"samtools view -h  -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
     cmd_view_rev = f"samtools view -h  -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
 
@@ -264,7 +389,14 @@ def hic_view(sam_for : str = "1.sam", sam_rev : str = "2.sam", cpus : int = 1, o
 
     logger.info(f"Compressed  alignment done at {output_path}")
 
-def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
+
+def hic_sort(
+    bam_for: str = "1.bam",
+    bam_rev: str = "2.bam",
+    cpus: int = 1,
+    output_dir: str = None,
+    verbose: bool = False,
+) -> None:
     """
     Sort .bam alignment files by read_name  (using samtools).
 
@@ -294,19 +426,21 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
             "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
         )
 
-    if output_dir is None:    
+    if output_dir is None:
         output_path = Path(getcwd())
-    
-    else : 
+
+    else:
         output_path = Path(output_dir)
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
-    
+        raise ValueError(
+            f"Output path {output_path} does not exist. Please provide existing ouput path."
+        )
+
     id_for = uuid.uuid4()
     id_rev = uuid.uuid4()
-    
+
     cmd_sort_for = f"samtools sort -n -T {id_for} {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
     cmd_sort_rev = f"samtools sort -n -T {id_rev} {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"
 
@@ -318,14 +452,20 @@ def hic_sort(bam_for : str = "1.bam", bam_rev : str = "2.bam", cpus : int = 1, o
     sp_for = sp.Popen([cmd_sort_for], shell=True)
     sp_for.communicate()
     sp_rev = sp.Popen([cmd_sort_rev], shell=True)
-    sp_rev.communicate()    
-    (output_path / '1.bam').unlink()
-    (output_path / '2.bam').unlink()
+    sp_rev.communicate()
+    (output_path / "1.bam").unlink()
+    (output_path / "2.bam").unlink()
 
     logger.info(f"Sorted alignment done at {output_path}")
 
 
-def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cpus : int = 1, output_dir : str = None, verbose : bool = False) -> None:
+def hic_index(
+    bam_for: str = "1.sorted.bam",
+    bam_rev: str = "2.sorted.bam",
+    cpus: int = 1,
+    output_dir: str = None,
+    verbose: bool = False,
+) -> None:
     """
     Index a coordinate-sorted BGZIP-compressed SAM, BAM or CRAM file for fast random access.
 
@@ -354,16 +494,18 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
             "Samtools not found; check if it is installed and in $PATH\n install Samtools with : conda install samtools"
         )
 
-    if output_dir is None:    
+    if output_dir is None:
         output_path = Path(getcwd())
-    
-    else : 
+
+    else:
         output_path = Path(output_dir)
 
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
-    
+        raise ValueError(
+            f"Output path {output_path} does not exist. Please provide existing output path."
+        )
+
     cmd_index_for = f"samtools index -b {bam_for} -@ {cpus}"
     cmd_index_rev = f"samtools index -b {bam_rev} -@ {cpus}"
 
@@ -376,6 +518,3 @@ def hic_index(bam_for : str = "1.sorted.bam", bam_rev : str = "2.sorted.bam", cp
     sp.run([cmd_index_rev], shell=True)
 
     logger.info(f"Indexed alignment done at {output_path}")
-
-
-
