@@ -252,8 +252,21 @@ def cli(chain=True):
     "--read-type",
     "-R",
     required=False,
-    default="short",
-    type=str,
+    default="sr",
+    type=click.Choice(
+        [
+            "sr",
+            "map-pb",
+            "map-hifi",
+            "map-ont",
+            "splice",
+            "splice:hq",
+            "asm5",
+            "asm10",
+            "ava-pb",
+            "ava-ont",
+        ]
+    ),
     show_default=True,
     metavar="<str>",
     help="Type of reads to align (Minimap2)",
@@ -280,7 +293,7 @@ def pipeline_cmd(
     force,
     blacklist,
     aligner,
-    read_type
+    read_type,
 ):
     """
     Hi-C pipeline to generate enhanced contact matrix from fastq files.
@@ -310,7 +323,7 @@ def pipeline_cmd(
         force=force,
         blacklist=blacklist,
         aligner=aligner,
-        read_type=read_type
+        read_type=read_type,
     )
     return
 
@@ -457,13 +470,28 @@ def get_tables_cmd(data, bins, output):
     "--read-type",
     "-R",
     required=False,
-    default="short",
-    type=str,
+    default="sr",
+    type=click.Choice(
+        [
+            "sr",
+            "map-pb",
+            "map-hifi",
+            "map-ont",
+            "splice",
+            "splice:hq",
+            "asm5",
+            "asm10",
+            "ava-pb",
+            "ava-ont",
+        ]
+    ),
     show_default=True,
     metavar="<str>",
     help="Type of reads to align (Minimap2)",
 )
-def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose, aligner, read_type):
+def alignment_cmd(
+    data, index, max_alignment, sensitivity, output, cpus, verbose, aligner, read_type
+):
     """
     Perform alignment of Hi-C reads.
     """
@@ -482,7 +510,7 @@ def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose
         cpus=cpus,
         verbose=True,
         aligner=aligner,
-        read_type=read_type
+        read_type=read_type,
     )
     hal.hic_view(output_dir=output, cpus=cpus, verbose=verbose)
     hal.hic_sort(output_dir=output, cpus=cpus, verbose=verbose)

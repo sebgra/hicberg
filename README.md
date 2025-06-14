@@ -149,7 +149,7 @@ https://sebgra.github.io/hicberg/
 ```bash
 
 hicberg pipeline [--enzyme=["DpnII", "HinfI"]] [--distance=1000]
-[--rate=1.0] [--cpus=1] [--mode="full"] [--aligner="bowtie2"] [--max-alignments=None] [--sensitivity="very-sensitive"]
+[--rate=1.0] [--cpus=1] [--mode="full"] [--aligner="bowtie2"] [--read-type="sr"] [--max-alignments=None] [--sensitivity="very-sensitive"]
 [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"]
 [--exit-stage=None] [--output=DIR] [--index=None] [--blacklist=STR] [--force]  <genome> <input1> <input2>
 
@@ -298,7 +298,7 @@ The files __*fragment_fixed_sizes.txt*__ and __*chromosome_sizes.npy*__ will be 
 After having created a folder with the previous command mentioned in **create folder** and performed the creation of fragment file __*fragment_fixed_sizes.txt*__ and the dictionary of chromosomes' sizes __*chromosome_sizes.npy*__ , the reads can be aligned using the following command:
 
 ```bash
-hicberg alignment  --output=DIR [--cpus=1] [--aligner="bowtie2"] [--max-alignments=None] [--sensitivity="very-sensitive"] [--index=index]
+hicberg alignment  --output=DIR [--cpus=1] [--aligner="bowtie2"] [--read-type="sr"][--max-alignments=None] [--sensitivity="very-sensitive"] [--index=index]
   [--verbosity] <genome> <forward> <reverse>
 ```
 
@@ -317,6 +317,31 @@ hicberg alignment -o ~/Desktop/test/ --cpus 8 --index index_prefix  <genome.fa> 
 The files __*XXX.btl2*__, __*1.sorted.bam*__ and __*2.sorted.bam*__ will be created if using  `bowtie2` as aligner `--aligner parameter` or `-a`.
 
 If the aligner used is `BWA`, the files  __*XXX.fa.amb*__, __*XXX.fa.ann*__, __*XXX.fa.bwt*__, __*XXX.fa.pac*__ and __*XXX.fa.sa*__ will be created.
+
+### Using Minimap2 for Alignment
+
+When using **Minimap2** `(--aligner "minimap2")`, it's crucial to specify the `--read-type` parameter to ensure optimal alignment for your specific sequencing data. Minimap2 uses different presets (`-x` option) that are highly optimized for various types of reads, affecting its performance and accuracy.
+
+The hicberg alignment command supports the following read-type values, directly mapping to Minimap2's presets:
+
+  - `sr`: For standard short genomic reads (e.g., Illumina, BGI). This is the default setting and is typically suitable for most Hi-C experiments that use short-read sequencing.
+  - `map-ont`: For Oxford Nanopore Technologies (ONT) reads. These are long reads, often characterized by a higher error rate.
+  - `map-pb`: For PacBio CLR (Continuous Long Read) data. These are also long reads but generally have different error profiles than ONT reads.
+  - `map-hifi`: For PacBio HiFi reads. These are highly accurate long reads (circular consensus sequencing).
+  - s`plice`: For RNA-seq reads, which accounts for splicing events during alignment.
+  - `splice:hq`: A higher-quality variant for RNA-seq reads, offering more accurate spliced alignment.
+  - `asm5` / `asm10`: For aligning reads during genome assembly, optimized for around 5% or 10% sequence divergence, respectively.
+  - `ava-pb` / `ava-ont`: For all-versus-all read overlapping with PacBio or ONT reads, primarily used in assembly workflows.
+
+Example for Nanopore reads:
+
+To align long reads sequenced with Oxford Nanopore Technologies, you would use:
+
+```bash
+hicberg alignment -o ~/Desktop/test/ --cpus 8 --aligner "minimap2" --read-type map-ont <genome.fa> <reads_for.fq> <rev_reads.fq>
+```
+
+For more detailed information on Minimap2's presets and their underlying parameters, please refer to the official Minimap2 [documentation](https://github.com/lh3/minimap2)
 
 ### Classification
 
@@ -589,7 +614,7 @@ It is possible to chain the different steps of the pipeline by using the followi
 hicberg pipeline  -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage fastq  --exit-stage bam <genome> <input1> <input2>
 
 # 1. Align reads
-hicberg pipeline -o --output=DIR  [--cpus=1] [--aligner=STR] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage bam  --exit-stage groups <genome> <input1> <input2>
+hicberg pipeline -o --output=DIR  [--cpus=1] [--aligner=STR] [--read-type=STR] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage bam  --exit-stage groups <genome> <input1> <input2>
 
 # 2. Group reads
 hicberg pipeline -o --output=DIR  [--cpus=1] [--enzyme=[STR, STR]] [--mode=STR] --name=NAME  --start-stage groups  --exit-stage build <genome> <input1> <input2>

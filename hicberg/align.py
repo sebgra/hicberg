@@ -125,10 +125,24 @@ def hic_build_index(
 
             pass
         
-# --- Helper functions for aligner-specific parameters ---
 
 def _get_bowtie2_params(sensitivity: str, max_alignment: int) -> list[str]:
-    """Get Bowtie2 parameters based on sensitivity and max_alignment."""
+    """
+    Get Bowtie2 parameters for a specific subcommand based on sensitivity and other settings.
+
+    Parameters
+    ----------
+    sensitivity : str
+        Sensitivity setting ('very-fast', 'fast', 'sensitive', 'very-sensitive').
+        Note: The interpretation of 'sensitivity' varies significantly between subcommands.
+    max_alignment : int
+        Maximum number of alignments to be returned. Used by 'mem' (conceptually via -a) and 'samse' (-n).
+
+    Returns
+    -------
+    list[str]
+        A list of Bowtie2 command-line parameters for the specified subcommand.
+    """    
     params = [f"--{sensitivity}"]
     if max_alignment is not None and max_alignment != -1:
         params.extend(["-k", str(max_alignment)])
@@ -140,8 +154,7 @@ def _get_bwa_params(
     bwa_subcommand: str,
     sensitivity: str,
     max_alignment: int = None,
-    cpus: int = None # cpus is used by 'mem' and 'aln', but not 'samse' directly
-) -> list[str]:
+    ) -> list[str]:
     """
     Get BWA parameters for a specific subcommand based on sensitivity and other settings.
 
@@ -154,8 +167,6 @@ def _get_bwa_params(
         Note: The interpretation of 'sensitivity' varies significantly between subcommands.
     max_alignment : Optional[int]
         Maximum number of alignments to be returned. Used by 'mem' (conceptually via -a) and 'samse' (-n).
-    cpus : Optional[int]
-        Number of threads. Used by 'mem' (-t) and 'aln' (-t).
 
     Returns
     -------
@@ -166,8 +177,6 @@ def _get_bwa_params(
 
     match bwa_subcommand:
         case "mem":
-            if cpus is not None:
-                params.extend(["-t", str(cpus)])
 
             # BWA-MEM specific sensitivity parameters
             if sensitivity == "very-fast":
@@ -186,8 +195,6 @@ def _get_bwa_params(
             params.append("-a")
 
         case "aln":
-            if cpus is not None:
-                params.extend(["-t", str(cpus)])
 
             # BWA-ALN specific sensitivity parameters
             if sensitivity == "very-fast":
@@ -214,27 +221,70 @@ def _get_bwa_params(
 
     return params
 
-def _get_minimap2_params(sensitivity: str, max_alignment: int) -> list[str]:
-    """Get Minimap2 parameters based on sensitivity and max_alignment."""
-    params = []
-    # Mapping generic sensitivity to Minimap2's presets or manual tweaks
-    if sensitivity == "very-fast":
-        params.extend(["-x", "sr", "-k", "28", "-w", "20"])
-    elif sensitivity == "fast":
-        params.extend(["-x", "sr", "-k", "24", "-w", "15"])
-    elif sensitivity == "sensitive":
-        params.extend(["-x", "sr"])
-    elif sensitivity == "very-sensitive":
-        params.extend(["-x", "sr", "-k", "15", "-w", "5", "-B", "2", "-O", "2,10", "-E", "0,0", "-m", "20", "--max-chain-skip", "50"])
-    else:
-        logger.warning(f"Unknown Minimap2 sensitivity '{sensitivity}'. Using '-x sr' preset.")
-        params.extend(["-x", "sr"])
+def _get_minimap2_params(
+    read_type: str,
+    max_alignment: int
+) -> list[str]:
+    """
+    Generates Minimap2 command-line parameters based directly on the read type preset.
 
+    This simplified function maps the `read_type` string to a Minimap2 `-x` preset.
+    It removes the complex 'sensitivity' fine-tuning, relying instead on Minimap2's
+    built-in preset characteristics.
+
+    Parameters
+    ----------
+    read_type : str
+        The type of reads, directly corresponding to a Minimap2 `-x` preset
+        (e.g., 'sr', 'map-ont', 'map-hifi').
+    max_alignment : Optional[int]
+        Maximum number of alignments to output per query (corresponds to Minimap2's -N).
+        Set to None or -1 to not apply a limit.
+
+    Returns
+    -------
+    list[str]
+        A list of Minimap2 command-line arguments.
+    """
+    
+    VALID_MINIMAP2_PRESETS = {
+    "sr",          # short reads (e.g., Illumina, BGI)
+    "map-pb",      # PacBio CLR (long, noisy)
+    "map-hifi",    # PacBio HiFi (long, accurate)
+    "map-ont",     # Oxford Nanopore (long, noisy, high error rate)
+    "splice",      # RNA-seq spliced alignment
+    "splice:hq",   # RNA-seq high-quality spliced alignment
+    "asm5",        # assembly (for ~5% divergence)
+    "asm10",       # assembly (for ~10% divergence)
+    "ava-pb",      # all-vs-all PacBio read overlapping
+    "ava-ont",     # all-vs-all Nanopore read overlapping
+}
+    
+    params = []
+    
+    # 1. Determine the Minimap2 preset
+    chosen_preset = read_type
+    if chosen_preset not in VALID_MINIMAP2_PRESETS:
+        logger.warning(
+            f"Unknown read_type preset '{read_type}' for Minimap2. "
+            f"Falling back to 'sr' (short reads) preset. "
+            f"Supported presets: {', '.join(sorted(VALID_MINIMAP2_PRESETS))}"
+        )
+        chosen_preset = "sr" # Default to 'sr' for any unrecognized type
+
+    # Always include the -x preset flag
+    params.extend(["-x", chosen_preset])
+    
+    # 2. Handle max_alignment (consistent behavior for all presets)
     if max_alignment is not None and max_alignment != -1:
+        # '-N' limits the number of secondary alignments.
+        # '--secondary=yes' ensures secondary alignments are even considered by Minimap2.
         params.extend(["-N", str(max_alignment)])
         params.append("--secondary=yes")
-    else:
-        params.append("--secondary=yes") # Output all secondary alignments by default
+    elif "--secondary=yes" not in params: 
+        # For Hi-C, we generally want all possible alignments including secondaries for contact mapping.
+        # Ensure this is added unless explicitly prevented by other logic (which isn't present here).
+        params.append("--secondary=yes")
 
     return params
 
@@ -250,7 +300,7 @@ def hic_align(
     output_dir: str = None,
     verbose: bool = False,
     aligner: str = "bowtie2",
-    read_type: str = "short"
+    read_type: str = "sr"
 ) -> None:
     """
     Alignment of reads from HiC experiments along an indexed genome.
@@ -278,6 +328,9 @@ def hic_align(
     aligner : str, optional
         Aligner algorithm to use for alignment, by default bowtie2
         Supported aligners: 'bowtie2', 'bwa', 'minimap2'.
+    read_type : str, optional
+        The type of reads, directly corresponding to a Minimap2 `-x` preset
+        (e.g., 'sr', 'map-ont', 'map-hifi')., by default 'sr'.
     """
 
     logger.info("Start aligning reads")
@@ -350,7 +403,8 @@ def hic_align(
                 # ... (rest of BWA-MEM block as before, removing '-t' if added inside _get_bwa_params)
                 cmd_alignment_for = [
                     "bwa", "mem",
-                    *bwa_mem_params, # Now includes '-t' from _get_bwa_params
+                    *bwa_mem_params, 
+                    "-t", str(cpus),
                     str(genome),
                     str(fq_for_path),
                     "-o", str(output_path / "1.sam")
@@ -359,6 +413,7 @@ def hic_align(
                 cmd_alignment_rev = [
                     "bwa", "mem",
                     *bwa_mem_params,
+                    "-t", str(cpus),
                     str(genome),
                     str(fq_rev_path),
                     "-o", str(output_path / "2.sam")
@@ -387,7 +442,8 @@ def hic_align(
                 # ... (rest of BWA-MEM block as before, removing '-t' if added inside _get_bwa_params)
                 cmd_pre_alignment_for = [
                     "bwa", "aln",
-                    *bwa_aln_params, # Now includes '-t' from _get_bwa_params
+                    *bwa_aln_params, 
+                    "-t", str(cpus),
                     "-f", str(output_path / "1.sai"),
                     str(genome),
                     str(fq_for_path),
@@ -396,7 +452,8 @@ def hic_align(
                 
                 cmd_alignment_for = [
                     "bwa", "samse",
-                    *bwa_samse_params, # Now includes '-t' from _get_bwa_params
+                    *bwa_samse_params, 
+                    "-t", str(cpus),
                     "-f", str(output_path / "1.sam"),
                     str(genome),
                     str(output_path / "1.sai"),
@@ -414,7 +471,7 @@ def hic_align(
                 
                 cmd_alignment_rev = [
                     "bwa", "samse",
-                    *bwa_samse_params, # Now includes '-t' from _get_bwa_params
+                    *bwa_samse_params, 
                     "-f", str(output_path / "2.sam"),
                     str(genome),
                     str(output_path / "2.sai"),
@@ -447,50 +504,45 @@ def hic_align(
                 )
 
         case "minimap2":
+            
+            mm2_params = _get_minimap2_params(
+                read_type=read_type, # This now directly maps to -x preset
+                max_alignment=max_alignment
+            )
+            
+            # Forward reads command construction
+            cmd_alignment_for = [
+                "minimap2",
+                "-a", # Output in SAM format (a common requirement for Hi-C downstream processing)
+                "-t", str(cpus), # Threads are independent of preset/sensitivity
+                *mm2_params, # This list now contains only the -x preset and -N/--secondary=yes
+                str(genome),
+                str(fq_for_path),
+                "-o", str(output_path / "1.sam")
+            ]
+            
+            # Reverse reads command construction
+            cmd_alignment_rev = [
+                "minimap2",
+                "-a",
+                "-t", str(cpus),
+                *mm2_params,
+                str(genome),
+                str(fq_rev_path),
+                "-o", str(output_path / "2.sam")
+            ]
 
-            if max_alignment is None or max_alignment == -1:
-
-                cmd_alignment_rev = f"minimap2 -a --secondary yes -t {cpus} -o {output_path / '1.sam'} {genome} {fq_for}"
-                cmd_alignment_for = f"minimap2 -a --secondary yes -t {cpus} -o {output_path / '2.sam'} {genome} {fq_rev}"
-
-            elif max_alignment is not None:
-
-                cmd_alignment_for = f"minimap2 -a --secondary yes -N {max_alignment} -t {cpus} -o {output_path / '1.sam'} {genome} {fq_for}"
-                cmd_alignment_rev = f"minimap2 -a --secondary yes -N {max_alignment} -t {cpus} -o {output_path / '2.sam'} {genome} {fq_rev}"
 
             _run_command(
-                [cmd_alignment_for],
+                cmd_alignment_for,
                 description="Forward reads alignment with Minimap2",
                 verbose=True,
             )
             _run_command(
-                [cmd_alignment_rev],
+                cmd_alignment_rev,
                 description="Reverse reads alignment with Minimap2",
                 verbose=True,
             )
-        # if verbose:
-
-        #     logger.info(cmd_alignment_for)
-        #     logger.info(cmd_alignment_rev)
-
-        # p_for = sp.Popen(
-        #     [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-        # )
-        # stdout_for, stderr_for = p_for.communicate()
-        # p_rev = sp.Popen(
-        #     [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-        # )
-        # stdout_rev, stderr_rev = p_rev.communicate()
-
-        # if stdout_for:
-        #     logger.info(stdout_for.decode("ascii"))
-        # if stderr_for:
-        #     logger.info(stderr_for.decode("ascii"))
-
-        # if stdout_rev:
-        #     logger.info(stdout_rev.decode("ascii"))
-        # if stderr_rev:
-        #     logger.info(stderr_rev.decode("ascii"))
 
         case "_":
 
@@ -684,11 +736,10 @@ def hic_index(
     cmd_index_rev = f"samtools index -b {bam_rev} -@ {cpus}"
 
     if verbose:
-
         logger.info(cmd_index_for)
         logger.info(cmd_index_rev)
 
-    sp.run([cmd_index_for], shell=True)
-    sp.run([cmd_index_rev], shell=True)
+    _run_command(cmd_index_for, description="Indexing of forward alignments.")
+    _run_command(cmd_index_rev, description="Indexing of forward alignments.")
 
     logger.info(f"Indexed alignment done at {output_path}")
