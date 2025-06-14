@@ -41,8 +41,14 @@ TRANS_PS = "trans_ps.npy"
 RESTRICTION_MAP = "restriction_map.npy"
 DENSITY_MAP = "density_map.npy"
 
+
 # TODO : check if keeping is necessary
-def generate_density_map_backup(matrix : str = "unrescued_map.cool", rounds : int = 1, magnitude : float = 1.0, output_dir : str = None) -> dict[str, np.ndarray[float]]:
+def generate_density_map_backup(
+    matrix: str = "unrescued_map.cool",
+    rounds: int = 1,
+    magnitude: float = 1.0,
+    output_dir: str = None,
+) -> dict[str, np.ndarray[float]]:
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 
@@ -68,7 +74,7 @@ def generate_density_map_backup(matrix : str = "unrescued_map.cool", rounds : in
 
         output_path = Path(getcwd())
 
-    else : 
+    else:
 
         output_path = Path(output_dir)
 
@@ -76,8 +82,10 @@ def generate_density_map_backup(matrix : str = "unrescued_map.cool", rounds : in
 
     if not matrix_path.is_file():
 
-        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
-    
+        raise FileNotFoundError(
+            f"Matrix file {matrix} not found. Please provide a valid path to a matrix file."
+        )
+
     density_map = {}
 
     # Load cooler matrix
@@ -94,29 +102,41 @@ def generate_density_map_backup(matrix : str = "unrescued_map.cool", rounds : in
 
         # Get matrix for each chromosome pair
 
-        matrix_chromosome = matrix.matrix(balance = False).fetch(combination[0], combination[1])
+        matrix_chromosome = matrix.matrix(balance=False).fetch(
+            combination[0], combination[1]
+        )
 
         # Get density map for each chromosome pair
 
         if combination[0] == combination[1]:
 
-            density_map[combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "intra")
+            density_map[combination] = hut.diffuse_matrix(
+                matrix=matrix_chromosome,
+                rounds=rounds,
+                magnitude=magnitude,
+                mode="intra",
+            )
 
         elif combination[0] != combination[1]:
 
-            density_map[combination] = hut.diffuse_matrix(matrix = matrix_chromosome, rounds = rounds, magnitude = magnitude, mode = "inter")
+            density_map[combination] = hut.diffuse_matrix(
+                matrix=matrix_chromosome,
+                rounds=rounds,
+                magnitude=magnitude,
+                mode="inter",
+            )
 
-        blured_density  = dict()
+        blured_density = dict()
 
     for key in density_map.keys():
 
         if key[0] == key[1]:
 
-            blured_density[key] = gaussian_filter(density_map[key], sigma = 5)
+            blured_density[key] = gaussian_filter(density_map[key], sigma=5)
 
-        else :
+        else:
 
-            blured_density[key] = gaussian_filter(density_map[key], sigma = 10)
+            blured_density[key] = gaussian_filter(density_map[key], sigma=10)
 
     np.save(output_path / DENSITY_MAP, blured_density)
 
@@ -124,8 +144,16 @@ def generate_density_map_backup(matrix : str = "unrescued_map.cool", rounds : in
 
     return blured_density
 
+
 # TODO : to correct docstrings
-def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, sigma : int = 2, n_mads : int = 2, nan_threshold : bool = False, output_dir : str = None) -> dict[str, np.ndarray[float]]:
+def generate_density_map(
+    matrix: str = "unrescued_map.cool",
+    size: int = 5,
+    sigma: int = 2,
+    n_mads: int = 2,
+    nan_threshold: bool = False,
+    output_dir: str = None,
+) -> dict[str, np.ndarray[float]]:
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 
@@ -151,7 +179,7 @@ def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, si
 
         output_path = Path(getcwd())
 
-    else : 
+    else:
 
         output_path = Path(output_dir)
 
@@ -159,8 +187,10 @@ def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, si
 
     if not matrix_path.is_file():
 
-        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
-    
+        raise FileNotFoundError(
+            f"Matrix file {matrix} not found. Please provide a valid path to a matrix file."
+        )
+
     density_map = {}
 
     # Load cooler matrix
@@ -176,10 +206,18 @@ def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, si
     for combination in chromosomes_combination:
 
         # Get matrix for each chromosome pair
-        matrix_chromosome = matrix.matrix(balance = True).fetch(combination[0], combination[1])
+        matrix_chromosome = matrix.matrix(balance=True).fetch(
+            combination[0], combination[1]
+        )
 
         # Get density map for each chromosome pair
-        density_map[combination] = hut.get_local_density(matrix = matrix_chromosome, size  = size, sigma  = sigma, n_mads  = n_mads, nan_threshold  = nan_threshold)
+        density_map[combination] = hut.get_local_density(
+            matrix=matrix_chromosome,
+            size=size,
+            sigma=sigma,
+            n_mads=n_mads,
+            nan_threshold=nan_threshold,
+        )
 
     np.save(output_path / DENSITY_MAP, density_map)
 
@@ -187,7 +225,14 @@ def generate_density_map(matrix : str = "unrescued_map.cool", size : int = 5, si
 
     return density_map
 
-def compute_density(cooler_file : str = "unrescued_map.cool", threads : int = 2, kernel_size: int = 11, deviation : float = 0.5, output_dir : str = None) -> None: 
+
+def compute_density(
+    cooler_file: str = "unrescued_map.cool",
+    threads: int = 2,
+    kernel_size: int = 11,
+    deviation: float = 0.5,
+    output_dir: str = None,
+) -> None:
     """
     Create density map from a Hi-C matrix. Return a dictionary where keys are chromosomes names and values are density maps.
 
@@ -207,50 +252,67 @@ def compute_density(cooler_file : str = "unrescued_map.cool", threads : int = 2,
 
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     matrix_path = output_path / cooler_file
 
     if not matrix_path.is_file():
 
-        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
+        raise FileNotFoundError(
+            f"Matrix file {matrix} not found. Please provide a valid path to a matrix file."
+        )
 
-    #Load cooler file
-    matrix = hio.load_cooler(matrix = matrix_path)
+    # Load cooler file
+    matrix = hio.load_cooler(matrix=matrix_path)
 
-    #Get chromosomes names
+    # Get chromosomes names
     chromosomes = matrix.chromnames
 
-    #Get chromosomes couples
-    chromosomes_couples = list(itertools.product(chromosomes, repeat = 2))
+    # Get chromosomes couples
+    chromosomes_couples = list(itertools.product(chromosomes, repeat=2))
 
     # Get chromsomes maps
-    chromosomes_maps = [matrix.matrix(balance = True).fetch(chrom1, chrom2) for chrom1, chrom2 in chromosomes_couples]
+    chromosomes_maps = [
+        matrix.matrix(balance=True).fetch(chrom1, chrom2)
+        for chrom1, chrom2 in chromosomes_couples
+    ]
 
     pool = mp.Pool(processes=threads)
 
-    results = pool.map(partial(hut.get_local_density, str(matrix_path), size  = kernel_size, sigma  = deviation, n_mads  = 2, nan_threshold  = False),
-            chromosomes_couples)
+    results = pool.map(
+        partial(
+            hut.get_local_density,
+            str(matrix_path),
+            size=kernel_size,
+            sigma=deviation,
+            n_mads=2,
+            nan_threshold=False,
+        ),
+        chromosomes_couples,
+    )
 
     # Close the pool and wait for the work to finish
     pool.close()
     pool.join()
 
-    results_dict =  {key : value for key, value in results}
+    results_dict = {key: value for key, value in results}
 
     for chrom_pair in results_dict.copy().keys():
         if chrom_pair[0] == chrom_pair[1]:
             pass
 
-        else :
-            results_dict[(chrom_pair[1], chrom_pair[0])]  = results_dict[chrom_pair].T
+        else:
+            results_dict[(chrom_pair[1], chrom_pair[0])] = results_dict[chrom_pair].T
 
     np.save(output_path / DENSITY_MAP, results_dict)
 
     logger.info(f"Saved density map at : {output_path}")
 
-def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], output_dir : str = None) -> dict[str, np.ndarray[int]]:
+
+def get_restriction_map(
+    genome: str = None, enzyme: list[str] = ["DpnII"], output_dir: str = None
+) -> dict[str, np.ndarray[int]]:
     """
     Get ordered restriction map (including 0 and n) from a chromosome sequence.
     Return a dictionary where keys are chromosomes names and values are restrictions sites positions.
@@ -276,16 +338,18 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
 
     if not genome_path.is_file():
 
-        raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")
+        raise FileNotFoundError(
+            f"Genome file {genome} not found. Please provide a valid path to a genome file."
+        )
 
     if output_dir is None:
 
         output_path = Path(getcwd())
 
-    else : 
+    else:
 
         output_path = Path(output_dir)
-    
+
     restriction_map_dictionary = dict()
 
     if len(enzyme) == 1 and enzyme[0].isnumeric():
@@ -333,12 +397,11 @@ def get_restriction_map(genome : str = None, enzyme : list[str] = ["DpnII"], out
     np.save(output_path / RESTRICTION_MAP, restriction_map_dictionary)
 
     logger.info(f"Saved restriction map at : {output_path}")
-    
 
     return restriction_map_dictionary
 
 
-def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
+def generate_xs(chromosome_size: int, base: float = 1.1) -> np.ndarray[int]:
     """
     Generate xs array for computing P(s). Return xs array which is log space.
 
@@ -356,10 +419,8 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
     """
 
     n_bins = np.divide(np.log1p(chromosome_size), np.log(base)).astype(int)
-    xs = np.unique(
-            np.logspace(0, n_bins, num=n_bins + 1, base=base, dtype=int)
-        )
-    
+    xs = np.unique(np.logspace(0, n_bins, num=n_bins + 1, base=base, dtype=int))
+
     # Add 0 to the beginning of the array (allow distance 0 to be counted in the first bin)
     xs = np.insert(xs, 0, 0)
 
@@ -367,32 +428,41 @@ def generate_xs(chromosome_size : int, base : float = 1.1) -> np.ndarray[int]:
     # # TODO : recent correction to fuse bins n-1 and n    (to delete ?)
     # return np.delete(xs, -2)
 
-def log_bin_genome(genome :str, base : float = 1.1, output_dir : str = None) -> dict[str, np.ndarray[int]]:
-    
+
+def log_bin_genome(
+    genome: str, base: float = 1.1, output_dir: str = None
+) -> dict[str, np.ndarray[int]]:
+
     logger.info("Start log binning of genome...")
 
     genome_path = Path(genome)
 
     if not genome_path.is_file():
 
-        raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")
-    
+        raise FileNotFoundError(
+            f"Genome file {genome} not found. Please provide a valid path to a genome file."
+        )
+
     if output_dir is None:
-            
+
         folder_path = Path(getcwd())
 
     else:
-            
+
         folder_path = Path(output_dir)
 
     genome_parser = SeqIO.parse(genome, "fasta")
-    xs_dict = {seq_record.id : generate_xs(chromosome_size = len(seq_record.seq), base = base) for seq_record in genome_parser}
+    xs_dict = {
+        seq_record.id: generate_xs(chromosome_size=len(seq_record.seq), base=base)
+        for seq_record in genome_parser
+    }
 
     np.save(folder_path / XS, xs_dict)
 
     logger.info(f"Log binning of genome {genome} saved in {folder_path / XS}.")
 
-def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
+
+def attribute_xs(xs: np.ndarray[int], distance: int) -> int:
     """
     Attibute genomic distance to the corresponding log bin of xs.
 
@@ -410,10 +480,17 @@ def attribute_xs(xs : np.ndarray[int], distance : int) -> int:
     """
 
     idx = np.searchsorted(xs, distance, side="right") - 1
-    
-    return idx if distance > 0 else 0 
 
-def get_dist_frags(genome : str = None, restriction_map : dict = None, circular : str = "", rate : float = 1.0, output_dir : str = None) -> None:
+    return idx if distance > 0 else 0
+
+
+def get_dist_frags(
+    genome: str = None,
+    restriction_map: dict = None,
+    circular: str = "",
+    rate: float = 1.0,
+    output_dir: str = None,
+) -> None:
     """
     Get the distribution of fragments' distance from a genome distribution .
 
@@ -451,21 +528,24 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
     genome_path = Path(genome)
 
     if not genome_path.is_file():
-            
-        raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")
-    
+
+        raise FileNotFoundError(
+            f"Genome file {genome} not found. Please provide a valid path to a genome file."
+        )
+
     dist_frag = dict()
     xs = dict()
-    
+
     if rate != 1.0:
 
-        restriction_map = hut.subsample_restriction_map(restriction_map = restriction_map, rate = rate)
+        restriction_map = hut.subsample_restriction_map(
+            restriction_map=restriction_map, rate=rate
+        )
 
     for seq_record in SeqIO.parse(genome, "fasta"):
 
         seq_name = seq_record.id
 
-        
         if seq_record.id in circular:
 
             map_size = restriction_map[seq_name].shape[0]
@@ -487,7 +567,7 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
             del backward_distances
             del max_size_vector
 
-        else :
+        else:
 
             pairwise_distances = pdist(
                 np.reshape(
@@ -511,7 +591,12 @@ def get_dist_frags(genome : str = None, restriction_map : dict = None, circular 
 
     logger.info(f"Saved restriction map at : {folder_path / DIST_FRAG}")
 
-def generate_trans_ps(matrix : str = "unrescued_map.cool", chrom_sizes : str = "chromosome_sizes.npy", output_dir : str = None) -> None:
+
+def generate_trans_ps(
+    matrix: str = "unrescued_map.cool",
+    chrom_sizes: str = "chromosome_sizes.npy",
+    output_dir: str = None,
+) -> None:
     """
     Generate pseudo-P(s) while considering reads originating from different chromosomes.
     Pseudo-P(s) are computed as the number of interactions between two chromosomes divided by the product of the length of these two chromosomes.
@@ -525,7 +610,7 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", chrom_sizes : str = "
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None.
 
-    """    
+    """
 
     logger.info("Start getting trans-P(s)")
 
@@ -543,8 +628,10 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", chrom_sizes : str = "
 
     if not matrix_path.is_file():
 
-        raise FileNotFoundError(f"Matrix file {matrix} not found. Please provide a valid path to a matrix file.")
-        
+        raise FileNotFoundError(
+            f"Matrix file {matrix} not found. Please provide a valid path to a matrix file."
+        )
+
     matrix = cooler.Cooler(matrix_path.as_posix())
 
     chromosome_sets = itertools.product((chrom_size_dict.keys()), repeat=2)
@@ -557,9 +644,11 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", chrom_sizes : str = "
 
         all_interactions = matrix.matrix(balance=False).fetch(s[0], s[1]).sum()
         n_frags = chrom_size_dict.get(s[0]) * chrom_size_dict.get(s[1])
-        
-        trans_ps[s] = np.divide(all_interactions, np.multiply(n_frags, 4)) # Multiplied by 4 to balance 4 configurations of reads orientation (++/+-/-+/--)
-        
+
+        trans_ps[s] = np.divide(
+            all_interactions, np.multiply(n_frags, 4)
+        )  # Multiplied by 4 to balance 4 configurations of reads orientation (++/+-/-+/--)
+
         all_interaction_matrix[idx] = all_interactions
         n_frags_matrix[idx] = n_frags
 
@@ -568,7 +657,13 @@ def generate_trans_ps(matrix : str = "unrescued_map.cool", chrom_sizes : str = "
     logger.info(f"Trans P(s) saved in {output_path}")
 
 
-def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", output_dir : str = None) -> None:
+def generate_coverages(
+    genome: str = None,
+    bins: int = 2000,
+    forward_bam_file: str = "group1.1.bam",
+    reverse_bam_file: str = "group1.2.bam",
+    output_dir: str = None,
+) -> None:
     """
     Take a genome and both forward and reverse bam files for unambiguous group and return a dictionary containing the coverage in terms of reads overs chromosomes.
 
@@ -584,8 +679,8 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
         Path to reverse .bam alignment file, by default None, by default group1.2.bam
     output_dir : str, optional
         Path to the folder where to save the classified alignment files, by default None, by default None
-    """        
-    
+    """
+
     logger.info("Start generating coverages...")
 
     if output_dir is None:
@@ -595,29 +690,42 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
     else:
 
         output_path = Path(output_dir)
-    
+
     genome_path = Path(genome)
 
     if not genome_path.is_file():
-                
-        raise FileNotFoundError(f"Genome file {genome} not found. Please provide a valid path to a genome file.")   
-    
+
+        raise FileNotFoundError(
+            f"Genome file {genome} not found. Please provide a valid path to a genome file."
+        )
+
     genome_parser = SeqIO.parse(genome, "fasta")
 
-    genome_coverages = {seq_record.id : np.zeros(np.round(np.divide(len(seq_record.seq), bins) + 1).astype(int)) for seq_record in genome_parser}
+    genome_coverages = {
+        seq_record.id: np.zeros(
+            np.round(np.divide(len(seq_record.seq), bins) + 1).astype(int)
+        )
+        for seq_record in genome_parser
+    }
 
     forward_bam_path = Path(output_dir, forward_bam_file)
     reverse_bam_path = Path(output_dir, reverse_bam_file)
 
     if not forward_bam_path.is_file():
 
-        raise FileNotFoundError(f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file.")
-    
+        raise FileNotFoundError(
+            f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file."
+        )
+
     if not reverse_bam_path.is_file():
 
-        raise FileNotFoundError(f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file.")
-    
-    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
+        raise FileNotFoundError(
+            f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file."
+        )
+
+    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(
+        forward_bam_path, "rb"
+    ), pysam.AlignmentFile(reverse_bam_path, "rb")
 
     for forward_read, reverse_read in zip(forward_bam_handler, reverse_bam_handler):
 
@@ -633,13 +741,22 @@ def generate_coverages(genome : str = None, bins : int = 2000, forward_bam_file 
     reverse_bam_handler.close()
 
     # Smooth coverages
-    smoothed_coverages = {seq_name : hut.mad_smoothing(coverage) for seq_name, coverage in genome_coverages.items()}
+    smoothed_coverages = {
+        seq_name: hut.mad_smoothing(coverage)
+        for seq_name, coverage in genome_coverages.items()
+    }
 
     np.save(output_path / COVERAGE_DICO, smoothed_coverages)
 
     logger.info(f"Coverage dictionary saved in {output_path}")
 
-def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", restriction_map : str = "restriction_map.npy", output_dir : str = None) -> None:
+
+def generate_d1d2(
+    forward_bam_file: str = "group1.1.bam",
+    reverse_bam_file: str = "group1.2.bam",
+    restriction_map: str = "restriction_map.npy",
+    output_dir: str = None,
+) -> None:
     """
     Compute d1d2 distance laws with the given alignments and restriction map.
 
@@ -653,10 +770,10 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
         Restriction map saved as a dictionary like chrom_name : list of restriction sites' position, by default "dist.frag.npy"
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None, by default None
-    """    
-    
+    """
+
     logger.info("Start generating d1d2 law...")
-    
+
     if output_dir is None:
 
         output_path = Path(getcwd())
@@ -669,25 +786,30 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
     reverse_bam_path = Path(output_path, reverse_bam_file)
 
     if not forward_bam_path.is_file():
-            
-        raise FileNotFoundError(f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file.")
-    
+
+        raise FileNotFoundError(
+            f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file."
+        )
+
     if not reverse_bam_path.is_file():
-            
-        raise FileNotFoundError(f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file.")
-    
-    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
+
+        raise FileNotFoundError(
+            f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file."
+        )
+
+    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(
+        forward_bam_path, "rb"
+    ), pysam.AlignmentFile(reverse_bam_path, "rb")
 
     # Ensure that the restriction map is a dictionary to be loaded
     try:
 
         restriction_map = hio.load_dictionary(output_path / restriction_map)
 
-    except : 
+    except:
 
         print(f"restriction map not found")
         pass
-
 
     list_d1d2 = []  # list containing the (d1+d2) i.e size of the fragment to sequence
 
@@ -698,13 +820,17 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
         if forward_read.flag == 0 or forward_read.flag == 256:
 
-            index = np.searchsorted(r_sites_forward_read, forward_read.pos, side="right")
+            index = np.searchsorted(
+                r_sites_forward_read, forward_read.pos, side="right"
+            )
 
             distance_1 = np.subtract(r_sites_forward_read[index], forward_read.pos)
 
         elif forward_read.flag == 16 or forward_read.flag == 272:
 
-            index = np.searchsorted(r_sites_forward_read, forward_read.reference_end, side="left")
+            index = np.searchsorted(
+                r_sites_forward_read, forward_read.reference_end, side="left"
+            )
 
             distance_1 = np.abs(
                 np.subtract(forward_read.reference_end, r_sites_forward_read[index])
@@ -716,8 +842,9 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
                 r_sites_reverse_read, reverse_read.reference_start, side="right"
             )  # right
 
-
-            distance_2 = np.subtract(r_sites_reverse_read[index], reverse_read.reference_start)
+            distance_2 = np.subtract(
+                r_sites_reverse_read[index], reverse_read.reference_start
+            )
 
         elif reverse_read.flag == 16 or reverse_read.flag == 272:
 
@@ -745,8 +872,16 @@ def generate_d1d2(forward_bam_file : str = "group1.1.bam", reverse_bam_file : st
 
     logger.info(f"Saved d1d2 law at : {output_path / D1D2}")
 
-def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str = "group1.2.bam", 
-                 xs : str = "xs.npy", chrom_sizes : str = "chromosome_sizes.npy", circular : str = "", blacklist : str = None, output_dir : str = None) -> None:
+
+def get_patterns(
+    forward_bam_file: str = "group1.1.bam",
+    reverse_bam_file: str = "group1.2.bam",
+    xs: str = "xs.npy",
+    chrom_sizes: str = "chromosome_sizes.npy",
+    circular: str = "",
+    blacklist: str = None,
+    output_dir: str = None,
+) -> None:
     """
     Get the patterns distribution from read pairs alignment.
 
@@ -764,12 +899,12 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
         Name of the chromosomes to consider as circular, by default ""
     output_dir : str, optional
         Path to the folder where to save the dictionary, by default None, by default None, by default None
-    """    
+    """
 
     logger.info("Start generating patterns distribution...")
 
     if output_dir is None:
-            
+
         output_path = Path(getcwd())
 
     else:
@@ -780,25 +915,31 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
     reverse_bam_path = Path(output_path, reverse_bam_file)
 
     if not forward_bam_path.is_file():
-        
-        raise FileNotFoundError(f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file.")
-    
+
+        raise FileNotFoundError(
+            f"Forward .bam file {forward_bam_file} not found. Please provide a valid path to a forward .bam file."
+        )
+
     if not reverse_bam_path.is_file():
 
-        raise FileNotFoundError(f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file.")
-    
-    #Load xs
+        raise FileNotFoundError(
+            f"Reverse .bam file {reverse_bam_file} not found. Please provide a valid path to a reverse .bam file."
+        )
+
+    # Load xs
     xs = hio.load_dictionary(output_path / XS)
     # dist_frag = hio.load_dictionary(output_path / dist_frag)
     chrom_size_dict = hio.load_dictionary(output_path / chrom_sizes)
 
     # Create placeholders for the dictionaries
-    weirds = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
-    uncuts = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
-    loops = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    weirds = {seq_name: np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    uncuts = {seq_name: np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    loops = {seq_name: np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
 
     # Create placeholder for area to divide logbins counts
-    trapezoids_area = {seq_name : np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()}
+    trapezoids_area = {
+        seq_name: np.zeros(xs.get(seq_name).shape) for seq_name in xs.keys()
+    }
 
     # Compute areas of trapezoids
 
@@ -806,22 +947,29 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
         xs_ = xs[chrom]
         chrom_size_ = chrom_size_dict[chrom]
 
-        trapezoids_area[chrom] = [(2 * chrom_size_ - xs_[j+1] - xs_[j]) * (xs_[j+1] - xs_[j]) * 0.5 for j in range(len(xs_) - 1)]
-        trapezoids_area[chrom].append( (((chrom_size_ - xs_[-1]) ** 2) / 2))
+        trapezoids_area[chrom] = [
+            (2 * chrom_size_ - xs_[j + 1] - xs_[j]) * (xs_[j + 1] - xs_[j]) * 0.5
+            for j in range(len(xs_) - 1)
+        ]
+        trapezoids_area[chrom].append((((chrom_size_ - xs_[-1]) ** 2) / 2))
 
-    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb"), pysam.AlignmentFile(reverse_bam_path, "rb")
+    forward_bam_handler, reverse_bam_handler = pysam.AlignmentFile(
+        forward_bam_path, "rb"
+    ), pysam.AlignmentFile(reverse_bam_path, "rb")
 
     for forward_read, reverse_read in zip(forward_bam_handler, reverse_bam_handler):
-                # TODO : Add blacklisting system to avoid counting reads from blacklisted regions
-                # if not is_blacklisted(forward_read, reverse_read): --> TO BE ADDED TO UTILS
-                #    continue
-                # blacklisting system per coordinates or per file as a list of coordinates (BED file)
-        if  hut.is_blacklisted(read_forward = forward_read, read_reverse = reverse_read, blacklist = blacklist):
+        # TODO : Add blacklisting system to avoid counting reads from blacklisted regions
+        # if not is_blacklisted(forward_read, reverse_read): --> TO BE ADDED TO UTILS
+        #    continue
+        # blacklisting system per coordinates or per file as a list of coordinates (BED file)
+        if hut.is_blacklisted(
+            read_forward=forward_read, read_reverse=reverse_read, blacklist=blacklist
+        ):
             print(f"Blacklisted read pair : {forward_read.query_name}")
             continue
 
         if hut.is_intra_chromosome(forward_read, reverse_read):
-                
+
             if hut.is_weird(forward_read, reverse_read):
 
                 weirds[forward_read.reference_name][
@@ -847,7 +995,7 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
                         hut.get_cis_distance(forward_read, reverse_read, circular) + 1,
                     )
                 ] += 1
-    
+
     forward_bam_handler.close()
     reverse_bam_handler.close()
 
@@ -886,10 +1034,19 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
             loops[chromosome][-1] = loops[chromosome][-2]
 
     # Post-processing to avoid nan values
-            
-    smoothed_weirds = {seq_name : hut.replace_consecutive_zeros_with_mean(weirds.get(seq_name)) for seq_name in weirds.keys()}
-    smoothed_uncuts = {seq_name : hut.replace_consecutive_zeros_with_mean(uncuts.get(seq_name)) for seq_name in uncuts.keys()}
-    smoothed_loops = {seq_name : hut.replace_consecutive_zeros_with_mean(loops.get(seq_name)) for seq_name in loops.keys()}
+
+    smoothed_weirds = {
+        seq_name: hut.replace_consecutive_zeros_with_mean(weirds.get(seq_name))
+        for seq_name in weirds.keys()
+    }
+    smoothed_uncuts = {
+        seq_name: hut.replace_consecutive_zeros_with_mean(uncuts.get(seq_name))
+        for seq_name in uncuts.keys()
+    }
+    smoothed_loops = {
+        seq_name: hut.replace_consecutive_zeros_with_mean(loops.get(seq_name))
+        for seq_name in loops.keys()
+    }
 
     np.save(output_path / WEIRDS, smoothed_weirds)
     np.save(output_path / UNCUTS, smoothed_uncuts)
@@ -897,7 +1054,16 @@ def get_patterns(forward_bam_file : str = "group1.1.bam", reverse_bam_file : str
 
     logger.info(f"Saved {WEIRDS}, {UNCUTS} and {LOOPS} in {output_path}")
 
-def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, xs : dict, weirds :  dict, uncuts : dict, loops : dict, circular : str = "") -> float:
+
+def get_pair_ps(
+    read_forward: pysam.AlignedSegment,
+    read_reverse: pysam.AlignedSegment,
+    xs: dict,
+    weirds: dict,
+    uncuts: dict,
+    loops: dict,
+    circular: str = "",
+) -> float:
     """
     Take two reads and return the P(s) value depending on event type (intra-chromosomal case only).
 
@@ -922,14 +1088,14 @@ def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.Aligne
     -------
     float
         P(s) of the pair considering the event type.
-    """    
-    
+    """
+
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
 
     if not hut.is_intra_chromosome(read_forward, read_reverse):
         raise ValueError("Reads are not intra-chromosomal.")
-    
+
     if hut.is_weird(read_forward, read_reverse):
         return weirds[read_forward.reference_name][
             attribute_xs(
@@ -953,9 +1119,13 @@ def get_pair_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.Aligne
                 hut.get_cis_distance(read_forward, read_reverse, circular),
             )
         ]
-    
 
-def get_trans_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, trans_ps : dict) -> float:
+
+def get_trans_ps(
+    read_forward: pysam.AlignedSegment,
+    read_reverse: pysam.AlignedSegment,
+    trans_ps: dict,
+) -> float:
     """
     Parameters
     ----------
@@ -971,19 +1141,25 @@ def get_trans_ps(read_forward : pysam.AlignedSegment, read_reverse : pysam.Align
     float
         Trans P(s) value
 
-    """    
+    """
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
-    
-    if  hut.is_intra_chromosome(read_forward, read_reverse):
+
+    if hut.is_intra_chromosome(read_forward, read_reverse):
 
         raise ValueError("Reads are not inter-chromosomal.")
-    
+
     return trans_ps[
         tuple(sorted([read_forward.reference_name, read_reverse.reference_name]))
-    ] 
+    ]
 
-def get_pair_cover(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, coverage : dict, bins : int) -> float:
+
+def get_pair_cover(
+    read_forward: pysam.AlignedSegment,
+    read_reverse: pysam.AlignedSegment,
+    coverage: dict,
+    bins: int,
+) -> float:
     """
     Get the coverage of a pair of reads.
 
@@ -1002,13 +1178,14 @@ def get_pair_cover(read_forward : pysam.AlignedSegment, read_reverse : pysam.Ali
     -------
     float
         Product of the coverage of the pair of reads.
-    """    
+    """
 
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
-    
 
-    if (read_forward.flag == 16 or read_forward.flag == 272) and( read_reverse.flag == 0 or read_reverse.flag == 256):
+    if (read_forward.flag == 16 or read_forward.flag == 272) and (
+        read_reverse.flag == 0 or read_reverse.flag == 256
+    ):
 
         return (
             coverage[read_forward.reference_name][
@@ -1019,7 +1196,9 @@ def get_pair_cover(read_forward : pysam.AlignedSegment, read_reverse : pysam.Ali
             ]
         )
 
-    elif (read_forward.flag == 0 or read_forward.flag == 256) and (read_reverse.flag == 16 or read_reverse.flag == 272):
+    elif (read_forward.flag == 0 or read_forward.flag == 256) and (
+        read_reverse.flag == 16 or read_reverse.flag == 272
+    ):
         return (
             coverage[read_forward.reference_name][
                 int(read_forward.reference_start / bins)
@@ -1029,7 +1208,9 @@ def get_pair_cover(read_forward : pysam.AlignedSegment, read_reverse : pysam.Ali
             ]
         )
 
-    elif (read_forward.flag == 16 or read_forward.flag == 272) and (read_reverse.flag == 16 or read_reverse.flag == 272):
+    elif (read_forward.flag == 16 or read_forward.flag == 272) and (
+        read_reverse.flag == 16 or read_reverse.flag == 272
+    ):
         return (
             coverage[read_forward.reference_name][
                 int(read_forward.reference_end / bins)
@@ -1050,7 +1231,12 @@ def get_pair_cover(read_forward : pysam.AlignedSegment, read_reverse : pysam.Ali
         )
 
 
-def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, d1d2 : np.array = None) -> int:
+def get_d1d2(
+    read_forward: pysam.AlignedSegment,
+    read_reverse: pysam.AlignedSegment,
+    restriction_map: dict = None,
+    d1d2: np.array = None,
+) -> int:
     """
     Get the d1d2 value of a pair of reads.
 
@@ -1073,7 +1259,7 @@ def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
 
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
-    
+
     # Get appropriate restriction sites vecctors in dicitionary
     r_sites_read_for = restriction_map[read_forward.reference_name]
     r_sites_read_rev = restriction_map[read_reverse.reference_name]
@@ -1085,7 +1271,9 @@ def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
 
     if read_forward.flag == 16 or read_forward.flag == 272:
 
-        index = np.searchsorted(r_sites_read_for, read_forward.reference_end, side="left")
+        index = np.searchsorted(
+            r_sites_read_for, read_forward.reference_end, side="left"
+        )
         distance_1 = np.abs(
             np.subtract(read_forward.reference_end, r_sites_read_for[index])
         )
@@ -1114,10 +1302,16 @@ def get_d1d2(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSe
 
     else:
         distance = np.add(distance_1, distance_2)
-        
+
     return d1d2[distance]
 
-def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, density_map : dict[(str, str) : np.array], bin_size : int = 2000) -> float:
+
+def get_density(
+    read_forward: pysam.AlignedSegment,
+    read_reverse: pysam.AlignedSegment,
+    density_map: dict[(str, str) : np.array],
+    bin_size: int = 2000,
+) -> float:
     """
     Get density from density map dictionary.
 
@@ -1137,7 +1331,7 @@ def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.Aligne
     float
         Density corresponding to the pair of reads.
 
-    """    
+    """
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
 
@@ -1154,12 +1348,29 @@ def get_density(read_forward : pysam.AlignedSegment, read_reverse : pysam.Aligne
 
         position_rev = int(read_reverse.reference_start // bin_size)
 
-    couple_density = density_map.get((read_forward.reference_name, read_reverse.reference_name))[position_for, position_rev]
+    couple_density = density_map.get(
+        (read_forward.reference_name, read_reverse.reference_name)
+    )[position_for, position_rev]
 
     return couple_density
 
 
-def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam.AlignedSegment, restriction_map : dict = None, xs : dict = None, weirds : dict = None, uncuts : dict = None, loops : dict = None, circular : str = "", trans_ps : dict = None,  coverage : dict = None, bins : int = 2000, d1d2 : dict = None, density_map : dict = None,  mode : str = "full") -> float:
+def compute_propensity(
+    read_forward: pysam.AlignedSegment,
+    read_reverse: pysam.AlignedSegment,
+    restriction_map: dict = None,
+    xs: dict = None,
+    weirds: dict = None,
+    uncuts: dict = None,
+    loops: dict = None,
+    circular: str = "",
+    trans_ps: dict = None,
+    coverage: dict = None,
+    bins: int = 2000,
+    d1d2: dict = None,
+    density_map: dict = None,
+    mode: str = "full",
+) -> float:
     """
     Compute propensity for read pair to be selected among all plausible pairs related to multi-mapping reads.
 
@@ -1202,7 +1413,6 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
     if read_forward.query_name != read_reverse.query_name:
         raise ValueError("Reads are not coming from the same pair.")
-    
 
     if mode == "random":
 
@@ -1211,7 +1421,7 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
     elif mode == "full":
 
         if hut.is_intra_chromosome(read_forward, read_reverse):
-        
+
             ps = get_pair_ps(
                 read_forward,
                 read_reverse,
@@ -1223,7 +1433,7 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             )
 
         else:
-            
+
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
@@ -1234,24 +1444,24 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         try:
             d1d2 = get_d1d2(
-            read_forward,
-            read_reverse,
-            restriction_map,
-            d1d2,
-        )
+                read_forward,
+                read_reverse,
+                restriction_map,
+                d1d2,
+            )
 
         except:
 
             d1d2 = 1
 
-        density = get_density(read_forward, read_reverse, density_map = density_map)
-    
+        density = get_density(read_forward, read_reverse, density_map=density_map)
+
         return ps * d1d2 * cover * density
-    
-    elif mode in ["standard", "omics"] :
-    
+
+    elif mode in ["standard", "omics"]:
+
         if hut.is_intra_chromosome(read_forward, read_reverse):
-        
+
             ps = get_pair_ps(
                 read_forward,
                 read_reverse,
@@ -1263,7 +1473,7 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             )
 
         else:
-            
+
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
@@ -1274,16 +1484,16 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
         # if ps is None:
         #     print(f"ps : {ps}")
         #     print(f"cover: {cover}")
-            
+
         #     print(f"Forward\n{read_forward}")
         #     print(f"Reverse\n{read_reverse}")
 
         return ps * cover
 
     elif mode == "one_enzyme":
-    
+
         if hut.is_intra_chromosome(read_forward, read_reverse):
-        
+
             ps = get_pair_ps(
                 read_forward,
                 read_reverse,
@@ -1295,9 +1505,8 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             )
 
         else:
-            
-            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
+            ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
             # Avoid ps = 0 making the read unselectable. Value of 1 make the propensity unsensitive to P(s).
             if ps == 0:
@@ -1312,11 +1521,11 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         try:
             d1d2 = get_d1d2(
-            read_forward,
-            read_reverse,
-            restriction_map,
-            d1d2,
-        )
+                read_forward,
+                read_reverse,
+                restriction_map,
+                d1d2,
+            )
 
         except:
 
@@ -1340,16 +1549,15 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             logger.error(f"read_forward reference name : {read_forward.reference_name}")
             logger.error(f"read_reverse : {read_reverse}")
             logger.error(f"read_reverse reference name : {read_reverse.reference_name}")
-            
+
             # sys.exit()
 
         return ps * d1d2 * cover
 
-    
     elif mode == "ps":
-    
+
         if hut.is_intra_chromosome(read_forward, read_reverse):
-        
+
             ps = get_pair_ps(
                 read_forward,
                 read_reverse,
@@ -1361,13 +1569,13 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
             )
 
         else:
-            
+
             ps = get_trans_ps(read_forward, read_reverse, trans_ps)
 
         return ps
 
     elif mode == "cov":
-        
+
         cover = get_pair_cover(read_forward, read_reverse, coverage, bins=bins)
 
         # Avoid cover = 0 making the read unselectable. Value of 1 make the propensity unsensitive to coverage.
@@ -1376,16 +1584,15 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         return cover
 
-
     elif mode == "d1d2":
 
         try:
             d1d2 = get_d1d2(
-            read_forward,
-            read_reverse,
-            restriction_map,
-            d1d2,
-        )
+                read_forward,
+                read_reverse,
+                restriction_map,
+                d1d2,
+            )
 
         except:
 
@@ -1393,15 +1600,14 @@ def compute_propensity(read_forward : pysam.AlignedSegment, read_reverse : pysam
 
         return d1d2
 
-
     elif mode == "density":
-        
-        density = get_density(read_forward, read_reverse, density_map = density_map)
+
+        density = get_density(read_forward, read_reverse, density_map=density_map)
 
         return density
 
-    
-def draw_read_couple(propensities : np.array) -> int:
+
+def draw_read_couple(propensities: np.array) -> int:
     """
     Draw an index respecting distribution of propensities. This function is used to draw a couple of reads considering the propensity of each couple.
 
@@ -1418,23 +1624,23 @@ def draw_read_couple(propensities : np.array) -> int:
 
     xk = np.arange(len(propensities))
 
-    if  np.sum(propensities) > 0: 
+    if np.sum(propensities) > 0:
         try:
             pk = np.divide(propensities, np.sum(propensities))
-        
+
         except:
             print(f"pk : {pk}")
             print(f"propensities : {propensities}")
 
     elif np.sum(propensities) <= 0:
-        try : 
+        try:
             pk = np.full(xk.shape, np.divide(1, len(propensities)))
 
-        except :    
-                print(f"pk : {pk}")
-                print(f"propensities : {propensities}")
+        except:
+            print(f"pk : {pk}")
+            print(f"propensities : {propensities}")
 
-    else : 
+    else:
         pk = np.full(xk.shape, np.divide(1, len(propensities)))
         logger.error(f"Propensities : {propensities}")
 
@@ -1447,9 +1653,23 @@ def draw_read_couple(propensities : np.array) -> int:
 
     return index
 
-def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.2.bam"), restriction_map : dict = None, xs : dict = "xs.npy", weirds : dict = "weirds.npy", uncuts : dict = "uncuts.npy", 
-                      loops : dict = "loops.npy", circular : str = "", trans_ps : dict = "trans_ps.npy",  coverage : dict = "coverage.npy", 
-                      bins : int = 2000, d1d2 : dict = "d1d2.npy", density_map : dict = "density_map.npy",  mode : str = "full", output_dir : str = None) -> None:
+
+def reattribute_reads(
+    reads_couple: tuple[str, str] = ("group2.1.bam", "group2.2.bam"),
+    restriction_map: dict = None,
+    xs: dict = "xs.npy",
+    weirds: dict = "weirds.npy",
+    uncuts: dict = "uncuts.npy",
+    loops: dict = "loops.npy",
+    circular: str = "",
+    trans_ps: dict = "trans_ps.npy",
+    coverage: dict = "coverage.npy",
+    bins: int = 2000,
+    d1d2: dict = "d1d2.npy",
+    density_map: dict = "density_map.npy",
+    mode: str = "full",
+    output_dir: str = None,
+) -> None:
     """
     Re-attribute multi-mapping (ambiguous) reads considering sets of statistical laws.
 
@@ -1483,19 +1703,19 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
         Mode to use to compute propensity among, by default "full"
     output_dir : str, optional
         Path to the re-attributed ambiguous reads alignment files are saved, by default None
-    """ 
+    """
 
     if output_dir is None:
-            
+
         output_path = Path(getcwd())
 
     else:
-            
+
         output_path = Path(output_dir)
 
-    #Reload dictionaries
+    # Reload dictionaries
     xs = hio.load_dictionary(output_path / xs)
-    weirds  = hio.load_dictionary(output_path / weirds)
+    weirds = hio.load_dictionary(output_path / weirds)
     uncuts = hio.load_dictionary(output_path / uncuts)
     loops = hio.load_dictionary(output_path / loops)
     trans_ps = hio.load_dictionary(output_path / trans_ps)
@@ -1503,17 +1723,17 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     d1d2 = None
     density = None
 
-    if mode == "full" :
+    if mode == "full":
 
         d1d2 = hio.load_dictionary(output_path / "d1d2.npy")
         density = hio.load_dictionary(output_path / "density_map.npy")
-    
-    elif mode in ["d1d2", "one_enzyme"]: # TODO : to be completed
+
+    elif mode in ["d1d2", "one_enzyme"]:  # TODO : to be completed
 
         d1d2 = hio.load_dictionary(output_path / "d1d2.npy")
-        
+
     elif mode == "density":
-            
+
         density = hio.load_dictionary(output_path / "density_map.npy")
 
     forward_bam_path, reverse_bam_path = Path(reads_couple[0]), Path(reads_couple[1])
@@ -1524,8 +1744,16 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
     forward_bam_handler = pysam.AlignmentFile(forward_bam_path, "rb")
     reverse_bam_handler = pysam.AlignmentFile(reverse_bam_path, "rb")
 
-    forward_out_bam_handler = pysam.AlignmentFile(output_path / f"forward_{id_for}_{file_id}_predicted.bam", "wb", template=forward_bam_handler)
-    reverse_out_bam_handler = pysam.AlignmentFile(output_path / f"reverse_{id_rev}_{file_id}_predicted.bam", "wb", template=reverse_bam_handler)
+    forward_out_bam_handler = pysam.AlignmentFile(
+        output_path / f"forward_{id_for}_{file_id}_predicted.bam",
+        "wb",
+        template=forward_bam_handler,
+    )
+    reverse_out_bam_handler = pysam.AlignmentFile(
+        output_path / f"reverse_{id_rev}_{file_id}_predicted.bam",
+        "wb",
+        template=reverse_bam_handler,
+    )
 
     # Instanciate generators
     forward_generator = hut.bam_iterator(forward_bam_path)
@@ -1535,36 +1763,55 @@ def reattribute_reads(reads_couple : tuple[str, str] = ("group2.1.bam", "group2.
 
         propensities = []
 
-        combinations = list(itertools.product(tuple(forward_block), tuple(reverse_block)))
+        combinations = list(
+            itertools.product(tuple(forward_block), tuple(reverse_block))
+        )
 
         # print(f"combinations : {combinations}")
 
         for combination in combinations:
 
-            propensities.append(compute_propensity(read_forward = combination[0], read_reverse = combination[1], 
-                                                   restriction_map = restriction_map, xs = xs, weirds = weirds, uncuts = uncuts, 
-                                                   loops = loops, trans_ps = trans_ps, coverage = coverage, bins = bins, d1d2 = d1d2, 
-                                                   density_map = density, mode = mode))
+            propensities.append(
+                compute_propensity(
+                    read_forward=combination[0],
+                    read_reverse=combination[1],
+                    restriction_map=restriction_map,
+                    xs=xs,
+                    weirds=weirds,
+                    uncuts=uncuts,
+                    loops=loops,
+                    trans_ps=trans_ps,
+                    coverage=coverage,
+                    bins=bins,
+                    d1d2=d1d2,
+                    density_map=density,
+                    mode=mode,
+                )
+            )
 
         selected_couple_index = draw_read_couple(propensities)
 
-        selected_read_forward, selected_read_reverse = combinations[selected_couple_index]
+        selected_read_forward, selected_read_reverse = combinations[
+            selected_couple_index
+        ]
         selected_read_forward.set_tag("XL", len(forward_block))
         selected_read_reverse.set_tag("XL", len(reverse_block))
 
         forward_out_bam_handler.write(selected_read_forward)
         reverse_out_bam_handler.write(selected_read_reverse)
-        
-    
+
     forward_bam_handler.close()
     reverse_bam_handler.close()
 
     logger.info(f"Predictions written in {output_path}")
 
-def pearson_score(original_matrix : cooler.Cooler, rescued_matrix : cooler.Cooler , markers : list[int]) -> float:
+
+def pearson_score(
+    original_matrix: cooler.Cooler, rescued_matrix: cooler.Cooler, markers: list[int]
+) -> float:
     """
     Compute Pearson correlation between concatenated matrix bins which have been deleted and reconstructed.
-    
+
     Parameters
     ----------
     original_matrix : cooler.Cooler
@@ -1578,7 +1825,7 @@ def pearson_score(original_matrix : cooler.Cooler, rescued_matrix : cooler.Coole
     -------
     float
         Pearson correlation between original and reconstructed matrix.
-    """    
+    """
     ori_matrix = original_matrix.matrix(balance=False)[:]
     reco_matrix = rescued_matrix.matrix(balance=False)[:]
 
@@ -1589,8 +1836,11 @@ def pearson_score(original_matrix : cooler.Cooler, rescued_matrix : cooler.Coole
 
     return pearson_score[0]
 
+
 # Benchamrk analysis functions
-def get_top_pattern(file : str = None, top : int = 10, chromosome : str = None) -> pd.DataFrame:
+def get_top_pattern(
+    file: str = None, top: int = 10, chromosome: str = None
+) -> pd.DataFrame:
     """
     Get top patterns from a dataframe
 
@@ -1608,13 +1858,16 @@ def get_top_pattern(file : str = None, top : int = 10, chromosome : str = None) 
     pd.DataFrame
         Dataframe containing top percentage patterns.
     """
-    df = pd.read_csv(file, sep = "\t", header = 0)
+    df = pd.read_csv(file, sep="\t", header=0)
     top_factor = (df.shape[0] * top) // 100
 
     if chromosome is not None:
 
         df = df.query(f"chrom1 == '{chromosome}' and chrom2 == '{chromosome}'")
-    df_top = df.sort_values(by='score', ascending=False).head(top_factor).reset_index(drop=True)
+    df_top = (
+        df.sort_values(by="score", ascending=False)
+        .head(top_factor)
+        .reset_index(drop=True)
+    )
 
     return df_top
-

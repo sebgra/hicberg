@@ -236,7 +236,7 @@ def cli(chain=True):
     type=str,
     show_default=True,
     metavar="<str>",
-    help="Blacklisted coordinates to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.",
+    help="Blacklisted coordintaes to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.",
 )
 @click.option(
     "--aligner",
@@ -247,6 +247,16 @@ def cli(chain=True):
     show_default=True,
     metavar="<str>",
     help="Aligner to be used for alignment.",
+)
+@click.option(
+    "--read-type",
+    "-R",
+    required=False,
+    default="short",
+    type=str,
+    show_default=True,
+    metavar="<str>",
+    help="Type of reads to align (Minimap2)",
 )
 def pipeline_cmd(
     data,
@@ -270,6 +280,7 @@ def pipeline_cmd(
     force,
     blacklist,
     aligner,
+    read_type
 ):
     """
     Hi-C pipeline to generate enhanced contact matrix from fastq files.
@@ -299,6 +310,7 @@ def pipeline_cmd(
         force=force,
         blacklist=blacklist,
         aligner=aligner,
+        read_type=read_type
     )
     return
 
@@ -439,25 +451,25 @@ def get_tables_cmd(data, bins, output):
     type=str,
     show_default=True,
     metavar="<str>",
-    help="Aligner to use to perform alignments.",
+    help="Aligner to be used for alignment.",
 )
 @click.option(
-    "--aligner",
-    "-a",
+    "--read-type",
+    "-R",
     required=False,
-    default="bowtie2",
+    default="short",
     type=str,
     show_default=True,
     metavar="<str>",
-    help="Aligner to be used for alignment.",
+    help="Type of reads to align (Minimap2)",
 )
-def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose, aligner):
+def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose, aligner, read_type):
     """
     Perform alignment of Hi-C reads.
     """
     if index is None:
         index = hal.hic_build_index(
-            genome=data[0], output_dir=output, cpus=cpus, verbose=verbose, aligner=aligner
+            genome=data[0], output_dir=output, cpus=cpus, verbose=verbose
         )
 
     hal.hic_align(
@@ -469,7 +481,8 @@ def alignment_cmd(data, index, max_alignment, sensitivity, output, cpus, verbose
         output_dir=output,
         cpus=cpus,
         verbose=True,
-        aligner = aligner
+        aligner=aligner,
+        read_type=read_type
     )
     hal.hic_view(output_dir=output, cpus=cpus, verbose=verbose)
     hal.hic_sort(output_dir=output, cpus=cpus, verbose=verbose)
@@ -684,7 +697,7 @@ def build_matrix_cmd(output, recover, cpus):
     type=str,
     show_default=True,
     metavar="<str>",
-    help="Blacklisted coordinates to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.",
+    help="Blacklisted coordintaes to exclude reads for statistical learning. Provide either a bed file or a list of coordinates coma separated using UCSC format.",
 )
 def statistics_cmd(
     data,
@@ -798,6 +811,7 @@ def rescue_cmd(data, enzyme, mode, output, cpus):
     """
     Reallocate ambiguous reads to the most plausible position according to model.
     """
+    # TODO : to uncomment
     restriction_map = hst.get_restriction_map(
         genome=data[0], enzyme=enzyme, output_dir=output
     )

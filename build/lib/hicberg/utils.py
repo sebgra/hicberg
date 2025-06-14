@@ -29,6 +29,7 @@ import hicberg.io as hio
 import hicberg.statistics as hst
 from hicberg import logger
 
+
 def _run_command(cmd_list: list[str], description: str, verbose: bool = False) -> None:
     """
     Helper function to execute a shell command, log its output, and handle errors.
@@ -46,18 +47,23 @@ def _run_command(cmd_list: list[str], description: str, verbose: bool = False) -
     if verbose:
         logger.info(f"Executing: {cmd_str}")
 
-    process = sp.Popen(cmd_list, stdout=sp.PIPE, stderr=sp.PIPE, shell=True)
+    process = sp.Popen(cmd_str, stdout=sp.PIPE, stderr=sp.PIPE, shell=True)
     stdout, stderr = process.communicate()
 
     if stdout:
-        logger.info(f"STDOUT ({description}):\n{stdout.decode('utf-8', errors='ignore')}")
+        logger.info(
+            f"STDOUT ({description}):\n{stdout.decode('utf-8', errors='ignore')}"
+        )
     if stderr:
         # Errors or warnings from tools usually go to stderr
-        logger.warning(f"STDERR ({description}):\n{stderr.decode('utf-8', errors='ignore')}")
+        logger.warning(
+            f"STDERR ({description}):\n{stderr.decode('utf-8', errors='ignore')}"
+        )
 
     if process.returncode != 0:
-        raise RuntimeError(f"Command failed: {description} (Exit code: {process.returncode})\nCommand: {cmd_str}\nSTDERR: {stderr.decode('utf-8', errors='ignore')}")
-
+        raise RuntimeError(
+            f"Command failed: {description} (Exit code: {process.returncode})\nCommand: {cmd_str}\nSTDERR: {stderr.decode('utf-8', errors='ignore')}"
+        )
 
 
 def sum_mat_bins(matrix: np.array) -> np.array:
@@ -938,12 +944,12 @@ def is_weird(
 
     # else:
     #     return False
-    
-    if  read_forward.is_forward and read_reverse.is_forward:
+
+    if read_forward.is_forward and read_reverse.is_forward:
         return True
     elif read_forward.is_reverse and read_reverse.is_reverse:
         return True
-    
+
     else:
         return False
 
@@ -982,7 +988,7 @@ def is_uncut(
     #     return True
     # else:
     #     return False
-    
+
     if read_forward.is_forward and read_reverse.is_reverse:
         return True
     else:
@@ -1022,7 +1028,7 @@ def is_circle(
     #     return True
     # else:
     #     return False
-    
+
     if read_forward.is_reverse and read_reverse.is_forward:
         return True
     else:

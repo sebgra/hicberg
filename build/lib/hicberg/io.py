@@ -15,7 +15,10 @@ import pysam as ps
 
 from hicberg import logger
 
-def create_folder(sample_name : str  = None, output_dir : str = None, force : bool = False) -> None:
+
+def create_folder(
+    sample_name: str = None, output_dir: str = None, force: bool = False
+) -> None:
     """
     Creates folder architecture to store results and intermediate files for the full HiC-BERG pipeline.
 
@@ -35,7 +38,7 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
     """
 
     logger.info(f"Creating folder {sample_name} in {output_dir}")
-    
+
     if sample_name is None:
 
         sample_name = "sample"
@@ -48,7 +51,7 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
 
         folder_path = Path(output_dir, sample_name)
 
-    if folder_path.exists() and force : 
+    if folder_path.exists() and force:
 
         rmtree(folder_path)
 
@@ -69,9 +72,15 @@ def create_folder(sample_name : str  = None, output_dir : str = None, force : bo
 
     return folder_path.as_posix()
 
-    
 
-def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", bam_for_rescued :str = "group2.1.rescued.bam", bam_rev_rescued : str = "group2.2.rescued.bam", mode : bool = False, output_dir : str = None) -> None:
+def build_pairs(
+    bam_for: str = "group1.1.bam",
+    bam_rev: str = "group1.2.bam",
+    bam_for_rescued: str = "group2.1.rescued.bam",
+    bam_rev_rescued: str = "group2.2.rescued.bam",
+    mode: bool = False,
+    output_dir: str = None,
+) -> None:
     """
     Build pairs of reads from the aligned reads.
 
@@ -95,10 +104,11 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
     chromosome_sizes_path = Path(output_path / "chromosome_sizes.npy")
     chromosome_sizes = load_dictionary(chromosome_sizes_path)
 
-
     if not output_path.exists():
 
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing output path.")
+        raise ValueError(
+            f"Output path {output_path} does not exist. Please provide existing output path."
+        )
 
     if not mode:
 
@@ -110,11 +120,11 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
         if not bam_for_path.exists():
 
             raise ValueError(f"Forward bam file {bam_for} not found")
-        
+
         if not bam_rev_path.exists():
-                
-                raise ValueError(f"Reverse bam file {bam_rev} not found")
-        
+
+            raise ValueError(f"Reverse bam file {bam_rev} not found")
+
         bam_for_handler = ps.AlignmentFile(bam_for_path, "rb")
         bam_rev_handler = ps.AlignmentFile(bam_rev_path, "rb")
 
@@ -122,7 +132,7 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
             f_out.write("## pairs format v1.0\n")
             f_out.write("#columns: readID chr1 pos1 strand1 chr2 pos2 strand2\n")
-            
+
             for chromosome, size in chromosome_sizes.items():
 
                 f_out.write(f"#chromsize: {chromosome} {size}\n")
@@ -131,15 +141,19 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
                 if forward_read.query_name != reverse_read.query_name:
 
-                    raise ValueError(f"Forward and reverse reads do not match. Please check the bam files.")
-                
-                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n")
+                    raise ValueError(
+                        f"Forward and reverse reads do not match. Please check the bam files."
+                    )
+
+                f_out.write(
+                    f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n"
+                )
 
         f_out.close()
         bam_for_handler.close()
         bam_rev_handler.close()
 
-    elif mode: 
+    elif mode:
 
         logger.info(f"Start building pairs file for ambiguously aligned reads")
         bam_for_path = Path(output_path / bam_for)
@@ -150,19 +164,18 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
         if not bam_for_path.exists():
 
             raise ValueError(f"Forward bam file {bam_for_rescued} not found")
-        
+
         if not bam_rev_path.exists():
-                
+
             raise ValueError(f"Reverse bam file {bam_rev_rescued} not found")
-        
+
         if not bam_for_path_rescued.exists():
-            
+
             raise ValueError(f"Forward rescued bam file {bam_for_rescued} not found")
-        
+
         if not bam_rev_path_rescued.exists():
-            
+
             raise ValueError(f"Reverse rescued bam file {bam_rev_rescued} not found")
-        
 
         bam_for_handler = ps.AlignmentFile(bam_for_path, "rb")
         bam_rev_handler = ps.AlignmentFile(bam_rev_path, "rb")
@@ -173,7 +186,7 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
             f_out.write("## pairs format v1.0\n")
             f_out.write("#columns: readID chr1 pos1 strand1 chr2 pos2 strand2\n")
-            
+
             for chromosome, size in chromosome_sizes.items():
 
                 f_out.write(f"#chromsize: {chromosome} {size}\n")
@@ -182,17 +195,27 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
 
                 if forward_read.query_name != reverse_read.query_name:
 
-                    raise ValueError(f"Forward and reverse reads do not match. Please check the bam files.")
+                    raise ValueError(
+                        f"Forward and reverse reads do not match. Please check the bam files."
+                    )
 
-                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n")
+                f_out.write(
+                    f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n"
+                )
 
-            for forward_read, reverse_read in zip(bam_for_handler_rescued, bam_rev_handler_rescued):
+            for forward_read, reverse_read in zip(
+                bam_for_handler_rescued, bam_rev_handler_rescued
+            ):
 
                 if forward_read.query_name != reverse_read.query_name:
 
-                    raise ValueError(f"Forward and reverse reads do not match. Please check the bam files.")
+                    raise ValueError(
+                        f"Forward and reverse reads do not match. Please check the bam files."
+                    )
 
-                f_out.write(f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n")
+                f_out.write(
+                    f"{forward_read.query_name}\t{forward_read.reference_name}\t{forward_read.pos}\t{reverse_read.reference_name}\t{reverse_read.pos}\t{'+' if forward_read.flag == 0 or forward_read.flag == 256 else '-'}\t{'+' if reverse_read.flag == 0 or forward_read.flag == 256 else '-'}\n"
+                )
 
         f_out.close()
         bam_for_handler.close()
@@ -203,7 +226,14 @@ def build_pairs(bam_for : str = "group1.1.bam", bam_rev : str = "group1.2.bam", 
     logger.info(f"Pairs file successfully created in {output_path}")
 
 
-def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1.pairs", mode : bool = False, balance : bool = False, cpus : int = 8, output_dir : str = None) -> None:
+def build_matrix(
+    bins: str = "fragments_fixed_sizes.txt",
+    pairs: str = "group1.pairs",
+    mode: bool = False,
+    balance: bool = False,
+    cpus: int = 8,
+    output_dir: str = None,
+) -> None:
     """
     Take table of bins and .pairs file and build a matrix in .cool format.
 
@@ -224,21 +254,27 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
     output_path = Path(output_dir)
 
     if not output_path.exists():
-            
-        raise ValueError(f"Output path {output_path} does not exist. Please provide existing ouput path.")
-    
+
+        raise ValueError(
+            f"Output path {output_path} does not exist. Please provide existing ouput path."
+        )
+
     pairs_path = output_path / Path(pairs)
 
     if not pairs_path.is_file():
-            
-        raise ValueError(f"Pairs file {pairs_path} not found. Please provide existing pairs file.")
-    
+
+        raise ValueError(
+            f"Pairs file {pairs_path} not found. Please provide existing pairs file."
+        )
+
     bins_path = output_path / Path(bins)
 
     if not bins_path.is_file():
-                
-        raise ValueError(f"Bins file {bins_path} not found. Please provide existing bins file.")
-    
+
+        raise ValueError(
+            f"Bins file {bins_path} not found. Please provide existing bins file."
+        )
+
     if not mode:
 
         cool_path = output_path / "unrescued_map.cool"
@@ -247,7 +283,7 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
 
     elif mode:
 
-        pairs_path = output_path /"all_group.pairs"
+        pairs_path = output_path / "all_group.pairs"
 
         cool_path = output_path / "rescued_map.cool"
 
@@ -262,7 +298,8 @@ def build_matrix(bins : str = "fragments_fixed_sizes.txt", pairs : str = "group1
 
     logger.info(f"Cooler matrix successfully created in {output_path}")
 
-def load_dictionary(dictionary : str = None) -> dict:
+
+def load_dictionary(dictionary: str = None) -> dict:
     """
     Load dictionary save into numpy format (.npy).
 
@@ -279,12 +316,13 @@ def load_dictionary(dictionary : str = None) -> dict:
     try:
 
         return np.load(dictionary, allow_pickle=True).item()
-    
+
     except:
 
         return np.load(dictionary, allow_pickle=True)
 
-def load_cooler(matrix : str = None) -> cooler.Cooler:
+
+def load_cooler(matrix: str = None) -> cooler.Cooler:
     """
     Load cooler matrix.
 
@@ -301,7 +339,10 @@ def load_cooler(matrix : str = None) -> cooler.Cooler:
 
     return cooler.Cooler(matrix.as_posix())
 
-def merge_predictions(output_dir : str = None, clean : bool = True, stage = "prediction", cpus : int = 1) -> None:
+
+def merge_predictions(
+    output_dir: str = None, clean: bool = True, stage="prediction", cpus: int = 1
+) -> None:
     """
     Merge predictions of all chunks of ambiguous reads predictions.
 
@@ -321,13 +362,17 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     if stage == "prediction":
 
-        forward_alignment_chunk_files = sorted(glob(str(output_path / "forward_*_predicted.bam")))
-        reverse_alignment_chunk_files = sorted(glob(str(output_path / "reverse_*_predicted.bam")))
+        forward_alignment_chunk_files = sorted(
+            glob(str(output_path / "forward_*_predicted.bam"))
+        )
+        reverse_alignment_chunk_files = sorted(
+            glob(str(output_path / "reverse_*_predicted.bam"))
+        )
 
         forward_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.1.rescued.bam'} {' '.join(forward_alignment_chunk_files)}"
         reverse_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group2.2.rescued.bam'} {' '.join(reverse_alignment_chunk_files)}"
@@ -340,20 +385,29 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
 
         if clean:
 
-            for forward_chunk, reverse_chunk in zip(forward_alignment_chunk_files, reverse_alignment_chunk_files):
+            for forward_chunk, reverse_chunk in zip(
+                forward_alignment_chunk_files, reverse_alignment_chunk_files
+            ):
 
                 Path(forward_chunk).unlink()
                 Path(reverse_chunk).unlink()
 
     elif stage == "classification":
 
-        forward_unaligned_chunk_files = sorted(glob(str(output_path / "group_*_0.1.bam")))
-        reverse_unaligned_chunk_files = sorted(glob(str(output_path / "group_*_0.2.bam")))
+        forward_unaligned_chunk_files = sorted(
+            glob(str(output_path / "group_*_0.1.bam"))
+        )
+        reverse_unaligned_chunk_files = sorted(
+            glob(str(output_path / "group_*_0.2.bam"))
+        )
         forward_aligned_chunk_files = sorted(glob(str(output_path / "group_*_1.1.bam")))
         reverse_aligned_chunk_files = sorted(glob(str(output_path / "group_*_1.2.bam")))
-        forward_multi_aligned_chunk_files = sorted(glob(str(output_path / "group_*_2.1.bam")))
-        reverse_multi_aligned_chunk_files = sorted(glob(str(output_path / "group_*_2.2.bam")))
-
+        forward_multi_aligned_chunk_files = sorted(
+            glob(str(output_path / "group_*_2.1.bam"))
+        )
+        reverse_multi_aligned_chunk_files = sorted(
+            glob(str(output_path / "group_*_2.2.bam"))
+        )
 
         forward_group0_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group0.1.bam'} {' '.join(forward_unaligned_chunk_files)}"
         reverse_group0_merge_cmd = f"samtools merge -f -n --threads {cpus} {output_path / 'group0.2.bam'} {' '.join(reverse_unaligned_chunk_files)}"
@@ -378,17 +432,23 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
 
         if clean:
 
-            for forward_chunk, reverse_chunk in zip(forward_unaligned_chunk_files, reverse_unaligned_chunk_files):
+            for forward_chunk, reverse_chunk in zip(
+                forward_unaligned_chunk_files, reverse_unaligned_chunk_files
+            ):
 
                 Path(forward_chunk).unlink()
                 Path(reverse_chunk).unlink()
 
-            for forward_chunk, reverse_chunk in zip(forward_aligned_chunk_files, reverse_aligned_chunk_files):
+            for forward_chunk, reverse_chunk in zip(
+                forward_aligned_chunk_files, reverse_aligned_chunk_files
+            ):
 
                 Path(forward_chunk).unlink()
                 Path(reverse_chunk).unlink()
-    
-            for forward_chunk, reverse_chunk in zip(forward_multi_aligned_chunk_files, reverse_multi_aligned_chunk_files):
+
+            for forward_chunk, reverse_chunk in zip(
+                forward_multi_aligned_chunk_files, reverse_multi_aligned_chunk_files
+            ):
 
                 Path(forward_chunk).unlink()
                 Path(reverse_chunk).unlink()
@@ -407,14 +467,17 @@ def merge_predictions(output_dir : str = None, clean : bool = True, stage = "pre
 
         if clean:
 
-            for forward_chunk, reverse_chunk in zip(forward_out_chunk_files, reverse_out_chunk_files):
+            for forward_chunk, reverse_chunk in zip(
+                forward_out_chunk_files, reverse_out_chunk_files
+            ):
 
                 Path(forward_chunk).unlink()
                 Path(reverse_chunk).unlink()
 
         logger.info(f"Out reads successfully merged in {output_path}")
 
-def tidy_folder(output_dir : str = None) -> None:
+
+def tidy_folder(output_dir: str = None) -> None:
     """
     Tidy all the files in the output folder.
 
@@ -422,19 +485,19 @@ def tidy_folder(output_dir : str = None) -> None:
     ----------
     output_dir : str, optional
         Path to the folder where to save the fused alignment file, by default None
-    """ 
+    """
 
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
 
         output_path = Path(output_dir)
 
     # Tidy folder
-    files = [p for  p in output_path.glob("*")]
+    files = [p for p in output_path.glob("*")]
 
-    for file in files :
+    for file in files:
 
         if Path(file).suffix == ".bt2l":
 
@@ -461,9 +524,9 @@ def tidy_folder(output_dir : str = None) -> None:
             Path(file).rename(output_path / "plots" / Path(file).name)
 
     # Tidy plots
-    plot_files = [p for  p in (output_path / "plots").glob("*.pdf")]
+    plot_files = [p for p in (output_path / "plots").glob("*.pdf")]
 
-    for file in plot_files :
+    for file in plot_files:
 
         if "density" in Path(file).name:
 
@@ -472,7 +535,7 @@ def tidy_folder(output_dir : str = None) -> None:
         elif "coverage" in Path(file).name:
 
             Path(file).rename(output_path / "plots" / "coverages" / Path(file).name)
-        
+
         elif "patterns" in Path(file).name:
 
             Path(file).rename(output_path / "plots" / "ps" / Path(file).name)
@@ -480,5 +543,3 @@ def tidy_folder(output_dir : str = None) -> None:
         elif Path(file).name.startswith("chr"):
 
             Path(file).rename(output_path / "plots" / "contact_maps" / Path(file).name)
-
-

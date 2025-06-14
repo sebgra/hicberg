@@ -107,7 +107,7 @@ def hic_build_index(
         case "bwa":
 
             cmd_index = f"bwa index -p {join(index_path)} {genome}"
-            
+
             _run_command([cmd_index], description="Indexing genome using BWA")
 
             return index_path
@@ -124,6 +124,119 @@ def hic_build_index(
         case "_":  # Default case
 
             pass
+        
+# --- Helper functions for aligner-specific parameters ---
+
+def _get_bowtie2_params(sensitivity: str, max_alignment: int) -> list[str]:
+    """Get Bowtie2 parameters based on sensitivity and max_alignment."""
+    params = [f"--{sensitivity}"]
+    if max_alignment is not None and max_alignment != -1:
+        params.extend(["-k", str(max_alignment)])
+    else:
+        params.append("-a") # -a means report all alignments for Bowtie2.
+    return params
+
+def _get_bwa_params(
+    bwa_subcommand: str,
+    sensitivity: str,
+    max_alignment: int = None,
+    cpus: int = None # cpus is used by 'mem' and 'aln', but not 'samse' directly
+) -> list[str]:
+    """
+    Get BWA parameters for a specific subcommand based on sensitivity and other settings.
+
+    Parameters
+    ----------
+    bwa_subcommand : str
+        The specific BWA subcommand ('mem', 'aln', 'samse').
+    sensitivity : str
+        Sensitivity setting ('very-fast', 'fast', 'sensitive', 'very-sensitive').
+        Note: The interpretation of 'sensitivity' varies significantly between subcommands.
+    max_alignment : Optional[int]
+        Maximum number of alignments to be returned. Used by 'mem' (conceptually via -a) and 'samse' (-n).
+    cpus : Optional[int]
+        Number of threads. Used by 'mem' (-t) and 'aln' (-t).
+
+    Returns
+    -------
+    list[str]
+        A list of BWA command-line parameters for the specified subcommand.
+    """
+    params = []
+
+    match bwa_subcommand:
+        case "mem":
+            if cpus is not None:
+                params.extend(["-t", str(cpus)])
+
+            # BWA-MEM specific sensitivity parameters
+            if sensitivity == "very-fast":
+                params.extend(["-k", "25", "-B", "6", "-O", "8,8", "-E", "2,2", "-T", "50"])
+            elif sensitivity == "fast":
+                params.extend(["-k", "22", "-B", "5", "-O", "7,7", "-E", "1,1", "-T", "40"])
+            elif sensitivity == "sensitive":
+                # BWA-MEM default parameters are often considered 'sensitive'
+                pass
+            elif sensitivity == "very-sensitive":
+                params.extend(["-k", "15", "-B", "2", "-O", "4,4", "-E", "0,0", "-T", "10"])
+            else:
+                logger.warning(f"Unknown BWA-MEM sensitivity '{sensitivity}'. Using default parameters.")
+            
+            # For Hi-C, '-a' (output all found alignments) is common for bwa mem.
+            params.append("-a")
+
+        case "aln":
+            if cpus is not None:
+                params.extend(["-t", str(cpus)])
+
+            # BWA-ALN specific sensitivity parameters
+            if sensitivity == "very-fast":
+                params.extend(["-n", "10", "-o", "2", "-q", "10"]) # Looser alignment parameters
+            elif sensitivity == "fast":
+                params.extend(["-n", "5", "-o", "1", "-q", "5"])
+            elif sensitivity == "sensitive":
+                params.extend(["-n", "2", "-o", "1", "-q", "0"]) # Common for Hi-C 'aln'
+            elif sensitivity == "very-sensitive":
+                params.extend(["-n", "1", "-o", "0", "-q", "0"]) # Very stringent
+            else:
+                logger.warning(f"Unknown BWA-ALN sensitivity '{sensitivity}'. Using default parameters (-n 2 -o 1 -q 0).")
+                params.extend(["-n", "2", "-o", "1", "-q", "0"]) # Fallback to 'sensitive'
+
+        case "samse":
+            # BWA-SAMSE specific parameters
+            # sensitivity parameter is largely irrelevant for samse, as it processes aln output
+            if max_alignment is not None and max_alignment != -1:
+                params.extend(["-n", str(max_alignment)])
+            # No other common parameters needed for 'sensitivity' or 'cpus' for samse itself.
+
+        case _:
+            raise ValueError(f"Unsupported BWA subcommand: '{bwa_subcommand}'. Must be 'mem', 'aln', or 'samse'.")
+
+    return params
+
+def _get_minimap2_params(sensitivity: str, max_alignment: int) -> list[str]:
+    """Get Minimap2 parameters based on sensitivity and max_alignment."""
+    params = []
+    # Mapping generic sensitivity to Minimap2's presets or manual tweaks
+    if sensitivity == "very-fast":
+        params.extend(["-x", "sr", "-k", "28", "-w", "20"])
+    elif sensitivity == "fast":
+        params.extend(["-x", "sr", "-k", "24", "-w", "15"])
+    elif sensitivity == "sensitive":
+        params.extend(["-x", "sr"])
+    elif sensitivity == "very-sensitive":
+        params.extend(["-x", "sr", "-k", "15", "-w", "5", "-B", "2", "-O", "2,10", "-E", "0,0", "-m", "20", "--max-chain-skip", "50"])
+    else:
+        logger.warning(f"Unknown Minimap2 sensitivity '{sensitivity}'. Using '-x sr' preset.")
+        params.extend(["-x", "sr"])
+
+    if max_alignment is not None and max_alignment != -1:
+        params.extend(["-N", str(max_alignment)])
+        params.append("--secondary=yes")
+    else:
+        params.append("--secondary=yes") # Output all secondary alignments by default
+
+    return params
 
 
 def hic_align(
@@ -137,6 +250,7 @@ def hic_align(
     output_dir: str = None,
     verbose: bool = False,
     aligner: str = "bowtie2",
+    read_type: str = "short"
 ) -> None:
     """
     Alignment of reads from HiC experiments along an indexed genome.
@@ -194,48 +308,143 @@ def hic_align(
     match aligner:
 
         case "bowtie2":
+            
+            bt2_params = _get_bowtie2_params(sensitivity=sensitivity, max_alignment=max_alignment)
+   
+            cmd_alignment_for = [
+            "bowtie2",
+            *bt2_params,
+            "-p", str(cpus),
+            "-x", str(index_path),
+            "-S", str(output_path / "1.sam"),
+            str(fq_for_path),
+        ]
+            
+            cmd_alignment_rev = [
+            "bowtie2",
+            *bt2_params,
+            "-p", str(cpus),
+            "-x", str(index_path),
+            "-S", str(output_path / "2.sam"),
+            str(fq_rev_path),
+        ]
 
-            if max_alignment is None or max_alignment == -1:
-
-                cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '2.sam'} {fq_for}"
-                cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -a -x {index_path} -S {output_path / '1.sam'} {fq_rev}"
-
-            elif max_alignment is not None:
-
-                cmd_alignment_for = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '1.sam'} {fq_for}"
-                cmd_alignment_rev = f"bowtie2 --{sensitivity} -p {cpus} -k {max_alignment}  -p {cpus}  -x {index_path} -S {output_path / '2.sam'} {fq_rev}"
-
-
-            _run_command([cmd_alignment_for], description = "Forward reads alignment with Bowtie2", verbose=True)
-            _run_command([cmd_alignment_rev], description = "Reverse reads alignment with Bowtie2", verbose=True)
-
+            _run_command(
+                cmd_alignment_for,
+                description="Forward reads alignment with Bowtie2",
+                verbose=True,
+            )
+            _run_command(
+                cmd_alignment_rev,
+                description="Reverse reads alignment with Bowtie2",
+                verbose=True,
+            )
 
         case "bwa":
-            
-            print(f"Max alignment: {max_alignment}")
-
             if max_alignment is None or max_alignment == -1:
-
-                cmd_alignment_for = f"bwa mem -t {cpus} -a -o {output_path / '1.sam'} {genome} {fq_rev}"
-                cmd_alignment_rev = f"bwa mem -t {cpus} -a -o {output_path / '2.sam'} {genome} {fq_for}"
+                logger.info("Using BWA-MEM workflow.")
+                # Call _get_bwa_params for 'mem'
+                bwa_mem_params = _get_bwa_params("mem", sensitivity, cpus=cpus)
                 
-                _run_command([cmd_alignment_for], description = "Forward reads alignment with BWA", verbose=True)
-                _run_command([cmd_alignment_rev], description = "Reverse reads alignment with BWA", verbose=True)
+                # Construct cmd_alignment_for and cmd_alignment_rev using bwa_mem_params
+                # ... (rest of BWA-MEM block as before, removing '-t' if added inside _get_bwa_params)
+                cmd_alignment_for = [
+                    "bwa", "mem",
+                    *bwa_mem_params, # Now includes '-t' from _get_bwa_params
+                    str(genome),
+                    str(fq_for_path),
+                    "-o", str(output_path / "1.sam")
+                ]
+                
+                cmd_alignment_rev = [
+                    "bwa", "mem",
+                    *bwa_mem_params,
+                    str(genome),
+                    str(fq_rev_path),
+                    "-o", str(output_path / "2.sam")
+                ]
+                
 
+                _run_command(
+                    cmd_alignment_for,
+                    description="Forward reads alignment with BWA",
+                    verbose=True,
+                )
+                _run_command(
+                    cmd_alignment_rev,
+                    description="Reverse reads alignment with BWA",
+                    verbose=True,
+                )
 
             elif max_alignment is not None:
-    
-                cmd_pre_alignment_for = f"bwa aln -n 2 -o 1 -q 0 -t {cpus} -f {output_path / '1.sai'} {genome} {fq_for}"
-                cmd_pre_alignment_rev = f"bwa aln -n 2 -o 1 -q 0 -t {cpus} -f {output_path / '2.sai'} {genome} {fq_rev}"
+
+                logger.info("Using BWA-MEM workflow.")
+                # Call _get_bwa_params for 'mem'
+                bwa_aln_params = _get_bwa_params("aln", sensitivity, cpus=cpus)
+                bwa_samse_params = _get_bwa_params("samse", sensitivity, cpus=cpus)
                 
-                cmd_alignment_for = f"bwa samse -n {max_alignment} -f {output_path / '1.sam'} {genome} {output_path / '1.sai'} {fq_for}"
-                cmd_alignment_rev = f"bwa samse -n {max_alignment} -f {output_path / '2.sam'} {genome} {output_path / '2.sai'} {fq_rev}"
+                # Construct cmd_alignment_for and cmd_alignment_rev using bwa_mem_params
+                # ... (rest of BWA-MEM block as before, removing '-t' if added inside _get_bwa_params)
+                cmd_pre_alignment_for = [
+                    "bwa", "aln",
+                    *bwa_aln_params, # Now includes '-t' from _get_bwa_params
+                    "-f", str(output_path / "1.sai"),
+                    str(genome),
+                    str(fq_for_path),
+                ]
                 
-                _run_command([cmd_pre_alignment_for], description = "Forward reads pre-alignment with BWA", verbose=True)
-                _run_command([cmd_pre_alignment_rev], description = "Reverse reads pre-alignment with BWA", verbose=True)
                 
-                _run_command([cmd_alignment_for], description = "Forward reads alignment with BWA", verbose=True)
-                _run_command([cmd_alignment_rev], description = "Reverse reads alignment with BWA", verbose=True)
+                cmd_alignment_for = [
+                    "bwa", "samse",
+                    *bwa_samse_params, # Now includes '-t' from _get_bwa_params
+                    "-f", str(output_path / "1.sam"),
+                    str(genome),
+                    str(output_path / "1.sai"),
+                    str(fq_for_path),
+                ]
+                
+                
+                cmd_pre_alignment_rev = [
+                    "bwa", "aln",
+                    *bwa_aln_params,
+                    "-f", str(output_path / "2.sai"),
+                    str(genome),
+                    str(fq_rev_path),
+                ]
+                
+                cmd_alignment_rev = [
+                    "bwa", "samse",
+                    *bwa_samse_params, # Now includes '-t' from _get_bwa_params
+                    "-f", str(output_path / "2.sam"),
+                    str(genome),
+                    str(output_path / "2.sai"),
+                    str(fq_for_path),
+                ]
+                
+
+                _run_command(
+                    cmd_pre_alignment_for,
+                    description="Forward reads alignment with BWA",
+                    verbose=True,
+                )
+                
+                _run_command(
+                    cmd_alignment_for,
+                    description="Forward reads alignment with BWA",
+                    verbose=True,
+                )
+                
+                _run_command(
+                    cmd_pre_alignment_rev,
+                    description="Reverse reads alignment with BWA",
+                    verbose=True,
+                )
+                
+                _run_command(
+                    cmd_alignment_rev,
+                    description="Reverse reads alignment with BWA",
+                    verbose=True,
+                )
 
         case "minimap2":
 
@@ -249,32 +458,39 @@ def hic_align(
                 cmd_alignment_for = f"minimap2 -a --secondary yes -N {max_alignment} -t {cpus} -o {output_path / '1.sam'} {genome} {fq_for}"
                 cmd_alignment_rev = f"minimap2 -a --secondary yes -N {max_alignment} -t {cpus} -o {output_path / '2.sam'} {genome} {fq_rev}"
 
+            _run_command(
+                [cmd_alignment_for],
+                description="Forward reads alignment with Minimap2",
+                verbose=True,
+            )
+            _run_command(
+                [cmd_alignment_rev],
+                description="Reverse reads alignment with Minimap2",
+                verbose=True,
+            )
+        # if verbose:
 
-            _run_command([cmd_alignment_for], description = "Forward reads alignment with Minimap2", verbose = True)
-            _run_command([cmd_alignment_rev], description = "Reverse reads alignment with Minimap2", verbose = True)
- # if verbose:
+        #     logger.info(cmd_alignment_for)
+        #     logger.info(cmd_alignment_rev)
 
-            #     logger.info(cmd_alignment_for)
-            #     logger.info(cmd_alignment_rev)
+        # p_for = sp.Popen(
+        #     [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+        # )
+        # stdout_for, stderr_for = p_for.communicate()
+        # p_rev = sp.Popen(
+        #     [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
+        # )
+        # stdout_rev, stderr_rev = p_rev.communicate()
 
-            # p_for = sp.Popen(
-            #     [cmd_alignment_for], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            # )
-            # stdout_for, stderr_for = p_for.communicate()
-            # p_rev = sp.Popen(
-            #     [cmd_alignment_rev], shell=True, stdout=sp.PIPE, stderr=sp.PIPE
-            # )
-            # stdout_rev, stderr_rev = p_rev.communicate()
+        # if stdout_for:
+        #     logger.info(stdout_for.decode("ascii"))
+        # if stderr_for:
+        #     logger.info(stderr_for.decode("ascii"))
 
-            # if stdout_for:
-            #     logger.info(stdout_for.decode("ascii"))
-            # if stderr_for:
-            #     logger.info(stderr_for.decode("ascii"))
-
-            # if stdout_rev:
-            #     logger.info(stdout_rev.decode("ascii"))
-            # if stderr_rev:
-            #     logger.info(stderr_rev.decode("ascii"))
+        # if stdout_rev:
+        #     logger.info(stdout_rev.decode("ascii"))
+        # if stderr_rev:
+        #     logger.info(stderr_rev.decode("ascii"))
 
         case "_":
 
@@ -334,8 +550,12 @@ def hic_view(
     cmd_view_for = f"samtools view -h  -b {output_path / sam_for} -o {output_path / '1.bam'} --threads {cpus}"
     cmd_view_rev = f"samtools view -h  -b {output_path / sam_rev} -o {output_path / '2.bam'} --threads {cpus}"
 
-    _run_command([cmd_view_for], description=".sam to .bam conversion of forward alignments")
-    _run_command([cmd_view_rev], description=".sam to .bam conversion of reverse alignments")
+    _run_command(
+        [cmd_view_for], description=".sam to .bam conversion of forward alignments"
+    )
+    _run_command(
+        [cmd_view_rev], description=".sam to .bam conversion of reverse alignments"
+    )
 
     # Delete .sam files after .bam conversion
     (output_path / sam_for).unlink()
@@ -398,8 +618,14 @@ def hic_sort(
     cmd_sort_for = f"samtools sort -n -T {id_for} {output_path / '1.bam'} -o {output_path / '1.sorted.bam'} --threads {cpus}"
     cmd_sort_rev = f"samtools sort -n -T {id_rev} {output_path / '2.bam'} -o {output_path / '2.sorted.bam'} --threads {cpus}"
 
-    _run_command([cmd_sort_for], description="Sorting of forward alignments considering read names")
-    _run_command([cmd_sort_rev], description="Sorting of reverse alignments considering read names")
+    _run_command(
+        [cmd_sort_for],
+        description="Sorting of forward alignments considering read names",
+    )
+    _run_command(
+        [cmd_sort_rev],
+        description="Sorting of reverse alignments considering read names",
+    )
 
     (output_path / "1.bam").unlink()
     (output_path / "2.bam").unlink()

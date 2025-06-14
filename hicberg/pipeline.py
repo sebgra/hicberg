@@ -71,6 +71,7 @@ def pipeline(
     force: bool = False,
     blacklist: str = None,
     aligner: str = "bowtie2",
+    read_type: str = "short"
 ) -> None:
 
     args = locals()
@@ -180,8 +181,9 @@ def pipeline(
             cpus=cpus,
             verbose=True,
             aligner=aligner,
+            read_type=read_type
         )
-        
+
         hal.hic_view(cpus=cpus, output_dir=output_folder, verbose=True)
         hal.hic_sort(cpus=cpus, output_dir=output_folder, verbose=True)
 

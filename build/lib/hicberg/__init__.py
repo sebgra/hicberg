@@ -13,8 +13,12 @@ console_handler.setLevel(logging.INFO)
 file_handler.setLevel(logging.INFO)
 
 # Create formatters and add it to handlers
-console_format = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s', "%Y-%m-%d -- %H:%M:%S")
-file_format = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s', "%Y-%m-%d --  %H:%M:%S")
+console_format = logging.Formatter(
+    "%(asctime)s :: %(levelname)s :: %(message)s", "%Y-%m-%d -- %H:%M:%S"
+)
+file_format = logging.Formatter(
+    "%(asctime)s :: %(levelname)s :: %(message)s", "%Y-%m-%d --  %H:%M:%S"
+)
 console_handler.setFormatter(console_format)
 file_handler.setFormatter(file_format)
 
@@ -25,4 +29,3 @@ logger.propagate = False
 
 
 save = pysam.set_verbosity(0)
-

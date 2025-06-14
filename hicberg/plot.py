@@ -32,10 +32,10 @@ RESTRICTION_MAP = "restriction_map.npy"
 DENSITY_MAP = "density_map.npy"
 
 
-def plot_density(output_dir : str = None) -> None:
+def plot_density(output_dir: str = None) -> None:
     """
     Plot density maps
-    
+
     Parameters
     ----------
     output_dir : str, optional
@@ -45,7 +45,7 @@ def plot_density(output_dir : str = None) -> None:
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     # reload dictionaries
@@ -58,15 +58,25 @@ def plot_density(output_dir : str = None) -> None:
         cmap = plt.get_cmap("seismic")
         cmap.set_bad(color="black")
         plt.figure(figsize=(10, 10))
-        plt.imshow(np.log10(matrix), cmap=cmap, vmin = -1, vmax = 1)
+        plt.imshow(np.log10(matrix), cmap=cmap, vmin=-1, vmax=1)
         plt.title(f"Contact density for  {chromosome_couple}")
         plt.colorbar(fraction=0.046)
-        plt.savefig(output_path / f"density_{chromosome_couple[0]}-{chromosome_couple[1]}.pdf", format = "pdf")
+        plt.savefig(
+            output_path / f"density_{chromosome_couple[0]}-{chromosome_couple[1]}.pdf",
+            format="pdf",
+        )
         plt.close()
 
     logger.info(f"Saved plots of densities at : {output_path}")
 
-def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, rescued_matrix : str = None, chromosomes : list[str] = None, output_dir : str = None) -> None:
+
+def plot_benchmark(
+    original_matrix: str = None,
+    depleted_matrix: str = None,
+    rescued_matrix: str = None,
+    chromosomes: list[str] = None,
+    output_dir: str = None,
+) -> None:
     """
     Plot benchmark results (original, depleted and rescued matrices with associated log ratios). One plot per chromosome.
 
@@ -82,11 +92,13 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
         Path to where to save plots, by default None
     """
 
-    if output_dir is None:  # if no output directory is provided, save in current directory     
+    if (
+        output_dir is None
+    ):  # if no output directory is provided, save in current directory
         output_path = Path(getcwd())
 
-    else : 
-        output_path = Path(output_dir)    
+    else:
+        output_path = Path(output_dir)
 
     chromosomes = chromosomes if type(chromosomes) == list else chromosomes.split()
 
@@ -96,13 +108,19 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
     rescued_matrix_path = output_dir / rescued_matrix
 
     if not original_matrix_path.is_file():
-        raise FileNotFoundError(f"Original matrix not found at {original_matrix_path}. Please provide a valid path.")
+        raise FileNotFoundError(
+            f"Original matrix not found at {original_matrix_path}. Please provide a valid path."
+        )
 
     if not depleted_matrix_path.is_file():
-        raise FileNotFoundError(f"Depleted matrix not found at {depleted_matrix_path}. Please provide a valid path.")
+        raise FileNotFoundError(
+            f"Depleted matrix not found at {depleted_matrix_path}. Please provide a valid path."
+        )
     if not rescued_matrix_path.is_file():
-        raise FileNotFoundError(f"Rescued matrix not found at {rescued_matrix_path}. Please provide a valid path.")
-    
+        raise FileNotFoundError(
+            f"Rescued matrix not found at {rescued_matrix_path}. Please provide a valid path."
+        )
+
     # Relaod matricies
     original_matrix = load_cooler(original_matrix_path)
     depleted_matrix = load_cooler(depleted_matrix_path)
@@ -124,26 +142,32 @@ def plot_benchmark(original_matrix : str = None, depleted_matrix : str = None, r
         # TODO : Adjust log non log and exponent
         plt.figure(figsize=(10, 10))
         plt.subplot(221)
-        plt.imshow(ori_matrix ** 0.15, cmap = "afmhot_r", vmin = 0, vmax = np.max(ori_matrix ** 0.15))
+        plt.imshow(
+            ori_matrix**0.15, cmap="afmhot_r", vmin=0, vmax=np.max(ori_matrix**0.15)
+        )
         plt.title(f"Original map - {chrm}")
         plt.subplot(222)
-        plt.imshow(dep_matrix ** 0.15, cmap = "afmhot_r", vmin = 0, vmax = np.max(ori_matrix ** 0.15))
+        plt.imshow(
+            dep_matrix**0.15, cmap="afmhot_r", vmin=0, vmax=np.max(ori_matrix**0.15)
+        )
         plt.title(f"Depleted map - {chrm}")
         plt.subplot(223)
-        plt.imshow(res_matrix ** 0.15, cmap = "afmhot_r", vmin = 0, vmax = np.max(ori_matrix ** 0.15))
+        plt.imshow(
+            res_matrix**0.15, cmap="afmhot_r", vmin=0, vmax=np.max(ori_matrix**0.15)
+        )
         plt.title(f"Rescued map - {chrm}")
         plt.subplot(224)
-        plt.imshow(log_ratio, cmap = "bwr" , vmin = -1, vmax = 1) 
+        plt.imshow(log_ratio, cmap="bwr", vmin=-1, vmax=1)
         plt.title(f"Log ratio - {chrm}")
         plt.colorbar(fraction=0.046)
-        plt.savefig(output_path / f"benchmark_{chrm}.pdf", format = "pdf")
+        plt.savefig(output_path / f"benchmark_{chrm}.pdf", format="pdf")
         plt.close()
 
 
-def plot_d1d2(output_dir : str = None) -> None:
+def plot_d1d2(output_dir: str = None) -> None:
     """
     Plot d1d2 law
-    
+
     Parameters
     ----------
     output_dir : str, optional
@@ -153,7 +177,7 @@ def plot_d1d2(output_dir : str = None) -> None:
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
 
         output_path = Path(output_dir)
 
@@ -167,15 +191,16 @@ def plot_d1d2(output_dir : str = None) -> None:
     plt.title("Log distribution of d1d2 distance")
     plt.xlabel("d1+d2")
     plt.ylabel("No. occurences")
-    plt.savefig(output_path / f"d1d2.pdf", format = "pdf")
+    plt.savefig(output_path / f"d1d2.pdf", format="pdf")
     plt.close()
 
     logger.info(f"Saved plots of d1d2 at : {output_path}")
 
-def plot_laws(output_dir : str = None) -> None:
+
+def plot_laws(output_dir: str = None) -> None:
     """
     Plot P(s) patterns laws
-    
+
     Parameters
     ----------
     output_dir : str, optional
@@ -185,7 +210,7 @@ def plot_laws(output_dir : str = None) -> None:
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     # reload dictionaries
@@ -196,25 +221,30 @@ def plot_laws(output_dir : str = None) -> None:
     loops = load_dictionary(output_path / LOOPS)
 
     for chromosome in xs.keys():
-        
+
         plt.figure(figsize=(10, 10))
         plt.loglog(xs[chromosome], weirds[chromosome], "o", label="++/--")
         plt.loglog(xs[chromosome], uncuts[chromosome], "o", label="+-")
         plt.loglog(xs[chromosome], loops[chromosome], "o", label="-+")
-        plt.title(f"Distribution of weirds, uncuts and loops events across {chromosome}")
+        plt.title(
+            f"Distribution of weirds, uncuts and loops events across {chromosome}"
+        )
         plt.xlabel("Logarithmic binned genomic distances")
         plt.ylabel("Number of events")
         plt.grid()
         plt.legend()
-        plt.savefig(output_path / f"patterns_distribution_{chromosome}.pdf", format = "pdf")
+        plt.savefig(
+            output_path / f"patterns_distribution_{chromosome}.pdf", format="pdf"
+        )
         plt.close()
 
     logger.info(f"Saved plots of patterns at : {output_path}")
 
-def plot_trans_ps(output_dir : str = None) -> None:
+
+def plot_trans_ps(output_dir: str = None) -> None:
     """
     Plot P(s) patterns laws
-    
+
     Parameters
     ----------
     output_dir : str, optional
@@ -224,7 +254,7 @@ def plot_trans_ps(output_dir : str = None) -> None:
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     # reload dictionaries
@@ -241,19 +271,14 @@ def plot_trans_ps(output_dir : str = None) -> None:
     for idx, s in enumerate(chrm_sets):
 
         all_interactions = clr_unambiguous.matrix(balance=False).fetch(s[0], s[1]).sum()
-        n_frags = len(dist_frag.get(str(s[0]))) * len(
-            dist_frag.get(str(s[1]))
-        )
+        n_frags = len(dist_frag.get(str(s[0]))) * len(dist_frag.get(str(s[1])))
         trans_ps_dictionary[s] = np.divide(all_interactions, np.multiply(n_frags, 4))
-
 
         t_ps[idx] = np.divide(all_interactions, np.multiply(n_frags, 4))
         all_interaction_matrix[idx] = all_interactions
         n_frags_matrix[idx] = n_frags
 
-    t_ps = t_ps.reshape(
-        (len(dist_frag.keys()), (len(dist_frag.keys())))
-    )
+    t_ps = t_ps.reshape((len(dist_frag.keys()), (len(dist_frag.keys()))))
     np.fill_diagonal(t_ps, np.nan)
 
     all_interaction_matrix = all_interaction_matrix.reshape(
@@ -280,15 +305,16 @@ def plot_trans_ps(output_dir : str = None) -> None:
         list(dist_frag.keys()),
     )
     plt.title("Pseudo P(s)")
-    plt.savefig(output_path / f"pseudo_ps.pdf", format = "pdf")
+    plt.savefig(output_path / f"pseudo_ps.pdf", format="pdf")
     plt.close()
 
     logger.info(f"Saved pseudo P(s) of patterns at : {output_path}")
 
-def plot_coverages(bins : int = 2000, output_dir : str = None ) -> None:
+
+def plot_coverages(bins: int = 2000, output_dir: str = None) -> None:
     """
     Plot coverages of chromosomes
-    
+
     Parameters
     ----------
     bins : int, optional
@@ -296,11 +322,11 @@ def plot_coverages(bins : int = 2000, output_dir : str = None ) -> None:
     output_dir : str, optional
         Path to the folder where to save the plot, by default None, by default None.
     """
-    
+
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     # reload dictionaries
@@ -310,18 +336,23 @@ def plot_coverages(bins : int = 2000, output_dir : str = None ) -> None:
     for chromosome in xs.keys():
 
         plt.figure()
-        plt.plot(coverage[chromosome], label="Covering smoothed")        
+        plt.plot(coverage[chromosome], label="Covering smoothed")
         plt.title(f"Covering across {chromosome} - bins of {bins} bp")
         plt.xlabel(f"Bin number")
         plt.ylabel("Number of reads")
         plt.legend()
         plt.grid()
-        plt.savefig(output_path / f"coverage_{chromosome}.pdf", format = "pdf")
+        plt.savefig(output_path / f"coverage_{chromosome}.pdf", format="pdf")
         plt.close()
 
     logger.info(f"Saved coverages at : {output_path}")
 
-def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", reverse_bam_file : str = "group2.2.rescued.bam",  output_dir : str = None ) -> None:
+
+def plot_couple_repartition(
+    forward_bam_file: str = "group2.1.rescued.bam",
+    reverse_bam_file: str = "group2.2.rescued.bam",
+    output_dir: str = None,
+) -> None:
     """
     Plot read couples sizes distribution
 
@@ -339,19 +370,25 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
     if output_dir is None:
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     merged_forward_alignment_path = output_path / forward_bam_file
     merged_reverse_alignment_path = output_path / reverse_bam_file
 
-    merged_forward_alignment_file_handler = ps.AlignmentFile(merged_forward_alignment_path, "rb")
-    merged_reverse_alignment_file_handler = ps.AlignmentFile(merged_reverse_alignment_path, "rb")
+    merged_forward_alignment_file_handler = ps.AlignmentFile(
+        merged_forward_alignment_path, "rb"
+    )
+    merged_reverse_alignment_file_handler = ps.AlignmentFile(
+        merged_reverse_alignment_path, "rb"
+    )
 
     # Get the number of possible couples
     couple_lenght = list()
 
-    for forward_read, reverse_read in zip(merged_forward_alignment_file_handler, merged_reverse_alignment_file_handler):
+    for forward_read, reverse_read in zip(
+        merged_forward_alignment_file_handler, merged_reverse_alignment_file_handler
+    ):
 
         couple_lenght.append(forward_read.get_tag("XL") * reverse_read.get_tag("XL"))
 
@@ -391,15 +428,25 @@ def plot_couple_repartition(forward_bam_file : str = "group2.1.rescued.bam", rev
     plt.title("Distribution of set of potential couple number")
     plt.legend()
 
-    plt.savefig(output_path / f"Couple_number_distribution.pdf",
+    plt.savefig(
+        output_path / f"Couple_number_distribution.pdf",
         format="pdf",
     )
     plt.close()
 
-
     logger.info(f"Saved couple number distribution at : {output_path}")
 
-def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : str = "rescued_map.cool", restriction_map : str = "restriction_map.npy", genome : str = "", vmin : float = 0.0, vmax : float = 3.5, bins : int = 2000, output_dir : str = None) -> None:
+
+def plot_matrix(
+    unrescued_matrix: str = "unrescued_map.cool",
+    rescued_matrix: str = "rescued_map.cool",
+    restriction_map: str = "restriction_map.npy",
+    genome: str = "",
+    vmin: float = 0.0,
+    vmax: float = 3.5,
+    bins: int = 2000,
+    output_dir: str = None,
+) -> None:
     """
     Plot matrix with additional trackss
 
@@ -427,12 +474,12 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
     # Get the matrix
     unrescued_matrix = load_cooler(output_path / unrescued_matrix)
-    rescued_matrix = load_cooler(output_path /rescued_matrix)
+    rescued_matrix = load_cooler(output_path / rescued_matrix)
 
     genome_file = bf.load_fasta(genome, engine="pysam")
     restriction_map = load_dictionary(output_path / restriction_map)
@@ -440,17 +487,23 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
     gc_cov = bf.frac_gc(bins[["chrom", "start", "end"]], genome_file)
 
     ### to make a list of chromosome start/ends in bins:
-    
+
     for i in rescued_matrix.chromnames:
 
         lower = rescued_matrix.extent(str(i))[0]
         upper = rescued_matrix.extent(str(i))[1]
 
         # Unrescued
-        coverage_unrescued = np.sum(np.tril(unrescued_matrix.matrix(balance = False).fetch(i)), axis = 1)
-        median_coverage = np.repeat(np.median(coverage_unrescued), coverage_unrescued.shape[0])
+        coverage_unrescued = np.sum(
+            np.tril(unrescued_matrix.matrix(balance=False).fetch(i)), axis=1
+        )
+        median_coverage = np.repeat(
+            np.median(coverage_unrescued), coverage_unrescued.shape[0]
+        )
         # Rescued
-        coverage_rescued = np.sum(np.tril(rescued_matrix.matrix(balance = False).fetch(i)), axis = 1)
+        coverage_rescued = np.sum(
+            np.tril(rescued_matrix.matrix(balance=False).fetch(i)), axis=1
+        )
 
         # Plot the matrix
         fig = plt.figure(figsize=(20, 20))
@@ -460,8 +513,10 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         divider1 = make_axes_locatable(ax1)
         cax1 = divider1.append_axes("right", size="5%", pad=0.1)
         im_unrescued = ax1.imshow(
-            np.log10(unrescued_matrix.matrix(balance=False).fetch(i)), vmin = vmin, vmax = vmax,
-            cmap = "afmhot_r",
+            np.log10(unrescued_matrix.matrix(balance=False).fetch(i)),
+            vmin=vmin,
+            vmax=vmax,
+            cmap="afmhot_r",
         )
         fig.colorbar(im_unrescued, cax=cax1, label="corrected frequencies")
         ax1.set_title(
@@ -476,8 +531,10 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         divider2 = make_axes_locatable(ax2)
         cax2 = divider2.append_axes("right", size="5%", pad=0.1)
         im_rescued = ax2.imshow(
-            np.log10(rescued_matrix.matrix(balance=False).fetch(i)), vmin = vmin, vmax = vmax,
-            cmap = "afmhot_r",
+            np.log10(rescued_matrix.matrix(balance=False).fetch(i)),
+            vmin=vmin,
+            vmax=vmax,
+            cmap="afmhot_r",
         )
         fig.colorbar(im_rescued, cax=cax2, label="corrected frequencies")
         ax2.set_title(
@@ -487,10 +544,10 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         ax3 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
         ax3.plot(coverage_unrescued)
-        ax3.plot(median_coverage, linestyle = '--', color = 'black')
+        ax3.plot(median_coverage, linestyle="--", color="black")
         ax3.set_ylabel("Coverage")
         ax3.set_xticks([])
-        ax3.set_title('Natural coverage')
+        ax3.set_title("Natural coverage")
 
         ax4 = divider1.append_axes("bottom", size="15%", pad=0.5, sharex=ax1)
         ax4.plot(list(gc_cov["GC"][lower:upper]), color="purple")
@@ -499,8 +556,8 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
         ax5 = divider2.append_axes("bottom", size="15%", pad=0.5, sharex=ax2)
         ax5.plot(coverage_unrescued, label="Before HiC-BERG")
         ax5.plot(coverage_rescued, label="After HiC-BERG")
-        ax5.plot(median_coverage, linestyle = '--', color = 'black')
-        ax5.set_title('Enhanced coverage')
+        ax5.plot(median_coverage, linestyle="--", color="black")
+        ax5.set_title("Enhanced coverage")
         ax5.set_xlim([0, len(unrescued_matrix.bins().fetch(str(i)))])
         ax5.set_ylabel("Coverage")
         ax5.legend(loc="center left", bbox_to_anchor=(1, 0.5))
@@ -517,7 +574,16 @@ def plot_matrix(unrescued_matrix : str = "unrescued_map.cool", rescued_matrix : 
 
         plt.close()
 
-def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str = None, rescued_cool : str = None, chromosome : str = None, threshold : float = 0.0, case : str = "",  output_dir : str = None) -> None:
+
+def plot_pattern_reconstruction(
+    table: pd.DataFrame = None,
+    original_cool: str = None,
+    rescued_cool: str = None,
+    chromosome: str = None,
+    threshold: float = 0.0,
+    case: str = "",
+    output_dir: str = None,
+) -> None:
     """
     Create a plot of pattern reconstruction quality.
 
@@ -543,40 +609,59 @@ def plot_pattern_reconstruction(table : pd.DataFrame = None, original_cool : str
 
         output_path = Path(getcwd())
 
-    else : 
+    else:
         output_path = Path(output_dir)
 
-    original_matrix = load_cooler(original_cool).matrix(balance = False)
-    rescued_matrix = load_cooler(rescued_cool).matrix(balance = False)
+    original_matrix = load_cooler(original_cool).matrix(balance=False)
+    rescued_matrix = load_cooler(rescued_cool).matrix(balance=False)
 
-    bin_size = load_cooler(original_cool).info['bin-size']
+    bin_size = load_cooler(original_cool).info["bin-size"]
 
     fig, ax = plt.subplots()
     plt.title(f"Reconstructed pattern {chromosome}\n {case}")
     # Use imshow to add the first set of data to the plot
-    img1 = ax.imshow(original_matrix.fetch(chromosome) ** 0.15, cmap ='afmhot_r', vmin = 0, vmax=np.max(rescued_matrix.fetch(chromosome) ** 0.15))
+    img1 = ax.imshow(
+        original_matrix.fetch(chromosome) ** 0.15,
+        cmap="afmhot_r",
+        vmin=0,
+        vmax=np.max(rescued_matrix.fetch(chromosome) ** 0.15),
+    )
 
     if table is not None:
-        colormap = plt.colormaps['Blues'] # 'plasma' or 'viridis'
-        colors = colormap(table['score'])
-        norm = plc.Normalize(vmin = 0.0, vmax = 1.0)
+        colormap = plt.colormaps["Blues"]  # 'plasma' or 'viridis'
+        colors = colormap(table["score"])
+        norm = plc.Normalize(vmin=0.0, vmax=1.0)
         # Create a divider for the existing axes instance
         divider = make_axes_locatable(ax)
 
         # Append axes to the right of the main axes.
-        cax1 = divider.append_axes("right", size = "5%", pad = 0.1)
+        cax1 = divider.append_axes("right", size="5%", pad=0.1)
 
         # Add the colorbar to the figure
-        cbar1 = fig.colorbar(img1, cax = cax1)
+        cbar1 = fig.colorbar(img1, cax=cax1)
 
-        sc = ax.scatter(x = table['start1'] // bin_size, y = table['start2'] // bin_size, s = 40, linewidth = 2, color = 'none', edgecolors = colors)
-        sm = plt.cm.ScalarMappable(cmap = colormap)
+        sc = ax.scatter(
+            x=table["start1"] // bin_size,
+            y=table["start2"] // bin_size,
+            s=40,
+            linewidth=2,
+            color="none",
+            edgecolors=colors,
+        )
+        sm = plt.cm.ScalarMappable(cmap=colormap)
 
         # Append axes to the bottom of the main axes.
-        cax2 = divider.append_axes("bottom", size = "5%", pad = 0.4)
+        cax2 = divider.append_axes("bottom", size="5%", pad=0.4)
 
         # Add the second colorbar to the figure
-        cbar2 = fig.colorbar(sm, cax = cax2, orientation = 'horizontal', )
-        cbar2.set_label(f'Pattern score - threshold : {threshold}')
-    
-    fig.savefig(str(output_path / f"pattern_{case.replace(' ', '')}_{chromosome}.pdf"), format = "pdf")
+        cbar2 = fig.colorbar(
+            sm,
+            cax=cax2,
+            orientation="horizontal",
+        )
+        cbar2.set_label(f"Pattern score - threshold : {threshold}")
+
+    fig.savefig(
+        str(output_path / f"pattern_{case.replace(' ', '')}_{chromosome}.pdf"),
+        format="pdf",
+    )
