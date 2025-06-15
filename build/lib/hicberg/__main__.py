@@ -271,6 +271,16 @@ def cli(chain=True):
     metavar="<str>",
     help="Type of reads to align (Minimap2)",
 )
+@click.option(
+    "--config",
+    "-C",
+    required=False,
+    default=None,
+    type=str,
+    show_default=True,
+    metavar="<str>",
+    help="Path to config file to parametrize Hicberg",
+)
 def pipeline_cmd(
     data,
     index,
@@ -294,6 +304,7 @@ def pipeline_cmd(
     blacklist,
     aligner,
     read_type,
+    config,
 ):
     """
     Hi-C pipeline to generate enhanced contact matrix from fastq files.
@@ -324,6 +335,7 @@ def pipeline_cmd(
         blacklist=blacklist,
         aligner=aligner,
         read_type=read_type,
+        config=config
     )
     return
 

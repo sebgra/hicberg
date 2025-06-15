@@ -12,7 +12,7 @@ from functools import partial
 import logging
 
 import numpy as np
-
+import hicberg.parser as hpa
 import hicberg.align as hal
 import hicberg.io as hio
 import hicberg.utils as hut
@@ -71,7 +71,8 @@ def pipeline(
     force: bool = False,
     blacklist: str = None,
     aligner: str = "bowtie2",
-    read_type: str = "short"
+    read_type: str = "short",
+    config: str = None
 ) -> None:
 
     args = locals()
@@ -111,7 +112,41 @@ def pipeline(
         "rescue": 5,
         "final": 6,
     }
-
+    
+    # Load parameters from config file if provided
+    if config is not None:
+        config_path = Path(config)
+        if not config_path.exists:
+            raise IOError(f"Config file {config_path} does not exist.\nPlease provide exisiting config file.")
+        
+        # Parameters loading
+        configuration = hpa.parse_ini_file(config_path)        
+        name = configuration["General"]["name"]
+        start_stage = configuration["General"]["start_stage"]
+        exit_stage = configuration["General"]["exit_stage"]
+        genome = configuration["InputFiles"]["genome"]
+        index=configuration["InputFiles"]["index"]
+        fq_for = configuration["InputFiles"]["fq_for"]
+        fq_rev = configuration["InputFiles"]["fq_rev"]
+        sensitivity = configuration["Alignment"]["sensitivity"]
+        max_alignment = configuration["Alignment"]["max_alignment"]
+        mapq = configuration["Alignment"]["mapq"]
+        enzyme = configuration["Processing"]["enzyme"]
+        circular = configuration["Processing"]["circular"]
+        rate = configuration["Processing"]["rate"]
+        distance = configuration["Processing"]["distance"]
+        bins = configuration["Processing"]["bins"]
+        mode = configuration["Processing"]["mode"]
+        kernel_size = configuration["Processing"]["kernel_size"]
+        deviation = configuration["Processing"]["deviation"]
+        verbose = configuration["General"]["verbose"]
+        cpus = configuration["Alignment"]["cpus"]
+        output_dir = configuration["General"]["output_dir"]
+        force = configuration["General"]["force"]
+        blacklist = configuration["InputFiles"]["blacklist"]
+        aligner = configuration["Alignment"]["aligner"]
+        read_type = configuration["Alignment"]["read_type"]
+                
     start_stage = stages[
         start_stage
     ]  # start_stage as variable of command line - default to "fastq" --> 0
@@ -132,18 +167,19 @@ def pipeline(
     logger.info("Start Hicberg pipeline")
 
     # Keep track of the arguments used
-    for arg in args:
-
-        logger.info("%s: %s", arg, args[arg])
+    if "config" in args and config is not None:
+        logger.info("config file used: %s", args["config"])
+    else:
+        for arg in args:
+            logger.info("%s: %s", arg, args[arg])
 
     # Check if the output directory exists
     output_folder = Path(output_dir, name).as_posix()
-
+    
     # Reformat blacklisted genomic regions if provided
     if blacklist is not None:
 
         blacklist = hut.format_blacklist(blacklist=blacklist)
-        print(f"reformatted blacklist : {blacklist}")
 
     if start_stage < 1:
 
