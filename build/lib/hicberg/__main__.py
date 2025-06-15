@@ -24,7 +24,7 @@ epilogs = {
     "bowtie2": "For more information about Bowtie2, please visit : http://bowtie-bio.sourceforge.net/bowtie2/index.shtml",
     "samtools": "For more information about Samtools, please visit : http://www.htslib.org/doc/samtools.html",
     "cooler": "For more information about cooler, please visit : https://cooler.readthedocs.io/en/latest/",
-    "complete": "For more information about hicberg and used components, please visit :\nhttps://github.com/sebgra/hicberg\n - Bowtie2 : http://bowtie-bio.sourceforge.net/bowtie2/index.shtml\n - Samtools : http://www.htslib.org/doc/samtools.html",
+    "complete": "For more information about hicberg and used components, please visit :\nhttps://github.com/sebgra/hicberg\n - Bowtie2 : http://bowtie-bio.sourceforge.net/bowtie2/index.shtml\n - Samtools : http://www.htslib.org/doc/samtools.html\n - BWA : https://bio-bwa.sourceforge.net/bwa.shtml\n - Minimap2 : https://lh3.github.io/minimap2/minimap2.html#5",
 }
 
 
@@ -129,7 +129,7 @@ def cli(chain=True):
     "--mode",
     "-m",
     required=False,
-    default="full",
+    default="standard",
     type=str,
     show_default=True,
     metavar="<str>",
@@ -819,7 +819,7 @@ def statistics_cmd(
     "--mode",
     "-m",
     required=False,
-    default="full",
+    default="standard",
     type=str,
     show_default=True,
     metavar="<str>",
@@ -839,7 +839,6 @@ def rescue_cmd(data, enzyme, mode, output, cpus):
     """
     Reallocate ambiguous reads to the most plausible position according to model.
     """
-    # TODO : to uncomment
     restriction_map = hst.get_restriction_map(
         genome=data[0], enzyme=enzyme, output_dir=output
     )
@@ -1084,7 +1083,7 @@ def chunk_cmd(data, chunks, output):
     "--mode",
     "-m",
     required=False,
-    default="full",
+    default="standard",
     type=str,
     show_default=True,
     metavar="<str>",

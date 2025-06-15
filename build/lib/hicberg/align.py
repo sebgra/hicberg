@@ -49,8 +49,6 @@ def hic_build_index(
 
     aligner_command = supported_aligners[aligner].split()[0]  # Get the base command
 
-    print(f"aligner_command: {aligner_command}")
-
     # Map aligner names to their primary executable names
     aligner_executables = {
         "bowtie2": "bowtie2-build",  # For index building
@@ -210,7 +208,7 @@ def _get_bwa_params(
                 params.extend(["-n", "2", "-o", "1", "-q", "0"]) # Fallback to 'sensitive'
 
         case "samse":
-            # BWA-SAMSE specific parameters
+                        # BWA-SAMSE specific parameters
             # sensitivity parameter is largely irrelevant for samse, as it processes aln output
             if max_alignment is not None and max_alignment != -1:
                 params.extend(["-n", str(max_alignment)])
@@ -397,7 +395,7 @@ def hic_align(
             if max_alignment is None or max_alignment == -1:
                 logger.info("Using BWA-MEM workflow.")
                 # Call _get_bwa_params for 'mem'
-                bwa_mem_params = _get_bwa_params("mem", sensitivity, cpus=cpus)
+                bwa_mem_params = _get_bwa_params("mem", sensitivity)
                 
                 # Construct cmd_alignment_for and cmd_alignment_rev using bwa_mem_params
                 # ... (rest of BWA-MEM block as before, removing '-t' if added inside _get_bwa_params)
@@ -432,14 +430,13 @@ def hic_align(
                 )
 
             elif max_alignment is not None:
-
-                logger.info("Using BWA-MEM workflow.")
-                # Call _get_bwa_params for 'mem'
-                bwa_aln_params = _get_bwa_params("aln", sensitivity, cpus=cpus)
-                bwa_samse_params = _get_bwa_params("samse", sensitivity, cpus=cpus)
                 
+                logger.info("Using BWA-ALN workflow.")
+                # Call _get_bwa_params for 'mem'
+                bwa_aln_params = _get_bwa_params("aln", sensitivity = sensitivity, max_alignment=max_alignment)
+                bwa_samse_params = _get_bwa_params("samse", sensitivity = sensitivity, max_alignment=max_alignment)
+                                
                 # Construct cmd_alignment_for and cmd_alignment_rev using bwa_mem_params
-                # ... (rest of BWA-MEM block as before, removing '-t' if added inside _get_bwa_params)
                 cmd_pre_alignment_for = [
                     "bwa", "aln",
                     *bwa_aln_params, 
@@ -449,11 +446,9 @@ def hic_align(
                     str(fq_for_path),
                 ]
                 
-                
                 cmd_alignment_for = [
                     "bwa", "samse",
                     *bwa_samse_params, 
-                    "-t", str(cpus),
                     "-f", str(output_path / "1.sam"),
                     str(genome),
                     str(output_path / "1.sai"),
@@ -464,6 +459,7 @@ def hic_align(
                 cmd_pre_alignment_rev = [
                     "bwa", "aln",
                     *bwa_aln_params,
+                    "-t", str(cpus),
                     "-f", str(output_path / "2.sai"),
                     str(genome),
                     str(fq_rev_path),
