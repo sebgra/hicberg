@@ -30,6 +30,7 @@ Requires-Dist: click
 Requires-Dist: cooler
 Requires-Dist: funcy
 Requires-Dist: hicstuff
+Requires-Dist: h5py
 Requires-Dist: matplotlib
 Requires-Dist: numpy
 Requires-Dist: pandas
@@ -71,6 +72,7 @@ Documentation and tutorial: https://sebgra.github.io/hicberg/
 - [Docker](#Docker)
 - [Installation](#installation)
 - [Usage/Examples](#usage)
+- [Config files](#config_usage)
 - [Snakemake usage](#snakemake_usage)
 - [Individual components](#individual_components)
 - [Chaining pipeline steps](#chaining_steps)
@@ -101,6 +103,13 @@ mamba install bowtie2 -c bioconda;
 mamba install samtools -c bioconda;
 mamba install -c bioconda ucsc-bedgraphtobigwig;
 mamba install bedtools -c bioconda;
+```
+
+Depending on your aligner preferences, `BWA` and `Minimap2` might be installed through:
+
+```bash
+mamba install bioconda::bwa;
+mamba install bioconda::minimap2
 ```
 
 ## <a id="installation"></a> Installation
@@ -146,6 +155,10 @@ mamba install bioconda::bowtie2
 mamba install bioconda::samtools
 mamba install bioconda::bedtools
 mamba install bioconda::ucsc-bedgraphtobigwig
+
+# For exhaustive aligners usage
+mamba install bioconda::bwa;
+mamba install bioconda::minimap2
 ```
 
 ### <a id="Docker"></a> Docker
@@ -202,7 +215,7 @@ https://sebgra.github.io/hicberg/
 hicberg pipeline [--enzyme=["DpnII", "HinfI"]] [--distance=1000]
 [--rate=1.0] [--cpus=1] [--mode="full"] [--aligner="bowtie2"] [--read-type="sr"] [--max-alignments=None] [--sensitivity="very-sensitive"]
 [--bins=2000] [--circular=""] [--mapq=35] [--kernel-size=11] [--deviation=0.5] [--start-stage="fastq"]
-[--exit-stage=None] [--output=DIR] [--index=None] [--blacklist=STR] [--force]  <genome> <input1> <input2>
+[--exit-stage=None] [--output=DIR] [--index=None] [--blacklist=STR] [--force] [--config=STR]  <genome> <input1> <input2>
 
 ```
 
@@ -299,6 +312,81 @@ _N.B: The parameter `--rerun-incomplete` is used to restart the pipeline from th
 N.B 2: The parameter `-j` is used to specify the number of jobs to run in parallel. It is recommended to set this parameter to the number of libraries to process.
 
 N.B 3: The ressources allocated to each job can be modified in the file cluster_slurm.yaml. The parameters `mem` and `ncpus` are used to specify the memory and the number of CPUs to allocate to each job. The parameter `ntasks` is used to specify the number of tasks to run in parallel. The parameter `queue` is used to specify the queue to use. The parameter `partition` is used to specify the partition to use. The parameters `name`, `output` and `error` are used to specify the name of the job and the output and error files._
+
+## <a id="config_usage"></a> 
+
+
+### Configuration Files
+
+Hicberg allows you to manage pipeline parameters efficiently using configuration files in the INI format. This is particularly useful for complex runs or for sharing reproducible settings across multiple analyses.
+
+#### INI File Format
+
+Hicberg uses the standard INI file format. Each file is organized into `[sections]` and contains `key = value` pairs. Comments can be added using `;` or `#`.
+
+A template of such config file is provided in the `templates` folder.
+
+**Example `config.ini`:**
+
+```ini
+; General pipeline settings
+[General]
+sample_name = my_experiment_run
+start_stage = fastq
+exit_stage = None ; Set to 'None' for full pipeline, or a stage name
+output_directory = ./results
+verbose_logging = True
+force_overwrite = False ; Set to True to overwrite existing output directories
+
+; General pipeline settings
+[General]
+sample_name = my_experiment_run
+start_stage = fastq
+exit_stage = None ; Set to 'None' for full pipeline, or a stage name
+output_directory = ./results
+verbose_logging = True
+force_overwrite = False ; Set to True to overwrite existing output directories
+
+; Input file paths
+[InputFiles]
+genome_fasta = /path/to/my_data/genome.fasta
+genome_index = /path/to/my_data/genome_index_prefix ; Optional: if not provided, Hicberg will build it
+forward_reads = /path/to/my_data/reads_R1.fastq.gz
+reverse_reads = /path/to/my_data/reads_R2.fastq.gz
+blacklist_regions = None ; Set to 'None' or leave blank if no blacklist file otherwise provide either a bed file or a list of coordinates coma separated using UCSC format.
+
+; Alignment parameters
+[Alignment]
+aligner = bowtie2 ; 'bowtie2', 'bwa' or 'minimap2'
+cpus = 8
+sensitivity = very-sensitive ; presets: very-fast, fast, sensitive, very-sensitive
+max_alignment = None ; Max alignments to report per read (int) or 'None' for unlimited
+mapq = 35
+read_type = short ; "sr", "map-pb", "map-hifi", "map-ont", "splice", "splice:hq", "asm5", "asm10", "ava-pb" or"ava-ont"
+
+; Processing parameters
+[Processing]
+enzyme = DpnII,HinfI ; Comma-separated list for multiple enzymes (e.g., 'DpnII,HinfI')
+circular_genome = ; e.g., 'chrM' if mitochondrial genome is circular, otherwise leave blank or 'None' (ChrM in our genome example)
+rate = 1.0 ; Downsampling rate (float)
+distance = 1000 ; Distance parameter (int) for omics mode
+bins = 2000 ; Contact map resolution(int)
+mode = standard ; 'full', 'standard', 'density', or 'omics'
+kernel_size = 11 ; Kernel size for density calculation (int)
+deviation = 0.5 ; Deviation for density calculation (float)
+```
+
+#### Using a Configuration File
+
+To run the pipeline using a configuration file, specify its path with the `-C` or `--config-file` option.
+
+**Important Note:** The positional arguments `<genome_fasta>`, `<R1_fastq>`, and `<R2_fastq>` are always required, even when using a configuration file. These arguments specify the primary input files for your pipeline run.
+
+```bash
+
+hicberg pipeline -C my_config.ini <path_to_genome.fasta> <path_to_R1.fastq.gz> <path_to_R2.fastq.gz>
+```
+
 
 ## <a id="individual_components"></a> Individual components
 

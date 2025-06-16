@@ -6,7 +6,7 @@ ARG UID
 ARG GID
 
 # Metadata
-LABEL Name=hicberg Version=0.0.1
+LABEL Name=hicberg Version=1.0.1
 
 # Update base components and set-up mamba
 RUN apt-get update && apt-get install -y gcc
@@ -26,6 +26,8 @@ RUN mamba install bioconda::bowtie2
 RUN mamba install bioconda::samtools
 RUN mamba install bioconda::bedtools
 RUN mamba install bioconda::ucsc-bedgraphtobigwig
+RUN mamba install bioconda::minimap2
+RUN mamba install bioconda::bwa
 
 # Copy necessary files
 

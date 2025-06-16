@@ -30,12 +30,15 @@ jobs:
         conda install bioconda::samtools
         conda install bioconda::bedtools
         conda install bioconda::ucsc-bedgraphtobigwig
+        conda install bioconda::minimap2
+        conda install bioconda::bwa
       shell: micromamba-shell {0}
 
     - name: Check installed package
       run: |
         hicberg --version
         bowtie2 --version
+        minimap2 --version
       shell: micromamba-shell {0}
 
     - name: Lint and test

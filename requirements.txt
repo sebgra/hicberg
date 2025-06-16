@@ -5,6 +5,7 @@ click
 cooler
 funcy
 hicstuff
+h5py 
 matplotlib
 numpy
 pandas
