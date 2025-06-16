@@ -5,6 +5,7 @@ from pathlib import Path
 from itertools import product, combinations
 
 import numpy as np
+from scipy.ndimage import gaussian_filter1d
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as plc
@@ -30,6 +31,10 @@ TRANS_PS = "trans_ps.npy"
 CLR = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
 DENSITY_MAP = "density_map.npy"
+
+#Matplotlib parameters
+plt.style.use('seaborn-v0_8')  
+colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 
 def plot_density(output_dir: str = None) -> None:
@@ -199,7 +204,7 @@ def plot_d1d2(output_dir: str = None) -> None:
 
 def plot_laws(output_dir: str = None) -> None:
     """
-    Plot P(s) patterns laws
+    Plot P(s) patterns laws.
 
     Parameters
     ----------
@@ -219,27 +224,44 @@ def plot_laws(output_dir: str = None) -> None:
     weirds = load_dictionary(output_path / WEIRDS)
     uncuts = load_dictionary(output_path / UNCUTS)
     loops = load_dictionary(output_path / LOOPS)
-
+    
     for chromosome in xs.keys():
+        
+        # Interpolate curves
+        interpolated_loops = gaussian_filter1d(loops[chromosome], 1.1)
+        interpolated_uncuts = gaussian_filter1d(uncuts[chromosome], 1.1)
+        interpolated_weirds = gaussian_filter1d(weirds[chromosome], 1.1)
+        
+        fig, ax = plt.subplots(figsize=(8, 6)) # Create figure and axes object
 
-        plt.figure(figsize=(10, 10))
-        plt.loglog(xs[chromosome], weirds[chromosome], "o", label="++/--")
-        plt.loglog(xs[chromosome], uncuts[chromosome], "o", label="+-")
-        plt.loglog(xs[chromosome], loops[chromosome], "o", label="-+")
-        plt.title(
-            f"Distribution of weirds, uncuts and loops events across {chromosome}"
+        ax.loglog(xs[chromosome], interpolated_weirds, label="++/--", color = colors[0])
+        ax.loglog(xs[chromosome], weirds[chromosome], "o", label="+-",markersize=5, color = colors[0])
+
+        
+        ax.loglog(xs[chromosome], interpolated_uncuts, label="+-", color = colors[1])
+        ax.loglog(xs[chromosome], uncuts[chromosome], "o", label="+-",markersize=5, color = colors[1])
+
+        ax.loglog(xs[chromosome], interpolated_loops, label="-+", color = colors[2])
+        ax.loglog(xs[chromosome], loops[chromosome], "o", label="+-",markersize=5, color = colors[2])
+
+
+        ax.set_title(
+            f"Distribution of weirds, uncuts and loops events across {chromosome}",
+            fontsize=16  # Title font size set to 16
         )
-        plt.xlabel("Logarithmic binned genomic distances")
-        plt.ylabel("Number of events")
-        plt.grid()
-        plt.legend()
+        ax.set_xlabel("Logarithmic binned genomic distances", fontsize=14)  # X-axis label font size set to 14
+        ax.set_ylabel("Number of events", fontsize=14)  # Y-axis label font size set to 14
+
+        ax.tick_params(axis='both', which='major', labelsize=13) # Tick label font size set to 13
+
+        ax.grid(True)
+        ax.legend(fontsize=15)  # Legend font size set to 12
         plt.savefig(
             output_path / f"patterns_distribution_{chromosome}.pdf", format="pdf"
         )
         plt.close()
-
+    
     logger.info(f"Saved plots of patterns at : {output_path}")
-
 
 def plot_trans_ps(output_dir: str = None) -> None:
     """
@@ -291,20 +313,37 @@ def plot_trans_ps(output_dir: str = None) -> None:
     )
     np.fill_diagonal(n_frags_matrix, np.nan)
 
-    plt.figure(figsize=(10, 10))
+    # Create figure and axes object explicitly
+    fig, ax = plt.subplots(figsize=(10, 10))
 
-    plt.imshow(t_ps, cmap="Wistia", interpolation="None")
-    plt.colorbar(fraction=0.046)
-    plt.xticks(
-        np.arange(len(list(dist_frag.keys()))),
+    # Display the image on the axes and capture the image object
+    im = ax.imshow(t_ps, cmap="Wistia", interpolation="None")
+
+    # Add the colorbar, referencing the image object 'im' and the axes 'ax'
+    # 'ax' is passed to 'ax' argument for colorbar to correctly size and position it.
+    plt.colorbar(im, ax=ax, fraction=0.046)
+
+    # Set x-ticks and labels directly on the axes
+    ax.set_xticks(
+        np.arange(len(list(dist_frag.keys())))
+    )
+    ax.set_xticklabels(
         list(dist_frag.keys()),
         rotation="vertical",
     )
-    plt.yticks(
-        np.arange(len(list(dist_frag.keys()))),
+
+    # Set y-ticks and labels directly on the axes
+    ax.set_yticks(
+        np.arange(len(list(dist_frag.keys())))
+    )
+    ax.set_yticklabels(
         list(dist_frag.keys()),
     )
-    plt.title("Pseudo P(s)")
+    ax.tick_params(axis='both', which='major', labelsize=14)
+
+    # Set the title directly on the axes
+    ax.set_title("Pseudo P(s)", fontsize=16)
+    ax.grid(False)
     plt.savefig(output_path / f"pseudo_ps.pdf", format="pdf")
     plt.close()
 
