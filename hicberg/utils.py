@@ -1582,7 +1582,7 @@ def is_empty_alignment(alignment_file: str) -> bool:
                 # If StopIteration is raised, the file is empty
                 return True
     except FileNotFoundError:
-        print(f"File not found: {filepath}")
+        print(f"File not found: {alignment_file}")
         return True  # Assuming file is "empty" if it doesn't exist
 
 

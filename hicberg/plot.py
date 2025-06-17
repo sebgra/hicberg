@@ -188,16 +188,69 @@ def plot_d1d2(output_dir: str = None) -> None:
 
     # reload dictionary
     d1d2 = load_dictionary(output_path / D1D2)
+# Ensure d1d2 is an array for consistent indexing and filtering
+    d1d2 = np.array(d1d2)
 
-    histo, bins = np.histogram(d1d2, max(d1d2))
+    # Filter out non-positive values from d1d2 for histogram on log scale
+    # max(d1d2) as bin count can be very large if d1d2 values are large.
+    # It's usually better to pick a number of bins or a more sophisticated binning strategy
+    # for a log-log histogram. Let's use `ax.hist` with `log=True` directly.
 
-    plt.figure(figsize=(10, 10))
-    plt.loglog(histo)
-    plt.title("Log distribution of d1d2 distance")
-    plt.xlabel("d1+d2")
-    plt.ylabel("No. occurences")
-    plt.savefig(output_path / f"d1d2.pdf", format="pdf")
-    plt.close()
+    # Ensure min_data_val is positive for log scale
+    min_data_val = np.min(d1d2[d1d2 > 0]) if np.any(d1d2 > 0) else 1
+    max_data_val = np.max(d1d2)
+
+    if min_data_val <= 0 or max_data_val <= min_data_val:
+        logger.error("d1d2 data range is not suitable for a log-log plot. "
+                     "Ensure values are positive and span a range.")
+        return
+
+    # Create bins for the histogram in log space
+    num_bins = 50 # You can adjust this number
+    log_bins = np.logspace(np.log10(min_data_val), np.log10(max_data_val), num_bins)
+
+
+    # --- Plotting with ax objects ---
+    fig, ax = plt.subplots(figsize=(10, 10)) # Create figure and axes
+
+    # Plot the histogram directly.
+    # `log=True` here means the Y-axis will be logarithmic (counts are logged).
+    # The X-axis scale will be set explicitly later.
+    counts, bins, patches = ax.hist(
+        d1d2,
+        bins=log_bins, # Use log-spaced bins for the x-axis
+        color='skyblue', # Choose a suitable color
+        edgecolor='black',
+        alpha=0.7
+    )
+
+    # Set both x and y axes to a logarithmic scale
+    ax.set_xscale('log')
+    ax.set_yscale('log') # This makes the y-axis (counts) logarithmic
+
+    # Set x-axis limits based on the log bins
+    ax.set_xlim(min_data_val, max_data_val)
+
+
+    # Set labels and title directly on ax
+    ax.set_title("Distribution of d1d2 distance", fontsize=16) # Removed "Log" from title since axes clarify
+    ax.set_xlabel("d1+d2", fontsize=14)
+    ax.set_ylabel("Number of occurrences", fontsize=14) # Sticking to "Number of occurrences"
+
+    # Add grid lines for both major and minor ticks on both axes
+    ax.grid(True, which="major", ls="-", alpha=0.7)
+    ax.grid(True, which="minor", ls="--", alpha=0.3)
+
+    # Set tick parameters
+    ax.tick_params(axis='both', which='major', labelsize=13)
+    ax.tick_params(axis='both', which='minor', labelsize=10) # Smaller labels for minor ticks
+
+    # Ensure tight layout to prevent elements from overlapping
+    fig.tight_layout()
+
+    # Save and close the figure
+    fig.savefig(output_path / f"d1d2.pdf", format="pdf")
+    plt.close(fig)
 
     logger.info(f"Saved plots of d1d2 at : {output_path}")
 
@@ -249,13 +302,13 @@ def plot_laws(output_dir: str = None) -> None:
             f"Distribution of weirds, uncuts and loops events across {chromosome}",
             fontsize=16  # Title font size set to 16
         )
-        ax.set_xlabel("Logarithmic binned genomic distances", fontsize=14)  # X-axis label font size set to 14
-        ax.set_ylabel("Number of events", fontsize=14)  # Y-axis label font size set to 14
+        ax.set_xlabel("Logarithmic binned genomic distances", fontsize=14)
+        ax.set_ylabel("Number of events", fontsize=14)
 
-        ax.tick_params(axis='both', which='major', labelsize=13) # Tick label font size set to 13
+        ax.tick_params(axis='both', which='major', labelsize=13)
 
-        ax.grid(True)
-        ax.legend(fontsize=15)  # Legend font size set to 12
+        ax.grid(True, linestyle='--', alpha=0.7)
+        ax.legend(fontsize=15) 
         plt.savefig(
             output_path / f"patterns_distribution_{chromosome}.pdf", format="pdf"
         )
@@ -313,14 +366,9 @@ def plot_trans_ps(output_dir: str = None) -> None:
     )
     np.fill_diagonal(n_frags_matrix, np.nan)
 
-    # Create figure and axes object explicitly
     fig, ax = plt.subplots(figsize=(10, 10))
 
-    # Display the image on the axes and capture the image object
     im = ax.imshow(t_ps, cmap="Wistia", interpolation="None")
-
-    # Add the colorbar, referencing the image object 'im' and the axes 'ax'
-    # 'ax' is passed to 'ax' argument for colorbar to correctly size and position it.
     plt.colorbar(im, ax=ax, fraction=0.046)
 
     # Set x-ticks and labels directly on the axes
@@ -331,8 +379,6 @@ def plot_trans_ps(output_dir: str = None) -> None:
         list(dist_frag.keys()),
         rotation="vertical",
     )
-
-    # Set y-ticks and labels directly on the axes
     ax.set_yticks(
         np.arange(len(list(dist_frag.keys())))
     )
@@ -341,7 +387,6 @@ def plot_trans_ps(output_dir: str = None) -> None:
     )
     ax.tick_params(axis='both', which='major', labelsize=14)
 
-    # Set the title directly on the axes
     ax.set_title("Pseudo P(s)", fontsize=16)
     ax.grid(False)
     plt.savefig(output_path / f"pseudo_ps.pdf", format="pdf")
@@ -349,42 +394,74 @@ def plot_trans_ps(output_dir: str = None) -> None:
 
     logger.info(f"Saved pseudo P(s) of patterns at : {output_path}")
 
-
+    
 def plot_coverages(bins: int = 2000, output_dir: str = None) -> None:
     """
-    Plot coverages of chromosomes
+    Plot coverages of chromosomes with x-axis converted to genomic coordinates,
+    and the last tick being the maximum chromosome size rounded to the 10k ceil.
 
     Parameters
     ----------
     bins : int, optional
-        Size of the desired bin., by default 2000
+        Size of the desired bin in base pairs (bp), by default 2000.
     output_dir : str, optional
-        Path to the folder where to save the plot, by default None, by default None.
+        Path to the folder where to save the plot, by default None.
     """
 
     if output_dir is None:
         output_path = Path(getcwd())
-
     else:
         output_path = Path(output_dir)
 
-    # reload dictionaries
     xs = load_dictionary(output_path / XS)
     coverage = load_dictionary(output_path / COVERAGE)
 
-    for chromosome in xs.keys():
+    for chromosome in coverage.keys():
+        fig, ax = plt.subplots(figsize=(12, 6))
 
-        plt.figure()
-        plt.plot(coverage[chromosome], label="Covering smoothed")
-        plt.title(f"Covering across {chromosome} - bins of {bins} bp")
-        plt.xlabel(f"Bin number")
-        plt.ylabel("Number of reads")
-        plt.legend()
-        plt.grid()
-        plt.savefig(output_path / f"coverage_{chromosome}.pdf", format="pdf")
-        plt.close()
+        bin_indices = np.arange(len(coverage[chromosome]))
+        genomic_coords = bin_indices * bins
 
-    logger.info(f"Saved coverages at : {output_path}")
+        ax.plot(genomic_coords, coverage[chromosome], label="Covering smoothed")
+
+        ax.set_title(f"{chromosome} coverage - bins of {bins / 1_000:.1f} kb", fontsize=16)
+        ax.set_xlabel("Genomic position (kb)", fontsize=14)
+        ax.set_ylabel("Number of reads", fontsize=14)
+        ax.legend(fontsize=12)
+        ax.grid(True, linestyle='--', alpha=0.7)
+
+        # Calculate the actual maximum genomic coordinate (end of the last bin)
+        # If there are no bins, max_genomic_coord is 0.
+        if len(coverage[chromosome]) > 0:
+            actual_max_genomic_coord = (len(coverage[chromosome])) * bins
+        else:
+            actual_max_genomic_coord = 0
+
+        round_to = 10_000
+        rounded_max_genomic_coord = np.ceil(actual_max_genomic_coord / round_to) * round_to
+
+        ax.set_xlim(0, rounded_max_genomic_coord)
+
+        tick_interval_bp = 100_000
+        major_tick_locs_bp = np.arange(0, rounded_max_genomic_coord + 1, tick_interval_bp)
+
+        if rounded_max_genomic_coord not in major_tick_locs_bp:
+            major_tick_locs_bp = np.append(major_tick_locs_bp, rounded_max_genomic_coord)
+            major_tick_locs_bp = np.sort(np.unique(major_tick_locs_bp))
+
+        ax.set_xticks(major_tick_locs_bp)
+
+        major_tick_labels = [f"{int(loc / 1_000)} kb" for loc in major_tick_locs_bp]
+        ax.set_xticklabels(major_tick_labels, rotation=45, ha='right', fontsize=13)
+
+        ax.tick_params(axis='y', which='major', labelsize=13)
+
+        fig.tight_layout()
+
+        fig.savefig(output_path / f"coverage_{chromosome}.pdf", format="pdf")
+        plt.close(fig)
+
+    logger.info(f"Saved coverages at: {output_path}")
 
 
 def plot_couple_repartition(
@@ -423,55 +500,109 @@ def plot_couple_repartition(
     )
 
     # Get the number of possible couples
-    couple_lenght = list()
+    couple_length = list()
 
     for forward_read, reverse_read in zip(
         merged_forward_alignment_file_handler, merged_reverse_alignment_file_handler
     ):
 
-        couple_lenght.append(forward_read.get_tag("XL") * reverse_read.get_tag("XL"))
+        couple_length.append(forward_read.get_tag("XL") * reverse_read.get_tag("XL"))
 
-    _, bins_edges = np.histogram(couple_lenght, bins=max(couple_lenght))
+    # Convert to numpy array for efficient calculations
+    couple_length = np.array(couple_length)
 
-    plt.figure()
-    plt.vlines(
-        x=np.mean(couple_lenght),
-        ymin=0,
-        ymax=max(_),
-        color="red",
-        label="mean",
-        linestyles="dashed",
-    )
-    plt.vlines(
-        x=np.median(couple_lenght),
-        ymin=0,
-        ymax=max(_),
-        color="green",
-        label="median",
-        linestyles="dashed",
-    )
-    plt.vlines(
-        x=np.percentile(couple_lenght, 99),
-        ymin=0,
-        ymax=max(_),
-        color="purple",
-        label="99 percentile",
-        linestyles="dashed",
-    )
-    plt.loglog(_)
-    plt.xlim(
-        (2, (np.percentile(couple_lenght, 99) + np.std(couple_lenght)).astype(int))
-    )
-    plt.xlabel("Number of possible pairs")
-    plt.ylabel("Number of occurences")
-    plt.title("Distribution of set of potential couple number")
-    plt.legend()
+    # Calculate statistics
+    mean_val = np.mean(couple_length)
+    median_val = np.median(couple_length)
+    percentile_99_val = np.percentile(couple_length, 99)
 
-    plt.savefig(
-        output_path / f"Couple_number_distribution.pdf",
-        format="pdf",
+    # --- Plotting with ax objects ---
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    # --- Changed: Determine histogram bins for a linear x-axis ---
+    # You can either let ax.hist determine optimal bins, or specify a number:
+    num_linear_bins = 100 # A reasonable number of bins for linear scale
+    # Or calculate max data value to set a range for bins:
+    min_data_val = np.min(couple_length)
+    max_data_val = np.max(couple_length)
+    linear_bins = np.linspace(min_data_val, max_data_val, num_linear_bins)
+
+    # Plot the histogram using ax.hist()
+    # No changes needed for y-axis scale (it's linear by default)
+    counts, bins, patches = ax.hist(
+        couple_length,
+        bins=linear_bins, # Use linear-spaced bins
+        color=colors[0],
+        edgecolor='black',
+        alpha=0.7,
+        label="Distribution"
     )
-    plt.close()
+
+    # --- Removed: ax.set_xscale('log') ---
+    # The x-axis will now be linear by default.
+
+    # Get the maximum y-value (count) from the histogram for positioning vlines
+    max_y_val = np.max(counts) if counts.size > 0 else 0
+
+    # Plot vertical lines for mean, median, and 99th percentile
+    ax.vlines(
+        x=mean_val,
+        ymin=0,
+        ymax=max_y_val,
+        color=colors[1],
+        label=f"Mean ({mean_val:.2f})",
+        linestyles="dashed",
+        linewidth=2
+    )
+    ax.vlines(
+        x=median_val,
+        ymin=0,
+        ymax=max_y_val,
+        color=colors[2],
+        label=f"Median ({median_val:.2f})",
+        linestyles="dashed",
+        linewidth=2
+    )
+    ax.vlines(
+        x=percentile_99_val,
+        ymin=0,
+        ymax=max_y_val,
+        color=colors[3],
+        label=f"99th Percentile ({percentile_99_val:.2f})",
+        linestyles="dashed",
+        linewidth=2
+    )
+
+    # --- Adjusted: Set x-axis limits for a linear scale ---
+    # Start from 0 or slightly below the min data value, extend to upper calculated limit.
+    lower_xlim = 0 # Start from 0 for counts
+    upper_xlim_calc = np.ceil(percentile_99_val + np.std(couple_length))
+    final_upper_xlim = max(upper_xlim_calc, max_data_val) # Ensure it covers all data
+    ax.set_xlim(lower_xlim, final_upper_xlim)
+
+
+    # Set labels and title
+    ax.set_xlabel("Number of possible pairs", fontsize=14)
+    ax.set_ylabel("Count", fontsize=14)
+    ax.set_title("Distribution of set of potential couple number", fontsize=16)
+
+    # Set legend and grid
+    ax.legend(fontsize=12)
+    # --- Adjusted: Grid for linear axes (no 'which="minor"' for x-axis if not needed) ---
+    ax.grid(True, which="major", ls="-", alpha=0.7)
+    # Minor grid on linear x-axis often not as useful as on log, so removed or can be adjusted.
+    # ax.grid(True, which="minor", ls="--", alpha=0.3)
+
+    # Set tick parameters
+    ax.tick_params(axis='both', which='major', labelsize=13)
+    # --- Removed: X-axis minor tick label size setting (not as relevant for linear) ---
+    # ax.tick_params(axis='x', which='minor', labelsize=10)
+    ax.tick_params(axis='y', which='minor', left=False)
+
+    fig.tight_layout()
+
+    fig.savefig(output_path / "Couple_number_distribution.pdf", format="pdf")
+    plt.close(fig)
 
     logger.info(f"Saved couple number distribution at : {output_path}")
 
