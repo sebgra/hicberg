@@ -26,6 +26,23 @@ from hicberg import logger
 UNRESCUED_MATRIX = "unrescued_map.cool"
 RESTRICTION_MAP = "restriction_map.npy"
 
+MODE_PARALLEL_PROCESSES = {
+    "full": ["p1", "p2", "p3", "p4"],
+    "standard": ["p1", "p2", "p3"],
+    "one_enzyme": ["p1", "p2", "p3", "p4"],
+    "ps": ["p1", "p2"],
+    "cover": ["p3"],
+    "d1d2": ["p4"],
+    "density": [], # 'density' mode runs only compute_density, no pX parallel processes
+    # Add other modes here if they involve p1-p4 processes
+}
+
+MODE_SEQUENTIAL_POST_PROCESSING = {
+    "full": True,
+    "density": True, # 'density' mode primarily runs this step.
+    # Other modes (standard, one_enzyme, ps, cover, d1d2) implicitly do NOT run compute_density.
+}
+
 
 def check_tool(name: str) -> bool:
     """
@@ -281,24 +298,52 @@ def pipeline(
         )
         p4 = Process(target=hst.generate_d1d2, kwargs=dict(output_dir=output_folder))
 
-        if mode != "omics":
+        # A mapping to easily access the Process objects by their string name (e.g., "p1")
+        PROCESS_OBJECT_MAP = {
+            "p1": p1,
+            "p2": p2,
+            "p3": p3,
+            "p4": p4,
+        }
 
-            for process in [p1, p2, p3]:
-                process.start()
+        # Determine which of the pre-defined processes to run for the current mode
+        process_names_for_mode = MODE_PARALLEL_PROCESSES.get(mode)
+        processes_to_start = []
+        
+        if process_names_for_mode is None:
+            logger.warning(
+                f"Mode '{mode}' is not defined in MODE_PARALLEL_PROCESSES. "
+                "No parallel processes will be launched in this phase."
+            )
+        else:
+            logger.info(f"[Pipeline Phase 2/3: Parallel Execution] Preparing processes for mode '{mode}':")
+            for p_name in process_names_for_mode:
+                process_obj = PROCESS_OBJECT_MAP.get(p_name)
+                if process_obj:
+                    processes_to_start.append(process_obj)
+                    logger.info(f"  - Added '{p_name}'.")
+                else:
+                    logger.error(
+                        f"Process '{p_name}' specified for mode '{mode}' "
+                        "is not found in PROCESS_OBJECT_MAP. Skipping this process."
+                    )
 
-            for process in [p1, p2, p3]:
-                process.join()
+        if processes_to_start:
+            logger.info(f"\n[Pipeline Phase 2/3] Starting {len(processes_to_start)} parallel processes...")
+            for p in processes_to_start:
+                p.start()
 
-        elif mode == "omics":
+            for p in processes_to_start:
+                p.join()
+            logger.info("[Pipeline Phase 2/3] All parallel processes completed.\n")
+        else:
+            logger.info("[Pipeline Phase 2/3] No parallel processes to run in this phase for the current mode.\n")
 
-            for process in [p1, p2, p3]:
-                process.start()
+        # Determine if sequential post-processing (e.g., density computation) is needed
+        should_run_density = MODE_SEQUENTIAL_POST_PROCESSING.get(mode, False)
 
-            for process in [p1, p2, p3]:
-                process.join()
-
-        if mode in ["full", "density"]:
-
+        if should_run_density:
+            logger.info(f"[Pipeline Phase 3/3: Sequential Post-processing] Running compute_density for mode '{mode}'...")
             hst.compute_density(
                 cooler_file=UNRESCUED_MATRIX,
                 kernel_size=kernel_size,
@@ -306,6 +351,37 @@ def pipeline(
                 threads=cpus,
                 output_dir=output_folder,
             )
+            logger.info("[Pipeline Phase 3/3] Density computation complete.\n")
+        else:
+            logger.info(f"[Pipeline Phase 3/3] Density computation not required for mode '{mode}'.\n")
+
+        # if mode != "omics":
+
+        #     for process in [p1, p2, p3]:
+        #         process.start()
+
+        #     for process in [p1, p2, p3]:
+        #         process.join()
+
+        # elif mode == "omics":
+
+        #     for process in [p1, p2, p3]:
+        #         process.start()
+
+        #     for process in [p1, p2, p3]:
+        #         process.join()
+
+        # if mode in ["full", "density"]:
+
+        #     hst.compute_density(
+        #         cooler_file=UNRESCUED_MATRIX,
+        #         kernel_size=kernel_size,
+        #         deviation=deviation,
+        #         threads=cpus,
+        #         output_dir=output_folder,
+        #     )
+            
+            
 
     if exit_stage == 5:
 
