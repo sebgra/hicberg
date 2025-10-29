@@ -167,6 +167,7 @@ hicberg/__init__.py
 hicberg/__main__.py
 hicberg/align.py
 hicberg/benchmark.py
+hicberg/cli.py
 hicberg/eval.py
 hicberg/io.py
 hicberg/omics.py
