@@ -1,0 +1,25 @@
+[project]
+name = "hicberg"
+version = "1.1.1"
+description = "Rescuing of multi-reads in Hi-C maps"
+authors = ["Sébastien Gradit <sebastiengradit@gmail.com>"]
+# Only these two. Pixi is 'nodefaults' by design.
+channels = ["conda-forge", "bioconda"]
+platforms = ["linux-64", "osx-64", "osx-arm64"]
+
+[dependencies]
+python = "3.11.*"
+bowtie2 = ">=2.5"
+samtools = ">=1.17"
+bwa = ">=0.7.17"
+minimap2 = ">=2.26"
+ucsc-bedgraphtobigwig = "*"
+pip = "*"
+
+[pypi-dependencies]
+# This installs your local src/hicberg code in editable mode
+hicberg = { path = ".", editable = true }
+
+[tasks]
+test = "pytest tests/"
+hicberg = "hicberg"

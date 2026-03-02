@@ -1,54 +1,34 @@
 Metadata-Version: 2.4
 Name: hicberg
-Version: 1.0.1
-Summary: Standalone command line tool to visualize coverage from a BAM file
-Home-page: https://github.com/sebgra/hicberg
-Author: sgradit
-Author-email: sebastien.gradit@pasteur.fr
+Version: 1.1.1
+Summary: Hicberg: Rescuing of multi-mapping reads in Hi-C maps (and other pair ended omics) using statistical learning.
+Author-email: Sébastien Gradit <sebastien.gradit@gmail.com>
 License: MIT
+Project-URL: Homepage, https://github.com/sebgra/hicberg
+Project-URL: Repository, https://github.com/sebgra/hicberg.git
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Science/Research
-Classifier: Intended Audience :: Science/Research
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3 :: Only
 Classifier: Programming Language :: Python :: 3.11
-Classifier: Topic :: Scientific/Engineering
 Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
-Classifier: Topic :: Scientific/Engineering :: Visualization
-Classifier: Operating System :: Microsoft :: Windows
-Classifier: Operating System :: POSIX
-Classifier: Operating System :: Unix
-Classifier: Operating System :: MacOS
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: bioframe
-Requires-Dist: biopython
-Requires-Dist: click
-Requires-Dist: cooler
-Requires-Dist: funcy
-Requires-Dist: hicstuff
-Requires-Dist: h5py
-Requires-Dist: matplotlib
-Requires-Dist: numpy
-Requires-Dist: pandas
-Requires-Dist: pysam
-Requires-Dist: scipy
-Requires-Dist: scikit-learn
-Requires-Dist: statsmodels
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: license
+Requires-Dist: click>=8.1.7
+Requires-Dist: pysam>=0.22.0
+Requires-Dist: cooler>=0.9.3
+Requires-Dist: biopython>=1.83
+Requires-Dist: numpy>=1.26.0
+Requires-Dist: pandas>=2.2.0
+Requires-Dist: scipy>=1.12.0
+Requires-Dist: matplotlib>=3.8.0
+Requires-Dist: statsmodels>=0.14.1
+Requires-Dist: bioframe>=0.6.1
+Requires-Dist: hicstuff>=3.2.2
+Requires-Dist: h5py>=3.10.0
+Requires-Dist: scikit-learn>=1.4.0
+Requires-Dist: funcy>=2.0
 Dynamic: license-file
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
 
 
 # HiC-BERG

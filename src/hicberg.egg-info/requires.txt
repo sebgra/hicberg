@@ -1,0 +1,14 @@
+click>=8.1.7
+pysam>=0.22.0
+cooler>=0.9.3
+biopython>=1.83
+numpy>=1.26.0
+pandas>=2.2.0
+scipy>=1.12.0
+matplotlib>=3.8.0
+statsmodels>=0.14.1
+bioframe>=0.6.1
+hicstuff>=3.2.2
+h5py>=3.10.0
+scikit-learn>=1.4.0
+funcy>=2.0
