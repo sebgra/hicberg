@@ -32,5 +32,10 @@ class Aligner(BaseCommand):
         """
         pass
     
+    
+class Bowtie2Aligner(Aligner):
+    pass
+    
+    
 
     
