@@ -12,8 +12,18 @@ class BaseCommand(ABC):
         
     def run(self, command: List[str], **kwargs)-> None:
         """
-        TO BE completed
-        """
+        Run command in subprocess, with support for dry-run mode and logging.
+
+        Parameters
+        ----------
+        command : List[str]
+            Command to execute as a list of strings, e.g. ['ls', '-l']
+
+        Returns
+        -------
+        subprocess.CompletedProcess or None
+            The result of the subprocess execution, or None if in dry-run mode.
+        """        
         cmd_str: str = " ".join(map(str, command))
         if self.dry_run:
             logger.info(f"[DRY RUN]: {cmd_str}")
